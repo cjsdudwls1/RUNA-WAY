@@ -1,0 +1,11 @@
+# gradle / build
+**/build/
+**/.gradle/
+**/.kotlin/
+*.iml
+.idea/
+local.properties
+android/app/release/
+# python
+__pycache__/
+*.pyc
