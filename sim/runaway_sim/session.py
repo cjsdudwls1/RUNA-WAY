@@ -4,7 +4,7 @@ from .threat import Threat, HIT, HIT_PENALTY_S, RESPAWN_GAP_CM, MAX_HITS
 
 WARMUP_S = 180
 WARMUP_MIN_GAP_CM = 10000      # 워밍업 중 접근 한계. 감지 반경이 더 작으면 감지 반경 - 20m
-COOLDOWN_FRACTION = 0.87       # 코스 87% 이후 쿨다운, 적 정지
+COOLDOWN_PCT = 87              # 코스 87% 이후 쿨다운, 적 정지
 START_GAP_EXTRA_CM = 10000     # 스폰 = 감지 반경 + 100m
 REENGAGE_INSIDE_CM = 2000      # 회복을 마쳤는데 감지 밖이면 따라잡아 감지 반경 안쪽 20m에 재배치
 PAUSE_SPEED_CMS = 100          # 5초 평균 1.0 m/s 미만
@@ -90,7 +90,7 @@ def run(track, animal, course_cm):
         else:
             res.moving_s += 1
         warmup = res.elapsed_s <= WARMUP_S
-        cooldown = dist >= int(course_cm * COOLDOWN_FRACTION)
+        cooldown = dist >= course_cm * COOLDOWN_PCT // 100
         frozen = paused or cooldown
         stalk = None
         if warmup and enemy.gap > warm_gap:
