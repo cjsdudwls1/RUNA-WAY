@@ -6,14 +6,15 @@
 
 ## 상태
 
-- PRD v0.2
+- PRD v0.6
 - 다음: M0 GPX 리플레이 시뮬레이터
 
 ## 문서
 
 | 파일 | 내용 |
 |---|---|
-| docs/prd/03-prd.md | PRD v0.2 |
+| docs/prd/03-prd.md | PRD 핵심 (v0.6) |
+| docs/prd/05-appendix.md | PRD 부록. 지표, 안전, 법률, 소셜, 비용 등 상세 |
 | docs/prd/04-animal-data.md | 추격자 동물 실측 데이터와 출처 |
 | docs/prd/02-decisions.md | 결정 로그 |
 | docs/prd/00-questionnaire.md | PRD 질문지 336개 |
