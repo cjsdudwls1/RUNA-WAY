@@ -1,4 +1,4 @@
-# RunAway
+# 러너웨이 (RunAway)
 
 - 러닝 AR 추격 게임 + 운동 앱
 - 지도에 뜬 가상 추격자를 피해, 제한 시간 안에 목적지를 찍고 출발점으로 복귀
@@ -6,7 +6,7 @@
 
 ## 상태
 
-- PRD v0.6
+- PRD v0.9
 - 다음: M0 GPX 리플레이 시뮬레이터
 
 ## 문서
@@ -15,6 +15,8 @@
 |---|---|
 | docs/prd/03-prd.md | PRD 핵심 (v0.6) |
 | docs/prd/05-appendix.md | PRD 부록. 지표, 안전, 법률, 소셜, 비용 등 상세 |
+| docs/prd/06-tts-research.md | TTS 공급자 조사 |
+| docs/prd/07-art-directions.md | 아트·프론트엔드 방향 초안 5종 |
 | docs/prd/04-animal-data.md | 추격자 동물 실측 데이터와 출처 |
 | docs/prd/02-decisions.md | 결정 로그 |
 | docs/prd/00-questionnaire.md | PRD 질문지 336개 |
