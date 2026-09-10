@@ -41,7 +41,7 @@ def main(argv):
         for v in SPEEDS:
             r = run(trs[v], an, a.course * 100)
             cells.append((r.hits, r.sprints, r.failed))
-        need = (an.detect_cm - 4000) / 100
+        need = (an.detect_cm - 3000) / 100
         rows.append((an, cells, closing_m(an, 10.0), need))
     hdr = f"{'동물':<9}{'트랙':>3}{'스프린트':>8}{'감지':>5}{'10km/h닫힘':>10}{'필요':>5} | " + ' | '.join(f'{v:>4.0f}km/h 피격/스프' for v in SPEEDS)
     print(hdr)
