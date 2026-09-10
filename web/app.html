@@ -1,0 +1,295 @@
+<title>러너웨이</title>
+<meta name="theme-color" content="#0a0f0d">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
+<style>
+  :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--orange:#ff9a3c;--yellow:#ffd93d;
+    --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+  *{box-sizing:border-box}html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none}
+  body.flash{background:#5a0f0a}
+  .screen{display:none;min-height:100vh;padding:16px 16px 40px;max-width:560px;margin:0 auto}.screen.on{display:block}
+  h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--green)}
+  .sub{color:var(--dim);font-size:13px;margin:0 0 18px}
+  .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:18px 0 8px}
+  .seg{display:flex;gap:6px}.seg button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 6px;font-family:var(--mono);font-size:13px}
+  .seg button.on{border-color:var(--green);color:var(--green)}
+  .list{border-top:1px solid var(--line)}
+  .row{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+  .row.on{background:var(--panel);outline:1px solid var(--green-dim)}
+  .row .tier{font-family:var(--mono);font-size:12px;color:var(--dim)}.row .tier.b{color:var(--red)}
+  .row .name{font-weight:600}.row .meta{font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .row .hits{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:right}
+  .big{display:block;width:100%;background:var(--green);color:#04120c;border:0;padding:16px;font-family:var(--display);font-size:24px;margin-top:22px}
+  .big:disabled{background:var(--green-dim)}
+  .ghost{background:transparent;border:1px solid var(--line);color:var(--text);padding:12px;font-family:var(--mono);font-size:13px;width:100%;margin-top:8px}
+  /* run */
+  #run{padding:10px 12px 20px}
+  .top{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .gauge{height:14px;background:var(--panel);border:1px solid var(--line);position:relative}
+  .gauge i{display:block;height:100%;background:var(--red);width:0;transition:width .2s}
+  .hits{font-family:var(--mono);font-size:16px;letter-spacing:.2em;color:var(--red)}
+  .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+  .num{background:var(--panel);border:1px solid var(--line);padding:6px 8px}
+  .num b{display:block;font-family:var(--mono);font-size:20px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
+  canvas{width:100%;aspect-ratio:1/1;display:block;background:#070b0a;border:1px solid var(--line)}
+  .enemy{margin-top:8px;padding:10px 12px;border:1px solid var(--line);background:var(--panel)}
+  .enemy b{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.1}
+  .enemy .st{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .enemy.sprint{border-color:var(--red)}.enemy.sprint b{color:var(--red)}.enemy.tired b{color:var(--orange)}.enemy.recover b{color:var(--dim)}.enemy.lost b{color:var(--dim)}
+  .banner{font-family:var(--mono);font-size:12px;color:var(--yellow);text-align:center;padding:6px;min-height:28px}
+  .ctl{display:flex;gap:6px;margin-top:6px}.ctl button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:12px;font-family:var(--mono)}
+  .dbg{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px;text-align:right}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}td{padding:6px 0;border-bottom:1px solid var(--line)}td:last-child{text-align:right}
+  .log{font-family:var(--mono);font-size:11px;color:var(--dim);max-height:160px;overflow:auto;border:1px solid var(--line);padding:6px;margin-top:10px;white-space:pre-wrap}
+</style>
+
+<div id="home" class="screen on">
+  <h1>러너웨이</h1>
+  <p class="sub">관제실 프로토타입 v0.1 · 진짜 동물의 속도와 지구력으로 쫓아온다</p>
+  <div class="lbl">모드</div>
+  <div class="seg" id="mode"><button data-v="gps" class="on">실주행 GPS</button><button data-v="replay">리플레이 데모 (실내, 10배속)</button></div>
+  <div class="lbl">거리</div>
+  <div class="seg" id="course"><button data-v="1000">1 km</button><button data-v="3000" class="on">3 km</button><button data-v="5000">5 km</button></div>
+  <div class="lbl">추격자 · 정규(순차) / 못 깨는 것들(상시)</div>
+  <div class="list" id="animals"></div>
+  <button class="big" id="start">출발</button>
+  <p class="sub" style="margin-top:12px">이어폰 권장. 화면은 켜둔 채로. 차도·횡단보도에서는 게임보다 신호를 먼저 본다.</p>
+</div>
+
+<div id="run" class="screen">
+  <div class="top"><div class="gauge"><i id="gauge"></i></div><div class="hits" id="hitsDots">○○○</div></div>
+  <div class="nums">
+    <div class="num"><b id="nGap">-</b><span>뒤 m</span></div>
+    <div class="num"><b id="nPace">-</b><span>내 km/h</span></div>
+    <div class="num"><b id="nTime">0:00</b><span>시간 · <em id="nDist">0.00</em>km</span></div>
+  </div>
+  <canvas id="radar" width="720" height="720"></canvas>
+  <div class="enemy" id="enemyBox"><b id="eName">-</b><div class="st" id="eState">-</div></div>
+  <div class="banner" id="banner"></div>
+  <div class="ctl"><button id="pause">일시정지</button><button id="stop">종료</button></div>
+  <div class="dbg" id="dbg"></div>
+</div>
+
+<div id="result" class="screen">
+  <h1 id="rTitle">완주</h1>
+  <p class="sub" id="rSub"></p>
+  <table id="rTable"></table>
+  <div class="log" id="rLog"></div>
+  <button class="big" id="again">다시</button>
+  <button class="ghost" id="copy">결과 텍스트 복사</button>
+</div>
+
+<script><!--CORE--></script>
+<script><!--ANIMALS--></script>
+<script><!--REPLAYS--></script>
+<script>
+(() => {
+const $ = (s) => document.querySelector(s);
+const st = { mode: 'gps', courseM: 3000, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, t0: 0 };
+
+// ---------- 홈 ----------
+function seg(id, key, cast) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.remove('on')); b.classList.add('on'); st[key] = cast(b.dataset.v); }); }
+seg('#mode', 'mode', String); seg('#course', 'courseM', Number);
+const list = $('#animals');
+const sorted = [...ANIMALS].sort((a, b) => (a.track === b.track ? (a.track === 'A' ? a.tier - b.tier : (a.hits ? a.hits[1] : 0) - (b.hits ? b.hits[1] : 0)) : (a.track === 'A' ? -1 : 1)));
+for (const a of sorted) {
+  const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
+  const sp = a.constant ? `${a.sprintKmh} km/h 등속` : `스프린트 ${a.sprintKmh} km/h × ${a.sprintS}s`;
+  d.innerHTML = `<div class="tier ${a.track === 'B' ? 'b' : ''}">${a.track === 'A' ? 'A' + a.tier : 'B'}</div><div><div class="name">${a.nameKo}</div><div class="meta">${sp} · 30분 ${a.target30Kmh} km/h · 감지 ${a.detectCm / 100}m</div></div><div class="hits">10km/h 러너<br>피격 ${a.hits ? a.hits[1] : '-'}</div>`;
+  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; });
+  list.appendChild(d);
+}
+list.children[3].click();  // 기본: 닭
+
+// ---------- 오디오 ----------
+const A = { ctx: null, master: null, noise: null, hb: null, nextBeat: 0, lastSay: 0, ambient: null };
+function audioInit() {
+  if (A.ctx) { A.ctx.resume(); return; }
+  const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C();
+  A.master = A.ctx.createGain(); A.master.gain.value = 0.9; A.master.connect(A.ctx.destination);
+  const len = A.ctx.sampleRate * 2, buf = A.ctx.createBuffer(1, len, A.ctx.sampleRate), d = buf.getChannelData(0);
+  let last = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }   // brown noise
+  A.noise = buf;
+  // 초원 바람 앰비언스
+  const src = A.ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+  const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 400;
+  const g = A.ctx.createGain(); g.gain.value = 0.06; src.connect(lp); lp.connect(g); g.connect(A.master); src.start(); A.ambient = g;
+}
+function growl(intensity, sizeCms, approaching) {
+  if (!A.ctx) return; const t = A.ctx.currentTime, dur = 0.5 + intensity * 0.8;
+  const src = A.ctx.createBufferSource(); src.buffer = A.noise; src.playbackRate.value = (approaching ? 1.06 : 0.94);
+  const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 180 + 500 * (1 - Math.min(1, sizeCms / 3000)); bp.Q.value = 1.2;
+  const g = A.ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.5 * intensity + 0.05, t + 0.08); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  const osc = A.ctx.createOscillator(); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(40 + 50 * (1 - Math.min(1, sizeCms / 3000)), t); osc.frequency.exponentialRampToValueAtTime(30, t + dur);
+  const og = A.ctx.createGain(); og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(0.35 * intensity, t + 0.1); og.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(bp); bp.connect(g); g.connect(A.master); osc.connect(og); og.connect(A.master); src.start(t); src.stop(t + dur); osc.start(t); osc.stop(t + dur);
+}
+function breath(level) {
+  if (!A.ctx) return; const t = A.ctx.currentTime;
+  const src = A.ctx.createBufferSource(); src.buffer = A.noise; src.playbackRate.value = 1.8;
+  const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
+  const g = A.ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.25 * level, t + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+  src.connect(hp); hp.connect(g); g.connect(A.master); src.start(t); src.stop(t + 0.5);
+}
+function thump(vol) {
+  if (!A.ctx) return; const t = A.ctx.currentTime; const o = A.ctx.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(70, t); o.frequency.exponentialRampToValueAtTime(35, t + 0.12);
+  const g = A.ctx.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14); o.connect(g); g.connect(A.master); o.start(t); o.stop(t + 0.15);
+}
+function heartbeat(bpm, vol) { if (!A.ctx) return; const now = A.ctx.currentTime; if (now >= A.nextBeat) { thump(vol); setTimeout(() => thump(vol * 0.6), 130); A.nextBeat = now + 60 / bpm; } }
+function say(text, urgent = false) {
+  if (!('speechSynthesis' in window)) return;
+  const now = Date.now(); if (!urgent && now - A.lastSay < 6000) return; A.lastSay = now;
+  if (urgent) speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = urgent ? 1.15 : 1.0; u.pitch = 1.0;
+  const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.startsWith('ko')); if (v) u.voice = v;
+  speechSynthesis.speak(u); log('🔊 ' + text);
+}
+function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
+function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
+
+// ---------- 위치 ----------
+function startGps() {
+  st.watchId = navigator.geolocation.watchPosition(p => { st.lastFix = { at: Date.now(), lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy || 8 }; },
+    e => { log('GPS 오류 ' + e.code + ' ' + e.message); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+}
+function stopGps() { if (st.watchId !== null) navigator.geolocation.clearWatch(st.watchId); st.watchId = null; }
+async function wakeLock() { try { st.wake = await navigator.wakeLock.request('screen'); } catch (e) { log('wake lock 불가 ' + e.message); } }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && st.session && !st.wake) wakeLock(); });
+
+// ---------- 세션 ----------
+function log(s) { const t = st.session ? st.session.elapsed : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
+function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+function fixToRow(t, fix) {
+  if (!fix) return st.builder.push(t, st.lat0 || 0, st.lon0 || 0, 99);
+  if (Number.isNaN(st.lat0)) { st.lat0 = fix.lat; st.lon0 = fix.lon; }
+  const row = st.builder.push(t, fix.lat, fix.lon, fix.acc);
+  const sl = Number.isNaN(st.builder.lastLat) ? fix.lat : st.builder.lastLat, so = Number.isNaN(st.builder.lastLon) ? fix.lon : st.builder.lastLon;
+  const n = RW.haversineM(st.lat0, st.lon0, sl, st.lon0) * (sl >= st.lat0 ? 1 : -1), e = RW.haversineM(st.lat0, st.lon0, st.lat0, so) * (so >= st.lon0 ? 1 : -1);
+  if (!st.trailDist.length || row.distCm > st.trailDist[st.trailDist.length - 1]) { st.trailDist.push(row.distCm); st.trail.push([e, n]); }
+  return row;
+}
+function pointBehind(gapCm) {
+  const D = st.trailDist, P = st.trail; if (!D.length) return null;
+  const target = D[D.length - 1] - gapCm;
+  if (target <= D[0]) { const [x, y] = P[0]; const [x2, y2] = P.length > 1 ? P[1] : [x, y + 1]; const dx = x - x2, dy = y - y2, len = Math.max(0.01, Math.hypot(dx, dy)), back = (D[0] - target) / 100; return [x + dx / len * back, y + dy / len * back]; }
+  let i = D.length - 1; while (i > 0 && D[i - 1] > target) i--;
+  const d0 = D[i - 1], d1 = D[i], f = d1 === d0 ? 0 : (target - d0) / (d1 - d0); const [x0, y0] = P[i - 1], [x1, y1] = P[i];
+  return [x0 + (x1 - x0) * f, y0 + (y1 - y0) * f];
+}
+let prevState = null, prevGap = null, lastSprintCycle = -1, saidWarmupEnd = false, saidHalf = false, saidCooldown = false;
+function tick() {
+  const s = st.session, a = st.animal, t = st.tickN++;
+  let fix = null;
+  if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now() }; }
+  else { fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null; }
+  const row = fixToRow(t, fix);
+  if (st.manualPause) row.speedCms = 0;
+  const snap = s.tick(row);
+  // ---- 이벤트 → 소리·말 ----
+  const gapM = snap.gapCm / 100, approaching = prevGap !== null && snap.gapCm < prevGap; prevGap = snap.gapCm;
+  const near = 1 - Math.min(1, snap.gapCm / Math.max(a.detectCm, 6000));
+  if (snap.warmup && s.elapsed === 1) say(`여기는 러너웨이 관제. ${a.nameKo} 한 마리가 뒤 ${Math.round(gapM)}미터 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 3분간 워밍업. 아직 널 못 봤다.`, true);
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; say('워밍업 끝. 녀석이 널 봤다.', true); }
+  if (snap.ev.sprintStart || (snap.state === 'sprint' && prevState !== 'sprint')) {
+    const cyc = snap.cycle; const kmh = Math.round(RW.cycleParams(a, cyc)[0] * 0.036);
+    growl(1.0, a.sprintCms, true); buzz([80, 60, 200]); flash();
+    say(cyc === 0 ? `온다! 시속 ${kmh}킬로로 달려온다. 버텨!` : `또 온다. 아까보다 느리다, ${kmh}킬로. 버텨!`, true); saidHalf = false;
+  } else if (snap.state === 'tired' && prevState === 'sprint') { breath(1); say('지쳤다. 헐떡인다. 지금이 기회다, 밟아!', true); }
+  else if (snap.state === 'recover' && prevState === 'tired') { say('숨 고르는 중. 다시 올 거다.'); }
+  else if (snap.state === 'lost' && prevState !== 'lost') { say('GPS가 흔들린다. 녀석이 냄새를 잃었다.'); }
+  if (snap.ev.hit) { growl(1.0, a.sprintCms, false); buzz(500); flash(); say(`잡혔다! ${snap.hits}번째. 30초 페널티. 녀석이 뒤로 물러난다.`, true); }
+  if (snap.ev.reengage) say(`따라잡았다. 뒤 ${Math.round(snap.gapCm / 100)}미터.`, true);
+  if (snap.state === 'sprint' && snap.gauge >= 500 && !saidHalf) { saidHalf = true; say('게이지 절반! 뛰어!', true); }
+  if (snap.cooldown && !saidCooldown) { saidCooldown = true; say('쿨다운 구간. 녀석은 포기했다. 천천히.', true); }
+  // 상시 레이어
+  if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); if (t % 2 === 0) growl(0.3 + 0.5 * near, a.sprintCms, approaching); }
+  else if (snap.state === 'tired') { heartbeat(80, 0.15); if (t % 1 === 0) breath(0.3 + 0.5 * near); }
+  else if (snap.state === 'roam' || snap.state === 'recover') { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (near > 0.5 && t % 4 === 0) growl(0.15, a.sprintCms, approaching); }
+  if (A.ambient) A.ambient.gain.value = 0.04 + 0.04 * (1 - near);
+  prevState = snap.state;
+  render(snap, fix);
+  if (snap.done) finish();
+}
+const KO = { roam: '배회', sprint: '스프린트', tired: '지침', recover: '회복', lost: '냄새 잃음' };
+function render(snap, fix) {
+  const a = st.animal, s = st.session;
+  $('#gauge').style.width = (snap.gauge / 10) + '%';
+  $('#hitsDots').textContent = '●'.repeat(snap.hits) + '○'.repeat(Math.max(0, 3 - snap.hits));
+  $('#nGap').textContent = Math.round(snap.gapCm / 100);
+  $('#nPace').textContent = (snap.playerCms * 0.036).toFixed(1);
+  $('#nTime').textContent = fmt(s.elapsed); $('#nDist').textContent = (snap.distCm / 100000).toFixed(2);
+  const box = $('#enemyBox'); box.className = 'enemy ' + snap.state;
+  $('#eName').textContent = `${a.nameKo} · ${(snap.enemyCms * 0.036).toFixed(0)} km/h`;
+  $('#eState').textContent = `${KO[snap.state] || snap.state} · 사이클 ${snap.cycle + 1} · 30분 기준 ${a.target30Kmh} km/h`;
+  $('#banner').textContent = snap.warmup ? `워밍업 ${fmt(RW.S.WARMUP_S - s.elapsed + 1)} · 녀석은 아직 널 못 봤다` : snap.cooldown ? '쿨다운 · 적 정지' : (snap.paused || st.manualPause) ? '일시정지 · 적도 멈춤' : snap.state === 'lost' ? 'GPS 불안정 · 판정 동결' : '';
+  $('#dbg').textContent = fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s · ${st.mode}` : '신호 없음';
+  drawRadar(snap);
+}
+function drawRadar(snap) {
+  const c = $('#radar'), g = c.getContext('2d'), W = c.width, cx = W / 2, cy = W / 2; const a = st.animal;
+  const viewM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), k = (W / 2 - 10) / viewM;
+  g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
+  const P = st.trail, me = P.length ? P[P.length - 1] : [0, 0];
+  let bearing = 0; if (P.length > 5) { const q = P[P.length - 6]; bearing = Math.atan2(me[0] - q[0], me[1] - q[1]); }
+  g.save(); g.translate(cx, cy); g.rotate(-bearing);
+  // rings
+  g.strokeStyle = '#173129'; g.lineWidth = 1;
+  for (const r of [30, 50, 100, 150, 200, 250]) { if (r > viewM) break; g.beginPath(); g.arc(0, 0, r * k, 0, Math.PI * 2); g.stroke(); }
+  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(0, 0, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(0, 0, Math.min(viewM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  // sweep
+  const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, 0, 0) : null;
+  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.18)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(0, 0, viewM * k, 0, Math.PI * 2); g.fill(); }
+  // trail (rotate so bearing is up: x=east, y=north → screen)
+  const toS = ([e, n]) => [(e - me[0]) * k, -(n - me[1]) * k];
+  g.strokeStyle = 'rgba(63,242,165,0.45)'; g.lineWidth = 3; g.beginPath();
+  for (let i = Math.max(0, P.length - 400); i < P.length; i++) { const [x, y] = toS(P[i]); if (i === Math.max(0, P.length - 400)) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
+  // enemy
+  const ep = pointBehind(snap.gapCm);
+  if (ep && snap.state !== 'lost') {
+    const [x, y] = toS(ep); const col = snap.state === 'sprint' ? '255,74,61' : snap.state === 'tired' ? '255,154,60' : snap.state === 'recover' ? '120,140,135' : '150,150,150';
+    const pulse = snap.state === 'sprint' ? 1 + 0.25 * Math.sin(Date.now() / 90) : 1; const rad = (snap.state === 'sprint' ? 30 : snap.state === 'tired' ? 16 : 10) * k * pulse * 0.35 + 10;
+    const rg = g.createRadialGradient(x, y, 0, x, y, rad * 2.2); rg.addColorStop(0, `rgba(${col},0.95)`); rg.addColorStop(0.5, `rgba(${col},0.35)`); rg.addColorStop(1, `rgba(${col},0)`);
+    g.fillStyle = rg; g.beginPath(); g.arc(x, y, rad * 2.2, 0, Math.PI * 2); g.fill();
+    g.fillStyle = `rgba(${col},1)`; g.beginPath(); g.arc(x, y, 6, 0, Math.PI * 2); g.fill();
+    if (snap.state === 'sprint') { g.strokeStyle = `rgba(${col},0.6)`; g.lineWidth = 2; g.beginPath(); g.arc(x, y, 30 * k, 0, Math.PI * 2); g.stroke(); }
+    g.fillStyle = '#dfe9e4'; g.font = '22px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.fillText(`${Math.round(snap.gapCm / 100)}m`, x, y - rad * 2.2 - 6);
+  }
+  g.restore();
+  // me (always up)
+  g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(cx, cy - 14); g.lineTo(cx - 9, cy + 9); g.lineTo(cx + 9, cy + 9); g.closePath(); g.fill();
+  g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
+}
+function start() {
+  if (!st.animal) return;
+  audioInit(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
+  st.session = new RW.Session(st.animal, st.courseM * 100); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false;
+  prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false;
+  if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; }
+  else { startGps(); }
+  wakeLock();
+  $('#home').classList.remove('on'); $('#run').classList.add('on');
+  log(`시작 ${st.animal.nameKo} ${st.courseM}m ${st.mode}`);
+  st.timer = setInterval(tick, st.mode === 'replay' ? 100 : 1000);
+  requestAnimationFrame(function loop() { if (st.session && !st.session.done) { const s = st.session; if (s.lastSnap) drawRadar(s.lastSnap); requestAnimationFrame(loop); } });
+}
+const _tick = RW.Session.prototype.tick; RW.Session.prototype.tick = function (r) { const s = _tick.call(this, r); this.lastSnap = s; return s; };
+function finish() {
+  clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
+  const s = st.session, a = st.animal; if (!s) return;
+  say(s.done ? `도착. ${s.hits}번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', true);
+  $('#rTitle').textContent = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
+  $('#rSub').textContent = `${a.nameKo} · ${st.courseM / 1000}km · ${st.mode}`;
+  const rows = [['최종 시간(이동+페널티)', fmt(s.finalTimeS)], ['이동 시간', fmt(s.moving)], ['일시정지', fmt(s.paused)], ['피격', `${s.hits} (+${s.penaltyS}s)`], ['거리', (s.dist / 100000).toFixed(2) + ' km'], ['내 평균', (s.moving ? s.dist / s.moving * 0.036 : 0).toFixed(1) + ' km/h'], ['적 평균(활성)', (s.enemyActive ? s.enemyMoved / s.enemyActive * 0.036 : 0).toFixed(1) + ' km/h'], ['적 스프린트', s.enemy.sprints], ['최소 거리', (s.minGap === null ? '-' : Math.round(s.minGap / 100) + ' m')], ['GPS 동결', s.lost + ' s']];
+  $('#rTable').innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  $('#rLog').textContent = st.log.join('\n');
+  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), animal: a.id, course: st.courseM, mode: st.mode, hits: s.hits, failed: s.failed, final: s.finalTimeS, dist: s.dist }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-50))); } catch (e) { }
+  $('#run').classList.remove('on'); $('#result').classList.add('on'); st.session = null;
+}
+$('#start').addEventListener('click', start);
+$('#stop').addEventListener('click', finish);
+$('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
+$('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
+$('#copy').addEventListener('click', () => { const t = $('#rTitle').textContent + ' ' + $('#rSub').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });
+})();
+</script>
