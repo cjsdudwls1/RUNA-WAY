@@ -7,7 +7,7 @@
 ## 상태
 
 - PRD v0.9
-- 다음: M0 GPX 리플레이 시뮬레이터
+- M0 시뮬레이터 완료 (`sim/`). 다음: 티어 재배치 결정, 실주행 GPX 검증
 
 ## 문서
 
@@ -17,6 +17,8 @@
 | docs/prd/05-appendix.md | PRD 부록. 지표, 안전, 법률, 소셜, 비용 등 상세 |
 | docs/prd/06-tts-research.md | TTS 공급자 조사 |
 | docs/prd/07-art-directions.md | 아트·프론트엔드 방향 초안 5종 |
+| docs/prd/08-m0-findings.md | M0 시뮬 결과와 티어 재배치 제안 |
+| sim/ | GPX 리플레이 시뮬레이터 (Python, 정수 코어) |
 | docs/prd/04-animal-data.md | 추격자 동물 실측 데이터와 출처 |
 | docs/prd/02-decisions.md | 결정 로그 |
 | docs/prd/00-questionnaire.md | PRD 질문지 336개 |
