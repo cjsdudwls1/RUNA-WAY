@@ -18,6 +18,8 @@
 | docs/prd/06-tts-research.md | TTS 공급자 조사 |
 | docs/prd/07-art-directions.md | 아트·프론트엔드 방향 초안 5종 |
 | docs/prd/08-m0-findings.md | M0 시뮬 결과와 티어 재배치 제안 |
+| docs/prd/09-feedback.md | 사용자 피드백 로그와 조치 |
+| docs/app/index.html | 웹 프로토타입 (GitHub Pages용 사본) |
 | sim/ | GPX 리플레이 시뮬레이터 (Python, 정수 코어) |
 | core/ | Kotlin 코어. 상태 머신·판정·세션·GPX. Python과 골든 테스트로 일치 검증 |
 | android/ | 네이티브 앱 스캐폴드. 이 환경에서 미빌드 |
