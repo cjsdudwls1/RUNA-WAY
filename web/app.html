@@ -57,12 +57,14 @@
 
 <div id="home" class="screen on">
   <h1>러너웨이</h1>
-  <p class="sub">관제실 프로토타입 v0.2 · 진짜 동물의 속도와 지구력으로 쫓아온다</p>
+  <p class="sub">관제실 프로토타입 v0.3 · 진짜 동물의 속도와 지구력으로 쫓아온다</p>
   <div class="lbl">GPS 상태</div>
   <div class="card" id="gpsCard">확인 전. 아래 버튼을 눌러 권한과 신호를 확인한다.</div>
   <button class="ghost" id="gpsTest">GPS 확인</button>
   <div class="lbl">모드</div>
   <div class="seg" id="mode"><button data-v="gps" class="on">실주행 GPS</button><button data-v="replay">리플레이 데모 (실내, 10배속)</button></div>
+  <div class="lbl">워밍업 · 이 시간 동안은 안 잡힘. 없음이면 바로 추격</div>
+  <div class="seg" id="warmup"><button data-v="0">없음</button><button data-v="60">1분</button><button data-v="120" class="on">2분</button><button data-v="180">3분</button></div>
   <div class="lbl">거리</div>
   <div class="seg" id="course"><button data-v="1000">1 km</button><button data-v="3000" class="on">3 km</button><button data-v="5000">5 km</button></div>
   <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
@@ -104,14 +106,13 @@
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
-RW.S.WARMUP_S = 120;   // 프로토타입: 3분은 루즈하다는 피드백. 2분 + 접근 연출
-const st = { mode: 'gps', courseM: 3000, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null };
+const st = { mode: 'gps', courseM: 3000, warmupS: 120, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null };
 const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
 // ---------- 홈 ----------
 function seg(id, key, cast) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.remove('on')); b.classList.add('on'); st[key] = cast(b.dataset.v); }); }
-seg('#mode', 'mode', String); seg('#course', 'courseM', Number);
+seg('#mode', 'mode', String); seg('#course', 'courseM', Number); seg('#warmup', 'warmupS', Number);
 const list = $('#animals');
 const sorted = [...ANIMALS].sort((a, b) => (a.track === b.track ? (a.track === 'A' ? a.tier - b.tier : (a.hits ? a.hits[1] : 0) - (b.hits ? b.hits[1] : 0)) : (a.track === 'A' ? -1 : 1)));
 for (const a of sorted) {
@@ -265,10 +266,10 @@ function tick() {
   const near = Math.max(0, 1 - snap.gapCm / Math.max(a.detectCm + 5000, 8000));
   const left = RW.S.WARMUP_S - s.elapsed + 1;
   // ---- 대사 ----
-  if (s.elapsed === 1) say(`여기는 러너웨이 관제. ${a.nameKo} 한 마리가 뒤 ${Math.round(snap.gapCm / 100)}미터 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
+  if (s.elapsed === 1) say(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo}가 뒤 ${Math.round(snap.gapCm / 100)}미터. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} 한 마리가 뒤 ${Math.round(snap.gapCm / 100)}미터 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
   if (snap.warmup && left <= 60 && !said60) { said60 = true; say('1분 뒤 녀석이 널 본다. 뒤에서 소리가 난다.', true); }
   if (snap.warmup && left <= 15 && !said15) { said15 = true; say('곧이다. 페이스 올려.', true); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; say('녀석이 널 봤다!', true); cry('roam', cls, Math.max(near, 0.6)); }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { say('녀석이 널 봤다!', true); cry('roam', cls, Math.max(near, 0.6)); } }
   if (snap.state === 'sprint' && prevState !== 'sprint') {
     const cyc = snap.cycle; const kmh = Math.round(RW.cycleParams(a, cyc)[0] * 0.036);
     cry('sprint', cls, Math.max(near, 0.7), 1.0); buzz([80, 60, 200]); flash();
@@ -353,7 +354,9 @@ function drawRadar(snap) {
 function start() {
   if (!st.animal) return;
   audioInit(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
-  st.session = new RW.Session(st.animal, st.courseM * 100); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
+  RW.S.WARMUP_S = st.warmupS;
+  st.session = new RW.Session(st.animal, st.courseM * 100); st.builder = new RW.TrackBuilder();
+  if (st.warmupS === 0) st.session.enemy.reposition(st.animal.detectCm - RW.S.REENGAGE_INSIDE_CM);   // 워밍업 없음: 감지 반경 안에서 시작 st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
   wakeLock();
