@@ -427,7 +427,7 @@ class Session2D {
     this.warmGap = Math.min(RW.S.WARMUP_MIN_GAP_CM, animal.detectCm - RW.S.REENGAGE_INSIDE_CM);
     this.enemies = []; this.n = n;
     this.elapsed = 0; this.slow = 0; this.recent = []; this.hits = 0; this.failed = false; this.moving = 0; this.paused = 0; this.dist = 0; this.minGap = null;
-    this.enemyMoved = 0; this.enemyActive = 0; this.lost = 0; this.reengages = 0; this.done = false; this.first = true; this.prevDist = 0; this.spawned = false; this.sprints = 0;
+    this.enemyMoved = 0; this.enemyActive = 0; this.lost = 0; this.reengages = 0; this.done = false; this.first = true; this.prevDist = 0; this.spawned = false; this.sprints = 0; this.oriented = false;
   }
   spawn(px, py, heading) {
     const a = this.a; this.enemies = [];
@@ -441,9 +441,12 @@ class Session2D {
     this.spawned = true;
   }
   place(en, px, py, ang, dM) { en.x = px + Math.sin(ang) * dM; en.y = py + Math.cos(ang) * dM; }
-  tick(row, px, py, heading) {
+  tick(row, px, py, heading0) {
     if (this.first) { this.prevDist = row.distCm; this.first = false; }
+    const hKnown = !Number.isNaN(heading0), heading = hKnown ? heading0 : 0;
     if (!this.spawned) this.spawn(px, py, heading);
+    // 출발 직후엔 진행 방향을 모름 → 방향이 잡히면 무리를 '뒤'로 한 번 회전 (스프린트·피격 전까지만)
+    if (!this.oriented && hKnown) { this.oriented = true; if (this.hits === 0 && this.sprints === 0) for (const en of this.enemies) { const dx = en.x - px, dy = en.y - py, d = Math.hypot(dx, dy); this.place(en, px, py, Math.atan2(dx, dy) + heading, d); } }
     const a = this.a, S = RW.S, T = RW.T;
     const adv = row.distCm - this.prevDist; this.prevDist = row.distCm; this.elapsed++;
     this.recent.push(row.speedCms); if (this.recent.length > 5) this.recent.shift();
@@ -474,13 +477,17 @@ class Session2D {
       e.gap = Math.round(d * 100);
       // 회복 끝났는데 감지 밖 → 따라잡음(뒤·옆 재배치)
       if (e.cycle > en.lastCycle) { en.lastCycle = e.cycle; if (!warmup && !frozen && e.gap > a.detectCm) { this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'reengage', en }); } }
-      // 너무 멀어진 놈은 45초 뒤 앞쪽에 매복
-      if (!warmup && !frozen && e.gap > a.detectCm * 2) { en.far++; if (en.far >= 45) { en.far = 0; this.place(en, px, py, heading + (Math.random() - 0.5) * 2.1, a.detectCm / 100 + 30); e.reposition(a.detectCm + 3000); this.reengages++; events.push({ type: 'ambush', en }); } } else en.far = 0;
+      // 배회 중 너무 멀어진 놈은 30초 뒤 뒤·옆에서 재출현 (앞 배치는 직진 러너가 무조건 잡히므로 금지. 지침·회복 중엔 재출현 없음 = 피로 우회 방지)
+      if (!warmup && !frozen && e.state === 'roam' && e.gap > a.detectCm * 2) { en.far++; if (en.far >= 30) { en.far = 0; this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2.0, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'ambush', en }); } } else en.far = 0;
       en.prevState = prev;
     }
     const nearest = order.reduce((m, en) => (en.e.gap < m.e.gap ? en : m), order[0]);
     const hit = this.threat.tick(nearest.e.gap, row.accM, !warmup && !frozen);
-    if (hit) { this.hits++; this.place(nearest, px, py, heading + Math.PI, T.RESPAWN_GAP_CM / 100); nearest.e.reposition(T.RESPAWN_GAP_CM, true); if (this.hits >= T.MAX_HITS) this.failed = true; events.push({ type: 'hit', en: nearest }); }
+    if (hit) {
+      // 무리 전체가 물러남: 200m 뒤, 지친 상태 (1D 코어와 같은 피격 간격. 연쇄 피격 방지)
+      this.hits++; for (const en of this.enemies) { this.place(en, px, py, heading + Math.PI + (en === nearest ? 0 : (Math.random() - 0.5) * 1.6), T.RESPAWN_GAP_CM / 100); en.e.reposition(T.RESPAWN_GAP_CM, true); }
+      if (this.hits >= T.MAX_HITS) { this.failed = true; this.done = true; } events.push({ type: 'hit', en: nearest });
+    }
     if (this.minGap === null || nearest.e.gap < this.minGap) this.minGap = nearest.e.gap;
     this.dist = row.distCm; if (row.distCm >= this.courseCm) this.done = true;
     const snap = { t: row.t, playerCms: row.speedCms, distCm: row.distCm, state: nearest.e.state, enemyCms: nearest.e.speed, gapCm: nearest.e.gap, gauge: this.threat.gauge, hits: this.hits, failed: this.failed, paused, warmup, cooldown, accM: row.accM, cycle: nearest.e.cycle, done: this.done, events, enemies: this.enemies.map(en => ({ x: en.x, y: en.y, state: en.e.state, gap: en.e.gap, cycle: en.e.cycle })), nearestId: nearest.id };
@@ -491,7 +498,7 @@ class Session2D {
   get finalTimeS() { return this.moving + this.excessPauseS + this.penaltyS; }
 }
 function playerXY() { const P = st.trail; return P.length ? P[P.length - 1] : [0, 0]; }
-function playerHeading() { const P = st.trail; if (P.length > 5) { const q = P[P.length - 6], m = P[P.length - 1]; return Math.atan2(m[0] - q[0], m[1] - q[1]); } return 0; }
+function playerHeading() { const P = st.trail; if (P.length > 5) { const q = P[P.length - 6], m = P[P.length - 1]; return Math.atan2(m[0] - q[0], m[1] - q[1]); } return NaN; }
 let prevState = null, prevGap = null, saidWarmupEnd = false, saidHalf = false, saidCooldown = false, said60 = false, said15 = false;
 function tick() {
   const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
@@ -511,9 +518,9 @@ function tick() {
   for (const ev of snap.events) {
     const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
     if (ev.type === 'sprint') { const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036); cry('sprint', cls, Math.max(eNear, 0.7), 1.0); buzz([80, 60, 200]); flash(); say(ev.en.e.cycle === 0 ? `온다! 시속 ${kmh}킬로. 버텨!` : `또 온다. 아까보다 느리다, ${kmh}킬로. 버텨!`, true); saidHalf = false; }
-    else if (ev.type === 'hit') { cry('sprint', cls, 1, 1.0); buzz(500); flash(); say(`잡혔다! ${snap.hits}번째. 30초 페널티.`, true); }
+    else if (ev.type === 'hit') { cry('sprint', cls, 1, 1.0); buzz(500); flash(); say(`잡혔다! ${snap.hits}번째. 30초 페널티. 녀석들이 물러난다.`, true); }
     else if (ev.type === 'reengage') { cry('roam', cls, 0.7); say(`한 마리가 따라붙었다. 뒤 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
-    else if (ev.type === 'ambush') { cry('roam', cls, 0.5); say('앞쪽에 한 마리 더 있다. 조심.', true); }
+    else if (ev.type === 'ambush') { cry('roam', cls, 0.6); say(`한 마리가 돌아왔다. 옆 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
   }
   if (snap.state === 'tired' && prevState === 'sprint') { cry('tired', cls, Math.max(near, 0.5)); say('지쳤다. 헐떡인다. 지금이 기회다, 밟아!', true); }
   else if (snap.state === 'recover' && prevState === 'tired') { say('숨 고르는 중. 다시 올 거다.'); }
@@ -606,7 +613,7 @@ function start() {
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
   const s = st.session, a = st.animal; if (!s) return;
-  say(s.done ? `도착. ${s.hits}번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', true);
+  say(s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${s.hits}번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', true);
   const title = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
   $('#rLabel').textContent = title + ' · 최종 시간(이동 + 페널티)'; $('#rHero').textContent = fmt(s.finalTimeS); $('#rHero').className = 'hero' + (s.failed ? ' fail' : '');
   $('#rSub').textContent = `${EMOJI[a.id] || ''} ${a.nameKo} ${st.nPack}마리 · ${st.courseM / 1000}km · ${st.mode === 'gps' ? '실주행' : '리플레이'}`;
