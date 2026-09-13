@@ -81,7 +81,7 @@
 <div id="run" class="screen">
   <div class="top"><div class="gauge"><i id="gauge"></i></div><div class="hits" id="hitsDots">○○○</div></div>
   <div class="nums">
-    <div class="num"><b id="nGap">-</b><span>뒤 m</span></div>
+    <div class="num"><b id="nGap">-</b><span id="nGapL">거리 m</span></div>
     <div class="num"><b id="nPace">-</b><span>내 km/h</span></div>
     <div class="num"><b id="nTime">0:00</b><span>시간 · <em id="nDist">0.00</em>km</span></div>
   </div>
@@ -529,11 +529,16 @@ function render(snap, fix) {
   $('#gauge').style.width = (snap.gauge / 10) + '%';
   $('#hitsDots').textContent = '●'.repeat(snap.hits) + '○'.repeat(Math.max(0, 3 - snap.hits));
   $('#nGap').textContent = Math.round(snap.gapCm / 100);
+  { const e0 = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0]; $('#nGapL').textContent = (e0 ? dirWord(relBearing(e0)) : '거리') + ' m'; }
   $('#nPace').textContent = (snap.playerCms * 0.036).toFixed(1);
   $('#nTime').textContent = fmt(s.elapsed); $('#nDist').textContent = (snap.distCm / 100000).toFixed(2);
   const box = $('#enemyBox'); box.className = 'enemy ' + snap.state; $('#eIco').textContent = EMOJI[a.id] || '🐾';
-  $('#eName').textContent = `${a.nameKo} · ${(snap.enemyCms * 0.036).toFixed(0)} km/h`;
-  $('#eState').textContent = `가장 가까운 놈 ${KO[snap.state] || snap.state} · 사이클 ${snap.cycle + 1} · ${snap.enemies.filter(e => e.state === 'sprint').length}마리 스프린트 중`;
+  const ekmh = snap.enemyCms * 0.036;
+  $('#eName').textContent = `${a.nameKo} · ${ekmh < 10 ? ekmh.toFixed(1) : ekmh.toFixed(0)} km/h`;
+  const nEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
+  const dw = nEn ? dirWord(relBearing(nEn)) : '';
+  const nSpr = snap.enemies.filter(e => e.state === 'sprint').length;
+  $('#eState').textContent = `${dw} ${Math.round(snap.gapCm / 100)}m · ${KO[snap.state] || snap.state}` + (nSpr ? ' · 달려온다' : '') + ` · 무리 ${snap.enemies.length}`;
   const b = $('#banner'); b.className = 'banner';
   if (st.mode === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr + ' · 홈에서 GPS 확인'; }
   else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
