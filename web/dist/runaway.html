@@ -67,6 +67,8 @@
   <div class="seg" id="warmup"><button data-v="0">없음</button><button data-v="60">1분</button><button data-v="120" class="on">2분</button><button data-v="180">3분</button></div>
   <div class="lbl">적 수 · 무리 동물은 여러 마리, 단독 사냥꾼은 1~2마리 권장</div>
   <div class="seg" id="npack"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div>
+  <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap. 브이월드 키를 넣으면 한국 상세 다크 지도</div>
+  <input id="vkey" class="card" style="width:100%;box-sizing:border-box" placeholder="vworld.kr 인증키 (도메인 등록 필요)">
   <div class="lbl">말 많음 · 이어폰으로 듣는다. 적게면 정말 중요한 것만 말한다</div>
   <div class="seg" id="voice"><button data-v="quiet">적게</button><button data-v="normal" class="on">보통</button><button data-v="chatty">많이</button></div>
   <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로 지나간다</button>
@@ -437,7 +439,7 @@ function speak(key, variants, o) {
   VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
   VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
   VOICE.q.sort((a, b) => a.pri - b.pri);
-  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; }
+  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; setTimeout(pump, 60); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
   pump();
 }
 function pump() {
@@ -458,7 +460,7 @@ function pump() {
 function duck(k) {
   if (!A.ctx || !A.sfx) return; const t = A.ctx.currentTime;
   A.sfx.gain.cancelScheduledValues(t); A.sfx.gain.linearRampToValueAtTime(k, t + 0.15);
-  if (A.ambient) { A.ambient.gain.cancelScheduledValues(t); A.ambient.gain.linearRampToValueAtTime(0.06 * (k < 1 ? 0.4 : 1), t + 0.15); }
+  if (A.ambient) { A.ambient.gain.cancelScheduledValues(t); A.ambient.gain.linearRampToValueAtTime(Math.max(0.015, 0.06 * (k < 1 ? 0.4 : 1)), t + 0.15); }
 }
 // 기존 호출부 호환
 function say(text, urgent = false) { speak('legacy:' + text.slice(0, 12), text, { pri: urgent ? PRI.HIGH : PRI.NORM, cooldown: urgent ? 0 : 6 }); }
@@ -478,19 +480,25 @@ function startGps() {
     e => { st.gpsErr = (e.code === 1 ? '권한 거부' : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
 }
 function stopGps() { if (st.watchId !== null) navigator.geolocation.clearWatch(st.watchId); st.watchId = null; }
-async function wakeLock() { try { st.wake = await navigator.wakeLock.request('screen'); } catch (e) { log('wake lock 불가 ' + e.message); } }
+async function wakeLock() { try { st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', () => { st.wake = null; }); } catch (e) { log('wake lock 불가 ' + e.message); } }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && st.session && !st.wake) wakeLock(); });
 
 // ---------- 지도 타일 (아티팩트 뷰어에서는 차단됨 → 자동으로 레이더만) ----------
 // 타일 공급자. CARTO는 2026년부터 키를 요구해 워터마크가 찍힌다 → 키 없는 OSM 표준 타일 + 캔버스 반전으로 다크맵
 const TILE_SRC = {
+  // 브이월드 midnight: 진짜 다크 타일이라 반전 필터가 필요 없고 한국 골목 상세도가 OSM을 압도한다.
+  // 경로가 z/y/x 순서다(y가 먼저). 키는 vworld.kr에서 무료 발급, 서비스 도메인 등록 필수
+  vworld: { name: 'VWorld midnight', invert: false, credit: '© VWorld 국토교통부',
+         url: (x, y, z) => `https://api.vworld.kr/req/wmts/1.0.0/${TILE.key}/midnight/${z}/${y}/${x}.png` },
   osm: { name: 'OpenStreetMap', invert: true, credit: '© OpenStreetMap contributors',
          url: (x, y, z) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png` },
   carto: { name: 'CARTO dark', invert: false, credit: '© OpenStreetMap © CARTO',
          url: (x, y, z) => `https://${'abcd'[(x + y) % 4]}.basemaps.cartocdn.com/dark_all/${z}/${x}/${y}.png` },
 };
-const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0, src: 'osm' };
-const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.65) brightness(0.78) contrast(1.08)';
+const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0, src: 'osm', key: '' };
+try { TILE.key = localStorage.getItem('vworldKey') || ''; } catch (e) { }
+if (TILE.key) TILE.src = 'vworld';
+const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.22) brightness(0.78) contrast(1.08)';   // 채도가 높으면 반전된 도로가 분홍으로 뜬다
 function tileUrl(x, y) { return TILE_SRC[TILE.src].url(x, y, TILE.z); }
 function getTile(x, y) {
   const k = TILE.src + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
@@ -500,10 +508,16 @@ function getTile(x, y) {
     if (useCors) img.crossOrigin = 'anonymous';
     img.onload = () => { rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
     img.onerror = () => { if (useCors) { load(false); return; }   // CORS 헤더 없는 공급자 대비
-      TILE.fails++; if (TILE.loads === 0 && TILE.fails >= 4) st.tilesOk = false; };
+      TILE.fails++;
+      if (TILE.src === 'vworld' && TILE.loads === 0 && TILE.fails >= 4) {   // 키가 틀렸거나 도메인 미등록
+        TILE.src = 'osm'; TILE.cache.clear(); TILE.fails = 0; log('브이월드 타일 실패 → OSM으로 전환'); return;
+      }
+      if (TILE.loads === 0 && TILE.fails >= 4) st.tilesOk = false; };
     img.src = tileUrl(x, y);
   };
-  load(true); TILE.cache.set(k, rec); return rec;
+  load(true); TILE.cache.set(k, rec);
+  if (TILE.cache.size > 220) { const it = TILE.cache.keys(); for (let i = 0; i < 60; i++) TILE.cache.delete(it.next().value); }   // 30분 세션 메모리 상한
+  return rec;
 }
 function lonToX(lon, z) { return (lon + 180) / 360 * Math.pow(2, z); }
 function latToY(lat, z) { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z); }
@@ -512,7 +526,7 @@ function latToY(lat, z) { const r = lat * Math.PI / 180; return (1 - Math.log(Ma
 function log(s) { const t = st.session ? st.session.elapsed : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
 function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
 // GPS 튐 억제 상수. 정지 중 표류를 죽이고 실제 이동만 남긴다
-const GPSF = { DEAD_MIN_M: 4, DEAD_ACC_K: 0.8, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 1.2, HEAD_GPS_MS: 1.5, HEAD_BASE_M: 12, HEAD_EMA: 0.25 };
+const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 1.2, HEAD_GPS_MS: 1.5, HEAD_BASE_M: 12, HEAD_EMA: 0.25 };
 /** 서 있는가? 1순위는 도플러 속도, 없으면 최근 창의 전반부·후반부 무게중심 이동량으로 판정 */
 function isStanding(fix) {
   if (fix.spd !== null) return fix.spd < GPSF.STILL_MS;
@@ -653,6 +667,7 @@ class Session2D {
     const snap = { t: row.t, playerCms: row.speedCms, distCm: row.distCm, state: nearest.e.state, enemyCms: nearest.e.speed, gapCm: nearest.e.gap, gauge: this.threat.gauge, hits: this.hits, failed: this.failed, paused, warmup, cooldown, accM: row.accM, cycle: nearest.e.cycle, done: this.done, events, enemies: this.enemies.map(en => ({ x: en.x, y: en.y, state: en.e.state, gap: en.e.gap, cycle: en.e.cycle })), nearestId: nearest.id };
     this.lastSnap = snap; return snap;
   }
+  skip(n) { this.elapsed += n; this.paused += n; }   // 앱이 멈춰 있던 시간
   get penaltyS() { return this.hits * RW.T.HIT_PENALTY_S; }
   get excessPauseS() { return Math.max(0, this.paused - RW.S.PAUSE_CAP_S); }
   get finalTimeS() { return this.moving + this.excessPauseS + this.penaltyS; }
@@ -660,7 +675,21 @@ class Session2D {
 function playerXY() { const P = st.trail; return P.length ? P[P.length - 1] : [0, 0]; }
 function playerHeading() { return st.headRad; }
 let prevState = null, prevGap = null, saidWarmupEnd = false, saidHalf = false, saidCooldown = false, said60 = false, said15 = false;
+/** 게임 시계는 벽시계에서 온다. setInterval 발화 횟수로 세면 화면이 꺼져 쓰로틀될 때 시뮬레이션이 슬로모션이 된다 */
 function tick() {
+  if (st.mode === 'replay') { step(); return; }
+  const due = Math.floor((Date.now() - st.t0) / 1000);
+  let n = due - st.tickN;
+  if (n <= 0) return;
+  if (n > 3) {                       // 앱이 멈춰 있던 구간. 적만 달리게 두면 불공평하니 통째로 일시정지 처리
+    const skip = n - 1;
+    if (st.session) st.session.skip(skip);
+    st.tickN += skip; n = 1;
+    log(`공백 ${skip}초 · 일시정지 처리`);
+  }
+  for (let i = 0; i < n && st.session && !st.session.done; i++) step();
+}
+function step() {
   const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
   let fix = null;
   if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now() }; }
@@ -726,7 +755,7 @@ function tick() {
   else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); if (t % per === 0) cry('tired', cls, near * 0.8, 0.5, nrel); }
   else if (snap.state === 'recover') { heartbeat(60, 0.06); if (t % per === 0) cry('roam', cls, near * 0.5, 0.3, nrel); }
   else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (t % per === 0) cry('roam', cls, near, 0.4, nrel); }
-  if (A.ambient && !VOICE.speaking) A.ambient.gain.value = 0.04 + 0.04 * (1 - near);
+  if (A.ambient && !VOICE.speaking) A.ambient.gain.value = Math.max(0.015, 0.04 + 0.04 * (1 - near));   // 0이면 타이머가 언다
   prevState = snap.state;
   render(snap, fix);
   if (snap.done) finish();
@@ -778,7 +807,7 @@ function drawRadar(snap) {
   if (st.useMap && st.tilesOk !== false && st.lastLatLon) {
     const [lat, lon] = st.lastLatLon; const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
     const mPerTile = 40075016.686 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), tilePx = mPerTile * k;
-    const span = Math.ceil(viewM * 1.5 / mPerTile) + 1;
+    const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
     g.save(); g.globalAlpha = 0.9;
     const SRC = TILE_SRC[TILE.src];
     if (SRC.invert && 'filter' in g) g.filter = DARK_FILTER;
@@ -824,7 +853,8 @@ function start() {
   wakeLock();
   $('#home').classList.remove('on'); $('#run').classList.add('on');
   log(`시작 ${st.animal.nameKo} ${st.courseM}m ${st.mode}`);
-  st.timer = setInterval(tick, st.mode === 'replay' ? 100 : 1000);
+  st.t0 = Date.now();
+  st.timer = setInterval(tick, st.mode === 'replay' ? 100 : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
   requestAnimationFrame(function loop() { if (st.session && !st.session.done) { const s = st.session; if (s.lastSnap) drawRadar(s.lastSnap); requestAnimationFrame(loop); } });
 }
 function finish() {
@@ -849,6 +879,12 @@ $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
 seg('#voice', v => { VOICE.level = v; });
+$('#vkey').value = TILE.key;
+$('#vkey').addEventListener('change', e => {
+  TILE.key = e.target.value.trim();
+  try { localStorage.setItem('vworldKey', TILE.key); } catch (er) { }
+  TILE.src = TILE.key ? 'vworld' : 'osm'; TILE.cache.clear(); TILE.loads = 0; TILE.fails = 0; st.tilesOk = null;
+});
 $('#audioTest').addEventListener('click', () => {
   audioInit(); if (!st.animal) return;
   const cls = CLASS[st.animal.id] || 'small';
