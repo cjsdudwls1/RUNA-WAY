@@ -57,7 +57,7 @@
 
 <div id="home" class="screen on">
   <h1>러너웨이</h1>
-  <p class="sub">관제실 프로토타입 v0.4 · 진짜 동물의 속도와 지구력으로 쫓아온다</p>
+  <p class="sub">관제실 프로토타입 v0.5 · 진짜 동물의 속도와 지구력으로 쫓아온다</p>
   <div class="lbl">GPS 상태</div>
   <div class="card" id="gpsCard">확인 전. 아래 버튼을 눌러 권한과 신호를 확인한다.</div>
   <button class="ghost" id="gpsTest">GPS 확인</button>
@@ -67,6 +67,9 @@
   <div class="seg" id="warmup"><button data-v="0">없음</button><button data-v="60">1분</button><button data-v="120" class="on">2분</button><button data-v="180">3분</button></div>
   <div class="lbl">적 수 · 무리 동물은 여러 마리, 단독 사냥꾼은 1~2마리 권장</div>
   <div class="seg" id="npack"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div>
+  <div class="lbl">말 많음 · 이어폰으로 듣는다. 적게면 정말 중요한 것만 말한다</div>
+  <div class="seg" id="voice"><button data-v="quiet">적게</button><button data-v="normal" class="on">보통</button><button data-v="chatty">많이</button></div>
+  <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로 지나간다</button>
   <div class="lbl">거리</div>
   <div class="seg" id="course"><button data-v="1000">1 km</button><button data-v="3000" class="on">3 km</button><button data-v="5000">5 km</button></div>
   <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
@@ -286,7 +289,7 @@ const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chi
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
 // ---------- 홈 ----------
-function seg(id, key, cast) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.remove('on')); b.classList.add('on'); st[key] = cast(b.dataset.v); }); }
+function seg(id, key, cast) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.remove('on')); b.classList.add('on'); if (typeof key === 'function') key(b.dataset.v); else st[key] = cast(b.dataset.v); }); }
 seg('#mode', 'mode', String); seg('#course', 'courseM', Number); seg('#warmup', 'warmupS', Number); seg('#npack', 'nPack', Number);
 const list = $('#animals');
 const sorted = [...ANIMALS].sort((a, b) => (a.track === b.track ? (a.track === 'A' ? a.tier - b.tier : (a.hits ? a.hits[1] : 0) - (b.hits ? b.hits[1] : 0)) : (a.track === 'A' ? -1 : 1)));
@@ -318,21 +321,51 @@ function audioInit() {
   const src = A.ctx.createBufferSource(); src.buffer = buf; src.loop = true;
   const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 400;           // 바람 = 브라운 노이즈 + 400Hz 로우패스
   const g = A.ctx.createGain(); g.gain.value = 0.06; src.connect(lp); lp.connect(g); g.connect(A.master); src.start(); A.ambient = g;
+  A.sfx = A.ctx.createGain(); A.sfx.gain.value = 1; A.sfx.connect(A.master);      // 동물 소리 버스. 말할 때 여기를 줄인다
+  A.duck = 1;
   // 실제 샘플(있으면) 디코드
   for (const k in (window.SOUNDS || {})) { const b = atob(SOUNDS[k]); const arr = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) arr[i] = b.charCodeAt(i); A.ctx.decodeAudioData(arr.buffer.slice(0)).then(buf => { A.samples[k] = buf; }).catch(() => { }); }
 }
 /** 거리 기반 출력 체인: 게인은 거리^1.5로, 멀면 로우패스로 먹먹하게. 피치는 건드리지 않는다(기계음 방지). */
-function out(near) {
-  const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300 + 5000 * near * near;
-  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5); lp.connect(g); g.connect(A.master); return { node: lp, gain: g };
+/** near=0(멀다)~1(붙었다), rel=내 진행방향 기준 상대 방위(0 정면, +오른쪽, ±π 뒤).
+ *  좌우는 스테레오 패닝, 앞뒤는 음색으로 구분한다. 뒤는 둔탁, 앞은 밝게. 사람 귀가 실제로 그렇게 듣는다 */
+function out(near, rel) {
+  const behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;      // 0=정면 1=바로 뒤
+  const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass';
+  lp.frequency.value = (300 + 5000 * near * near) * (1 - 0.45 * behind);
+  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 - 0.15 * behind);
+  let tail = g;
+  if (rel !== undefined && A.ctx.createStereoPanner) {
+    const pn = A.ctx.createStereoPanner();
+    pn.pan.value = Math.max(-1, Math.min(1, Math.sin(rel) * 0.95));
+    g.connect(pn); tail = pn;
+  }
+  lp.connect(g); tail.connect(A.sfx || A.master); return { node: lp, gain: g };
 }
-function playSample(key, near) { const b = A.samples[key]; if (!b) return false; const s = A.ctx.createBufferSource(); s.buffer = b; const o = out(near); s.connect(o.node); s.start(); return true; }
+/** 내 진행 방향 기준 적의 상대 방위 */
+function relBearing(en) {
+  const [px, py] = playerXY();
+  const abs = Math.atan2(en.x - px, en.y - py);
+  let r = abs - (Number.isNaN(st.headRad) ? 0 : st.headRad);
+  while (r > Math.PI) r -= Math.PI * 2; while (r < -Math.PI) r += Math.PI * 2;
+  return r;
+}
+/** 말로 하는 방향. 여덟 방위가 아니라 러너가 즉시 알아듣는 다섯 가지만 */
+function dirWord(rel) {
+  const d = Math.abs(rel), side = rel > 0 ? '오른쪽' : '왼쪽';
+  if (d < Math.PI / 8) return '정면';
+  if (d > Math.PI * 7 / 8) return '바로 뒤';
+  if (d < Math.PI * 3 / 8) return side + ' 앞';
+  if (d < Math.PI * 5 / 8) return side;
+  return side + ' 뒤';
+}
+function playSample(key, near, rel) { const b = A.samples[key]; if (!b) return false; const s = A.ctx.createBufferSource(); s.buffer = b; const o = out(near, rel); s.connect(o.node); s.start(); return true; }
 function env(g, t, a, peak, dur) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); }
 // 동물군별 절차 합성. 실제 샘플이 있으면 그걸 우선.
-function cry(kind, cls, near, intensity = 1) {
+function cry(kind, cls, near, intensity = 1, rel) {
   if (!A.ctx || near <= 0.02) return; const a = st.animal;
-  if (playSample(`${a.id}_${kind}`, near) || playSample(`${cls}_${kind}`, near)) return;
-  const t = A.ctx.currentTime, o = out(near);
+  if (playSample(`${a.id}_${kind}`, near, rel) || playSample(`${cls}_${kind}`, near, rel)) return;
+  const t = A.ctx.currentTime, o = out(near, rel);
   if (cls === 'bird') {            // 꼬꼬댁: FM 버스트 3~5회
     const n = kind === 'sprint' ? 5 : 3;
     for (let i = 0; i < n; i++) { const osc = A.ctx.createOscillator(), g = A.ctx.createGain(); osc.type = 'square'; const t0 = t + i * 0.13;
@@ -372,14 +405,48 @@ function thump(vol) {
   const g = A.ctx.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14); o.connect(g); g.connect(A.master); o.start(t); o.stop(t + 0.15);
 }
 function heartbeat(bpm, vol) { if (!A.ctx) return; const now = A.ctx.currentTime; if (now >= A.nextBeat) { thump(vol); setTimeout(() => thump(vol * 0.6), 130); A.nextBeat = now + 60 / bpm; } }
-function say(text, urgent = false) {
-  if (!('speechSynthesis' in window)) return;
-  const now = Date.now(); if (!urgent && now - A.lastSay < 6000) return; A.lastSay = now;
-  if (urgent) speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = urgent ? 1.15 : 1.0;
-  const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.startsWith('ko')); if (v) u.voice = v;
-  speechSynthesis.speak(u); log('🔊 ' + text);
+const PRI = { CRIT: 0, HIGH: 1, NORM: 2, LOW: 3 };
+// 발화 스케줄러. 우선순위 큐 + 최소 간격 + 키별 쿨다운 + 유통기한.
+// 러너는 화면을 못 본다. 그렇다고 쉴 새 없이 떠들면 다음 세션에 음소거당한다.
+const VOICE = { on: true, level: 'normal', q: [], speaking: false, lastAt: 0, keyAt: {}, rot: {}, GAP_MS: 3500 };
+function pickVar(key, v) { if (!Array.isArray(v)) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
+/** key: 같은 종류의 말을 묶는 이름. variants: 문장 배열(돌아가며 쓴다). o.pri/o.cooldown(초)/o.ttl(초) */
+function speak(key, variants, o) {
+  o = o || {}; const pri = o.pri === undefined ? PRI.NORM : o.pri, now = Date.now();
+  if (!VOICE.on || !('speechSynthesis' in window)) return;
+  if (VOICE.level === 'quiet' && pri > PRI.HIGH) return;
+  if (pri === PRI.LOW && VOICE.level !== 'chatty') return;
+  const cd = (o.cooldown || 0) * 1000;
+  if (cd && now - (VOICE.keyAt[key] || -1e9) < cd) return;
+  VOICE.keyAt[key] = now;
+  VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
+  VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 });
+  VOICE.q.sort((a, b) => a.pri - b.pri);
+  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; }
+  pump();
 }
+function pump() {
+  if (VOICE.speaking || !VOICE.q.length) return;
+  const now = Date.now(), wait = VOICE.GAP_MS - (now - VOICE.lastAt);
+  if (wait > 0 && VOICE.q[0].pri > PRI.CRIT) { clearTimeout(VOICE.t); VOICE.t = setTimeout(pump, wait); return; }
+  const it = VOICE.q.shift(); if (!it || now > it.ttl) { if (VOICE.q.length) pump(); return; }
+  const u = new SpeechSynthesisUtterance(it.text); u.lang = 'ko-KR';
+  u.rate = it.pri === PRI.CRIT ? 1.2 : it.pri === PRI.HIGH ? 1.1 : 1.0;
+  const v = speechSynthesis.getVoices().find(x => x.lang && x.lang.startsWith('ko')); if (v) u.voice = v;
+  // 이벤트에만 의존하면 안 된다. 일부 안드로이드 웹뷰는 onstart/onend를 안 쏜다
+  VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
+  u.onend = u.onerror = () => { VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
+  speechSynthesis.speak(u); log('말: ' + it.text);
+  setTimeout(() => { if (VOICE.speaking) { VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); } }, 1000 + it.text.length * 220);  // onend 유실 대비
+}
+/** 말할 때 동물 소리와 바람을 낮춘다. 말이 묻히면 말한 의미가 없다 */
+function duck(k) {
+  if (!A.ctx || !A.sfx) return; const t = A.ctx.currentTime;
+  A.sfx.gain.cancelScheduledValues(t); A.sfx.gain.linearRampToValueAtTime(k, t + 0.15);
+  if (A.ambient) { A.ambient.gain.cancelScheduledValues(t); A.ambient.gain.linearRampToValueAtTime(0.06 * (k < 1 ? 0.4 : 1), t + 0.15); }
+}
+// 기존 호출부 호환
+function say(text, urgent = false) { speak('legacy:' + text.slice(0, 12), text, { pri: urgent ? PRI.HIGH : PRI.NORM, cooldown: urgent ? 0 : 6 }); }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
 
@@ -594,27 +661,30 @@ function tick() {
   const [px, py] = playerXY();
   const snap = s.tick(row, px, py, playerHeading());
   const near = Math.max(0, 1 - snap.gapCm / Math.max(a.detectCm + 5000, 8000));
+  const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
+  const nrel = nearEn ? relBearing(nearEn) : undefined;
   const left = RW.S.WARMUP_S - s.elapsed + 1;
   if (s.elapsed === 1) say(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
   if (snap.warmup && left <= 60 && !said60) { said60 = true; say('1분 뒤 녀석들이 널 본다.', true); }
   if (snap.warmup && left <= 15 && !said15) { said15 = true; say('곧이다. 페이스 올려.', true); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { say('들켰다!', true); cry('roam', cls, Math.max(near, 0.6)); } }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { say('들켰다!', true); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
   for (const ev of snap.events) {
     const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
-    if (ev.type === 'sprint') { const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036); cry('sprint', cls, Math.max(eNear, 0.7), 1.0); buzz([80, 60, 200]); flash(); say(ev.en.e.cycle === 0 ? `온다! 시속 ${kmh}킬로. 버텨!` : `또 온다. 아까보다 느리다, ${kmh}킬로. 버텨!`, true); saidHalf = false; }
-    else if (ev.type === 'hit') { cry('sprint', cls, 1, 1.0); buzz(500); flash(); say(`잡혔다! ${snap.hits}번째. 30초 페널티. 녀석들이 물러난다.`, true); }
-    else if (ev.type === 'reengage') { cry('roam', cls, 0.7); say(`한 마리가 따라붙었다. 뒤 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
-    else if (ev.type === 'ambush') { cry('roam', cls, 0.6); say(`한 마리가 돌아왔다. 옆 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
+    const erel = relBearing(ev.en);
+    if (ev.type === 'sprint') { const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036); cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel); buzz([80, 60, 200]); flash(); say(ev.en.e.cycle === 0 ? `온다! 시속 ${kmh}킬로. 버텨!` : `또 온다. 아까보다 느리다, ${kmh}킬로. 버텨!`, true); saidHalf = false; }
+    else if (ev.type === 'hit') { cry('sprint', cls, 1, 1.0, erel); buzz(500); flash(); say(`잡혔다! ${snap.hits}번째. 30초 페널티. 녀석들이 물러난다.`, true); }
+    else if (ev.type === 'reengage') { cry('roam', cls, 0.7, 1, erel); say(`한 마리가 따라붙었다. 뒤 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
+    else if (ev.type === 'ambush') { cry('roam', cls, 0.6, 1, erel); say(`한 마리가 돌아왔다. 옆 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
   }
-  if (snap.state === 'tired' && prevState === 'sprint') { cry('tired', cls, Math.max(near, 0.5)); say('지쳤다. 헐떡인다. 지금이 기회다, 밟아!', true); }
+  if (snap.state === 'tired' && prevState === 'sprint') { cry('tired', cls, Math.max(near, 0.5), 1, nrel); say('지쳤다. 헐떡인다. 지금이 기회다, 밟아!', true); }
   else if (snap.state === 'recover' && prevState === 'tired') { say('숨 고르는 중. 다시 올 거다.'); }
   else if (snap.state === 'lost' && prevState !== 'lost') { say('GPS가 흔들린다. 녀석들이 냄새를 잃었다.'); }
   if (snap.state === 'sprint' && snap.gauge >= 500 && !saidHalf) { saidHalf = true; say('게이지 절반! 뛰어!', true); }
   if (snap.cooldown && !saidCooldown) { saidCooldown = true; say('쿨다운 구간. 녀석들은 포기했다. 천천히.', true); }
-  if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); if (t % 20 === 10) cry('roam', cls, Math.max(0.15, near * 0.6), 0.5); }
-  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); if (t % 2 === 0) cry('sprint', cls, near, 0.6 + 0.4 * near); }
+  if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); if (t % 20 === 10) cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel); }
+  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); if (t % 2 === 0) cry('sprint', cls, near, 0.6 + 0.4 * near, nrel); }
   else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); }
-  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (t % 6 === 0) cry('roam', cls, near, 0.4); }
+  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (t % 6 === 0) cry('roam', cls, near, 0.4, nrel); }
   if (A.ambient) A.ambient.gain.value = 0.04 + 0.04 * (1 - near);
   prevState = snap.state;
   render(snap, fix);
@@ -724,6 +794,14 @@ $('#start').addEventListener('click', start);
 $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
+seg('#voice', v => { VOICE.level = v; });
+$('#audioTest').addEventListener('click', () => {
+  audioInit(); if (!st.animal) return;
+  const cls = CLASS[st.animal.id] || 'small';
+  // 왼쪽 뒤에서 정면을 지나 오른쪽 뒤로. 좌우와 앞뒤가 구분되는지 귀로 확인한다
+  [-2.4, -1.2, 0, 1.2, 2.4].forEach((rel, i) => setTimeout(() => cry('roam', cls, 0.85, 1, rel), i * 750));
+  setTimeout(() => speak('test', `${st.animal.nameKo}. 지금 소리가 왼쪽에서 오른쪽으로 지나갔으면 정상이다.`, { pri: PRI.CRIT }), 4200);
+});
 $('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
 $('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });
 })();
