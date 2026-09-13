@@ -90,9 +90,11 @@
   <canvas id="radar" width="720" height="720"></canvas>
   <div class="enemy" id="enemyBox"><div class="big-ico" id="eIco">🐔</div><div><b id="eName">-</b><div class="st" id="eState">-</div></div></div>
   <div class="banner" id="banner"></div>
-  <div class="ctl"><button id="pause">일시정지</button><button id="mapToggle">지도/레이더</button><button id="stop">종료</button></div>
+  <div class="ctl"><button id="pause">일시정지</button><button id="mapToggle">지도/레이더</button><button id="pocket">주머니</button><button id="stop">종료</button></div>
   <div class="dbg" id="dbg"></div>
 </div>
+
+<div id="pocketCover" style="display:none;position:fixed;inset:0;background:#000;z-index:99;align-items:center;justify-content:center;color:#1d3a30;font:14px monospace">화면 꺼둠 · 탭하면 돌아온다</div>
 
 <div id="result" class="screen">
   <div class="hero-l" id="rLabel">최종 시간</div>
@@ -143,7 +145,10 @@ const A = { ctx: null, master: null, noise: null, nextBeat: 0, lastSay: 0, ambie
 function audioInit() {
   if (A.ctx) { A.ctx.resume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C();
-  A.master = A.ctx.createGain(); A.master.gain.value = 0.9; A.master.connect(A.ctx.destination);
+  A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
+  const lim = A.ctx.createDynamicsCompressor();            // 절차 합성이 겹치면 클리핑한다
+  lim.threshold.value = -6; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.003; lim.release.value = 0.15;
+  A.master.connect(lim); lim.connect(A.ctx.destination);
   const len = A.ctx.sampleRate * 2, buf = A.ctx.createBuffer(1, len, A.ctx.sampleRate), d = buf.getChannelData(0);
   let last = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }   // 브라운 노이즈(랜덤 워크)
   A.noise = buf;
@@ -162,11 +167,11 @@ function out(near, rel) {
   const behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;      // 0=정면 1=바로 뒤
   const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass';
   lp.frequency.value = (300 + 5000 * near * near) * (1 - 0.45 * behind);
-  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 - 0.15 * behind);
+  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 + 0.12 * behind);   // 뒤가 더 조용하면 추격 게임이 아니다
   let tail = g;
   if (rel !== undefined && A.ctx.createStereoPanner) {
     const pn = A.ctx.createStereoPanner();
-    pn.pan.value = Math.max(-1, Math.min(1, Math.sin(rel) * 0.95));
+    pn.pan.value = Math.max(-0.7, Math.min(0.7, Math.sin(rel) * 0.7));   // 한쪽 귀가 완전히 비면 고장으로 들린다
     g.connect(pn); tail = pn;
   }
   lp.connect(g); tail.connect(A.sfx || A.master); return { node: lp, gain: g };
@@ -261,6 +266,9 @@ function budgetOk(cost) {
 // 리플레이는 10배속. 벽시계 기준 쿨다운이 세션 시간으로는 10배가 되므로 배속만큼 줄인다
 function vrate() { return st.mode === 'replay' ? 10 : 1; }
 function speakIntro(t) { speak('intro', t, { pri: PRI.CRIT }); }
+const NUM_KO = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+/** TTS는 "3마리"를 "삼마리"로 읽는다. 수 세는 말은 고유어로 바꿔 넣는다 */
+function numKo(n) { return NUM_KO[n] || String(n); }
 function pickVar(key, v) { if (!Array.isArray(v)) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
 /** key: 같은 종류의 말을 묶는 이름. variants: 문장 배열(돌아가며 쓴다). o.pri/o.cooldown(초)/o.ttl(초) */
 function speak(key, variants, o) {
@@ -275,7 +283,7 @@ function speak(key, variants, o) {
   VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
   VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
   VOICE.q.sort((a, b) => a.pri - b.pri);
-  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; setTimeout(pump, 60); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
+  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
   pump();
 }
 function pump() {
@@ -304,16 +312,34 @@ function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
 
 // ---------- 위치 ----------
+// 자이로 각속도. 폰이 주머니에 있어도 몸이 돈 만큼 폰도 돈다.
+// 장착 방향을 몰라도 "지금 안 돌고 있다"는 판정은 정확하다. 정지 중 지도가 도는 것을 뿌리에서 막는다
+const GYRO = { on: false, rate: 0, at: 0 };
+function startGyro() {
+  if (GYRO.on || typeof window.DeviceOrientationEvent === 'undefined') return;
+  const h = (e) => {
+    if (e.alpha === null || e.alpha === undefined) return;
+    const now = Date.now(); const a = e.alpha * Math.PI / 180;
+    if (GYRO.at) { let d = a - GYRO.last; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
+      const dt = Math.max(0.02, (now - GYRO.at) / 1000);
+      GYRO.rate = GYRO.rate * 0.7 + Math.abs(d / dt) * 0.3; }
+    GYRO.last = a; GYRO.at = now; GYRO.on = true;
+  };
+  window.addEventListener('deviceorientationabsolute', h, true);
+  window.addEventListener('deviceorientation', h, true);
+}
 function startGps() {
+  startGyro();
   st.gpsErr = null; st.fixCount = 0;
   if (!navigator.geolocation) { st.gpsErr = '위치 미지원 브라우저'; return; }
   st.watchId = navigator.geolocation.watchPosition(p => {
       const c = p.coords; st.fixCount++;
       const num = (v) => (typeof v === 'number' && isFinite(v) && v >= 0) ? v : null;
-      st.lastFix = { at: Date.now(), lat: c.latitude, lon: c.longitude, acc: num(c.accuracy) || 8, spd: num(c.speed), hdg: num(c.heading) };
+      const ac = num(c.accuracy);
+      st.lastFix = { at: Date.now(), lat: c.latitude, lon: c.longitude, acc: ac === null ? 8 : ac, spd: num(c.speed), hdg: num(c.heading) };
       st.gpsErr = null;
     },
-    e => { st.gpsErr = (e.code === 1 ? '권한 거부' : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+    e => { st.gpsErr = (e.code === 1 ? '권한 거부' : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
 }
 function stopGps() { if (st.watchId !== null) navigator.geolocation.clearWatch(st.watchId); st.watchId = null; }
 async function wakeLock() { try { st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', () => { st.wake = null; }); } catch (e) { log('wake lock 불가 ' + e.message); } }
@@ -362,7 +388,7 @@ function latToY(lat, z) { const r = lat * Math.PI / 180; return (1 - Math.log(Ma
 function log(s) { const t = st.session ? st.session.elapsed : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
 function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
 // GPS 튐 억제 상수. 정지 중 표류를 죽이고 실제 이동만 남긴다
-const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 1.2, HEAD_GPS_MS: 1.5, HEAD_BASE_M: 12, HEAD_EMA: 0.25 };
+const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 1.2, HEAD_GPS_MS: 1.5, HEAD_BASE_M: 8, HEAD_EMA: 0.25 };
 /** 서 있는가? 1순위는 도플러 속도, 없으면 최근 창의 전반부·후반부 무게중심 이동량으로 판정 */
 function isStanding(fix) {
   if (fix.spd !== null) return fix.spd < GPSF.STILL_MS;
@@ -391,6 +417,8 @@ function trackAnchor(fix) {
 function updateHeading(fix, row) {
   const spd = fix && fix.spd !== null ? fix.spd : row.speedCms / 100;
   if (spd < GPSF.HEAD_MIN_MS) return;
+  // 자이로가 "안 돌고 있다"고 하면 GPS 잡음만으로 방향을 바꾸지 않는다 (0.25 rad/s = 14도/초)
+  if (GYRO.on && GYRO.rate < 0.25 && !Number.isNaN(st.headRad)) return;
   let target = NaN;
   if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) target = fix.hdg * Math.PI / 180;
   else {
@@ -411,6 +439,9 @@ function fixToRow(t, fix) {
   if (fix) { trackAnchor(fix); st.holdN = 0; } else st.holdN++;
   const h = st.hold;
   if (!h) return null;                                    // 첫 위치 확보 전 = 아직 세션 시작 안 함
+  // 안드로이드 12+ '대략적 위치'만 허용하면 정확도가 수백 m다. 그 상태로는 게임이 성립하지 않는다
+  st.coarse = h.acc > 100;
+  if (st.coarse && !st.gpsReady) return null;
   if (Number.isNaN(st.lat0)) { st.lat0 = h.lat; st.lon0 = h.lon; }
   const row = st.builder.push(t, h.lat, h.lon, h.acc);
   if (fix && fix.spd !== null) row.speedCms = Math.round(fix.spd * 100);   // 도플러 속도가 위치 차분보다 정확
@@ -491,7 +522,11 @@ class Session2D {
       if (!warmup && !frozen && e.state === 'roam' && e.gap > a.detectCm * 2) { en.far++; if (en.far >= 30) { en.far = 0; this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2.0, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'ambush', en }); } } else en.far = 0;
       en.prevState = prev;
     }
-    const nearest = order.reduce((m, en) => (en.e.gap < m.e.gap ? en : m), order[0]);
+    // 최근접 교체에 히스테리시스. 없으면 아무 사건 없이 소리의 상태와 방향이 튄다
+    const best = order.reduce((m, en) => (en.e.gap < m.e.gap ? en : m), order[0]);
+    const cur = this.enemies.find(en => en.id === this.lastNearest);
+    const nearest = (cur && cur !== best && cur.e.gap - best.e.gap < 300) ? cur : best;
+    this.lastNearest = nearest.id;
     const hit = this.threat.tick(nearest.e.gap, row.accM, !warmup && !frozen);
     if (hit) {
       // 무리 전체가 물러남: 200m 뒤, 지친 상태 (1D 코어와 같은 피격 간격. 연쇄 피격 방지)
@@ -533,7 +568,7 @@ function step() {
   const row = fixToRow(t, fix);
   if (!row) {                                   // GPS 첫 위치 대기. 타이머도 적도 아직 없다
     st.tickN = 0;
-    if (!st.saidWait) { st.saidWait = true; speak('wait', '위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', { pri: PRI.CRIT }); }
+    if (!st.saidWait) { st.saidWait = true; speak('wait', st.coarse ? '위치 정확도가 너무 낮다. 크롬 위치 권한에서 정확한 위치를 켜라.' : '위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', { pri: PRI.CRIT }); }
     render(null, fix); return;
   }
   if (!st.gpsReady) { st.gpsReady = true; if (st.mode === 'gps') log('첫 위치 확보 acc ' + Math.round(st.hold.acc) + 'm'); }
@@ -544,7 +579,7 @@ function step() {
   const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const nrel = nearEn ? relBearing(nearEn) : undefined;
   const left = RW.S.WARMUP_S - s.elapsed + 1;
-  if (s.elapsed === 1) speakIntro(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
+  if (s.elapsed === 1) speakIntro(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${numKo(st.nPack)} 마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${numKo(st.nPack)} 마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
   if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', '1분 뒤 녀석들이 널 본다.', { pri: PRI.HIGH }); }
   if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', '곧이다. 페이스 올려.', { pri: PRI.HIGH }); }
   if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', '들켰다!', { pri: PRI.HIGH, ttl: 2 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
@@ -564,7 +599,7 @@ function step() {
     }
     else if (ev.type === 'hit') {
       cry('sprint', cls, 1, 1.0, erel); buzz(500); flash();
-      speak('hit', snap.hits >= 3 ? '세 번째다. 끝났다.' : `잡혔다. ${snap.hits}번째. 물러난다.`, { pri: PRI.CRIT });
+      speak('hit', snap.hits >= 3 ? '세 번째다. 끝났다.' : `잡혔다. ${numKo(snap.hits)} 번째. 물러난다.`, { pri: PRI.CRIT });
     }
     else if (ev.type === 'reengage' || ev.type === 'ambush') {
       // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
@@ -582,18 +617,23 @@ function step() {
   }
   else if (snap.state === 'recover' && prevState === 'tired') speak('recover', ['숨 고르는 중. 다시 올 거다.', '멀어진다. 아직 끝난 게 아니다.'], { pri: PRI.LOW, cooldown: 60, cost: 1 });
   else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', 'GPS가 흔들린다. 녀석들이 냄새를 잃었다.', { pri: PRI.NORM, cooldown: 120 }); }
-  if (snap.state === 'sprint' && snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', '게이지 절반! 뛰어!', { pri: PRI.CRIT }); }
+  if (snap.gauge < 200) saidHalf = false;                 // 벗어나면 다시 무장. 교전마다 한 번은 경고해야 한다
+  if (snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', ['절반이다. 뛰어!', '잡힌다. 밟아!'], { pri: PRI.CRIT }); }
   if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', '쿨다운 구간. 녀석들은 포기했다. 천천히.', { pri: PRI.HIGH }); }
   // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
-  const gapM = snap.gapCm / 100, phase = snap.warmup ? 'warm' : snap.state;
-  const per = cryPeriodS(gapM, phase);
+  const gapM = snap.gapCm / 100, frozen = snap.paused || snap.cooldown || st.manualPause;
+  const phase = snap.warmup ? 'warm' : frozen ? 'recover' : snap.state;
+  // 판정이 멈춘 동안 소리가 계속 조여오면 학습한 규칙이 거짓이 된다. 멀리 물러난 것처럼 들려야 한다
+  const per = frozen ? 14 : cryPeriodS(gapM, phase);
   if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); beacon(per, () => cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel)); }
   else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); beacon(per, () => cry('sprint', cls, near, 0.6 + 0.4 * near, nrel)); }
   else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); beacon(per, () => cry('tired', cls, near * 0.8, 0.5, nrel)); }
   else if (snap.state === 'recover') { heartbeat(60, 0.06); beacon(per, () => cry('roam', cls, near * 0.5, 0.3, nrel)); }
   else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); beacon(per, () => cry('roam', cls, near, 0.4, nrel)); }
-  // 30m 안에서는 진동도 거리계가 된다. 손에 들고 있을 때만 유효하지만 공짜다
-  if (!snap.warmup && !snap.paused && gapM < 50 && t % 2 === 0) buzz(gapM < 30 ? [30, 40, 30] : 25);
+  // 진동은 사건에만. 상시 진동은 화면 꺼지면 죽고, 배터리와 습관화 양쪽에서 손해다
+  if (!snap.warmup && !frozen && gapM < 30 && snap.state === 'sprint' && t % 4 === 0) buzz([30, 40, 30]);
+  // 90초 넘게 아무 소리도 없으면 앱이 죽은 걸로 읽힌다. 멀리서 한 번 울어 존재만 남긴다
+  if (!snap.warmup && A.lastCry && t - A.lastCry > 90 && (t - A.lastCry) % 40 === 0) cry('roam', cls, 0.08, 0.3);
   if (A.ambient && !VOICE.speaking) A.ambient.gain.value = Math.max(0.015, 0.04 + 0.04 * (1 - near));   // 0이면 타이머가 언다
   prevState = snap.state;
   render(snap, fix);
@@ -609,7 +649,8 @@ function cryPeriodS(gapM, state) {
 }
 /** 1초에 한 번 도는 루프에서 1초보다 짧은 주기를 내려면 그 초 안에 나눠 쏜다 */
 function beacon(per, fn) {
-  if (per <= 1) { const n = Math.min(4, Math.max(1, Math.round(1 / per))); for (let i = 0; i < n; i++) setTimeout(fn, i * (1000 / n)); A.cryAcc = 0; return; }
+  A.lastCry = st.tickN;
+  if (per <= 1) { const n = st.mode === 'replay' ? 1 : Math.min(4, Math.max(1, Math.round(1 / per))); for (let i = 0; i < n; i++) setTimeout(fn, i * (1000 / n)); A.cryAcc = 0; return; }
   A.cryAcc = (A.cryAcc || 0) + 1; if (A.cryAcc >= per) { A.cryAcc = 0; fn(); }
 }
 const KO = { roam: '배회', sprint: '스프린트', tired: '지침', recover: '회복', lost: '냄새 잃음' };
@@ -617,7 +658,9 @@ function render(snap, fix) {
   const a = st.animal, s = st.session;
   if (!snap) {                                  // 위치 대기 화면
     const b = $('#banner'); b.className = 'banner bad';
-    b.textContent = st.gpsErr ? 'GPS ' + st.gpsErr : '위치 잡는 중... 하늘이 보이는 곳에서 기다려라';
+    b.textContent = st.gpsErr ? 'GPS ' + st.gpsErr
+      : st.coarse ? `정확도 ${Math.round(st.hold.acc)}m · 안드로이드 설정 > 앱 > Chrome > 권한 > 위치에서 '정확한 위치'를 켜라`
+      : '위치 잡는 중... 하늘이 보이는 곳에서 기다려라';
     $('#dbg').textContent = (fix ? 'acc ' + fix.acc.toFixed(0) + 'm' : '신호 없음') + ' · 위치 대기';
     return;
   }
@@ -639,14 +682,14 @@ function render(snap, fix) {
   else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
   else b.textContent = snap.warmup ? '녀석이 뒤에 있다. 아직 널 못 봤다' : snap.cooldown ? '쿨다운 · 적 정지' : (snap.paused || st.manualPause) ? '일시정지 · 적도 멈춤' : snap.state === 'lost' ? 'GPS 불안정 · 판정 동결' : '';
   $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'}`;
-  drawRadar(snap);
+  if (!st.pocket) drawRadar(snap);
 }
 function drawRadar(snap) {
   const c = $('#radar'), g = c.getContext('2d'), W = c.width, cx = W / 2, cy = W / 2; const a = st.animal;
   const viewM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), k = (W / 2 - 10) / viewM;
   g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
   const P = st.trail, me = P.length ? P[P.length - 1] : [0, 0];
-  let bearing = 0; if (P.length > 5) { const q = P[P.length - 6]; bearing = Math.atan2(me[0] - q[0], me[1] - q[1]); }
+  const bearing = Number.isNaN(st.headRad) ? 0 : st.headRad;   // 소리와 지도가 같은 방향을 써야 한다. 어긋나면 러너가 소리를 안 믿는다
   g.save(); g.translate(cx, cy); g.rotate(-bearing);
   // 지도 타일
   if (st.useMap && st.tilesOk !== false && st.lastLatLon) {
@@ -691,7 +734,7 @@ function start() {
   audioInit(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
-  st.hold = null; st.win = []; st.still = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
+  st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
   VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
@@ -700,12 +743,12 @@ function start() {
   log(`시작 ${st.animal.nameKo} ${st.courseM}m ${st.mode}`);
   st.t0 = Date.now();
   st.timer = setInterval(tick, st.mode === 'replay' ? 100 : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
-  requestAnimationFrame(function loop() { if (st.session && !st.session.done) { const s = st.session; if (s.lastSnap) drawRadar(s.lastSnap); requestAnimationFrame(loop); } });
+  requestAnimationFrame(function loop() { if (st.session && !st.session.done) { const s = st.session; if (!st.pocket && s.lastSnap) drawRadar(s.lastSnap); requestAnimationFrame(loop); } });
 }
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
   const s = st.session, a = st.animal; if (!s) return;
-  speak('end', s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${s.hits}번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', { pri: PRI.CRIT });
+  speak('end', s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${numKo(s.hits) || '영'} 번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', { pri: PRI.CRIT });
   const title = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
   $('#rLabel').textContent = title + ' · 최종 시간(이동 + 페널티)'; $('#rHero').textContent = fmt(s.finalTimeS); $('#rHero').className = 'hero' + (s.failed ? ' fail' : '');
   $('#rSub').textContent = `${EMOJI[a.id] || ''} ${a.nameKo} ${st.nPack}마리 · ${st.courseM / 1000}km · ${st.mode === 'gps' ? '실주행' : '리플레이'}`;
@@ -723,6 +766,12 @@ $('#start').addEventListener('click', start);
 $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
+// 주머니 모드. 화면을 덮고 캔버스 그리기를 멈춘다. 소리만 남는다
+$('#pocket').addEventListener('click', () => {
+  st.pocket = true; $('#pocketCover').style.display = 'flex';
+  speak('pocket', '주머니 모드. 이제 소리만 듣고 달려라.', { pri: PRI.HIGH });
+});
+$('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
 seg('#voice', v => { VOICE.level = v; });
 $('#vkey').value = TILE.key;
 $('#vkey').addEventListener('change', e => {
