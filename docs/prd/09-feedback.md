@@ -30,7 +30,7 @@
 
 미해결
 
-- GitHub Pages 활성화 (Settings → Pages → Branch: gh-pages 또는 main /docs). 비공개 저장소면 공개 전환 필요
+- GitHub Pages 활성화 완료 (gh-pages). 주소: https://cjsdudwls1.github.io/runa-way/ (저장소 이름이 RUNA-WAY로 바뀌어 옛 주소는 404)
 - 도로망 추종 (2D 라우팅)은 2차
 
 헤드리스 리플레이 검증 (10 km/h, 1 km, 무리 3, 워밍업 없음)

@@ -45,8 +45,8 @@
 - 그래서 이 게임은 빠르게 달려 이기는 게임이 아니라, 적의 스프린트를 버텨내는 게임
 - 칼라하리 수렵민은 쿠두를 2~5시간 추격해 잡았고, 웨일스의 34km 레이스에서 인간이 말을 이긴 적이 두 번 있다
 
-## 레포 이름
+## 주소
 
-- 이 레포는 원래 다른 아이디어(`my-girlfriend-is-two`)로 만들어졌다
-- 이름 변경은 GitHub Settings > General > Repository name에서 수동으로
-- 변경 후 로컬: `git remote set-url origin https://github.com/cjsdudwls1/<새-이름>.git`
+- 저장소: https://github.com/cjsdudwls1/RUNA-WAY (원래 `my-girlfriend-is-two`에서 이름 변경)
+- 웹 프로토타입 (GPS·지도 동작): https://cjsdudwls1.github.io/runa-way/
+- 배포: `gh-pages` 브랜치 루트의 index.html = `docs/app/index.html` (web/build.py 산출물)
