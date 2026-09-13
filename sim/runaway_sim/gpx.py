@@ -69,13 +69,15 @@ def to_track(pts_1hz):
     """스무딩 + 게이트 필터 후 [(t, dist_cm 누적, speed_cms, acc_m)]. 코어 입력 형식."""
     track = []
     dist = 0.0
-    slat, slon = pts_1hz[0][1], pts_1hz[0][2]
-    plat, plon = slat, slon
+    slat = slon = plat = plon = float('nan')
     ignored = 0
     for (t, lat, lon, acc) in pts_1hz:
         if acc > GATE_ACC_M:
             track.append((t, int(round(dist * 100)), 0, acc))
             continue                      # 저정확도: 위치·거리 유지
+        if slat != slat:                  # 게이트를 통과한 첫 점만 평활화 시드
+            slat, slon = lat, lon
+            plat, plon = lat, lon
         slat = SMOOTH_ALPHA * lat + (1 - SMOOTH_ALPHA) * slat
         slon = SMOOTH_ALPHA * lon + (1 - SMOOTH_ALPHA) * slon
         step = haversine_m(plat, plon, slat, slon)

@@ -74,8 +74,9 @@ object Gpx {
         var lastSmoothLon = Double.NaN; private set
 
         fun push(t: Int, lat: Double, lon: Double, acc: Double): TrackRow {
-            if (slat.isNaN()) { slat = lat; slon = lon; plat = lat; plon = lon }
+            // 정확도 게이트를 먼저. 나쁜 점이 평활화 시드가 되면 좌표가 통째로 날아간다
             if (acc > GATE_ACC_M) return TrackRow(t, round(dist * 100).toInt(), 0, acc)
+            if (slat.isNaN()) { slat = lat; slon = lon; plat = lat; plon = lon }
             slat = SMOOTH_ALPHA * lat + (1 - SMOOTH_ALPHA) * slat
             slon = SMOOTH_ALPHA * lon + (1 - SMOOTH_ALPHA) * slon
             lastSmoothLat = slat; lastSmoothLon = slon

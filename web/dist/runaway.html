@@ -183,8 +183,9 @@ const RW = (() => {
   class TrackBuilder {
     constructor() { this.dist = 0; this.slat = NaN; this.slon = NaN; this.plat = NaN; this.plon = NaN; this.ignored = 0; this.lastLat = NaN; this.lastLon = NaN; }
     push(t, lat, lon, acc) {
-      if (Number.isNaN(this.slat)) { this.slat = lat; this.slon = lon; this.plat = lat; this.plon = lon; }
+      // 정확도 게이트를 먼저. 나쁜 점이 평활화 시드가 되면 좌표가 통째로 날아간다
       if (acc > G.GATE_ACC_M) return { t, distCm: rhe(this.dist * 100), speedCms: 0, accM: acc };
+      if (Number.isNaN(this.slat)) { this.slat = lat; this.slon = lon; this.plat = lat; this.plon = lon; }
       this.slat = G.SMOOTH_ALPHA * lat + (1 - G.SMOOTH_ALPHA) * this.slat;
       this.slon = G.SMOOTH_ALPHA * lon + (1 - G.SMOOTH_ALPHA) * this.slon;
       this.lastLat = this.slat; this.lastLon = this.slon;
@@ -280,7 +281,7 @@ if (typeof module !== "undefined") module.exports = ANIMALS;
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
-const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null };
+const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
 const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
@@ -386,7 +387,12 @@ function flash() { document.body.classList.add('flash'); setTimeout(() => docume
 function startGps() {
   st.gpsErr = null; st.fixCount = 0;
   if (!navigator.geolocation) { st.gpsErr = '위치 미지원 브라우저'; return; }
-  st.watchId = navigator.geolocation.watchPosition(p => { st.fixCount++; st.lastFix = { at: Date.now(), lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy || 8 }; st.gpsErr = null; },
+  st.watchId = navigator.geolocation.watchPosition(p => {
+      const c = p.coords; st.fixCount++;
+      const num = (v) => (typeof v === 'number' && isFinite(v) && v >= 0) ? v : null;
+      st.lastFix = { at: Date.now(), lat: c.latitude, lon: c.longitude, acc: num(c.accuracy) || 8, spd: num(c.speed), hdg: num(c.heading) };
+      st.gpsErr = null;
+    },
     e => { st.gpsErr = (e.code === 1 ? '권한 거부' : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
 }
 function stopGps() { if (st.watchId !== null) navigator.geolocation.clearWatch(st.watchId); st.watchId = null; }
@@ -394,14 +400,28 @@ async function wakeLock() { try { st.wake = await navigator.wakeLock.request('sc
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && st.session && !st.wake) wakeLock(); });
 
 // ---------- 지도 타일 (아티팩트 뷰어에서는 차단됨 → 자동으로 레이더만) ----------
-const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0 };
-function tileUrl(x, y) { const s = 'abcd'[(x + y) % 4]; return `https://${s}.basemaps.cartocdn.com/dark_all/${TILE.z}/${x}/${y}.png`; }
+// 타일 공급자. CARTO는 2026년부터 키를 요구해 워터마크가 찍힌다 → 키 없는 OSM 표준 타일 + 캔버스 반전으로 다크맵
+const TILE_SRC = {
+  osm: { name: 'OpenStreetMap', invert: true, credit: '© OpenStreetMap contributors',
+         url: (x, y, z) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png` },
+  carto: { name: 'CARTO dark', invert: false, credit: '© OpenStreetMap © CARTO',
+         url: (x, y, z) => `https://${'abcd'[(x + y) % 4]}.basemaps.cartocdn.com/dark_all/${z}/${x}/${y}.png` },
+};
+const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0, src: 'osm' };
+const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.65) brightness(0.78) contrast(1.08)';
+function tileUrl(x, y) { return TILE_SRC[TILE.src].url(x, y, TILE.z); }
 function getTile(x, y) {
-  const k = x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
-  const img = new Image(); img.crossOrigin = 'anonymous'; img.decoding = 'async'; const rec = { img, ok: false };
-  img.onload = () => { rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
-  img.onerror = () => { TILE.fails++; if (TILE.loads === 0 && TILE.fails >= 3) st.tilesOk = false; };
-  img.src = tileUrl(x, y); TILE.cache.set(k, rec); return rec;
+  const k = TILE.src + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
+  const rec = { img: null, ok: false };
+  const load = (useCors) => {
+    const img = new Image(); rec.img = img; img.decoding = 'async';
+    if (useCors) img.crossOrigin = 'anonymous';
+    img.onload = () => { rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
+    img.onerror = () => { if (useCors) { load(false); return; }   // CORS 헤더 없는 공급자 대비
+      TILE.fails++; if (TILE.loads === 0 && TILE.fails >= 4) st.tilesOk = false; };
+    img.src = tileUrl(x, y);
+  };
+  load(true); TILE.cache.set(k, rec); return rec;
 }
 function lonToX(lon, z) { return (lon + 180) / 360 * Math.pow(2, z); }
 function latToY(lat, z) { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z); }
@@ -409,14 +429,66 @@ function latToY(lat, z) { const r = lat * Math.PI / 180; return (1 - Math.log(Ma
 // ---------- 세션 ----------
 function log(s) { const t = st.session ? st.session.elapsed : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
 function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+// GPS 튐 억제 상수. 정지 중 표류를 죽이고 실제 이동만 남긴다
+const GPSF = { DEAD_MIN_M: 4, DEAD_ACC_K: 0.8, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 1.2, HEAD_GPS_MS: 1.5, HEAD_BASE_M: 12, HEAD_EMA: 0.25 };
+/** 서 있는가? 1순위는 도플러 속도, 없으면 최근 창의 전반부·후반부 무게중심 이동량으로 판정 */
+function isStanding(fix) {
+  if (fix.spd !== null) return fix.spd < GPSF.STILL_MS;
+  const W = st.win;
+  if (W.length < GPSF.WIN_N) return false;
+  const mid = W.length >> 1;
+  const cen = (from, to) => { let a = 0, o = 0; for (let i = from; i < to; i++) { a += W[i][0]; o += W[i][1]; } const n = to - from; return [a / n, o / n]; };
+  const [a1, o1] = cen(0, mid), [a2, o2] = cen(mid, W.length);
+  return RW.haversineM(a1, o1, a2, o2) < GPSF.STILL_SEP_M;   // 무게중심이 안 움직이면 잡음일 뿐
+}
+/** 정확도 반경만큼의 데드밴드를 둔 앵커 추종. 밴드 안의 흔들림은 무시, 밖으로 나간 만큼만 끌려간다 */
+function trackAnchor(fix) {
+  if (!st.hold) { st.hold = { lat: fix.lat, lon: fix.lon, acc: fix.acc }; st.win = [[fix.lat, fix.lon]]; return; }
+  const h = st.hold, W = st.win;
+  W.push([fix.lat, fix.lon]); if (W.length > GPSF.WIN_N) W.shift();
+  h.acc = fix.acc;
+  if (isStanding(fix)) { st.still = true; return; }           // 정지. 앵커 완전 고정
+  st.still = false;
+  const d = RW.haversineM(h.lat, h.lon, fix.lat, fix.lon);
+  const band = Math.max(GPSF.DEAD_MIN_M, fix.acc * GPSF.DEAD_ACC_K);
+  if (d <= band) return;                       // 밴드 안 = 잡음
+  const k = (d - band) / d;                    // 밴드 경계까지만 이동
+  h.lat += (fix.lat - h.lat) * k; h.lon += (fix.lon - h.lon) * k;
+}
+/** 진행 방향. 느리면 갱신하지 않고 직전 방향을 유지한다 (정지 중 지도가 빙빙 도는 원인) */
+function updateHeading(fix, row) {
+  const spd = fix && fix.spd !== null ? fix.spd : row.speedCms / 100;
+  if (spd < GPSF.HEAD_MIN_MS) return;
+  let target = NaN;
+  if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) target = fix.hdg * Math.PI / 180;
+  else {
+    const P = st.trail;
+    for (let i = P.length - 2; i >= 0 && i > P.length - 60; i--) {
+      const dx = P[P.length - 1][0] - P[i][0], dy = P[P.length - 1][1] - P[i][1];
+      if (Math.hypot(dx, dy) >= GPSF.HEAD_BASE_M) { target = Math.atan2(dx, dy); break; }
+    }
+  }
+  if (Number.isNaN(target)) return;
+  if (Number.isNaN(st.headRad)) { st.headRad = target; return; }
+  let d = target - st.headRad;
+  while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
+  st.headRad += d * GPSF.HEAD_EMA;
+}
+/** 신호가 없으면 마지막 위치를 유지한다. 출발점으로 되돌리지 않는다 */
 function fixToRow(t, fix) {
-  if (!fix) return st.builder.push(t, Number.isNaN(st.lat0) ? 0 : st.lat0, Number.isNaN(st.lon0) ? 0 : st.lon0, 99);
-  if (Number.isNaN(st.lat0)) { st.lat0 = fix.lat; st.lon0 = fix.lon; }
-  const row = st.builder.push(t, fix.lat, fix.lon, fix.acc);
-  const sl = Number.isNaN(st.builder.lastLat) ? fix.lat : st.builder.lastLat, so = Number.isNaN(st.builder.lastLon) ? fix.lon : st.builder.lastLon;
+  if (fix) { trackAnchor(fix); st.holdN = 0; } else st.holdN++;
+  const h = st.hold;
+  if (!h) return null;                                    // 첫 위치 확보 전 = 아직 세션 시작 안 함
+  if (Number.isNaN(st.lat0)) { st.lat0 = h.lat; st.lon0 = h.lon; }
+  const row = st.builder.push(t, h.lat, h.lon, h.acc);
+  if (fix && fix.spd !== null) row.speedCms = Math.round(fix.spd * 100);   // 도플러 속도가 위치 차분보다 정확
+  if (!fix || st.still) row.speedCms = 0;
+  const sl = Number.isNaN(st.builder.lastLat) ? h.lat : st.builder.lastLat, so = Number.isNaN(st.builder.lastLon) ? h.lon : st.builder.lastLon;
   st.lastLatLon = [sl, so];
   const n = RW.haversineM(st.lat0, st.lon0, sl, st.lon0) * (sl >= st.lat0 ? 1 : -1), e = RW.haversineM(st.lat0, st.lon0, st.lat0, so) * (so >= st.lon0 ? 1 : -1);
   if (!st.trailDist.length || row.distCm > st.trailDist[st.trailDist.length - 1]) { st.trailDist.push(row.distCm); st.trail.push([e, n]); }
+  if (!st.trail.length) st.trail.push([e, n]);
+  updateHeading(fix, row);
   return row;
 }
 const PACK = { wolf: 5, jindo: 4, sleddog: 5, chihuahua: 3, greyhound: 2, chicken: 4, pig: 3, squirrel: 3, hare: 2, kangaroo: 3, horse: 2, ostrich: 2, pronghorn: 3, elephant: 2, hippo: 1, cheetah: 1, cat: 2, crocodile: 2, komodo: 1, gila: 1, koala: 2, armadillo: 2, sloth: 1, loris: 1, camel: 2 };
@@ -444,6 +516,12 @@ class Session2D {
   tick(row, px, py, heading0) {
     if (this.first) { this.prevDist = row.distCm; this.first = false; }
     const hKnown = !Number.isNaN(heading0), heading = hKnown ? heading0 : 0;
+    // GPS가 순간이동하면 무리도 같이 옮긴다. 상대 배치를 보존해 거리 폭주를 막는다
+    if (this.px !== undefined) {
+      const jx = px - this.px, jy = py - this.py;
+      if (Math.hypot(jx, jy) > 50) for (const en of this.enemies) { en.x += jx; en.y += jy; }
+    }
+    this.px = px; this.py = py;
     if (!this.spawned) this.spawn(px, py, heading);
     // 출발 직후엔 진행 방향을 모름 → 방향이 잡히면 무리를 '뒤'로 한 번 회전 (스프린트·피격 전까지만)
     if (!this.oriented && hKnown) { this.oriented = true; if (this.hits === 0 && this.sprints === 0) for (const en of this.enemies) { const dx = en.x - px, dy = en.y - py, d = Math.hypot(dx, dy); this.place(en, px, py, Math.atan2(dx, dy) + heading, d); } }
@@ -462,7 +540,7 @@ class Session2D {
     for (const en of order) {
       const e = en.e; let d = Math.hypot(en.x - px, en.y - py); e.gap = Math.round(d * 100);
       let stalk = null;
-      if (warmup && e.gap > this.warmGap) { const rem = Math.max(1, S.WARMUP_S - this.elapsed + 1); stalk = adv + Math.max(20, Math.floor((e.gap - this.warmGap) / rem)); }
+      if (warmup && e.gap > this.warmGap) { const rem = Math.max(1, S.WARMUP_S - this.elapsed + 1); stalk = Math.min(a.sprintCms, adv + Math.max(20, Math.floor((e.gap - this.warmGap) / rem))); }
       const canDetect = !warmup && (!sprinting || e.state === 'sprint');
       const prev = e.state;
       const state = e.tick(0, row.accM, { frozen, stalkCms: stalk, canDetect });
@@ -498,7 +576,7 @@ class Session2D {
   get finalTimeS() { return this.moving + this.excessPauseS + this.penaltyS; }
 }
 function playerXY() { const P = st.trail; return P.length ? P[P.length - 1] : [0, 0]; }
-function playerHeading() { const P = st.trail; if (P.length > 5) { const q = P[P.length - 6], m = P[P.length - 1]; return Math.atan2(m[0] - q[0], m[1] - q[1]); } return NaN; }
+function playerHeading() { return st.headRad; }
 let prevState = null, prevGap = null, saidWarmupEnd = false, saidHalf = false, saidCooldown = false, said60 = false, said15 = false;
 function tick() {
   const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
@@ -506,6 +584,12 @@ function tick() {
   if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now() }; }
   else { fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null; }
   const row = fixToRow(t, fix);
+  if (!row) {                                   // GPS 첫 위치 대기. 타이머도 적도 아직 없다
+    st.tickN = 0;
+    if (!st.saidWait) { st.saidWait = true; say('위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', true); }
+    render(null, fix); return;
+  }
+  if (!st.gpsReady) { st.gpsReady = true; if (st.mode === 'gps') log('첫 위치 확보 acc ' + Math.round(st.hold.acc) + 'm'); }
   if (st.manualPause) row.speedCms = 0;
   const [px, py] = playerXY();
   const snap = s.tick(row, px, py, playerHeading());
@@ -539,6 +623,12 @@ function tick() {
 const KO = { roam: '배회', sprint: '스프린트', tired: '지침', recover: '회복', lost: '냄새 잃음' };
 function render(snap, fix) {
   const a = st.animal, s = st.session;
+  if (!snap) {                                  // 위치 대기 화면
+    const b = $('#banner'); b.className = 'banner bad';
+    b.textContent = st.gpsErr ? 'GPS ' + st.gpsErr : '위치 잡는 중... 하늘이 보이는 곳에서 기다려라';
+    $('#dbg').textContent = (fix ? 'acc ' + fix.acc.toFixed(0) + 'm' : '신호 없음') + ' · 위치 대기';
+    return;
+  }
   $('#gauge').style.width = (snap.gauge / 10) + '%';
   $('#hitsDots').textContent = '●'.repeat(snap.hits) + '○'.repeat(Math.max(0, 3 - snap.hits));
   $('#nGap').textContent = Math.round(snap.gapCm / 100);
@@ -566,7 +656,9 @@ function drawRadar(snap) {
     const [lat, lon] = st.lastLatLon; const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
     const mPerTile = 40075016.686 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), tilePx = mPerTile * k;
     const span = Math.ceil(viewM * 1.5 / mPerTile) + 1;
-    g.save(); g.globalAlpha = 0.85;
+    g.save(); g.globalAlpha = 0.9;
+    const SRC = TILE_SRC[TILE.src];
+    if (SRC.invert && 'filter' in g) g.filter = DARK_FILTER;
     for (let dx = -span; dx <= span; dx++) for (let dy = -span; dy <= span; dy++) {
       const tx = Math.floor(fx) + dx, ty = Math.floor(fy) + dy; const rec = getTile(tx, ty); if (!rec.ok) continue;
       const px = (tx - fx) * tilePx, py = (ty - fy) * tilePx; g.drawImage(rec.img, px, py, tilePx + 0.5, tilePx + 0.5);
@@ -595,13 +687,14 @@ function drawRadar(snap) {
   g.restore();
   g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(cx, cy - 14); g.lineTo(cx - 9, cy + 9); g.lineTo(cx + 9, cy + 9); g.closePath(); g.fill();
   g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
-  if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText('© OpenStreetMap © CARTO', W - 8, W - 8); }
+  if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(TILE_SRC[TILE.src].credit, W - 8, W - 8); }
 }
 function start() {
   if (!st.animal) return;
   audioInit(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
+  st.hold = null; st.win = []; st.still = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
   wakeLock();

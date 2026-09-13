@@ -80,8 +80,9 @@ const RW = (() => {
   class TrackBuilder {
     constructor() { this.dist = 0; this.slat = NaN; this.slon = NaN; this.plat = NaN; this.plon = NaN; this.ignored = 0; this.lastLat = NaN; this.lastLon = NaN; }
     push(t, lat, lon, acc) {
-      if (Number.isNaN(this.slat)) { this.slat = lat; this.slon = lon; this.plat = lat; this.plon = lon; }
+      // 정확도 게이트를 먼저. 나쁜 점이 평활화 시드가 되면 좌표가 통째로 날아간다
       if (acc > G.GATE_ACC_M) return { t, distCm: rhe(this.dist * 100), speedCms: 0, accM: acc };
+      if (Number.isNaN(this.slat)) { this.slat = lat; this.slon = lon; this.plat = lat; this.plon = lon; }
       this.slat = G.SMOOTH_ALPHA * lat + (1 - G.SMOOTH_ALPHA) * this.slat;
       this.slon = G.SMOOTH_ALPHA * lon + (1 - G.SMOOTH_ALPHA) * this.slon;
       this.lastLat = this.slat; this.lastLon = this.slon;
