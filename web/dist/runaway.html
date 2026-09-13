@@ -364,10 +364,19 @@ function dirWord(rel) {
 function playSample(key, near, rel) { const b = A.samples[key]; if (!b) return false; const s = A.ctx.createBufferSource(); s.buffer = b; const o = out(near, rel); s.connect(o.node); s.start(); return true; }
 function env(g, t, a, peak, dur) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); }
 // 동물군별 절차 합성. 실제 샘플이 있으면 그걸 우선.
+/** 야외에서 정보를 지는 단서는 800Hz~3kHz에 있어야 한다. 바람소리는 저역을 통째로 덮는다.
+ *  동물 소리의 성격은 그대로 두고, 들리는 온셋만 얹는다 */
+function onset(o, t, near, intensity) {
+  const src = A.ctx.createBufferSource(); src.buffer = A.noise;
+  const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 1.1;
+  const g = A.ctx.createGain(); env(g, t, 0.004, 0.16 * intensity * (0.4 + 0.6 * near), 0.07);
+  src.connect(bp); bp.connect(g); g.connect(o.node); src.start(t); src.stop(t + 0.1);
+}
 function cry(kind, cls, near, intensity = 1, rel) {
   if (!A.ctx || near <= 0.02) return; const a = st.animal;
   if (playSample(`${a.id}_${kind}`, near, rel) || playSample(`${cls}_${kind}`, near, rel)) return;
   const t = A.ctx.currentTime, o = out(near, rel);
+  if (cls === 'canine' || cls === 'hoof' || cls === 'feline') onset(o, t, near, intensity);
   if (cls === 'bird') {            // 꼬꼬댁: FM 버스트 3~5회
     const n = kind === 'sprint' ? 5 : 3;
     for (let i = 0; i < n; i++) { const osc = A.ctx.createOscillator(), g = A.ctx.createGain(); osc.type = 'square'; const t0 = t + i * 0.13;
@@ -748,24 +757,33 @@ function step() {
   else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', 'GPS가 흔들린다. 녀석들이 냄새를 잃었다.', { pri: PRI.NORM, cooldown: 120 }); }
   if (snap.state === 'sprint' && snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', '게이지 절반! 뛰어!', { pri: PRI.CRIT }); }
   if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', '쿨다운 구간. 녀석들은 포기했다. 천천히.', { pri: PRI.HIGH }); }
-  // 울음 주기가 거리계다. 붙으면 1초마다, 멀면 10초마다. 말 없이 거리를 알 수 있다
-  const per = cryPeriod(near, snap.warmup ? 'warm' : snap.state);
-  if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); if (t % 20 === 10) cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel); }
-  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); if (t % per === 0) cry('sprint', cls, near, 0.6 + 0.4 * near, nrel); }
-  else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); if (t % per === 0) cry('tired', cls, near * 0.8, 0.5, nrel); }
-  else if (snap.state === 'recover') { heartbeat(60, 0.06); if (t % per === 0) cry('roam', cls, near * 0.5, 0.3, nrel); }
-  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (t % per === 0) cry('roam', cls, near, 0.4, nrel); }
+  // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
+  const gapM = snap.gapCm / 100, phase = snap.warmup ? 'warm' : snap.state;
+  const per = cryPeriodS(gapM, phase);
+  if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); beacon(per, () => cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel)); }
+  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); beacon(per, () => cry('sprint', cls, near, 0.6 + 0.4 * near, nrel)); }
+  else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); beacon(per, () => cry('tired', cls, near * 0.8, 0.5, nrel)); }
+  else if (snap.state === 'recover') { heartbeat(60, 0.06); beacon(per, () => cry('roam', cls, near * 0.5, 0.3, nrel)); }
+  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); beacon(per, () => cry('roam', cls, near, 0.4, nrel)); }
+  // 30m 안에서는 진동도 거리계가 된다. 손에 들고 있을 때만 유효하지만 공짜다
+  if (!snap.warmup && !snap.paused && gapM < 50 && t % 2 === 0) buzz(gapM < 30 ? [30, 40, 30] : 25);
   if (A.ambient && !VOICE.speaking) A.ambient.gain.value = Math.max(0.015, 0.04 + 0.04 * (1 - near));   // 0이면 타이머가 언다
   prevState = snap.state;
   render(snap, fix);
   if (snap.done) finish();
 }
-/** 거리 → 울음 주기(초). 가까울수록 자주 운다. 이게 말을 대신하는 진짜 정보 채널이다 */
-function cryPeriod(near, state) {
-  if (state === 'sprint') return near > 0.65 ? 1 : 2;
-  if (state === 'tired') return 3;
+/** 거리(m) → 울음 주기(초). 주차 센서와 가이거 카운터가 쓰는 기하 곡선.
+ *  30m = 위협 반경에서 소리가 거의 안 끊긴다. "안 끊기면 게이지가 차는 중"을 귀로 배우게 된다 */
+function cryPeriodS(gapM, state) {
   if (state === 'recover') return 12;
-  return Math.max(2, Math.round(10 - 8 * near));
+  if (state === 'warm') return 20;
+  const k = state === 'sprint' ? 0.7 : state === 'tired' ? 1.7 : 1.0;
+  return Math.max(0.34, Math.min(12, 0.45 * Math.pow(Math.max(gapM, 10) / 30, 1.35) * k));
+}
+/** 1초에 한 번 도는 루프에서 1초보다 짧은 주기를 내려면 그 초 안에 나눠 쏜다 */
+function beacon(per, fn) {
+  if (per <= 1) { const n = Math.min(4, Math.max(1, Math.round(1 / per))); for (let i = 0; i < n; i++) setTimeout(fn, i * (1000 / n)); A.cryAcc = 0; return; }
+  A.cryAcc = (A.cryAcc || 0) + 1; if (A.cryAcc >= per) { A.cryAcc = 0; fn(); }
 }
 const KO = { roam: '배회', sprint: '스프린트', tired: '지침', recover: '회복', lost: '냄새 잃음' };
 function render(snap, fix) {
