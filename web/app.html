@@ -235,7 +235,21 @@ function heartbeat(bpm, vol) { if (!A.ctx) return; const now = A.ctx.currentTime
 const PRI = { CRIT: 0, HIGH: 1, NORM: 2, LOW: 3 };
 // 발화 스케줄러. 우선순위 큐 + 최소 간격 + 키별 쿨다운 + 유통기한.
 // 러너는 화면을 못 본다. 그렇다고 쉴 새 없이 떠들면 다음 세션에 음소거당한다.
-const VOICE = { on: true, level: 'normal', q: [], speaking: false, lastAt: 0, keyAt: {}, rot: {}, GAP_MS: 3500 };
+const VOICE = { on: true, level: 'normal', q: [], speaking: false, lastAt: 0, keyAt: {}, rot: {}, GAP_MS: 3500,
+  tok: 3, CAP: 3, REFILL_S: 90, refAt: 0, seen: {} };
+/** 말 예산. 중요한 말은 공짜, 부연 설명은 토큰을 쓴다. 30분에 스무 마디 남짓으로 묶인다 */
+function budgetOk(cost) {
+  if (!cost) return true;
+  const now = Date.now();
+  if (!VOICE.refAt) VOICE.refAt = now;
+  const gain = Math.floor((now - VOICE.refAt) / (VOICE.REFILL_S * 1000 / vrate()));
+  if (gain > 0) { VOICE.tok = Math.min(VOICE.CAP, VOICE.tok + gain); VOICE.refAt += gain * VOICE.REFILL_S * 1000 / vrate(); }
+  if (VOICE.tok < cost) return false;
+  VOICE.tok -= cost; return true;
+}
+// 리플레이는 10배속. 벽시계 기준 쿨다운이 세션 시간으로는 10배가 되므로 배속만큼 줄인다
+function vrate() { return st.mode === 'replay' ? 10 : 1; }
+function speakIntro(t) { speak('intro', t, { pri: PRI.CRIT }); }
 function pickVar(key, v) { if (!Array.isArray(v)) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
 /** key: 같은 종류의 말을 묶는 이름. variants: 문장 배열(돌아가며 쓴다). o.pri/o.cooldown(초)/o.ttl(초) */
 function speak(key, variants, o) {
@@ -243,18 +257,19 @@ function speak(key, variants, o) {
   if (!VOICE.on || !('speechSynthesis' in window)) return;
   if (VOICE.level === 'quiet' && pri > PRI.HIGH) return;
   if (pri === PRI.LOW && VOICE.level !== 'chatty') return;
-  const cd = (o.cooldown || 0) * 1000;
+  const cd = (o.cooldown || 0) * 1000 / vrate();
   if (cd && now - (VOICE.keyAt[key] || -1e9) < cd) return;
+  if (!budgetOk(o.cost)) return;
   VOICE.keyAt[key] = now;
   VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
-  VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 });
+  VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
   VOICE.q.sort((a, b) => a.pri - b.pri);
   if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; }
   pump();
 }
 function pump() {
   if (VOICE.speaking || !VOICE.q.length) return;
-  const now = Date.now(), wait = VOICE.GAP_MS - (now - VOICE.lastAt);
+  const now = Date.now(), wait = VOICE.GAP_MS / vrate() - (now - VOICE.lastAt);
   if (wait > 0 && VOICE.q[0].pri > PRI.CRIT) { clearTimeout(VOICE.t); VOICE.t = setTimeout(pump, wait); return; }
   const it = VOICE.q.shift(); if (!it || now > it.ttl) { if (VOICE.q.length) pump(); return; }
   const u = new SpeechSynthesisUtterance(it.text); u.lang = 'ko-KR';
@@ -480,7 +495,7 @@ function tick() {
   const row = fixToRow(t, fix);
   if (!row) {                                   // GPS 첫 위치 대기. 타이머도 적도 아직 없다
     st.tickN = 0;
-    if (!st.saidWait) { st.saidWait = true; say('위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', true); }
+    if (!st.saidWait) { st.saidWait = true; speak('wait', '위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', { pri: PRI.CRIT }); }
     render(null, fix); return;
   }
   if (!st.gpsReady) { st.gpsReady = true; if (st.mode === 'gps') log('첫 위치 확보 acc ' + Math.round(st.hold.acc) + 'm'); }
@@ -491,31 +506,64 @@ function tick() {
   const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const nrel = nearEn ? relBearing(nearEn) : undefined;
   const left = RW.S.WARMUP_S - s.elapsed + 1;
-  if (s.elapsed === 1) say(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
-  if (snap.warmup && left <= 60 && !said60) { said60 = true; say('1분 뒤 녀석들이 널 본다.', true); }
-  if (snap.warmup && left <= 15 && !said15) { said15 = true; say('곧이다. 페이스 올려.', true); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { say('들켰다!', true); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
+  if (s.elapsed === 1) speakIntro(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${st.nPack}마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
+  if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', '1분 뒤 녀석들이 널 본다.', { pri: PRI.HIGH }); }
+  if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', '곧이다. 페이스 올려.', { pri: PRI.HIGH }); }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', '들켰다!', { pri: PRI.HIGH, ttl: 2 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
   for (const ev of snap.events) {
     const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
-    const erel = relBearing(ev.en);
-    if (ev.type === 'sprint') { const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036); cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel); buzz([80, 60, 200]); flash(); say(ev.en.e.cycle === 0 ? `온다! 시속 ${kmh}킬로. 버텨!` : `또 온다. 아까보다 느리다, ${kmh}킬로. 버텨!`, true); saidHalf = false; }
-    else if (ev.type === 'hit') { cry('sprint', cls, 1, 1.0, erel); buzz(500); flash(); say(`잡혔다! ${snap.hits}번째. 30초 페널티. 녀석들이 물러난다.`, true); }
-    else if (ev.type === 'reengage') { cry('roam', cls, 0.7, 1, erel); say(`한 마리가 따라붙었다. 뒤 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
-    else if (ev.type === 'ambush') { cry('roam', cls, 0.6, 1, erel); say(`한 마리가 돌아왔다. 옆 ${Math.round(ev.en.e.gap / 100)}미터.`, true); }
+    const erel = relBearing(ev.en), dw = dirWord(erel), em = Math.round(ev.en.e.gap / 100);
+    const ek = (ev.type === 'ambush') ? 'reengage' : ev.type;
+    const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
+    if (ev.type === 'sprint') {
+      cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel); buzz([80, 60, 200]); flash();
+      const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
+      // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
+      if (n === 1) speak('sprint', `${dw}에서 온다. 시속 ${kmh}. 버텨!`, { pri: PRI.CRIT });
+      else if (n === 2) speak('sprint', `또 온다. ${dw}. 시속 ${kmh}.`, { pri: PRI.HIGH });
+      else if (n <= 4) speak('sprint', [`온다. ${dw}.`, `${dw}. 붙는다.`], { pri: PRI.HIGH, cooldown: 15 });
+      else speak('sprint', [`${dw} ${em}미터.`, `${dw}.`], { pri: PRI.NORM, cooldown: 50, cost: 1 });
+    }
+    else if (ev.type === 'hit') {
+      cry('sprint', cls, 1, 1.0, erel); buzz(500); flash();
+      speak('hit', snap.hits >= 3 ? '세 번째다. 끝났다.' : `잡혔다. ${snap.hits}번째. 물러난다.`, { pri: PRI.CRIT });
+    }
+    else if (ev.type === 'reengage' || ev.type === 'ambush') {
+      // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
+      cry('roam', cls, 0.65, 1, erel);
+      if (n <= 2) speak('rejoin', `한 마리가 돌아왔다. ${dw} ${em}미터.`, { pri: PRI.HIGH });
+    }
   }
-  if (snap.state === 'tired' && prevState === 'sprint') { cry('tired', cls, Math.max(near, 0.5), 1, nrel); say('지쳤다. 헐떡인다. 지금이 기회다, 밟아!', true); }
-  else if (snap.state === 'recover' && prevState === 'tired') { say('숨 고르는 중. 다시 올 거다.'); }
-  else if (snap.state === 'lost' && prevState !== 'lost') { say('GPS가 흔들린다. 녀석들이 냄새를 잃었다.'); }
-  if (snap.state === 'sprint' && snap.gauge >= 500 && !saidHalf) { saidHalf = true; say('게이지 절반! 뛰어!', true); }
-  if (snap.cooldown && !saidCooldown) { saidCooldown = true; say('쿨다운 구간. 녀석들은 포기했다. 천천히.', true); }
+  if (snap.state === 'tired' && prevState === 'sprint') {
+    cry('tired', cls, Math.max(near, 0.5), 1, nrel);
+    const tn = (VOICE.seen.tired = (VOICE.seen.tired || 0) + 1);
+    // 지침은 유일하게 행동을 바꾸는 정보다. 계속 알리되 갈수록 짧게
+    if (tn === 1) speak('tired', '지쳤다. 헐떡인다. 지금이 기회다, 밟아!', { pri: PRI.HIGH });
+    else if (tn <= 3) speak('tired', ['지쳤다. 벌려!', '헐떡인다. 지금이다.'], { pri: PRI.HIGH, cooldown: 30 });
+    else speak('tired', ['지쳤다.', '기회다.'], { pri: PRI.NORM, cooldown: 120, cost: 1 });
+  }
+  else if (snap.state === 'recover' && prevState === 'tired') speak('recover', ['숨 고르는 중. 다시 올 거다.', '멀어진다. 아직 끝난 게 아니다.'], { pri: PRI.LOW, cooldown: 60, cost: 1 });
+  else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', 'GPS가 흔들린다. 녀석들이 냄새를 잃었다.', { pri: PRI.NORM, cooldown: 120 }); }
+  if (snap.state === 'sprint' && snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', '게이지 절반! 뛰어!', { pri: PRI.CRIT }); }
+  if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', '쿨다운 구간. 녀석들은 포기했다. 천천히.', { pri: PRI.HIGH }); }
+  // 울음 주기가 거리계다. 붙으면 1초마다, 멀면 10초마다. 말 없이 거리를 알 수 있다
+  const per = cryPeriod(near, snap.warmup ? 'warm' : snap.state);
   if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); if (t % 20 === 10) cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel); }
-  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); if (t % 2 === 0) cry('sprint', cls, near, 0.6 + 0.4 * near, nrel); }
-  else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); }
-  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (t % 6 === 0) cry('roam', cls, near, 0.4, nrel); }
-  if (A.ambient) A.ambient.gain.value = 0.04 + 0.04 * (1 - near);
+  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); if (t % per === 0) cry('sprint', cls, near, 0.6 + 0.4 * near, nrel); }
+  else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); if (t % per === 0) cry('tired', cls, near * 0.8, 0.5, nrel); }
+  else if (snap.state === 'recover') { heartbeat(60, 0.06); if (t % per === 0) cry('roam', cls, near * 0.5, 0.3, nrel); }
+  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); if (t % per === 0) cry('roam', cls, near, 0.4, nrel); }
+  if (A.ambient && !VOICE.speaking) A.ambient.gain.value = 0.04 + 0.04 * (1 - near);
   prevState = snap.state;
   render(snap, fix);
   if (snap.done) finish();
+}
+/** 거리 → 울음 주기(초). 가까울수록 자주 운다. 이게 말을 대신하는 진짜 정보 채널이다 */
+function cryPeriod(near, state) {
+  if (state === 'sprint') return near > 0.65 ? 1 : 2;
+  if (state === 'tired') return 3;
+  if (state === 'recover') return 12;
+  return Math.max(2, Math.round(10 - 8 * near));
 }
 const KO = { roam: '배회', sprint: '스프린트', tired: '지침', recover: '회복', lost: '냄새 잃음' };
 function render(snap, fix) {
@@ -597,6 +645,7 @@ function start() {
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
   st.hold = null; st.win = []; st.still = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
+  VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
   wakeLock();
@@ -608,7 +657,7 @@ function start() {
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
   const s = st.session, a = st.animal; if (!s) return;
-  say(s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${s.hits}번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', true);
+  speak('end', s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${s.hits}번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', { pri: PRI.CRIT });
   const title = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
   $('#rLabel').textContent = title + ' · 최종 시간(이동 + 페널티)'; $('#rHero').textContent = fmt(s.finalTimeS); $('#rHero').className = 'hero' + (s.failed ? ' fail' : '');
   $('#rSub').textContent = `${EMOJI[a.id] || ''} ${a.nameKo} ${st.nPack}마리 · ${st.courseM / 1000}km · ${st.mode === 'gps' ? '실주행' : '리플레이'}`;
