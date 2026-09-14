@@ -1,0 +1,15 @@
+{
+  "name": "러너웨이",
+  "short_name": "러너웨이",
+  "description": "뒤에서 진짜 동물이 쫓아온다. 실측 속도와 지구력 그대로.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0f0d",
+  "theme_color": "#0a0f0d",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
