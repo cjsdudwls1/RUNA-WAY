@@ -1,6 +1,11 @@
 """app.html + core.js + animals.js + replays.js + sounds/ → dist/runaway.html (단일 파일).
 sounds/<animalId 또는 동물군>_<roam|sprint|tired>.(mp3|ogg|m4a|wav) 를 base64로 포함. 동물군: bird canine feline reptile hoof small"""
 import os, base64, json
+# 배포 주소. Pages 주소가 바뀌면 여기 한 줄만 고치면 된다 (공유 카드·OG·매니페스트가 모두 이걸 쓴다)
+SITE = 'https://cjsdudwls1.github.io/RUNA-WAY/'   # Pages 경로는 대소문자를 구분한다. 소문자는 404
+# 방문자 수 확인용. goatcounter.com 무료 계정을 만들고 코드만 넣으면 켜진다. 비우면 아무것도 안 붙는다
+COUNTER = ''
+
 here = os.path.dirname(os.path.abspath(__file__))
 r = lambda n: open(os.path.join(here, n), encoding='utf-8').read()
 snd = {}
@@ -11,14 +16,10 @@ if os.path.isdir(sd):
         if ext.lower() in ('.mp3', '.ogg', '.m4a', '.wav'):
             snd[k] = base64.b64encode(open(os.path.join(sd, f), 'rb').read()).decode()
 sounds_js = 'const SOUNDS = ' + json.dumps(snd) + ';\n'
-html = r('app.html').replace('<!--CORE-->', r('core.js')).replace('<!--ANIMALS-->', r('animals.js')).replace('<!--REPLAYS-->', r('replays.js')).replace('<!--SOUNDS-->', sounds_js)
+html = r('app.html').replace('<!--SITE-->', SITE.replace('https://', '').rstrip('/')).replace('<!--CORE-->', r('core.js')).replace('<!--ANIMALS-->', r('animals.js')).replace('<!--REPLAYS-->', r('replays.js')).replace('<!--SOUNDS-->', sounds_js)
 os.makedirs(os.path.join(here, 'dist'), exist_ok=True)
 out = os.path.join(here, 'dist', 'runaway.html')
 open(out, 'w', encoding='utf-8').write(html)
-# 배포 주소. Pages 주소가 바뀌면 여기 한 줄만 고치면 된다 (공유 카드·OG·매니페스트가 모두 이걸 쓴다)
-SITE = 'https://cjsdudwls1.github.io/runa-way/'
-# 방문자 수 확인용. goatcounter.com 무료 계정을 만들고 코드만 넣으면 켜진다. 비우면 아무것도 안 붙는다
-COUNTER = ''
 HEAD = """<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>러너웨이 · 뒤에서 진짜 동물이 쫓아온다</title>
