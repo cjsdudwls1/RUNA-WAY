@@ -651,7 +651,7 @@ async function shareCard() {
 }
 function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
 // GPS 튐 억제 상수. 정지 중 표류를 죽이고 실제 이동만 남긴다
-const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 1.2, HEAD_GPS_MS: 1.5, HEAD_BASE_M: 8, HEAD_EMA: 0.25 };
+const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, DEAD_MAX_M: 10, MOVE_MS: 1.0, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 0.9, HEAD_GPS_MS: 1.3, HEAD_BASE_M: 8, HEAD_EMA: 0.25, HEAD_GPS_EMA: 0.5 };
 /** 서 있는가? 1순위는 도플러 속도, 없으면 최근 창의 전반부·후반부 무게중심 이동량으로 판정 */
 function isStanding(fix) {
   if (fix.spd !== null) return fix.spd < GPSF.STILL_MS;
@@ -668,10 +668,13 @@ function trackAnchor(fix) {
   const h = st.hold, W = st.win;
   W.push([fix.lat, fix.lon]); if (W.length > GPSF.WIN_N) W.shift();
   h.acc = fix.acc;
+  // 도플러가 "달린다"고 하면 두말없이 따라간다. 정지 잡음을 막으려고 만든 장치가 달릴 때까지 발목을 잡으면 안 된다
+  if (fix.spd !== null && fix.spd >= GPSF.MOVE_MS) { st.still = false; h.lat = fix.lat; h.lon = fix.lon; return; }
   if (isStanding(fix)) { st.still = true; return; }           // 정지. 앵커 완전 고정
   st.still = false;
   const d = RW.haversineM(h.lat, h.lon, fix.lat, fix.lon);
-  const band = Math.max(GPSF.DEAD_MIN_M, fix.acc * GPSF.DEAD_ACC_K);
+  // 정확도가 20m여도 밴드가 28m가 되면 안 된다. 그러면 움직여도 아무 일이 안 일어난다
+  const band = Math.min(GPSF.DEAD_MAX_M, Math.max(GPSF.DEAD_MIN_M, fix.acc * GPSF.DEAD_ACC_K));
   if (d <= band) return;                       // 밴드 안 = 잡음
   const k = (d - band) / d;                    // 밴드 경계까지만 이동
   h.lat += (fix.lat - h.lat) * k; h.lon += (fix.lon - h.lon) * k;
@@ -680,10 +683,9 @@ function trackAnchor(fix) {
 function updateHeading(fix, row) {
   const spd = fix && fix.spd !== null ? fix.spd : row.speedCms / 100;
   if (spd < GPSF.HEAD_MIN_MS) return;
-  // 자이로가 "안 돌고 있다"고 하면 GPS 잡음만으로 방향을 바꾸지 않는다 (0.25 rad/s = 14도/초)
-  if (GYRO.on && GYRO.rate < 0.25 && !Number.isNaN(st.headRad)) return;
-  let target = NaN;
-  if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) target = fix.hdg * Math.PI / 180;
+  let target = NaN, hard = false;
+  // GPS 코스는 도플러에서 나온다. 달리는 중이면 이게 제일 정확하다
+  if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) { target = fix.hdg * Math.PI / 180; hard = true; }
   else {
     const P = st.trail;
     for (let i = P.length - 2; i >= 0 && i > P.length - 60; i--) {
@@ -692,10 +694,13 @@ function updateHeading(fix, row) {
     }
   }
   if (Number.isNaN(target)) return;
+  // 자이로 잠금은 '멈춰 있을 때 잡음으로 도는 것'만 막는 장치다.
+  // 실제로 달리는 중에도 막으면 지도가 옛 방향에 갇혀 게처럼 옆으로 걷는다
+  if (!hard && GYRO.on && GYRO.rate < 0.25 && spd < GPSF.HEAD_GPS_MS && !Number.isNaN(st.headRad)) return;
   if (Number.isNaN(st.headRad)) { st.headRad = target; return; }
   let d = target - st.headRad;
   while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
-  st.headRad += d * GPSF.HEAD_EMA;
+  st.headRad += d * (hard ? GPSF.HEAD_GPS_EMA : GPSF.HEAD_EMA);
 }
 /** 신호가 없으면 마지막 위치를 유지한다. 출발점으로 되돌리지 않는다 */
 function fixToRow(t, fix) {
@@ -709,7 +714,7 @@ function fixToRow(t, fix) {
   const row = st.builder.push(t, h.lat, h.lon, h.acc);
   if (fix && fix.spd !== null) row.speedCms = Math.round(fix.spd * 100);   // 도플러 속도가 위치 차분보다 정확
   if (!fix || st.still) row.speedCms = 0;
-  const sl = Number.isNaN(st.builder.lastLat) ? h.lat : st.builder.lastLat, so = Number.isNaN(st.builder.lastLon) ? h.lon : st.builder.lastLon;
+  const sl = h.lat, so = h.lon;   // 표시는 앵커 그대로. 코어 평활화(알파 0.35)는 거리 계산에만 쓴다
   st.lastLatLon = [sl, so];
   const n = RW.haversineM(st.lat0, st.lon0, sl, st.lon0) * (sl >= st.lat0 ? 1 : -1), e = RW.haversineM(st.lat0, st.lon0, st.lat0, so) * (so >= st.lon0 ? 1 : -1);
   if (!st.trailDist.length || row.distCm > st.trailDist[st.trailDist.length - 1]) { st.trailDist.push(row.distCm); st.trail.push([e, n]); }
@@ -947,16 +952,29 @@ function render(snap, fix) {
   $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'}`;
   if (!st.pocket) drawRadar(snap);
 }
+/** GPS는 1초에 한 번 온다. 그 사이를 진행 방향으로 메워야 즉각 반응하는 것처럼 보인다.
+ *  내비 앱이 부드러운 이유가 이것이다. 값을 지어내는 게 아니라 다음 수신까지 관성으로 잇는 것 */
+function predictOffset() {
+  if (Number.isNaN(st.headRad) || !st.lastFix || st.still) return [0, 0];
+  const v = st.lastFix.spd !== null ? st.lastFix.spd
+          : (st.session && st.session.lastSnap ? st.session.lastSnap.playerCms / 100 : 0);
+  if (v < 0.8) return [0, 0];
+  const dt = Math.min(2.0, Math.max(0, (Date.now() - st.lastFix.at) / 1000));
+  return [Math.sin(st.headRad) * v * dt, Math.cos(st.headRad) * v * dt];
+}
 function drawRadar(snap) {
   const c = $('#radar'), g = c.getContext('2d'), W = c.width, cx = W / 2, cy = W / 2; const a = st.animal;
   const viewM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), k = (W / 2 - 10) / viewM;
   g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
-  const P = st.trail, me = P.length ? P[P.length - 1] : [0, 0];
+  const [pdE, pdN] = predictOffset();
+  const P = st.trail, raw = P.length ? P[P.length - 1] : [0, 0], me = [raw[0] + pdE, raw[1] + pdN];
   const bearing = Number.isNaN(st.headRad) ? 0 : st.headRad;   // 소리와 지도가 같은 방향을 써야 한다. 어긋나면 러너가 소리를 안 믿는다
   g.save(); g.translate(cx, cy); g.rotate(-bearing);
   // 지도 타일
   if (st.useMap && st.tilesOk !== false && st.lastLatLon) {
-    const [lat, lon] = st.lastLatLon; const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
+    const [rlat, rlon] = st.lastLatLon;
+    const lat = rlat + pdN / 111320, lon = rlon + pdE / (111320 * Math.cos(rlat * Math.PI / 180) || 1);
+    const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
     const mPerTile = 40075016.686 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), tilePx = mPerTile * k;
     const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
     g.save(); g.globalAlpha = 0.9;
