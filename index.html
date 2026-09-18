@@ -549,24 +549,49 @@ function flash() { document.body.classList.add('flash'); setTimeout(() => docume
 // ---------- 위치 ----------
 // 자이로 각속도. 폰이 주머니에 있어도 몸이 돈 만큼 폰도 돈다.
 // 장착 방향을 몰라도 "지금 안 돌고 있다"는 판정은 정확하다. 정지 중 지도가 도는 것을 뿌리에서 막는다
-const GYRO = { on: false, rate: 0, at: 0 };
-function startGyro() {
-  if (GYRO.on || typeof window.DeviceOrientationEvent === 'undefined') return;
-  const h = (e) => {
+// 나침반. 카카오맵이 폰을 돌리면 바로 반응하는 이유가 이것이다.
+// GPS 코스는 "움직이는 방향"이라 제자리에서 돌면 아무 값도 안 나온다. 지자기 센서만이 "지금 어디를 보는가"를 안다
+const HEAD = { compass: NaN, compassAt: 0, course: NaN, courseAt: 0, ok: false, outAt: 0 };
+function nrm(a) { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
+function startCompass() {
+  if (typeof window.DeviceOrientationEvent === 'undefined') return;
+  const onOrient = (e) => {
     if (e.alpha === null || e.alpha === undefined) return;
-    const now = Date.now(); const a = e.alpha * Math.PI / 180;
-    if (GYRO.at) { let d = a - GYRO.last; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
-      const dt = Math.max(0.02, (now - GYRO.at) / 1000);
-      GYRO.rate = GYRO.rate * 0.7 + Math.abs(d / dt) * 0.3; }
-    GYRO.last = a; GYRO.at = now; GYRO.on = true;
+    if (e.absolute !== true && e.type !== 'deviceorientationabsolute') return;   // 상대 방향은 나침반이 아니다
+    const b = (e.beta || 0) * Math.PI / 180, cb = Math.cos(b);
+    if (Math.abs(cb) < 0.25) return;                    // 폰이 거의 수직. 윗변의 수평 방향이 정의되지 않는다
+    const sa = (screen.orientation && screen.orientation.angle) || 0;
+    let h = nrm((-e.alpha + sa) * Math.PI / 180);       // 알파는 나침반과 반대 방향으로 증가한다
+    if (cb < 0) h = nrm(h + Math.PI);                   // 폰을 뒤집어 들었다
+    HEAD.compass = h; HEAD.compassAt = Date.now(); HEAD.ok = true;
+    applyHeading();
   };
-  window.addEventListener('deviceorientationabsolute', h, true);
-  window.addEventListener('deviceorientation', h, true);
+  window.addEventListener('deviceorientationabsolute', onOrient, true);
+  window.addEventListener('deviceorientation', onOrient, true);
+}
+/** 나침반과 GPS 코스를 합친다.
+ *  달릴 땐 코스(팔 흔들림에 안 흔들린다), 느리거나 서 있으면 나침반(제자리에서 돌아도 바로 반응) */
+function applyHeading() {
+  const now = Date.now();
+  const spd = st.lastFix && st.lastFix.spd !== null ? st.lastFix.spd
+            : (st.session && st.session.lastSnap ? st.session.lastSnap.playerCms / 100 : 0);
+  const courseOk = !Number.isNaN(HEAD.course) && now - HEAD.courseAt < 4000;
+  const compOk = !Number.isNaN(HEAD.compass) && now - HEAD.compassAt < 1500;
+  let target = NaN, soft = false;
+  if (spd >= GPSF.COURSE_MS && courseOk) { target = HEAD.course; soft = HEAD.courseSoft; }
+  else if (compOk) target = HEAD.compass;
+  else if (courseOk) { target = HEAD.course; soft = HEAD.courseSoft; }
+  if (Number.isNaN(target)) return;
+  if (Number.isNaN(st.headRad)) { st.headRad = target; HEAD.outAt = now; return; }
+  const d = nrm(target - st.headRad);
+  if (Math.abs(d) < GPSF.HEAD_DEAD) { HEAD.outAt = now; return; }   // 미세한 떨림은 무시. 서 있을 때 흔들리지 않게
+  const dt = Math.min(0.5, Math.max(0.01, (now - (HEAD.outAt || now)) / 1000)); HEAD.outAt = now;
+  st.headRad = nrm(st.headRad + d * (1 - Math.exp(-dt / (soft ? GPSF.HEAD_TAU_SOFT : GPSF.HEAD_TAU))));
 }
 // 아티팩트 뷰어와 일부 인앱 브라우저는 iframe 정책으로 위치를 막는다. 코드로 못 푼다
 const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
 function startGps() {
-  startGyro();
+  startCompass();
   st.gpsErr = null; st.fixCount = 0;
   if (!navigator.geolocation) { st.gpsErr = '위치 미지원 브라우저'; return; }
   st.watchId = navigator.geolocation.watchPosition(p => {
@@ -664,7 +689,7 @@ async function shareCard() {
 }
 function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
 // GPS 튐 억제 상수. 정지 중 표류를 죽이고 실제 이동만 남긴다
-const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, DEAD_MAX_M: 10, MOVE_MS: 1.0, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 0.9, HEAD_GPS_MS: 1.3, HEAD_BASE_M: 8, HEAD_EMA: 0.25, HEAD_GPS_EMA: 0.5 };
+const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, DEAD_MAX_M: 10, MOVE_MS: 1.0, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 0.9, HEAD_GPS_MS: 1.3, HEAD_BASE_M: 8, COURSE_MS: 2.0, HEAD_TAU: 0.12, HEAD_TAU_SOFT: 1.2, HEAD_DEAD: 0.05 };
 /** 서 있는가? 1순위는 도플러 속도, 없으면 최근 창의 전반부·후반부 무게중심 이동량으로 판정 */
 function isStanding(fix) {
   if (fix.spd !== null) return fix.spd < GPSF.STILL_MS;
@@ -693,27 +718,24 @@ function trackAnchor(fix) {
   h.lat += (fix.lat - h.lat) * k; h.lon += (fix.lon - h.lon) * k;
 }
 /** 진행 방향. 느리면 갱신하지 않고 직전 방향을 유지한다 (정지 중 지도가 빙빙 도는 원인) */
+/** GPS 코스를 기록한다. 지도 회전 자체는 applyHeading이 나침반과 합쳐서 결정한다 */
 function updateHeading(fix, row) {
   const spd = fix && fix.spd !== null ? fix.spd : row.speedCms / 100;
   if (spd < GPSF.HEAD_MIN_MS) return;
-  let target = NaN, hard = false;
-  // GPS 코스는 도플러에서 나온다. 달리는 중이면 이게 제일 정확하다
-  if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) { target = fix.hdg * Math.PI / 180; hard = true; }
+  let target = NaN;
+  let soft = false;
+  if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) target = fix.hdg * Math.PI / 180;
   else {
+    soft = true;   // 궤적 차분은 잡음이 많다. 같은 속도로 반영하면 지도가 떨린다
     const P = st.trail;
-    for (let i = P.length - 2; i >= 0 && i > P.length - 60; i--) {
-      const dx = P[P.length - 1][0] - P[i][0], dy = P[P.length - 1][1] - P[i][1];
+    for (let k = P.length - 2; k >= 0 && k > P.length - 60; k--) {
+      const dx = P[P.length - 1][0] - P[k][0], dy = P[P.length - 1][1] - P[k][1];
       if (Math.hypot(dx, dy) >= GPSF.HEAD_BASE_M) { target = Math.atan2(dx, dy); break; }
     }
   }
   if (Number.isNaN(target)) return;
-  // 자이로 잠금은 '멈춰 있을 때 잡음으로 도는 것'만 막는 장치다.
-  // 실제로 달리는 중에도 막으면 지도가 옛 방향에 갇혀 게처럼 옆으로 걷는다
-  if (!hard && GYRO.on && GYRO.rate < 0.25 && spd < GPSF.HEAD_GPS_MS && !Number.isNaN(st.headRad)) return;
-  if (Number.isNaN(st.headRad)) { st.headRad = target; return; }
-  let d = target - st.headRad;
-  while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
-  st.headRad += d * (hard ? GPSF.HEAD_GPS_EMA : GPSF.HEAD_EMA);
+  HEAD.course = nrm(target); HEAD.courseAt = Date.now(); HEAD.courseSoft = soft;
+  applyHeading();
 }
 /** 신호가 없으면 마지막 위치를 유지한다. 출발점으로 되돌리지 않는다 */
 function fixToRow(t, fix) {
@@ -962,7 +984,7 @@ function render(snap, fix) {
   if (st.mode === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr + ' · 홈에서 GPS 확인'; }
   else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
   else b.textContent = snap.warmup ? '녀석이 뒤에 있다. 아직 널 못 봤다' : snap.cooldown ? '쿨다운 · 적 정지' : (snap.paused || st.manualPause) ? '일시정지 · 적도 멈춤' : snap.state === 'lost' ? 'GPS 불안정 · 판정 동결' : '';
-  $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'}`;
+  $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'} · 나침반 ${HEAD.ok ? Math.round(((HEAD.compass * 180 / Math.PI) + 360) % 360) + '°' : '없음'}`;
   if (!st.pocket) drawRadar(snap);
 }
 /** GPS는 1초에 한 번 온다. 그 사이를 진행 방향으로 메워야 즉각 반응하는 것처럼 보인다.
@@ -1019,6 +1041,14 @@ function drawRadar(snap) {
     g.fillStyle = '#dfe9e4'; g.font = '20px "IBM Plex Mono", monospace'; g.fillText(`${Math.round(en.gap / 100)}m`, 0, -rad - 12); g.restore();
   }
   g.restore();
+  // 북쪽 표시. 지도가 도는 게 맞는지 눈으로 확인된다. 이게 없으면 회전이 버그처럼 보인다
+  {
+    const r = W / 2 - 26, nx = cx + Math.sin(-bearing) * r, ny = cy - Math.cos(-bearing) * r;
+    g.save(); g.translate(nx, ny);
+    g.fillStyle = 'rgba(255,74,61,0.9)'; g.beginPath(); g.moveTo(0, -13); g.lineTo(-8, 8); g.lineTo(8, 8); g.closePath(); g.fill();
+    g.fillStyle = '#dfe9e4'; g.font = 'bold 18px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('N', 0, 26); g.restore();
+  }
   g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(cx, cy - 14); g.lineTo(cx - 9, cy + 9); g.lineTo(cx + 9, cy + 9); g.closePath(); g.fill();
   g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
   if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(TILE_SRC[TILE.src].credit, W - 8, W - 8); }
