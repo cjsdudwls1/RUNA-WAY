@@ -133,6 +133,19 @@
   <div class="dbg" id="dbg"></div>
 </div>
 
+<div id="safety" style="display:none;position:fixed;inset:0;background:rgba(4,8,7,.96);z-index:120;align-items:center;justify-content:center;padding:24px">
+  <div style="max-width:420px">
+    <h2 style="color:var(--red);font-family:var(--display);font-weight:400;font-size:30px;margin:0 0 14px">달리기 전에</h2>
+    <ul style="padding-left:18px;line-height:1.8;margin:0 0 22px">
+      <li>차도와 횡단보도에서는 게임보다 신호를 먼저 본다</li>
+      <li>이어폰 음량은 차 소리가 들리는 수준으로 유지한다</li>
+      <li>소리가 가까워져도 앞을 보고 달린다. 화면은 안 봐도 된다</li>
+      <li>사고는 앱이 막아주지 않는다</li>
+    </ul>
+    <button class="big" id="safetyOk">알겠다</button>
+  </div>
+</div>
+
 <div id="pocketCover" style="display:none;position:fixed;inset:0;background:#000;z-index:99;align-items:center;justify-content:center;color:#1d3a30;font:14px monospace">화면 꺼둠 · 탭하면 돌아온다</div>
 
 <div id="result" class="screen">
@@ -1049,6 +1062,24 @@ $('#start').addEventListener('click', start);
 $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#share').addEventListener('click', shareCard);
+// 테스터가 화면만 찍어 보내도 원인이 남도록. 오류를 조용히 삼키지 않는다
+window.addEventListener('error', e => {
+  const m = (e.message || '오류') + ' @' + (e.lineno || '?');
+  log('오류 ' + m);
+  const b = $('#banner'); if (b) { b.className = 'banner bad'; b.textContent = '내부 오류: ' + m; }
+});
+window.addEventListener('unhandledrejection', e => log('오류(비동기) ' + ((e.reason && e.reason.message) || e.reason)));
+// 첫 실행 안전 고지
+let safeSeen = false;
+try { safeSeen = localStorage.getItem('safetyOk') === '1'; } catch (e) { }
+$('#safetyOk').addEventListener('click', () => {
+  try { localStorage.setItem('safetyOk', '1'); } catch (e) { }
+  $('#safety').style.display = 'none'; safeSeen = true;
+});
+const _start = $('#start');
+_start.addEventListener('click', (e) => {
+  if (!safeSeen && st.mode === 'gps') { e.stopImmediatePropagation(); $('#safety').style.display = 'flex'; }
+}, true);
 // 끼워진 창에서 열렸으면 실주행이 안 된다. 앱이 고장난 줄 알게 두지 않는다
 if (EMBEDDED) {
   const url = 'https://' + SHARE_URL + '/';
