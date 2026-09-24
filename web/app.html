@@ -101,7 +101,7 @@
     <div class="lbl">말 많음</div>
     <div class="seg" id="voice"><button data-v="quiet">적게</button><button data-v="normal" class="on">보통</button><button data-v="chatty">많이</button></div>
     <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로 지나간다</button>
-    <p class="sub" style="margin-top:6px">목소리: 관제사와 동물 25종. Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p>
+    <p class="sub" style="margin-top:6px">관제사 목소리: Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p>
     <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap</div>
     <input id="vkey" class="card" style="width:100%" placeholder="vworld.kr 인증키를 넣으면 한국 상세 다크 지도">
     <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
@@ -161,7 +161,7 @@
 (() => {
 const $ = (s) => document.querySelector(s);
 const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
-const VP = { op: null, an: null, aid: null, cache: new Map(), opP: null, anP: null };   // 음성 팩 상태. 동물 목록 클릭 핸들러가 로드 중에 쓰므로 위에 둔다
+const VP = { op: null, cache: new Map(), opP: null };   // 음성 팩 상태
 const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
@@ -174,7 +174,7 @@ for (const a of sorted) {
   const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
   const sp = a.constant ? `${a.sprintKmh} km/h 등속` : `스프린트 ${a.sprintKmh} km/h × ${a.sprintS}s`;
   d.innerHTML = `<div class="ico">${EMOJI[a.id] || '🐾'}<small class="${a.track === 'B' ? 'b' : ''}">${a.track === 'A' ? 'A' + a.tier : 'B'}</small></div><div><div class="name">${a.nameKo}</div><div class="meta">${sp}</div></div><div class="hits">${a.track === 'B' ? '못 깸' : '난이도 ' + a.tier}</div>`;
-  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); if (VP.opP) vpLoad(a.id); });
+  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); });
   list.appendChild(d);
 }
 function refreshPick() {
@@ -326,28 +326,25 @@ function budgetOk(cost) {
 // 리플레이는 10배속. 벽시계 기준 쿨다운이 세션 시간으로는 10배가 되므로 배속만큼 줄인다
 function vrate() { return st.mode === 'replay' ? 10 : 1; }
 // ---------- 음성 팩 ----------
-// 미리 구운 신경망 TTS(web/voice/bake.py). 관제사 문장은 조각을 이어 붙이고, 동물은 자기 목소리로 적의 방향에서 말한다.
+// 미리 구운 신경망 TTS(web/voice/bake.py). 관제사 문장은 조각을 이어 붙인다.
+// 동물 목소리(사람이 의성어를 읽는 것)는 어색해서 뺐다. 동물은 울음 합성음만 낸다
 // 팩을 못 받으면(오프라인, 단일 파일 실행) 브라우저 TTS로 같은 문장을 읽는다
 const HAS_PACK = typeof VOICE_PACK !== 'undefined' && VOICE_PACK.op;
 function vtext(k) { return (HAS_PACK && VOICE_PACK.text[k]) || k; }
 /** 바이트만 받는다(오디오 컨텍스트 불필요). 홈 화면에서 미리 받아 두어야 출발 직후 첫 말부터 구운 목소리가 나온다 */
-function vpLoad(aid) {
+function vpLoad() {
   if (!HAS_PACK || location.protocol === 'file:') return;
   const get = (f) => fetch('voice/' + f + '?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); });
   if (!VP.opP) VP.opP = get('op.bin').then(b => { VP.op = b; prewarm(); }).catch(e => { VP.opP = null; log('음성 팩 실패 → 기본 TTS ' + e.message); });
-  if (aid && VP.aid !== aid) {
-    VP.aid = aid; VP.an = null; for (const k of [...VP.cache.keys()]) if (k.startsWith('a:')) VP.cache.delete(k);
-    VP.anP = get('a_' + aid + '.bin').then(b => { if (VP.aid === aid) VP.an = b; }).catch(() => { });
-  }
 }
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 /** 조각 하나를 필요할 때 디코드한다. 전부 풀어두면 수십 MB라 저가 폰에서 위험하다 */
-function clip(src, key) {
-  const ck = src[0] + ':' + key;
+function clip(key) {
+  const ck = key;
   if (VP.cache.has(ck)) { const p = VP.cache.get(ck); VP.cache.delete(ck); VP.cache.set(ck, p); return p; }
-  const bin = src === 'op' ? VP.op : VP.an;
+  const bin = VP.op;
   if (!A.ctx) return Promise.resolve(null);
-  const idx = src === 'op' ? VOICE_PACK.op[key] : (VOICE_PACK.animals[VP.aid] || {})[key];
+  const idx = VOICE_PACK.op[key];
   if (!bin || !idx) return Promise.resolve(null);
   const p = A.ctx.decodeAudioData(bin.slice(idx[0], idx[0] + idx[1])).catch(() => null);
   VP.cache.set(ck, p);
@@ -357,8 +354,8 @@ function clip(src, key) {
 /** 급할 때 디코드 지연이 없도록 방향과 자주 쓰는 말은 미리 풀어둔다 */
 function prewarm() {
   if (!A.ctx || !VP.op) return;
-  for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) { clip('op', 'dc_' + d); clip('op', 'dx_' + d); }
-  for (const k of ['spotted', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip('op', k);
+  for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) { clip('dc_' + d); clip('dx_' + d); }
+  for (const k of ['spotted', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip(k);
 }
 /** 수 → 조각 키. 235 = 이백 + 삼십오 */
 function numSeq(n) {
@@ -379,10 +376,10 @@ function kmhSeq(k) {
 }
 const DIR_KEYS = { '정면': 'front', '바로 뒤': 'back', '왼쪽 앞': 'lf', '오른쪽 앞': 'rf', '왼쪽': 'l', '오른쪽': 'r', '왼쪽 뒤': 'lb', '오른쪽 뒤': 'rb' };
 function dirKey(rel) { return DIR_KEYS[dirWord(rel)]; }
-function speakIntro(seq, pre) { speak('intro', seq, { pri: PRI.CRIT, pre }); }
+function speakIntro(seq) { speak('intro', seq, { pri: PRI.CRIT }); }
 function pickVar(key, v) { if (!Array.isArray(v[0])) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
 /** key: 같은 종류의 말을 묶는 이름. variants: 조각 키 배열 하나, 또는 그 배열들(돌아가며 쓴다).
- *  o.pri/o.cooldown(초)/o.ttl(초). o.pre = { k: 'sprint', near, rel } 이면 동물이 먼저 자기 목소리로 말한다 */
+ *  o.pri/o.cooldown(초)/o.ttl(초) */
 function speak(key, variants, o) {
   o = o || {}; const pri = o.pri === undefined ? PRI.NORM : o.pri, now = Date.now();
   if (!VOICE.on) return;
@@ -395,7 +392,7 @@ function speak(key, variants, o) {
   VOICE.keyAt[key] = now;
   VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
   const seq = pickVar(key, variants);
-  VOICE.q.push({ key, seq, pre: o.pre || null, text: seq.map(vtext).join(' '), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
+  VOICE.q.push({ key, seq, text: seq.map(vtext).join(' '), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
   VOICE.q.sort((a, b) => a.pri - b.pri);
   if (pri === PRI.CRIT && VOICE.speaking) { hush(); setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
   pump();
@@ -416,7 +413,7 @@ function pump() {
   VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
   const tok = VOICE.cur = (VOICE.cur || 0) + 1;
   const done = () => { if (tok !== VOICE.cur || !VOICE.speaking) return; VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
-  log('말: ' + (it.pre && VP.an ? '[' + ((VOICE_PACK.atext[VP.aid] || {})[it.pre.k] || '') + '] ' : '') + it.text);
+  log('말: ' + it.text);
   playPack(it, tok).then(dur => {
     if (tok !== VOICE.cur) return;
     if (dur !== null) { setTimeout(done, dur * 1000 + 60); return; }
@@ -427,24 +424,14 @@ function pump() {
 async function playPack(it, tok) {
   if (!A.ctx) return null;
   // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새는 것보다 조금 늦는 게 낫다
-  if ((!VP.op && VP.opP) || (it.pre && !VP.an && VP.anP)) await Promise.race([Promise.all([VP.opP, it.pre ? VP.anP : null]), sleep(4000)]);
+  if (!VP.op && VP.opP) await Promise.race([VP.opP, sleep(4000)]);
   if (!VP.op) return null;
-  const bufs = await Promise.all(it.seq.map(k => clip('op', k)));
+  const bufs = await Promise.all(it.seq.map(k => clip(k)));
   if (bufs.some(b => !b)) return null;
-  const pre = it.pre && VP.an ? await clip('a', it.pre.k) : null;
   if (tok !== VOICE.cur) return 0;
   if (A.ctx.state !== 'running') A.ctx.resume();
   const t0 = A.ctx.currentTime + 0.03; let t = t0; VOICE.srcs = [];
   const play = (b, dest, at) => { const s = A.ctx.createBufferSource(); s.buffer = b; s.connect(dest); s.start(at); VOICE.srcs.push(s); };
-  if (pre) {   // 동물 목소리는 그 녀석이 있는 방향에서. 울음소리 체인은 뒤를 너무 먹먹하게 만들어 말이 안 들린다 → 가볍게
-    const rel = it.pre.rel, behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;
-    const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 7000 * (1 - 0.35 * behind);
-    const g = A.ctx.createGain(); g.gain.value = 0.7 + 0.3 * Math.max(0, Math.min(1, it.pre.near || 0.8));
-    lp.connect(g); let tail = g;
-    if (rel !== undefined && A.ctx.createStereoPanner) { const pn = A.ctx.createStereoPanner(); pn.pan.value = Math.max(-0.75, Math.min(0.75, Math.sin(rel) * 0.75)); g.connect(pn); tail = pn; }
-    tail.connect(A.voice);
-    play(pre, lp, t); t += pre.duration + 0.12;
-  }
   bufs.forEach((b, i) => { play(b, A.radio, t); t += b.duration + (/[.!?]$/.test(vtext(it.seq[i])) ? 0.1 : 0.035); });
   return t - A.ctx.currentTime;
 }
@@ -805,31 +792,29 @@ function step() {
   const left = RW.S.WARMUP_S - s.elapsed + 1;
   if (s.elapsed === 1) {
     const head = ['intro_head', 'name_' + a.id, 'cnt' + Math.min(5, st.nPack)];
-    if (st.warmupS === 0) speakIntro([...head, 'intro_now'], { k: 'spot', near: Math.max(near, 0.6), rel: nrel });
+    if (st.warmupS === 0) speakIntro([...head, 'intro_now']);
     else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);
   }
   if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', ['warn60'], { pri: PRI.HIGH }); }
   if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4, pre: { k: 'spot', near: Math.max(near, 0.6), rel: nrel } }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
   for (const ev of snap.events) {
     const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
     const erel = relBearing(ev.en), dk = dirKey(erel), em = Math.round(ev.en.e.gap / 100);
-    const pre = (k) => ({ k, near: eNear, rel: erel });
     const ek = (ev.type === 'ambush') ? 'reengage' : ev.type;
     const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
     if (ev.type === 'sprint') {
       cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel); buzz([80, 60, 200]); flash();
       const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
       // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
-      // 동물이 먼저 소리친다("꼬꼬댁! 거기 서!"). 방향은 그 목소리가 온 쪽이다
-      if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT, pre: pre('sprint') });
-      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, ...kmhSeq(kmh)], { pri: PRI.HIGH, pre: pre('sprint') });
-      else if (n <= 4) speak('sprint', [['dc_' + dk], ['dx_' + dk, 'stick']], { pri: PRI.HIGH, cooldown: 15, pre: n === 3 ? pre('sprint') : null });
+      if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT });
+      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, ...kmhSeq(kmh)], { pri: PRI.HIGH });
+      else if (n <= 4) speak('sprint', [['dc_' + dk], ['dx_' + dk, 'stick']], { pri: PRI.HIGH, cooldown: 15 });
       else speak('sprint', [['dx_' + dk, ...meterSeq(em)], ['dx_' + dk]], { pri: PRI.NORM, cooldown: 50, cost: 1 });
     }
     else if (ev.type === 'hit') {
       cry('sprint', cls, 1, 1.0, erel); buzz(500); flash();
-      speak('hit', ['hit' + Math.min(3, snap.hits)], { pri: PRI.CRIT, pre: pre('hit') });
+      speak('hit', ['hit' + Math.min(3, snap.hits)], { pri: PRI.CRIT });
     }
     else if (ev.type === 'reengage' || ev.type === 'ambush') {
       // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
@@ -841,9 +826,8 @@ function step() {
     cry('tired', cls, Math.max(near, 0.5), 1, nrel);
     const tn = (VOICE.seen.tired = (VOICE.seen.tired || 0) + 1);
     // 지침은 유일하게 행동을 바꾸는 정보다. 계속 알리되 갈수록 짧게
-    const tpre = tn <= 2 ? { k: 'tired', near: Math.max(near, 0.5), rel: nrel } : null;
-    if (tn === 1) speak('tired', ['tired1'], { pri: PRI.HIGH, pre: tpre });
-    else if (tn <= 3) speak('tired', [['tired2'], ['tired3']], { pri: PRI.HIGH, cooldown: 30, pre: tpre });
+    if (tn === 1) speak('tired', ['tired1'], { pri: PRI.HIGH });
+    else if (tn <= 3) speak('tired', [['tired2'], ['tired3']], { pri: PRI.HIGH, cooldown: 30 });
     else speak('tired', [['tired4'], ['tired5']], { pri: PRI.NORM, cooldown: 120, cost: 1 });
   }
   else if (snap.state === 'recover' && prevState === 'tired') speak('recover', [['recover1'], ['recover2']], { pri: PRI.LOW, cooldown: 60, cost: 1 });
@@ -1002,7 +986,7 @@ function drawRadar(snap) {
 }
 function start() {
   if (!st.animal) return;
-  audioInit(); vpLoad(st.animal.id); if ('speechSynthesis' in window) speechSynthesis.getVoices();
+  audioInit(); vpLoad(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
   st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
@@ -1069,7 +1053,7 @@ if (EMBEDDED) {
 }
 // 오프라인 캐시. 음성 팩을 한 번 받으면 신호가 약한 코스에서도 말이 끊기지 않는다
 if ('serviceWorker' in navigator && location.protocol === 'https:' && !EMBEDDED) navigator.serviceWorker.register('sw.js').catch(() => { });
-if (!EMBEDDED) setTimeout(() => vpLoad(st.animal && st.animal.id), 800);   // 첫 화면을 그린 뒤. 약 1.3 MB, 서비스 워커가 한 번만 받게 한다
+if (!EMBEDDED) setTimeout(vpLoad, 800);   // 첫 화면을 그린 뒤. 약 2.8 MB, 서비스 워커가 한 번만 받게 한다
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
 // 지도 끌기(한 손가락)와 확대·축소(두 손가락, 휠). 끈 만큼 화면 중심이 옮겨 간다
 {
@@ -1101,12 +1085,11 @@ $('#vkey').addEventListener('change', e => {
   TILE.src = TILE.key ? 'vworld' : 'osm'; TILE.cache.clear(); TILE.loads = 0; TILE.fails = 0; st.tilesOk = null;
 });
 $('#audioTest').addEventListener('click', () => {
-  audioInit(); if (!st.animal) return; vpLoad(st.animal.id);
+  audioInit(); if (!st.animal) return; vpLoad();
   const cls = CLASS[st.animal.id] || 'small';
   // 왼쪽 뒤에서 정면을 지나 오른쪽 뒤로. 좌우와 앞뒤가 구분되는지 귀로 확인한다
   [-2.4, -1.2, 0, 1.2, 2.4].forEach((rel, i) => setTimeout(() => cry('roam', cls, 0.85, 1, rel), i * 750));
-  // 마지막에 그 동물이 오른쪽 뒤에서 자기 목소리로 한마디. 동물마다 목소리가 다르다는 걸 출발 전에 들려준다
-  setTimeout(() => speak('test', ['name_' + st.animal.id, 'test_tail'], { pri: PRI.CRIT, pre: { k: 'spot', near: 0.85, rel: 2.4 } }), 4200);
+  setTimeout(() => speak('test', ['name_' + st.animal.id, 'test_tail'], { pri: PRI.CRIT }), 4200);
 });
 $('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
 $('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });

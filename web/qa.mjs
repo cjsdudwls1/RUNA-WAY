@@ -1,7 +1,7 @@
 // 출시 전 헤드리스 QA. docs/app/을 로컬로 띄워 실제 크롬에서 끝까지 돌린다
 // 실행: NODE_PATH=$(npm root -g) node web/qa.mjs   (playwright 필요)
 // 확인: 스크립트 오류 0, 음성 팩 전 조각 디코드, 실내 데모 완주, 구운 음성 재생(브라우저 TTS 미사용),
-//       동물 목소리 재생, 지도 끌기·복귀, 결과 화면, 음성 팩이 없을 때 브라우저 TTS로 대체
+//       지도 끌기·복귀, 결과 화면, 음성 팩이 없을 때 브라우저 TTS로 대체
 import { createRequire } from 'node:module';
 import http from 'node:http';
 import fs from 'node:fs';
@@ -64,16 +64,9 @@ async function run(opts) {
     for (const [k, [o, l]] of Object.entries(P.op)) {
       try { const b = await ac.decodeAudioData(op.slice(o, o + l).buffer); out.op++; out.opSec += b.duration; if (b.duration < 0.15) out.opBad.push(k); } catch (e) { out.opBad.push(k); }
     }
-    for (const [aid, idx] of Object.entries(P.animals)) {
-      const bin = await load('a_' + aid + '.bin');
-      for (const [k, [o, l]] of Object.entries(idx)) {
-        try { const b = await ac.decodeAudioData(bin.slice(o, o + l).buffer); out.an++; out.anSec += b.duration; if (b.duration < 0.3) out.anBad.push(aid + '_' + k); } catch (e) { out.anBad.push(aid + '_' + k); }
-      }
-    }
     return out;
   });
   check(r.opBad.length === 0 && r.op >= 400, `관제 음성 ${r.op}조각 디코드 (${r.opSec.toFixed(0)}초) 불량 ${r.opBad.join(',') || 0}`);
-  check(r.anBad.length === 0 && r.an === 100, `동물 음성 ${r.an}조각 디코드 (${r.anSec.toFixed(0)}초) 불량 ${r.anBad.join(',') || 0}`);
   // 대사에서 쓰는 키가 전부 팩에 있는가 (조각 누락 = 그 문장만 기계음으로 빠진다)
   const miss = await page.evaluate(() => {
     const need = ['intro_head', 'intro_hide', 'intro_top', 'intro_kmh', 'intro_tail', 'intro_now', 'warn60', 'warn15', 'spotted', 'sisok', 'hold', 'again', 'stick', 'meter',
@@ -86,7 +79,6 @@ async function run(opts) {
     need.push('intro_max');
     for (const a of ANIMALS) need.push('name_' + a.id);
     const m = need.filter(k => !VOICE_PACK.op[k]);
-    for (const a of ANIMALS) for (const k of ['spot', 'sprint', 'tired', 'hit']) if (!(VOICE_PACK.animals[a.id] || {})[k]) m.push(a.id + ':' + k);
     return m;
   });
   check(miss.length === 0, `대사 키 누락 ${miss.length ? miss.join(',') : '없음'}`);
@@ -133,11 +125,10 @@ async function run(opts) {
   const log = await page.locator('#rLog').textContent();
   const said = log.split('\n').filter(l => l.includes('말: '));
   console.log('     발화 ' + said.length + '회. 처음 6개:\n       ' + said.slice(0, 6).join('\n       '));
-  check(reqs.some(u => u.includes('voice/op.bin')) && reqs.some(u => /voice\/a_\w+\.bin/.test(u)), '음성 팩 요청 (관제 + 선택 동물)');
+  check(reqs.some(u => u.includes('voice/op.bin')), '음성 팩 요청');
   check(said.length >= 4, `대사 발화 ${said.length}회`);
   check(q.tts.length === 0, `브라우저 기계음 TTS 호출 0회 (실제 ${q.tts.length})`);
   check(q.decodes >= 10, `구운 음성 디코드 ${q.decodes}회`);
-  check(said.some(l => /\[.+\]/.test(l)), '동물 목소리 대사 재생 (로그에 [동물 대사])');
   check(!/오류/.test(log), '세션 로그에 오류 없음');
   const title = await page.locator('#rLabel').textContent();
   check(/탈출|중단/.test(title), '결과 화면: ' + title);
@@ -183,7 +174,7 @@ async function run(opts) {
   await ctx.close();
 }
 
-// 4. 소리 테스트 버튼: 동물 목소리 + 관제 문장
+// 4. 소리 테스트 버튼: 관제 문장
 {
   const { ctx, page, errors } = await run({});
   await page.click('#openSet');

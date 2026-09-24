@@ -196,15 +196,11 @@ def pack(items):
 
 
 def main():
-    shard = os.environ.get('VOICE_SHARD', 'all')   # op | animals | all. 굽기를 두 프로세스로 나눠 돌릴 때
+    shard = os.environ.get('VOICE_SHARD', 'all')   # op | op:i/n | all. 굽기를 두 프로세스로 나눠 돌릴 때
     if shard.startswith('op'):   # op 또는 op:1/2 (나눠 굽기)
         i, n = (int(v) for v in shard[3:].split('/')) if ':' in shard else (0, 1)
         for j, (key, t, tempo) in enumerate(L.OP):
             if j % n == i: bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
-        return
-    if shard == 'animals':
-        for aid, (sid, pitch, speed, lines) in L.ANIMALS.items():
-            for key, t in lines.items(): bake(f'{aid}_{key}', t, sid, speed, 1.0, pitch)
         return
     os.makedirs(OUT, exist_ok=True)
     qa = []
@@ -215,16 +211,7 @@ def main():
         print(f'[op {i + 1}/{len(L.OP)}] {key} cer={meta["cer"]} {t} → {meta["asr"]}', flush=True)
     b, idx = pack(items)
     open(os.path.join(OUT, 'op.bin'), 'wb').write(b)
-    man = {'op': idx, 'text': text, 'animals': {}, 'atext': {}}
-    for aid, (sid, pitch, speed, lines) in L.ANIMALS.items():
-        items, atext = [], {}
-        for key, t in lines.items():
-            meta, data = bake(f'{aid}_{key}', t, sid, speed, 1.0, pitch)
-            items.append((key, data)); atext[key] = t; qa.append((aid, key, meta))
-            print(f'[{aid}] {key} cer={meta["cer"]} {t} → {meta["asr"]}', flush=True)
-        b, idx = pack(items)
-        open(os.path.join(OUT, f'a_{aid}.bin'), 'wb').write(b)
-        man['animals'][aid] = idx; man['atext'][aid] = atext
+    man = {'op': idx, 'text': text}
     ver = hashlib.sha1(json.dumps(man, sort_keys=True).encode()).hexdigest()[:10]
     man['ver'] = ver
     open(os.path.join(HERE, '..', 'voice_manifest.js'), 'w', encoding='utf-8').write(
@@ -235,8 +222,7 @@ def main():
         for v, k, m in qa: f.write(f'{v}\t{k}\t{m["cer"]}\t{m["dur"]}\t{m["text"]}\t{m["asr"]}\n')
     op = [m['cer'] for v, k, m in qa if v == 'op']
     size = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT))
-    an = [m['cer'] for v, k, m in qa if v != 'op']
-    print(f'ver {ver} · 동물 {len(an)}조각 평균 CER {np.mean(an):.3f} · 관제 {len(op)}조각 평균 CER {np.mean(op):.3f} · CER>0.3 {sum(e > 0.3 for e in op)}개 · 총 {size // 1024} KB')
+    print(f'ver {ver} · 관제 {len(op)}조각 평균 CER {np.mean(op):.3f} · CER>0.3 {sum(e > 0.3 for e in op)}개 · 총 {size // 1024} KB')
 
 
 if __name__ == '__main__':
