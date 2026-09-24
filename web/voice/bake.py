@@ -135,15 +135,31 @@ def decode(data):
     return np.frombuffer(p.stdout, dtype='float32')
 
 
+def num_part(text):
+    return norm(re.sub(r'시속|킬로|미터', '', text))
+
+
+def score(key, text, hyp):
+    """낮을수록 좋다. 숫자 구절은 숫자가 들리는지가 먼저다. ASR은 '킬로'를 '킬러'로 적는 버릇이 있어 CER만 보면 숫자가 틀린 후보가 이긴다"""
+    e = cer(text, hyp)
+    if NUMKEY.match(key):
+        return (0 if num_part(text) in norm(hyp) else 1) + e
+    return e
+
+
+NUMKEY = re.compile(r'(kmh|m)\d')
+
+
 def bake(key, text, sid, speed, tempo=1.0, pitch=1.0):
-    h = hashlib.sha1(json.dumps([text, sid, speed, tempo, pitch, N_CAND, 4]).encode()).hexdigest()[:16]
+    h = hashlib.sha1(json.dumps([text, sid, speed, tempo, pitch, N_CAND, 5 if NUMKEY.match(key) else 4]).encode()).hexdigest()[:16]
     # 동물 대사는 의성어가 섞여 ASR이 원래 못 읽는다. 문턱을 따로 둔다
     retry_cer = RETRY_CER if abs(pitch - 1) < 1e-3 else 0.4
+    if NUMKEY.match(key): retry_cer = 0.2   # 숫자 구절: 숫자가 들리고(점수 1 미만) 나머지 오류가 작을 때까지
     cp = os.path.join(CACHE, h + '.json'); mp = os.path.join(CACHE, h + '.mp3')
     old = None
     if os.path.exists(cp) and os.path.exists(mp):
         old = json.load(open(cp))
-        if old['cer'] <= retry_cer or old.get('retried'):
+        if old.get('score', old['cer']) <= retry_cer or old.get('retried'):
             return old, open(mp, 'rb').read()
     import sherpa_onnx as so
     best = None
@@ -158,14 +174,14 @@ def bake(key, text, sid, speed, tempo=1.0, pitch=1.0):
         y = decode(data)
         if len(y) == 0 or np.abs(y).max() < 0.1:
             raise RuntimeError(f'{key}: 최종 mp3가 무음')
-        hyp = transcribe(y, SR_OUT); e = cer(text, hyp)
+        hyp = transcribe(y, SR_OUT); e = score(key, text, hyp)
         if best is None or e < best[0]: best = (e, hyp, data, dur)
-        if e == 0: break
+        if e <= (0.2 if NUMKEY.match(key) else 0): break
     e, hyp, data, dur = best
-    if old and e >= old['cer']:
+    if old and e >= old.get('score', old['cer']):
         old['retried'] = True; json.dump(old, open(cp, 'w'), ensure_ascii=False)
         return old, open(mp, 'rb').read()
-    meta = {'key': key, 'text': text, 'cer': round(e, 3), 'asr': hyp, 'dur': round(dur, 3), 'retried': True}
+    meta = {'key': key, 'text': text, 'cer': round(cer(text, hyp), 3), 'score': round(e, 3), 'asr': hyp, 'dur': round(dur, 3), 'retried': True}
     os.makedirs(CACHE, exist_ok=True)
     json.dump(meta, open(cp, 'w'), ensure_ascii=False); open(mp, 'wb').write(data)
     return meta, data
@@ -181,8 +197,10 @@ def pack(items):
 
 def main():
     shard = os.environ.get('VOICE_SHARD', 'all')   # op | animals | all. 굽기를 두 프로세스로 나눠 돌릴 때
-    if shard == 'op':
-        for key, t, tempo in L.OP: bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
+    if shard.startswith('op'):   # op 또는 op:1/2 (나눠 굽기)
+        i, n = (int(v) for v in shard[3:].split('/')) if ':' in shard else (0, 1)
+        for j, (key, t, tempo) in enumerate(L.OP):
+            if j % n == i: bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
         return
     if shard == 'animals':
         for aid, (sid, pitch, speed, lines) in L.ANIMALS.items():

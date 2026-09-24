@@ -358,7 +358,7 @@ function clip(src, key) {
 function prewarm() {
   if (!A.ctx || !VP.op) return;
   for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) { clip('op', 'dc_' + d); clip('op', 'dx_' + d); }
-  for (const k of ['spotted', 'sisok', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip('op', k);
+  for (const k of ['spotted', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip('op', k);
 }
 /** 수 → 조각 키. 235 = 이백 + 삼십오 */
 function numSeq(n) {
@@ -367,8 +367,16 @@ function numSeq(n) {
   const h = Math.floor(n / 100) * 100, r = n % 100;
   return [...(h ? ['n' + h] : []), ...(r ? ['n' + r] : [])];
 }
-/** 거리는 50m 밖이면 10m 단위로. "이백삼십칠 미터"는 들어도 못 쓴다 */
-function meterSeq(m) { return [...numSeq(m < 50 ? m : Math.round(m / 10) * 10), 'meter']; }
+/** 거리는 50m 밖이면 10m 단위로. "이백삼십칠 미터"는 들어도 못 쓴다.
+ *  숫자는 구절째 구운 조각을 쓴다. 조각을 이으면 "육십"이 "6시"로 들리는 일이 잦았다(ASR 실측 60~70%) */
+function meterSeq(m) {
+  const v = Math.max(1, m < 50 ? Math.round(m) : Math.round(m / 10) * 10);
+  return HAS_PACK && VOICE_PACK.op['m' + v] ? ['m' + v] : [...numSeq(v), 'meter'];
+}
+function kmhSeq(k) {
+  const v = Math.max(1, Math.round(k));
+  return HAS_PACK && VOICE_PACK.op['kmh' + v] ? ['kmh' + v] : ['sisok', ...numSeq(v), 'intro_kmh'];
+}
 const DIR_KEYS = { '정면': 'front', '바로 뒤': 'back', '왼쪽 앞': 'lf', '오른쪽 앞': 'rf', '왼쪽': 'l', '오른쪽': 'r', '왼쪽 뒤': 'lb', '오른쪽 뒤': 'rb' };
 function dirKey(rel) { return DIR_KEYS[dirWord(rel)]; }
 function speakIntro(seq, pre) { speak('intro', seq, { pri: PRI.CRIT, pre }); }
@@ -798,7 +806,7 @@ function step() {
   if (s.elapsed === 1) {
     const head = ['intro_head', 'name_' + a.id, 'cnt' + Math.min(5, st.nPack)];
     if (st.warmupS === 0) speakIntro([...head, 'intro_now'], { k: 'spot', near: Math.max(near, 0.6), rel: nrel });
-    else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_top', ...numSeq(a.sprintKmh), 'intro_kmh']), 'intro_tail']);
+    else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);
   }
   if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', ['warn60'], { pri: PRI.HIGH }); }
   if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
@@ -814,8 +822,8 @@ function step() {
       const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
       // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
       // 동물이 먼저 소리친다("꼬꼬댁! 거기 서!"). 방향은 그 목소리가 온 쪽이다
-      if (n === 1) speak('sprint', ['dc_' + dk, 'sisok', ...numSeq(kmh), 'hold'], { pri: PRI.CRIT, pre: pre('sprint') });
-      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, 'sisok', ...numSeq(kmh)], { pri: PRI.HIGH, pre: pre('sprint') });
+      if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT, pre: pre('sprint') });
+      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, ...kmhSeq(kmh)], { pri: PRI.HIGH, pre: pre('sprint') });
       else if (n <= 4) speak('sprint', [['dc_' + dk], ['dx_' + dk, 'stick']], { pri: PRI.HIGH, cooldown: 15, pre: n === 3 ? pre('sprint') : null });
       else speak('sprint', [['dx_' + dk, ...meterSeq(em)], ['dx_' + dk]], { pri: PRI.NORM, cooldown: 50, cost: 1 });
     }

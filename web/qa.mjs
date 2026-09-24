@@ -72,7 +72,7 @@ async function run(opts) {
     }
     return out;
   });
-  check(r.opBad.length === 0 && r.op >= 200, `관제 음성 ${r.op}조각 디코드 (${r.opSec.toFixed(0)}초) 불량 ${r.opBad.join(',') || 0}`);
+  check(r.opBad.length === 0 && r.op >= 400, `관제 음성 ${r.op}조각 디코드 (${r.opSec.toFixed(0)}초) 불량 ${r.opBad.join(',') || 0}`);
   check(r.anBad.length === 0 && r.an === 100, `동물 음성 ${r.an}조각 디코드 (${r.anSec.toFixed(0)}초) 불량 ${r.anBad.join(',') || 0}`);
   // 대사에서 쓰는 키가 전부 팩에 있는가 (조각 누락 = 그 문장만 기계음으로 빠진다)
   const miss = await page.evaluate(() => {
@@ -81,6 +81,9 @@ async function run(opts) {
       'end_hits0', 'end_hits1', 'end_hits2', 'end_final', 'unit_min', 'unit_sec', 'end_stop', 'wait', 'wait_coarse', 'pocket', 'test_tail', 'zero', 'cnt1', 'cnt2', 'cnt3', 'cnt5'];
     for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) need.push('dc_' + d, 'dx_' + d, 'dr_' + d);
     for (let n = 1; n < 100; n++) need.push('n' + n); for (let h = 1; h < 10; h++) need.push('n' + h * 100);
+    for (let n = 1; n <= 120; n++) need.push('kmh' + n);
+    for (let n = 1; n < 50; n++) need.push('m' + n); for (let n = 50; n <= 300; n += 10) need.push('m' + n);
+    need.push('intro_max');
     for (const a of ANIMALS) need.push('name_' + a.id);
     const m = need.filter(k => !VOICE_PACK.op[k]);
     for (const a of ANIMALS) for (const k of ['spot', 'sprint', 'tired', 'hit']) if (!(VOICE_PACK.animals[a.id] || {})[k]) m.push(a.id + ':' + k);

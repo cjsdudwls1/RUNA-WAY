@@ -30,6 +30,7 @@ OP = [
     ('intro_head', '여기는 러너웨이 관제.', 1.0),
     ('intro_hide', '근처 풀숲에 숨어 있다.', 1.0),
     ('intro_top', '최고 시속', 1.0),
+    ('intro_max', '최고 속도는', 1.0),
     ('intro_kmh', '킬로.', 1.0),
     ('intro_tail', '아직 널 못 봤다. 조용히 페이스를 올려라.', 1.0),
     ('intro_now', '바로 뒤에 있다. 이미 널 봤다. 뛰어!', 1.12),
@@ -79,6 +80,13 @@ for k, w in DIRS.items():
     OP.append((f'dr_{k}', f'한 마리가 돌아왔다. {w}.', 1.05))
 for n in range(1, 100):
     OP.append((f'n{n}', sino(n), 1.08))
+# 숫자는 구절째로 굽는다. 조각을 이으면 ASR이 "시속 육십"을 "시속 6시"로 듣는 식으로 60~70%만 맞았다
+def sino3(n):
+    return ('백' + sino(n - 100)) if n >= 100 else sino(n)
+for n in range(1, 121):
+    OP.append((f'kmh{n}', f'시속 {sino3(n)} 킬로!', 1.08))
+for n in list(range(1, 50)) + list(range(50, 301, 10)):
+    OP.append((f'm{n}', f'{sino3(n) if n < 100 else ("" if n < 200 else sino(n // 100)) + "백" + sino(n % 100)} 미터.', 1.08))
 for h in range(1, 10):
     OP.append((f'n{h * 100}', ('' if h == 1 else SINO[h]) + '백', 1.08))
 

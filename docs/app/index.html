@@ -54,6 +54,8 @@
   .num{background:var(--panel);border:1px solid var(--line);padding:6px 8px}
   .num b{display:block;font-family:var(--mono);font-size:20px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
   canvas{width:100%;aspect-ratio:1/1;display:block;background:#070b0a;border:1px solid var(--line)}
+  .mapwrap{position:relative}#radar{touch-action:none;cursor:grab}
+  #recenter{position:absolute;right:10px;bottom:10px;display:none;background:rgba(10,15,13,.88);border:1px solid var(--green);color:var(--green);padding:10px 14px;font-family:var(--mono);font-size:13px}
   .enemy{margin-top:8px;padding:10px 12px;border:1px solid var(--line);background:var(--panel);display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center}
   .enemy .big-ico{font-size:40px;line-height:1;text-align:center}
   .enemy b{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.1}
@@ -112,6 +114,7 @@
     <div class="lbl">말 많음</div>
     <div class="seg" id="voice"><button data-v="quiet">적게</button><button data-v="normal" class="on">보통</button><button data-v="chatty">많이</button></div>
     <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로 지나간다</button>
+    <p class="sub" style="margin-top:6px">목소리: 관제사와 동물 25종. Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p>
     <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap</div>
     <input id="vkey" class="card" style="width:100%" placeholder="vworld.kr 인증키를 넣으면 한국 상세 다크 지도">
     <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
@@ -126,7 +129,7 @@
     <div class="num"><b id="nPace">-</b><span>내 km/h</span></div>
     <div class="num"><b id="nTime">0:00</b><span>시간 · <em id="nDist">0.00</em>km</span></div>
   </div>
-  <canvas id="radar" width="720" height="720"></canvas>
+  <div class="mapwrap"><canvas id="radar" width="720" height="720"></canvas><button id="recenter">내 위치로</button></div>
   <div class="enemy" id="enemyBox"><div class="big-ico" id="eIco">🐔</div><div><b id="eName">-</b><div class="st" id="eState">-</div></div></div>
   <div class="banner" id="banner"></div>
   <div class="ctl"><button id="pause">일시정지</button><button id="mapToggle">지도/레이더</button><button id="pocket">주머니</button><button id="stop">종료</button></div>
@@ -339,10 +342,15 @@ if (typeof module !== "undefined") module.exports = ANIMALS;
 </script>
 <script>const SOUNDS = {};
 </script>
+<script>// 자동 생성. web/voice/bake.py
+const VOICE_PACK = {"op":{"intro_head":[0,10220],"intro_hide":[10220,11564],"intro_top":[21784,5804],"intro_max":[27588,9068],"intro_kmh":[36656,4460],"intro_tail":[41116,19628],"intro_now":[60744,12716],"warn60":[73460,12332],"warn15":[85792,7724],"spotted":[93516,10412],"sisok":[103928,3884],"hold":[107812,4076],"again":[111888,4460],"stick":[116348,4844],"meter":[121192,4268],"hit1":[125460,13676],"hit2":[139136,18860],"hit3":[157996,9644],"tired1":[167640,15980],"tired2":[183620,8108],"tired3":[191728,7532],"tired4":[199260,4268],"tired5":[203528,4268],"recover1":[207796,14060],"recover2":[221856,14060],"lost":[235916,21164],"half1":[257080,5612],"half2":[262692,6188],"cool":[268880,20780],"end_fail":[289660,10220],"end_arrive":[299880,8492],"end_hits0":[308372,8684],"end_hits1":[317056,6764],"end_hits2":[323820,6764],"end_final":[330584,5420],"unit_min":[336004,3692],"unit_sec":[339696,2924],"end_stop":[342620,5804],"wait":[348424,27116],"wait_coarse":[375540,33452],"pocket":[408992,15980],"test_tail":[424972,27116],"zero":[452088,3884],"cnt1":[455972,5036],"cnt2":[461008,4652],"cnt3":[465660,5804],"cnt4":[471464,5612],"cnt5":[477076,5996],"dc_front":[483072,6188],"dx_front":[489260,4652],"dr_front":[493912,10604],"dc_back":[504516,7532],"dx_back":[512048,4652],"dr_back":[516700,12140],"dc_lf":[528840,7724],"dx_lf":[536564,5420],"dr_lf":[541984,12716],"dc_rf":[554700,8108],"dx_rf":[562808,6956],"dr_rf":[569764,13100],"dc_l":[582864,6380],"dx_l":[589244,4460],"dr_l":[593704,11564],"dc_r":[605268,7724],"dx_r":[612992,5420],"dr_r":[618412,11372],"dc_lb":[629784,7340],"dx_lb":[637124,5804],"dr_lb":[642928,12140],"dc_rb":[655068,8492],"dx_rb":[663560,7148],"dr_rb":[670708,12524],"n1":[683232,3884],"n2":[687116,2924],"n3":[690040,2732],"n4":[692772,2540],"n5":[695312,4460],"n6":[699772,3116],"n7":[702888,3884],"n8":[706772,3308],"n9":[710080,2924],"n10":[713004,2732],"n11":[715736,4076],"n12":[719812,5036],"n13":[724848,5036],"n14":[729884,4076],"n15":[733960,4460],"n16":[738420,3884],"n17":[742304,4076],"n18":[746380,3884],"n19":[750264,2540],"n20":[752804,3308],"n21":[756112,4844],"n22":[760956,4652],"n23":[765608,5612],"n24":[771220,4844],"n25":[776064,5228],"n26":[781292,4268],"n27":[785560,4844],"n28":[790404,4652],"n29":[795056,4844],"n30":[799900,4460],"n31":[804360,5036],"n32":[809396,5036],"n33":[814432,6572],"n34":[821004,5228],"n35":[826232,4652],"n36":[830884,4076],"n37":[834960,4844],"n38":[839804,5228],"n39":[845032,7532],"n40":[852564,4460],"n41":[857024,4652],"n42":[861676,4844],"n43":[866520,5420],"n44":[871940,4076],"n45":[876016,4844],"n46":[880860,4076],"n47":[884936,5228],"n48":[890164,4844],"n49":[895008,4076],"n50":[899084,3308],"n51":[902392,4844],"n52":[907236,4076],"n53":[911312,4844],"n54":[916156,5036],"n55":[921192,4076],"n56":[925268,5420],"n57":[930688,4652],"n58":[935340,5420],"n59":[940760,4460],"n60":[945220,3500],"n61":[948720,5612],"n62":[954332,4268],"n63":[958600,5228],"n64":[963828,4844],"n65":[968672,5036],"n66":[973708,4652],"n67":[978360,5228],"n68":[983588,5612],"n69":[989200,4844],"n70":[994044,3692],"n71":[997736,4652],"n72":[1002388,5228],"n73":[1007616,5612],"n74":[1013228,5036],"n75":[1018264,5612],"n76":[1023876,5612],"n77":[1029488,5036],"n78":[1034524,6188],"n79":[1040712,3308],"n80":[1044020,3308],"n81":[1047328,5228],"n82":[1052556,4844],"n83":[1057400,6188],"n84":[1063588,4844],"n85":[1068432,5036],"n86":[1073468,5228],"n87":[1078696,4652],"n88":[1083348,5804],"n89":[1089152,4844],"n90":[1093996,3308],"n91":[1097304,4652],"n92":[1101956,4268],"n93":[1106224,5036],"n94":[1111260,5420],"n95":[1116680,4460],"n96":[1121140,4844],"n97":[1125984,5228],"n98":[1131212,5612],"n99":[1136824,4460],"kmh1":[1141284,5612],"kmh2":[1146896,7148],"kmh3":[1154044,5996],"kmh4":[1160040,6572],"kmh5":[1166612,5804],"kmh6":[1172416,7340],"kmh7":[1179756,6380],"kmh8":[1186136,5228],"kmh9":[1191364,6380],"kmh10":[1197744,6380],"kmh11":[1204124,7148],"kmh12":[1211272,7532],"kmh13":[1218804,9068],"kmh14":[1227872,8108],"kmh15":[1235980,7724],"kmh16":[1243704,8108],"kmh17":[1251812,7724],"kmh18":[1259536,7724],"kmh19":[1267260,6380],"kmh20":[1273640,8108],"kmh21":[1281748,7916],"kmh22":[1289664,8876],"kmh23":[1298540,8492],"kmh24":[1307032,9260],"kmh25":[1316292,7724],"kmh26":[1324016,8300],"kmh27":[1332316,8876],"kmh28":[1341192,8108],"kmh29":[1349300,8300],"kmh30":[1357600,7340],"kmh31":[1364940,8492],"kmh32":[1373432,8300],"kmh33":[1381732,7724],"kmh34":[1389456,8876],"kmh35":[1398332,8492],"kmh36":[1406824,8684],"kmh37":[1415508,8684],"kmh38":[1424192,9452],"kmh39":[1433644,9836],"kmh40":[1443480,7532],"kmh41":[1451012,7724],"kmh42":[1458736,9836],"kmh43":[1468572,7532],"kmh44":[1476104,8300],"kmh45":[1484404,8492],"kmh46":[1492896,8876],"kmh47":[1501772,9068],"kmh48":[1510840,8492],"kmh49":[1519332,8492],"kmh50":[1527824,6956],"kmh51":[1534780,8300],"kmh52":[1543080,7724],"kmh53":[1550804,8108],"kmh54":[1558912,8108],"kmh55":[1567020,9836],"kmh56":[1576856,8300],"kmh57":[1585156,8300],"kmh58":[1593456,8492],"kmh59":[1601948,7916],"kmh60":[1609864,7724],"kmh61":[1617588,8300],"kmh62":[1625888,7724],"kmh63":[1633612,8684],"kmh64":[1642296,8876],"kmh65":[1651172,8876],"kmh66":[1660048,8876],"kmh67":[1668924,8492],"kmh68":[1677416,9452],"kmh69":[1686868,8492],"kmh70":[1695360,7916],"kmh71":[1703276,8108],"kmh72":[1711384,9836],"kmh73":[1721220,8684],"kmh74":[1729904,9260],"kmh75":[1739164,8684],"kmh76":[1747848,8876],"kmh77":[1756724,9260],"kmh78":[1765984,8492],"kmh79":[1774476,8492],"kmh80":[1782968,7724],"kmh81":[1790692,8492],"kmh82":[1799184,8300],"kmh83":[1807484,9260],"kmh84":[1816744,8684],"kmh85":[1825428,9068],"kmh86":[1834496,9836],"kmh87":[1844332,9260],"kmh88":[1853592,8684],"kmh89":[1862276,8876],"kmh90":[1871152,7340],"kmh91":[1878492,8300],"kmh92":[1886792,8300],"kmh93":[1895092,9260],"kmh94":[1904352,7724],"kmh95":[1912076,7724],"kmh96":[1919800,8108],"kmh97":[1927908,7916],"kmh98":[1935824,7916],"kmh99":[1943740,9644],"kmh100":[1953384,6188],"kmh101":[1959572,7916],"kmh102":[1967488,7724],"kmh103":[1975212,7148],"kmh104":[1982360,8876],"kmh105":[1991236,7532],"kmh106":[1998768,7532],"kmh107":[2006300,7148],"kmh108":[2013448,7340],"kmh109":[2020788,7724],"kmh110":[2028512,7340],"kmh111":[2035852,8108],"kmh112":[2043960,8876],"kmh113":[2052836,8684],"kmh114":[2061520,8300],"kmh115":[2069820,8492],"kmh116":[2078312,9260],"kmh117":[2087572,9068],"kmh118":[2096640,9068],"kmh119":[2105708,7340],"kmh120":[2113048,9068],"m1":[2122116,4652],"m2":[2126768,4652],"m3":[2131420,5420],"m4":[2136840,5036],"m5":[2141876,5804],"m6":[2147680,3692],"m7":[2151372,5804],"m8":[2157176,4844],"m9":[2162020,5036],"m10":[2167056,5036],"m11":[2172092,7532],"m12":[2179624,6380],"m13":[2186004,7532],"m14":[2193536,7148],"m15":[2200684,6188],"m16":[2206872,5612],"m17":[2212484,5228],"m18":[2217712,7340],"m19":[2225052,6572],"m20":[2231624,5996],"m21":[2237620,5228],"m22":[2242848,5804],"m23":[2248652,7148],"m24":[2255800,5996],"m25":[2261796,6188],"m26":[2267984,5804],"m27":[2273788,4844],"m28":[2278632,5996],"m29":[2284628,5036],"m30":[2289664,5996],"m31":[2295660,7532],"m32":[2303192,7340],"m33":[2310532,7724],"m34":[2318256,5228],"m35":[2323484,7148],"m36":[2330632,6764],"m37":[2337396,7148],"m38":[2344544,7340],"m39":[2351884,5804],"m40":[2357688,5612],"m41":[2363300,5804],"m42":[2369104,5228],"m43":[2374332,7532],"m44":[2381864,5036],"m45":[2386900,6764],"m46":[2393664,7148],"m47":[2400812,6188],"m48":[2407000,7340],"m49":[2414340,5804],"m50":[2420144,4652],"m60":[2424796,5420],"m70":[2430216,5612],"m80":[2435828,5804],"m90":[2441632,6380],"m100":[2448012,4460],"m110":[2452472,5228],"m120":[2457700,5804],"m130":[2463504,5804],"m140":[2469308,5612],"m150":[2474920,5036],"m160":[2479956,6956],"m170":[2486912,6764],"m180":[2493676,6188],"m190":[2499864,5996],"m200":[2505860,5420],"m210":[2511280,6764],"m220":[2518044,6764],"m230":[2524808,7148],"m240":[2531956,7916],"m250":[2539872,6764],"m260":[2546636,7148],"m270":[2553784,6956],"m280":[2560740,7916],"m290":[2568656,6572],"m300":[2575228,5612],"n100":[2580840,2156],"n200":[2582996,3884],"n300":[2586880,4076],"n400":[2590956,4076],"n500":[2595032,3308],"n600":[2598340,3692],"n700":[2602032,3500],"n800":[2605532,3884],"n900":[2609416,3500],"name_sloth":[2612916,9260],"name_loris":[2622176,5804],"name_gila":[2627980,7148],"name_chicken":[2635128,3116],"name_chihuahua":[2638244,4652],"name_crocodile":[2642896,5228],"name_komodo":[2648124,10220],"name_squirrel":[2658344,5228],"name_koala":[2663572,6188],"name_cat":[2669760,7340],"name_pig":[2677100,4076],"name_armadillo":[2681176,8876],"name_hippo":[2690052,4268],"name_elephant":[2694320,5036],"name_greyhound":[2699356,6764],"name_kangaroo":[2706120,6764],"name_cheetah":[2712884,4268],"name_hare":[2717152,6572],"name_wolf":[2723724,6188],"name_jindo":[2729912,5612],"name_horse":[2735524,7148],"name_camel":[2742672,5804],"name_sleddog":[2748476,6956],"name_ostrich":[2755432,3884],"name_pronghorn":[2759316,4652]},"text":{"intro_head":"여기는 러너웨이 관제.","intro_hide":"근처 풀숲에 숨어 있다.","intro_top":"최고 시속","intro_max":"최고 속도는","intro_kmh":"킬로.","intro_tail":"아직 널 못 봤다. 조용히 페이스를 올려라.","intro_now":"바로 뒤에 있다. 이미 널 봤다. 뛰어!","warn60":"일 분 뒤, 녀석들이 널 본다.","warn15":"곧이다. 페이스 올려!","spotted":"녀석들이 널 봤다. 뛰어!","sisok":"시속","hold":"버텨!","again":"또 온다!","stick":"붙는다!","meter":"미터.","hit1":"잡혔다! 첫 번째. 무리가 물러난다.","hit2":"잡혔다! 두 번째. 한 번 더 잡히면 끝이다!","hit3":"세 번째다. 끝났다.","tired1":"지쳤다. 헐떡인다. 지금이 기회다, 밟아!","tired2":"지쳤다. 벌려!","tired3":"헐떡인다. 지금이다!","tired4":"지쳤다.","tired5":"기회다.","recover1":"숨 고르는 중. 다시 올 거다.","recover2":"멀어진다. 아직 끝난 게 아니다.","lost":"GPS가 흔들린다. 녀석들이 냄새를 잃었다.","half1":"절반이다. 뛰어!","half2":"잡힌다! 밟아!","cool":"쿨다운 구간. 녀석들은 포기했다. 천천히.","end_fail":"잡혔다. 탈출 실패.","end_arrive":"도착! 탈출 성공.","end_hits0":"한 번도 안 잡혔다.","end_hits1":"한 번 잡혔다.","end_hits2":"두 번 잡혔다.","end_final":"최종 기록","unit_min":"분","unit_sec":"초.","end_stop":"세션 종료.","wait":"위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.","wait_coarse":"위치 정확도가 너무 낮다. 크롬 위치 권한에서 정확한 위치를 켜라.","pocket":"주머니 모드. 이제 소리만 듣고 달려라.","test_tail":"지금 소리가 왼쪽에서 오른쪽으로 지나갔으면 정상이다.","zero":"영","cnt1":"한 마리가","cnt2":"두 마리가","cnt3":"세 마리가","cnt4":"네 마리가","cnt5":"다섯 마리가","dc_front":"정면에서 온다!","dx_front":"정면이다!","dr_front":"한 마리가 돌아왔다. 정면.","dc_back":"바로 뒤에서 온다!","dx_back":"바로 뒤다!","dr_back":"한 마리가 돌아왔다. 바로 뒤.","dc_lf":"왼쪽 앞에서 온다!","dx_lf":"왼쪽 앞이다!","dr_lf":"한 마리가 돌아왔다. 왼쪽 앞.","dc_rf":"오른쪽 앞에서 온다!","dx_rf":"오른쪽 앞이다!","dr_rf":"한 마리가 돌아왔다. 오른쪽 앞.","dc_l":"왼쪽에서 온다!","dx_l":"왼쪽이다!","dr_l":"한 마리가 돌아왔다. 왼쪽.","dc_r":"오른쪽에서 온다!","dx_r":"오른쪽이다!","dr_r":"한 마리가 돌아왔다. 오른쪽.","dc_lb":"왼쪽 뒤에서 온다!","dx_lb":"왼쪽 뒤다!","dr_lb":"한 마리가 돌아왔다. 왼쪽 뒤.","dc_rb":"오른쪽 뒤에서 온다!","dx_rb":"오른쪽 뒤다!","dr_rb":"한 마리가 돌아왔다. 오른쪽 뒤.","n1":"일","n2":"이","n3":"삼","n4":"사","n5":"오","n6":"육","n7":"칠","n8":"팔","n9":"구","n10":"십","n11":"십일","n12":"십이","n13":"십삼","n14":"십사","n15":"십오","n16":"십육","n17":"십칠","n18":"십팔","n19":"십구","n20":"이십","n21":"이십일","n22":"이십이","n23":"이십삼","n24":"이십사","n25":"이십오","n26":"이십육","n27":"이십칠","n28":"이십팔","n29":"이십구","n30":"삼십","n31":"삼십일","n32":"삼십이","n33":"삼십삼","n34":"삼십사","n35":"삼십오","n36":"삼십육","n37":"삼십칠","n38":"삼십팔","n39":"삼십구","n40":"사십","n41":"사십일","n42":"사십이","n43":"사십삼","n44":"사십사","n45":"사십오","n46":"사십육","n47":"사십칠","n48":"사십팔","n49":"사십구","n50":"오십","n51":"오십일","n52":"오십이","n53":"오십삼","n54":"오십사","n55":"오십오","n56":"오십육","n57":"오십칠","n58":"오십팔","n59":"오십구","n60":"육십","n61":"육십일","n62":"육십이","n63":"육십삼","n64":"육십사","n65":"육십오","n66":"육십육","n67":"육십칠","n68":"육십팔","n69":"육십구","n70":"칠십","n71":"칠십일","n72":"칠십이","n73":"칠십삼","n74":"칠십사","n75":"칠십오","n76":"칠십육","n77":"칠십칠","n78":"칠십팔","n79":"칠십구","n80":"팔십","n81":"팔십일","n82":"팔십이","n83":"팔십삼","n84":"팔십사","n85":"팔십오","n86":"팔십육","n87":"팔십칠","n88":"팔십팔","n89":"팔십구","n90":"구십","n91":"구십일","n92":"구십이","n93":"구십삼","n94":"구십사","n95":"구십오","n96":"구십육","n97":"구십칠","n98":"구십팔","n99":"구십구","kmh1":"시속 일 킬로!","kmh2":"시속 이 킬로!","kmh3":"시속 삼 킬로!","kmh4":"시속 사 킬로!","kmh5":"시속 오 킬로!","kmh6":"시속 육 킬로!","kmh7":"시속 칠 킬로!","kmh8":"시속 팔 킬로!","kmh9":"시속 구 킬로!","kmh10":"시속 십 킬로!","kmh11":"시속 십일 킬로!","kmh12":"시속 십이 킬로!","kmh13":"시속 십삼 킬로!","kmh14":"시속 십사 킬로!","kmh15":"시속 십오 킬로!","kmh16":"시속 십육 킬로!","kmh17":"시속 십칠 킬로!","kmh18":"시속 십팔 킬로!","kmh19":"시속 십구 킬로!","kmh20":"시속 이십 킬로!","kmh21":"시속 이십일 킬로!","kmh22":"시속 이십이 킬로!","kmh23":"시속 이십삼 킬로!","kmh24":"시속 이십사 킬로!","kmh25":"시속 이십오 킬로!","kmh26":"시속 이십육 킬로!","kmh27":"시속 이십칠 킬로!","kmh28":"시속 이십팔 킬로!","kmh29":"시속 이십구 킬로!","kmh30":"시속 삼십 킬로!","kmh31":"시속 삼십일 킬로!","kmh32":"시속 삼십이 킬로!","kmh33":"시속 삼십삼 킬로!","kmh34":"시속 삼십사 킬로!","kmh35":"시속 삼십오 킬로!","kmh36":"시속 삼십육 킬로!","kmh37":"시속 삼십칠 킬로!","kmh38":"시속 삼십팔 킬로!","kmh39":"시속 삼십구 킬로!","kmh40":"시속 사십 킬로!","kmh41":"시속 사십일 킬로!","kmh42":"시속 사십이 킬로!","kmh43":"시속 사십삼 킬로!","kmh44":"시속 사십사 킬로!","kmh45":"시속 사십오 킬로!","kmh46":"시속 사십육 킬로!","kmh47":"시속 사십칠 킬로!","kmh48":"시속 사십팔 킬로!","kmh49":"시속 사십구 킬로!","kmh50":"시속 오십 킬로!","kmh51":"시속 오십일 킬로!","kmh52":"시속 오십이 킬로!","kmh53":"시속 오십삼 킬로!","kmh54":"시속 오십사 킬로!","kmh55":"시속 오십오 킬로!","kmh56":"시속 오십육 킬로!","kmh57":"시속 오십칠 킬로!","kmh58":"시속 오십팔 킬로!","kmh59":"시속 오십구 킬로!","kmh60":"시속 육십 킬로!","kmh61":"시속 육십일 킬로!","kmh62":"시속 육십이 킬로!","kmh63":"시속 육십삼 킬로!","kmh64":"시속 육십사 킬로!","kmh65":"시속 육십오 킬로!","kmh66":"시속 육십육 킬로!","kmh67":"시속 육십칠 킬로!","kmh68":"시속 육십팔 킬로!","kmh69":"시속 육십구 킬로!","kmh70":"시속 칠십 킬로!","kmh71":"시속 칠십일 킬로!","kmh72":"시속 칠십이 킬로!","kmh73":"시속 칠십삼 킬로!","kmh74":"시속 칠십사 킬로!","kmh75":"시속 칠십오 킬로!","kmh76":"시속 칠십육 킬로!","kmh77":"시속 칠십칠 킬로!","kmh78":"시속 칠십팔 킬로!","kmh79":"시속 칠십구 킬로!","kmh80":"시속 팔십 킬로!","kmh81":"시속 팔십일 킬로!","kmh82":"시속 팔십이 킬로!","kmh83":"시속 팔십삼 킬로!","kmh84":"시속 팔십사 킬로!","kmh85":"시속 팔십오 킬로!","kmh86":"시속 팔십육 킬로!","kmh87":"시속 팔십칠 킬로!","kmh88":"시속 팔십팔 킬로!","kmh89":"시속 팔십구 킬로!","kmh90":"시속 구십 킬로!","kmh91":"시속 구십일 킬로!","kmh92":"시속 구십이 킬로!","kmh93":"시속 구십삼 킬로!","kmh94":"시속 구십사 킬로!","kmh95":"시속 구십오 킬로!","kmh96":"시속 구십육 킬로!","kmh97":"시속 구십칠 킬로!","kmh98":"시속 구십팔 킬로!","kmh99":"시속 구십구 킬로!","kmh100":"시속 백 킬로!","kmh101":"시속 백일 킬로!","kmh102":"시속 백이 킬로!","kmh103":"시속 백삼 킬로!","kmh104":"시속 백사 킬로!","kmh105":"시속 백오 킬로!","kmh106":"시속 백육 킬로!","kmh107":"시속 백칠 킬로!","kmh108":"시속 백팔 킬로!","kmh109":"시속 백구 킬로!","kmh110":"시속 백십 킬로!","kmh111":"시속 백십일 킬로!","kmh112":"시속 백십이 킬로!","kmh113":"시속 백십삼 킬로!","kmh114":"시속 백십사 킬로!","kmh115":"시속 백십오 킬로!","kmh116":"시속 백십육 킬로!","kmh117":"시속 백십칠 킬로!","kmh118":"시속 백십팔 킬로!","kmh119":"시속 백십구 킬로!","kmh120":"시속 백이십 킬로!","m1":"일 미터.","m2":"이 미터.","m3":"삼 미터.","m4":"사 미터.","m5":"오 미터.","m6":"육 미터.","m7":"칠 미터.","m8":"팔 미터.","m9":"구 미터.","m10":"십 미터.","m11":"십일 미터.","m12":"십이 미터.","m13":"십삼 미터.","m14":"십사 미터.","m15":"십오 미터.","m16":"십육 미터.","m17":"십칠 미터.","m18":"십팔 미터.","m19":"십구 미터.","m20":"이십 미터.","m21":"이십일 미터.","m22":"이십이 미터.","m23":"이십삼 미터.","m24":"이십사 미터.","m25":"이십오 미터.","m26":"이십육 미터.","m27":"이십칠 미터.","m28":"이십팔 미터.","m29":"이십구 미터.","m30":"삼십 미터.","m31":"삼십일 미터.","m32":"삼십이 미터.","m33":"삼십삼 미터.","m34":"삼십사 미터.","m35":"삼십오 미터.","m36":"삼십육 미터.","m37":"삼십칠 미터.","m38":"삼십팔 미터.","m39":"삼십구 미터.","m40":"사십 미터.","m41":"사십일 미터.","m42":"사십이 미터.","m43":"사십삼 미터.","m44":"사십사 미터.","m45":"사십오 미터.","m46":"사십육 미터.","m47":"사십칠 미터.","m48":"사십팔 미터.","m49":"사십구 미터.","m50":"오십 미터.","m60":"육십 미터.","m70":"칠십 미터.","m80":"팔십 미터.","m90":"구십 미터.","m100":"백 미터.","m110":"백십 미터.","m120":"백이십 미터.","m130":"백삼십 미터.","m140":"백사십 미터.","m150":"백오십 미터.","m160":"백육십 미터.","m170":"백칠십 미터.","m180":"백팔십 미터.","m190":"백구십 미터.","m200":"이백 미터.","m210":"이백십 미터.","m220":"이백이십 미터.","m230":"이백삼십 미터.","m240":"이백사십 미터.","m250":"이백오십 미터.","m260":"이백육십 미터.","m270":"이백칠십 미터.","m280":"이백팔십 미터.","m290":"이백구십 미터.","m300":"삼백 미터.","n100":"백","n200":"이백","n300":"삼백","n400":"사백","n500":"오백","n600":"육백","n700":"칠백","n800":"팔백","n900":"구백","name_sloth":"세발가락나무늘보","name_loris":"늘보로리스","name_gila":"힐라몬스터","name_chicken":"닭","name_chihuahua":"치와와","name_crocodile":"나일악어","name_komodo":"코모도왕도마뱀","name_squirrel":"다람쥐","name_koala":"코알라","name_cat":"집고양이","name_pig":"돼지","name_armadillo":"아홉띠아르마딜로","name_hippo":"하마","name_elephant":"코끼리","name_greyhound":"그레이하운드","name_kangaroo":"붉은캥거루","name_cheetah":"치타","name_hare":"유럽산토끼","name_wolf":"회색늑대","name_jindo":"진돗개","name_horse":"지구력경주마","name_camel":"단봉낙타","name_sleddog":"알래스칸허스키","name_ostrich":"타조","name_pronghorn":"프롱혼"},"animals":{"sloth":{"spot":[0,14060],"sprint":[14060,11756],"tired":[25816,13100],"hit":[38916,8492]},"loris":{"spot":[0,13292],"sprint":[13292,11564],"tired":[24856,8492],"hit":[33348,6572]},"gila":{"spot":[0,9452],"sprint":[9452,8876],"tired":[18328,8876],"hit":[27204,11372]},"chicken":{"spot":[0,6956],"sprint":[6956,7916],"tired":[14872,10028],"hit":[24900,6956]},"chihuahua":{"spot":[0,7340],"sprint":[7340,11180],"tired":[18520,10988],"hit":[29508,9068]},"crocodile":{"spot":[0,7532],"sprint":[7532,10796],"tired":[18328,8492],"hit":[26820,9068]},"komodo":{"spot":[0,8684],"sprint":[8684,11756],"tired":[20440,6572],"hit":[27012,17132]},"squirrel":{"spot":[0,8108],"sprint":[8108,6764],"tired":[14872,10220],"hit":[25092,5036]},"koala":{"spot":[0,7340],"sprint":[7340,7532],"tired":[14872,9452],"hit":[24324,10220]},"cat":{"spot":[0,10028],"sprint":[10028,6956],"tired":[16984,6572],"hit":[23556,5612]},"pig":{"spot":[0,8492],"sprint":[8492,8876],"tired":[17368,8876],"hit":[26244,5612]},"armadillo":{"spot":[0,7916],"sprint":[7916,7340],"tired":[15256,7148],"hit":[22404,4460]},"hippo":{"spot":[0,8492],"sprint":[8492,10988],"tired":[19480,11564],"hit":[31044,5612]},"elephant":{"spot":[0,11180],"sprint":[11180,6956],"tired":[18136,8684],"hit":[26820,6956]},"greyhound":{"spot":[0,9644],"sprint":[9644,13292],"tired":[22936,12524],"hit":[35460,14252]},"kangaroo":{"spot":[0,5804],"sprint":[5804,10604],"tired":[16408,10028],"hit":[26436,4844]},"cheetah":{"spot":[0,7532],"sprint":[7532,11948],"tired":[19480,13100],"hit":[32580,9836]},"hare":{"spot":[0,5996],"sprint":[5996,7724],"tired":[13720,8876],"hit":[22596,11756]},"wolf":{"spot":[0,11756],"sprint":[11756,11756],"tired":[23512,10604],"hit":[34116,6956]},"jindo":{"spot":[0,11180],"sprint":[11180,10604],"tired":[21784,15020],"hit":[36804,11564]},"horse":{"spot":[0,11564],"sprint":[11564,10796],"tired":[22360,10220],"hit":[32580,12140]},"camel":{"spot":[0,10028],"sprint":[10028,9260],"tired":[19288,9260],"hit":[28548,5612]},"sleddog":{"spot":[0,16940],"sprint":[16940,11180],"tired":[28120,11948],"hit":[40068,13292]},"ostrich":{"spot":[0,7724],"sprint":[7724,13484],"tired":[21208,8300],"hit":[29508,6188]},"pronghorn":{"spot":[0,10988],"sprint":[10988,10028],"tired":[21016,6956],"hit":[27972,10220]}},"atext":{"sloth":{"spot":"어... 저기... 누가... 있네...","sprint":"기다려... 간다아...","tired":"조금만... 쉬었다가...","hit":"잡... 았... 다..."},"loris":{"spot":"눈 마주쳤다. 천천히 간다.","sprint":"슬금슬금. 다 왔다.","tired":"하아... 졸려...","hit":"잡았지롱."},"gila":{"spot":"스스스. 냄새 난다.","sprint":"쉬익! 물어버린다!","tired":"햇볕이 필요해...","hit":"쉬익. 독 맛 좀 봐라."},"chicken":{"spot":"꼬꼬! 저기 있다!","sprint":"꼬꼬댁! 거기 서!","tired":"꼬... 꼬... 숨차...","hit":"꼬끼오! 잡았다!"},"chihuahua":{"spot":"왈! 왈! 찾았다!","sprint":"왈왈왈! 거기 서라!","tired":"헥헥. 다리가 짧아...","hit":"왈! 내가 이겼다!"},"crocodile":{"spot":"물가로 와라...","sprint":"콰악! 한입에 삼킨다!","tired":"몸이 식는다...","hit":"콰직. 잡았다."},"komodo":{"spot":"냄새를 맡았다...","sprint":"쉬이익! 도망쳐 봐라!","tired":"쉬어야겠다...","hit":"물었다. 이제 기다리기만 하면 된다."},"squirrel":{"spot":"찍! 저 사람이다!","sprint":"찍찍! 도토리 내놔!","tired":"헉헉. 볼이 무거워...","hit":"찍! 잡았다!"},"koala":{"spot":"음냐. 누구야...","sprint":"화났다! 간다!","tired":"하암... 졸려...","hit":"잡았다. 이제 잘래."},"cat":{"spot":"냐옹. 사냥감 발견.","sprint":"하악! 거기 서!","tired":"귀찮아졌다...","hit":"냥. 잡았다."},"pig":{"spot":"꿀꿀! 저기 있다!","sprint":"꿀꿀꿀! 비켜라!","tired":"꾸익... 숨차...","hit":"꿀! 잡았다!"},"armadillo":{"spot":"킁킁. 뭐가 지나간다.","sprint":"굴러간다! 비켜!","tired":"껍질이 무거워...","hit":"잡았다! 킁!"},"hippo":{"spot":"내 구역에 들어왔군.","sprint":"크아아! 밟아버린다!","tired":"후우... 물이 그립다...","hit":"쿵. 잡았다."},"elephant":{"spot":"뿌우우! 침입자다!","sprint":"뿌우! 비켜라!","tired":"후우... 무겁다...","hit":"뿌우. 잡았다."},"greyhound":{"spot":"토끼다! 아니, 사람이다!","sprint":"간다! 나보다 빠른 건 없어!","tired":"헥헥. 삼십 초가 한계야...","hit":"잡았다! 역시 내가 제일 빠르지."},"kangaroo":{"spot":"어이! 거기!","sprint":"한 판 붙자! 펀치 간다!","tired":"헉. 꼬리가 무겁다...","hit":"넉다운이다!"},"cheetah":{"spot":"사냥 시작이다.","sprint":"끝이다. 절대 못 피한다.","tired":"헉... 헉... 과열됐다...","hit":"잡았다. 당연하지."},"hare":{"spot":"어이, 느림보!","sprint":"메롱! 잡아볼까?","tired":"헥. 너무 달렸다...","hit":"잡았다! 거북이보다 느리네!"},"wolf":{"spot":"크르릉. 냄새를 찾았다.","sprint":"아우우! 무리여, 몰아라!","tired":"잠깐 숨을 고른다...","hit":"크르릉. 잡았다."},"jindo":{"spot":"멍! 수상한 놈이다!","sprint":"멍멍! 절대 안 놓친다!","tired":"헥헥. 그래도 안 포기한다...","hit":"멍! 주인님, 잡았습니다!"},"horse":{"spot":"히힝! 경주 시작이다!","sprint":"히이잉! 따라잡는다!","tired":"푸르르. 페이스 조절...","hit":"히힝! 결승선은 내 거다."},"camel":{"spot":"사막에선 내가 왕이다.","sprint":"크르르! 퉤! 간다!","tired":"후우... 물 좀...","hit":"퉤. 잡았다."},"sleddog":{"spot":"아우우! 썰매 없이도 달린다!","sprint":"하이크! 간다, 간다!","tired":"헥헥. 조금만 쉬고...","hit":"아우! 잡았다! 다음 코스!"},"ostrich":{"spot":"꾸르르! 뭐야 저건!","sprint":"쿵쿵쿵! 다리 길이가 다르다!","tired":"헉. 목이 마르다...","hit":"꾸르르. 잡았다."},"pronghorn":{"spot":"치타도 나한텐 안 된다.","sprint":"간다! 시속 팔십팔!","tired":"후. 몸 좀 풀렸네.","hit":"잡았다. 게임도 안 되네."}},"ver":"f6672f18b0"};
+if (typeof module !== "undefined") module.exports = VOICE_PACK;
+</script>
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
 const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
+const VP = { op: null, an: null, aid: null, cache: new Map(), opP: null, anP: null };   // 음성 팩 상태. 동물 목록 클릭 핸들러가 로드 중에 쓰므로 위에 둔다
 const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
@@ -355,7 +363,7 @@ for (const a of sorted) {
   const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
   const sp = a.constant ? `${a.sprintKmh} km/h 등속` : `스프린트 ${a.sprintKmh} km/h × ${a.sprintS}s`;
   d.innerHTML = `<div class="ico">${EMOJI[a.id] || '🐾'}<small class="${a.track === 'B' ? 'b' : ''}">${a.track === 'A' ? 'A' + a.tier : 'B'}</small></div><div><div class="name">${a.nameKo}</div><div class="meta">${sp}</div></div><div class="hits">${a.track === 'B' ? '못 깸' : '난이도 ' + a.tier}</div>`;
-  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); });
+  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); if (VP.opP) vpLoad(a.id); });
   list.appendChild(d);
 }
 function refreshPick() {
@@ -392,13 +400,19 @@ function audioInit() {
   const g = A.ctx.createGain(); g.gain.value = 0.06; src.connect(lp); lp.connect(g); g.connect(A.master); src.start(); A.ambient = g;
   A.sfx = A.ctx.createGain(); A.sfx.gain.value = 1; A.sfx.connect(A.master);      // 동물 소리 버스. 말할 때 여기를 줄인다
   A.duck = 1;
+  // 목소리 버스. 동물 소리처럼 줄이지 않는다. 관제사는 무전기처럼 저역을 깎고 명료도 대역을 살린다(바람 속에서 들리게)
+  A.voice = A.ctx.createGain(); A.voice.gain.value = 1.1; A.voice.connect(A.master);
+  const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 200;
+  const pk = A.ctx.createBiquadFilter(); pk.type = 'peaking'; pk.frequency.value = 2600; pk.Q.value = 0.9; pk.gain.value = 4;
+  hp.connect(pk); pk.connect(A.voice); A.radio = hp;
+  prewarm();
   // 실제 샘플(있으면) 디코드
   for (const k in (window.SOUNDS || {})) { const b = atob(SOUNDS[k]); const arr = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) arr[i] = b.charCodeAt(i); A.ctx.decodeAudioData(arr.buffer.slice(0)).then(buf => { A.samples[k] = buf; }).catch(() => { }); }
 }
 /** 거리 기반 출력 체인: 게인은 거리^1.5로, 멀면 로우패스로 먹먹하게. 피치는 건드리지 않는다(기계음 방지). */
 /** near=0(멀다)~1(붙었다), rel=내 진행방향 기준 상대 방위(0 정면, +오른쪽, ±π 뒤).
  *  좌우는 스테레오 패닝, 앞뒤는 음색으로 구분한다. 뒤는 둔탁, 앞은 밝게. 사람 귀가 실제로 그렇게 듣는다 */
-function out(near, rel) {
+function out(near, rel, dest) {
   const behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;      // 0=정면 1=바로 뒤
   const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass';
   lp.frequency.value = (300 + 5000 * near * near) * (1 - 0.45 * behind);
@@ -409,7 +423,7 @@ function out(near, rel) {
     pn.pan.value = Math.max(-0.7, Math.min(0.7, Math.sin(rel) * 0.7));   // 한쪽 귀가 완전히 비면 고장으로 들린다
     g.connect(pn); tail = pn;
   }
-  lp.connect(g); tail.connect(A.sfx || A.master); return { node: lp, gain: g };
+  lp.connect(g); tail.connect(dest || A.sfx || A.master); return { node: lp, gain: g };
 }
 /** 내 진행 방향 기준 적의 상대 방위 */
 function relBearing(en) {
@@ -500,15 +514,68 @@ function budgetOk(cost) {
 }
 // 리플레이는 10배속. 벽시계 기준 쿨다운이 세션 시간으로는 10배가 되므로 배속만큼 줄인다
 function vrate() { return st.mode === 'replay' ? 10 : 1; }
-function speakIntro(t) { speak('intro', t, { pri: PRI.CRIT }); }
-const NUM_KO = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
-/** TTS는 "3마리"를 "삼마리"로 읽는다. 수 세는 말은 고유어로 바꿔 넣는다 */
-function numKo(n) { return NUM_KO[n] || String(n); }
-function pickVar(key, v) { if (!Array.isArray(v)) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
-/** key: 같은 종류의 말을 묶는 이름. variants: 문장 배열(돌아가며 쓴다). o.pri/o.cooldown(초)/o.ttl(초) */
+// ---------- 음성 팩 ----------
+// 미리 구운 신경망 TTS(web/voice/bake.py). 관제사 문장은 조각을 이어 붙이고, 동물은 자기 목소리로 적의 방향에서 말한다.
+// 팩을 못 받으면(오프라인, 단일 파일 실행) 브라우저 TTS로 같은 문장을 읽는다
+const HAS_PACK = typeof VOICE_PACK !== 'undefined' && VOICE_PACK.op;
+function vtext(k) { return (HAS_PACK && VOICE_PACK.text[k]) || k; }
+/** 바이트만 받는다(오디오 컨텍스트 불필요). 홈 화면에서 미리 받아 두어야 출발 직후 첫 말부터 구운 목소리가 나온다 */
+function vpLoad(aid) {
+  if (!HAS_PACK || location.protocol === 'file:') return;
+  const get = (f) => fetch('voice/' + f + '?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); });
+  if (!VP.opP) VP.opP = get('op.bin').then(b => { VP.op = b; prewarm(); }).catch(e => { VP.opP = null; log('음성 팩 실패 → 기본 TTS ' + e.message); });
+  if (aid && VP.aid !== aid) {
+    VP.aid = aid; VP.an = null; for (const k of [...VP.cache.keys()]) if (k.startsWith('a:')) VP.cache.delete(k);
+    VP.anP = get('a_' + aid + '.bin').then(b => { if (VP.aid === aid) VP.an = b; }).catch(() => { });
+  }
+}
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+/** 조각 하나를 필요할 때 디코드한다. 전부 풀어두면 수십 MB라 저가 폰에서 위험하다 */
+function clip(src, key) {
+  const ck = src[0] + ':' + key;
+  if (VP.cache.has(ck)) { const p = VP.cache.get(ck); VP.cache.delete(ck); VP.cache.set(ck, p); return p; }
+  const bin = src === 'op' ? VP.op : VP.an;
+  if (!A.ctx) return Promise.resolve(null);
+  const idx = src === 'op' ? VOICE_PACK.op[key] : (VOICE_PACK.animals[VP.aid] || {})[key];
+  if (!bin || !idx) return Promise.resolve(null);
+  const p = A.ctx.decodeAudioData(bin.slice(idx[0], idx[0] + idx[1])).catch(() => null);
+  VP.cache.set(ck, p);
+  if (VP.cache.size > 90) VP.cache.delete(VP.cache.keys().next().value);
+  return p;
+}
+/** 급할 때 디코드 지연이 없도록 방향과 자주 쓰는 말은 미리 풀어둔다 */
+function prewarm() {
+  if (!A.ctx || !VP.op) return;
+  for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) { clip('op', 'dc_' + d); clip('op', 'dx_' + d); }
+  for (const k of ['spotted', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip('op', k);
+}
+/** 수 → 조각 키. 235 = 이백 + 삼십오 */
+function numSeq(n) {
+  n = Math.max(0, Math.min(999, Math.round(n)));
+  if (n === 0) return ['zero'];
+  const h = Math.floor(n / 100) * 100, r = n % 100;
+  return [...(h ? ['n' + h] : []), ...(r ? ['n' + r] : [])];
+}
+/** 거리는 50m 밖이면 10m 단위로. "이백삼십칠 미터"는 들어도 못 쓴다.
+ *  숫자는 구절째 구운 조각을 쓴다. 조각을 이으면 "육십"이 "6시"로 들리는 일이 잦았다(ASR 실측 60~70%) */
+function meterSeq(m) {
+  const v = Math.max(1, m < 50 ? Math.round(m) : Math.round(m / 10) * 10);
+  return HAS_PACK && VOICE_PACK.op['m' + v] ? ['m' + v] : [...numSeq(v), 'meter'];
+}
+function kmhSeq(k) {
+  const v = Math.max(1, Math.round(k));
+  return HAS_PACK && VOICE_PACK.op['kmh' + v] ? ['kmh' + v] : ['sisok', ...numSeq(v), 'intro_kmh'];
+}
+const DIR_KEYS = { '정면': 'front', '바로 뒤': 'back', '왼쪽 앞': 'lf', '오른쪽 앞': 'rf', '왼쪽': 'l', '오른쪽': 'r', '왼쪽 뒤': 'lb', '오른쪽 뒤': 'rb' };
+function dirKey(rel) { return DIR_KEYS[dirWord(rel)]; }
+function speakIntro(seq, pre) { speak('intro', seq, { pri: PRI.CRIT, pre }); }
+function pickVar(key, v) { if (!Array.isArray(v[0])) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
+/** key: 같은 종류의 말을 묶는 이름. variants: 조각 키 배열 하나, 또는 그 배열들(돌아가며 쓴다).
+ *  o.pri/o.cooldown(초)/o.ttl(초). o.pre = { k: 'sprint', near, rel } 이면 동물이 먼저 자기 목소리로 말한다 */
 function speak(key, variants, o) {
   o = o || {}; const pri = o.pri === undefined ? PRI.NORM : o.pri, now = Date.now();
-  if (!VOICE.on || !('speechSynthesis' in window)) return;
+  if (!VOICE.on) return;
+  if (!HAS_PACK && !('speechSynthesis' in window)) return;
   if (VOICE.level === 'quiet' && pri > PRI.HIGH) return;
   if (pri === PRI.LOW && VOICE.level !== 'chatty') return;
   const cd = (o.cooldown || 0) * 1000 / vrate();
@@ -516,24 +583,69 @@ function speak(key, variants, o) {
   if (!budgetOk(o.cost)) return;
   VOICE.keyAt[key] = now;
   VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
-  VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
+  const seq = pickVar(key, variants);
+  VOICE.q.push({ key, seq, pre: o.pre || null, text: seq.map(vtext).join(' '), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
   VOICE.q.sort((a, b) => a.pri - b.pri);
-  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
+  if (pri === PRI.CRIT && VOICE.speaking) { hush(); setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
   pump();
+}
+/** 지금 하던 말을 끊는다. 더 급한 말이 왔을 때 */
+function hush() {
+  VOICE.cur = (VOICE.cur || 0) + 1;
+  for (const s of VOICE.srcs || []) { try { s.stop(); } catch (e) { } }
+  VOICE.srcs = [];
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  VOICE.speaking = false;
 }
 function pump() {
   if (VOICE.speaking || !VOICE.q.length) return;
   const now = Date.now(), wait = VOICE.GAP_MS / vrate() - (now - VOICE.lastAt);
   if (wait > 0 && VOICE.q[0].pri > PRI.CRIT) { clearTimeout(VOICE.t); VOICE.t = setTimeout(pump, wait); return; }
   const it = VOICE.q.shift(); if (!it || now > it.ttl) { if (VOICE.q.length) pump(); return; }
+  VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
+  const tok = VOICE.cur = (VOICE.cur || 0) + 1;
+  const done = () => { if (tok !== VOICE.cur || !VOICE.speaking) return; VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
+  log('말: ' + (it.pre && VP.an ? '[' + ((VOICE_PACK.atext[VP.aid] || {})[it.pre.k] || '') + '] ' : '') + it.text);
+  playPack(it, tok).then(dur => {
+    if (tok !== VOICE.cur) return;
+    if (dur !== null) { setTimeout(done, dur * 1000 + 60); return; }
+    ttsFallback(it, done);
+  });
+}
+/** 구운 조각을 이어서 재생. 하나라도 없으면 null → 브라우저 TTS */
+async function playPack(it, tok) {
+  if (!A.ctx) return null;
+  // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새는 것보다 조금 늦는 게 낫다
+  if ((!VP.op && VP.opP) || (it.pre && !VP.an && VP.anP)) await Promise.race([Promise.all([VP.opP, it.pre ? VP.anP : null]), sleep(4000)]);
+  if (!VP.op) return null;
+  const bufs = await Promise.all(it.seq.map(k => clip('op', k)));
+  if (bufs.some(b => !b)) return null;
+  const pre = it.pre && VP.an ? await clip('a', it.pre.k) : null;
+  if (tok !== VOICE.cur) return 0;
+  if (A.ctx.state !== 'running') A.ctx.resume();
+  const t0 = A.ctx.currentTime + 0.03; let t = t0; VOICE.srcs = [];
+  const play = (b, dest, at) => { const s = A.ctx.createBufferSource(); s.buffer = b; s.connect(dest); s.start(at); VOICE.srcs.push(s); };
+  if (pre) {   // 동물 목소리는 그 녀석이 있는 방향에서. 울음소리 체인은 뒤를 너무 먹먹하게 만들어 말이 안 들린다 → 가볍게
+    const rel = it.pre.rel, behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;
+    const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 7000 * (1 - 0.35 * behind);
+    const g = A.ctx.createGain(); g.gain.value = 0.7 + 0.3 * Math.max(0, Math.min(1, it.pre.near || 0.8));
+    lp.connect(g); let tail = g;
+    if (rel !== undefined && A.ctx.createStereoPanner) { const pn = A.ctx.createStereoPanner(); pn.pan.value = Math.max(-0.75, Math.min(0.75, Math.sin(rel) * 0.75)); g.connect(pn); tail = pn; }
+    tail.connect(A.voice);
+    play(pre, lp, t); t += pre.duration + 0.12;
+  }
+  bufs.forEach((b, i) => { play(b, A.radio, t); t += b.duration + (/[.!?]$/.test(vtext(it.seq[i])) ? 0.1 : 0.035); });
+  return t - A.ctx.currentTime;
+}
+function ttsFallback(it, done) {
+  if (!('speechSynthesis' in window)) { done(); return; }
   const u = new SpeechSynthesisUtterance(it.text); u.lang = 'ko-KR';
   u.rate = it.pri === PRI.CRIT ? 1.2 : it.pri === PRI.HIGH ? 1.1 : 1.0;
   const v = speechSynthesis.getVoices().find(x => x.lang && x.lang.startsWith('ko')); if (v) u.voice = v;
   // 이벤트에만 의존하면 안 된다. 일부 안드로이드 웹뷰는 onstart/onend를 안 쏜다
-  VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
-  u.onend = u.onerror = () => { VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
-  speechSynthesis.speak(u); log('말: ' + it.text);
-  setTimeout(() => { if (VOICE.speaking) { VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); } }, 1000 + it.text.length * 220);  // onend 유실 대비
+  u.onend = u.onerror = done;
+  speechSynthesis.speak(u);
+  setTimeout(done, 1000 + it.text.length * 220);  // onend 유실 대비
 }
 /** 말할 때 동물 소리와 바람을 낮춘다. 말이 묻히면 말한 의미가 없다 */
 function duck(k) {
@@ -541,8 +653,6 @@ function duck(k) {
   A.sfx.gain.cancelScheduledValues(t); A.sfx.gain.linearRampToValueAtTime(k, t + 0.15);
   if (A.ambient) { A.ambient.gain.cancelScheduledValues(t); A.ambient.gain.linearRampToValueAtTime(Math.max(0.015, 0.06 * (k < 1 ? 0.4 : 1)), t + 0.15); }
 }
-// 기존 호출부 호환
-function say(text, urgent = false) { speak('legacy:' + text.slice(0, 12), text, { pri: urgent ? PRI.HIGH : PRI.NORM, cooldown: urgent ? 0 : 6 }); }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
 
@@ -866,12 +976,12 @@ function tick() {
 function step() {
   const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
   let fix = null;
-  if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now() }; }
+  if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now(), spd: null, hdg: null }; }   // 도플러 없음. undefined로 두면 속도가 NaN이 된다
   else { fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null; }
   const row = fixToRow(t, fix);
   if (!row) {                                   // GPS 첫 위치 대기. 타이머도 적도 아직 없다
     st.tickN = 0;
-    if (!st.saidWait) { st.saidWait = true; speak('wait', st.coarse ? '위치 정확도가 너무 낮다. 크롬 위치 권한에서 정확한 위치를 켜라.' : '위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', { pri: PRI.CRIT }); }
+    if (!st.saidWait) { st.saidWait = true; speak('wait', [st.coarse ? 'wait_coarse' : 'wait'], { pri: PRI.CRIT }); }
     render(null, fix); return;
   }
   if (!st.gpsReady) { st.gpsReady = true; if (st.mode === 'gps') log('첫 위치 확보 acc ' + Math.round(st.hold.acc) + 'm'); }
@@ -882,47 +992,54 @@ function step() {
   const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const nrel = nearEn ? relBearing(nearEn) : undefined;
   const left = RW.S.WARMUP_S - s.elapsed + 1;
-  if (s.elapsed === 1) speakIntro(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${numKo(st.nPack)} 마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${numKo(st.nPack)} 마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
-  if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', '1분 뒤 녀석들이 널 본다.', { pri: PRI.HIGH }); }
-  if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', '곧이다. 페이스 올려.', { pri: PRI.HIGH }); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', '들켰다!', { pri: PRI.HIGH, ttl: 2 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
+  if (s.elapsed === 1) {
+    const head = ['intro_head', 'name_' + a.id, 'cnt' + Math.min(5, st.nPack)];
+    if (st.warmupS === 0) speakIntro([...head, 'intro_now'], { k: 'spot', near: Math.max(near, 0.6), rel: nrel });
+    else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);
+  }
+  if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', ['warn60'], { pri: PRI.HIGH }); }
+  if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4, pre: { k: 'spot', near: Math.max(near, 0.6), rel: nrel } }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
   for (const ev of snap.events) {
     const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
-    const erel = relBearing(ev.en), dw = dirWord(erel), em = Math.round(ev.en.e.gap / 100);
+    const erel = relBearing(ev.en), dk = dirKey(erel), em = Math.round(ev.en.e.gap / 100);
+    const pre = (k) => ({ k, near: eNear, rel: erel });
     const ek = (ev.type === 'ambush') ? 'reengage' : ev.type;
     const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
     if (ev.type === 'sprint') {
       cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel); buzz([80, 60, 200]); flash();
       const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
       // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
-      if (n === 1) speak('sprint', `${dw}에서 온다. 시속 ${kmh}. 버텨!`, { pri: PRI.CRIT });
-      else if (n === 2) speak('sprint', `또 온다. ${dw}. 시속 ${kmh}.`, { pri: PRI.HIGH });
-      else if (n <= 4) speak('sprint', [`온다. ${dw}.`, `${dw}. 붙는다.`], { pri: PRI.HIGH, cooldown: 15 });
-      else speak('sprint', [`${dw} ${em}미터.`, `${dw}.`], { pri: PRI.NORM, cooldown: 50, cost: 1 });
+      // 동물이 먼저 소리친다("꼬꼬댁! 거기 서!"). 방향은 그 목소리가 온 쪽이다
+      if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT, pre: pre('sprint') });
+      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, ...kmhSeq(kmh)], { pri: PRI.HIGH, pre: pre('sprint') });
+      else if (n <= 4) speak('sprint', [['dc_' + dk], ['dx_' + dk, 'stick']], { pri: PRI.HIGH, cooldown: 15, pre: n === 3 ? pre('sprint') : null });
+      else speak('sprint', [['dx_' + dk, ...meterSeq(em)], ['dx_' + dk]], { pri: PRI.NORM, cooldown: 50, cost: 1 });
     }
     else if (ev.type === 'hit') {
       cry('sprint', cls, 1, 1.0, erel); buzz(500); flash();
-      speak('hit', snap.hits >= 3 ? '세 번째다. 끝났다.' : `잡혔다. ${numKo(snap.hits)} 번째. 물러난다.`, { pri: PRI.CRIT });
+      speak('hit', ['hit' + Math.min(3, snap.hits)], { pri: PRI.CRIT, pre: pre('hit') });
     }
     else if (ev.type === 'reengage' || ev.type === 'ambush') {
       // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
       cry('roam', cls, 0.65, 1, erel);
-      if (n <= 2) speak('rejoin', `한 마리가 돌아왔다. ${dw} ${em}미터.`, { pri: PRI.HIGH });
+      if (n <= 2) speak('rejoin', ['dr_' + dk, ...meterSeq(em)], { pri: PRI.HIGH });
     }
   }
   if (snap.state === 'tired' && prevState === 'sprint') {
     cry('tired', cls, Math.max(near, 0.5), 1, nrel);
     const tn = (VOICE.seen.tired = (VOICE.seen.tired || 0) + 1);
     // 지침은 유일하게 행동을 바꾸는 정보다. 계속 알리되 갈수록 짧게
-    if (tn === 1) speak('tired', '지쳤다. 헐떡인다. 지금이 기회다, 밟아!', { pri: PRI.HIGH });
-    else if (tn <= 3) speak('tired', ['지쳤다. 벌려!', '헐떡인다. 지금이다.'], { pri: PRI.HIGH, cooldown: 30 });
-    else speak('tired', ['지쳤다.', '기회다.'], { pri: PRI.NORM, cooldown: 120, cost: 1 });
+    const tpre = tn <= 2 ? { k: 'tired', near: Math.max(near, 0.5), rel: nrel } : null;
+    if (tn === 1) speak('tired', ['tired1'], { pri: PRI.HIGH, pre: tpre });
+    else if (tn <= 3) speak('tired', [['tired2'], ['tired3']], { pri: PRI.HIGH, cooldown: 30, pre: tpre });
+    else speak('tired', [['tired4'], ['tired5']], { pri: PRI.NORM, cooldown: 120, cost: 1 });
   }
-  else if (snap.state === 'recover' && prevState === 'tired') speak('recover', ['숨 고르는 중. 다시 올 거다.', '멀어진다. 아직 끝난 게 아니다.'], { pri: PRI.LOW, cooldown: 60, cost: 1 });
-  else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', 'GPS가 흔들린다. 녀석들이 냄새를 잃었다.', { pri: PRI.NORM, cooldown: 120 }); }
+  else if (snap.state === 'recover' && prevState === 'tired') speak('recover', [['recover1'], ['recover2']], { pri: PRI.LOW, cooldown: 60, cost: 1 });
+  else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', ['lost'], { pri: PRI.NORM, cooldown: 120 }); }
   if (snap.gauge < 200) saidHalf = false;                 // 벗어나면 다시 무장. 교전마다 한 번은 경고해야 한다
-  if (snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', ['절반이다. 뛰어!', '잡힌다. 밟아!'], { pri: PRI.CRIT }); }
-  if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', '쿨다운 구간. 녀석들은 포기했다. 천천히.', { pri: PRI.HIGH }); }
+  if (snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', [['half1'], ['half2']], { pri: PRI.CRIT }); }
+  if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', ['cool'], { pri: PRI.HIGH }); }
   // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
   const gapM = snap.gapCm / 100, frozen = snap.paused || snap.cooldown || st.manualPause;
   const phase = snap.warmup ? 'warm' : frozen ? 'recover' : snap.state;
@@ -987,6 +1104,17 @@ function render(snap, fix) {
   $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'} · 나침반 ${HEAD.ok ? Math.round(((HEAD.compass * 180 / Math.PI) + 360) % 360) + '°' : '없음'}`;
   if (!st.pocket) drawRadar(snap);
 }
+const MAPV = { e: 0, n: 0, zoom: 1, at: 0, k: 1, bearing: 0, IDLE_MS: 12000 };
+/** 화면에서 (dx, dy)px 끌었다 → 세계 좌표(동, 북 m)로. 지도가 진행 방향으로 돌아가 있으니 회전을 되돌린다 */
+function mapPan(dx, dy) {
+  const b = MAPV.bearing, wx = dx * Math.cos(b) - dy * Math.sin(b), wy = dx * Math.sin(b) + dy * Math.cos(b);
+  MAPV.e -= wx / MAPV.k; MAPV.n += wy / MAPV.k;
+  const lim = 1500; MAPV.e = Math.max(-lim, Math.min(lim, MAPV.e)); MAPV.n = Math.max(-lim, Math.min(lim, MAPV.n));   // 타일 폭주 방지
+  MAPV.at = Date.now(); mapUi();
+}
+function mapZoom(z) { MAPV.zoom = Math.max(0.5, Math.min(3, z)); MAPV.at = Date.now(); mapUi(); }
+function mapReset() { MAPV.e = 0; MAPV.n = 0; MAPV.zoom = 1; mapUi(); }
+function mapUi() { const off = Math.hypot(MAPV.e, MAPV.n) > 3 || Math.abs(MAPV.zoom - 1) > 0.02; $('#recenter').style.display = off ? 'block' : 'none'; }
 /** GPS는 1초에 한 번 온다. 그 사이를 진행 방향으로 메워야 즉각 반응하는 것처럼 보인다.
  *  내비 앱이 부드러운 이유가 이것이다. 값을 지어내는 게 아니라 다음 수신까지 관성으로 잇는 것 */
 function predictOffset() {
@@ -999,16 +1127,20 @@ function predictOffset() {
 }
 function drawRadar(snap) {
   const c = $('#radar'), g = c.getContext('2d'), W = c.width, cx = W / 2, cy = W / 2; const a = st.animal;
-  const viewM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), k = (W / 2 - 10) / viewM;
+  if (MAPV.e || MAPV.n || MAPV.zoom !== 1) { if (Date.now() - MAPV.at > MAPV.IDLE_MS) mapReset(); }   // 달리는 중이다. 손을 떼고 잠시 지나면 내 위치로 돌아온다
+  const baseM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), viewM = Math.round(baseM / MAPV.zoom), k = (W / 2 - 10) / viewM;
+  MAPV.k = k;
   g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
   const [pdE, pdN] = predictOffset();
   const P = st.trail, raw = P.length ? P[P.length - 1] : [0, 0], me = [raw[0] + pdE, raw[1] + pdN];
+  const ctr = [me[0] + MAPV.e, me[1] + MAPV.n];                   // 화면 중심. 끌면 내 위치에서 벗어난다
   const bearing = Number.isNaN(st.headRad) ? 0 : st.headRad;   // 소리와 지도가 같은 방향을 써야 한다. 어긋나면 러너가 소리를 안 믿는다
+  MAPV.bearing = bearing;
   g.save(); g.translate(cx, cy); g.rotate(-bearing);
   // 지도 타일
   if (st.useMap && st.tilesOk !== false && st.lastLatLon) {
     const [rlat, rlon] = st.lastLatLon;
-    const lat = rlat + pdN / 111320, lon = rlon + pdE / (111320 * Math.cos(rlat * Math.PI / 180) || 1);
+    const lat = rlat + (pdN + MAPV.n) / 111320, lon = rlon + (pdE + MAPV.e) / (111320 * Math.cos(rlat * Math.PI / 180) || 1);
     const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
     const mPerTile = 40075016.686 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), tilePx = mPerTile * k;
     const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
@@ -1021,13 +1153,14 @@ function drawRadar(snap) {
     }
     g.restore();
   }
+  const toS = ([e, n]) => [(e - ctr[0]) * k, -(n - ctr[1]) * k];
+  const [mx, my] = toS(me);                                      // 반경 원과 레이더 스윕은 화면 중심이 아니라 나를 따라간다
   g.strokeStyle = '#173129'; g.lineWidth = 1;
-  for (const r of [30, 50, 100, 150, 200, 250]) { if (r > viewM) break; g.beginPath(); g.arc(0, 0, r * k, 0, Math.PI * 2); g.stroke(); }
-  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(0, 0, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(0, 0, Math.min(viewM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, 0, 0) : null;
-  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.16)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(0, 0, viewM * k, 0, Math.PI * 2); g.fill(); }
-  const toS = ([e, n]) => [(e - me[0]) * k, -(n - me[1]) * k];
+  for (const r of [30, 50, 100, 150, 200, 250]) { if (r > baseM) break; g.beginPath(); g.arc(mx, my, r * k, 0, Math.PI * 2); g.stroke(); }
+  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(mx, my, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(mx, my, Math.min(baseM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, mx, my) : null;
+  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.16)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(mx, my, baseM * k, 0, Math.PI * 2); g.fill(); }
   g.strokeStyle = 'rgba(63,242,165,0.55)'; g.lineWidth = 3; g.beginPath();
   for (let i = Math.max(0, P.length - 400); i < P.length; i++) { const [x, y] = toS(P[i]); if (i === Math.max(0, P.length - 400)) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
   for (const en of snap.enemies) {
@@ -1049,17 +1182,20 @@ function drawRadar(snap) {
     g.fillStyle = '#dfe9e4'; g.font = 'bold 18px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText('N', 0, 26); g.restore();
   }
-  g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(cx, cy - 14); g.lineTo(cx - 9, cy + 9); g.lineTo(cx + 9, cy + 9); g.closePath(); g.fill();
+  { // 내 위치. 지도를 끌었으면 화면 중심이 아니라 실제 위치에 그린다
+    const c0 = Math.cos(-bearing), s0 = Math.sin(-bearing), ax = cx + mx * c0 - my * s0, ay = cy + mx * s0 + my * c0;
+    g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(ax, ay - 14); g.lineTo(ax - 9, ay + 9); g.lineTo(ax + 9, ay + 9); g.closePath(); g.fill();
+  }
   g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
   if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(TILE_SRC[TILE.src].credit, W - 8, W - 8); }
 }
 function start() {
   if (!st.animal) return;
-  audioInit(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
+  audioInit(); vpLoad(st.animal.id); if ('speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
   st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
-  VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
+  mapReset(); hush(); VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
   wakeLock();
@@ -1072,7 +1208,8 @@ function start() {
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
   const s = st.session, a = st.animal; if (!s) return;
-  speak('end', s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${numKo(s.hits) || '영'} 번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', { pri: PRI.CRIT });
+  { const m = Math.floor(s.finalTimeS / 60), sec = s.finalTimeS % 60;
+    speak('end', s.failed ? ['end_fail'] : s.done ? ['end_arrive', 'end_hits' + Math.min(2, s.hits), 'end_final', ...(m ? [...numSeq(m), 'unit_min'] : []), ...(sec || !m ? [...numSeq(sec), 'unit_sec'] : [])] : ['end_stop'], { pri: s.failed ? PRI.HIGH : PRI.CRIT, ttl: 30 }); }   // 실패는 '세 번째다'를 끊지 않고 뒤에 붙인다
   const title = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
   $('#rLabel').textContent = title + ' · 최종 시간(이동 + 페널티)'; $('#rHero').textContent = fmt(s.finalTimeS); $('#rHero').className = 'hero' + (s.failed ? ' fail' : '');
   $('#rSub').textContent = `${EMOJI[a.id] || ''} ${a.nameKo} ${st.nPack}마리 · ${st.courseM / 1000}km · ${st.mode === 'gps' ? '실주행' : '리플레이'}`;
@@ -1119,11 +1256,30 @@ if (EMBEDDED) {
   if (demo) demo.click();                      // 여기서는 실내 데모만 돌아간다
   $('#setBox').open = false;
 }
+// 오프라인 캐시. 음성 팩을 한 번 받으면 신호가 약한 코스에서도 말이 끊기지 않는다
+if ('serviceWorker' in navigator && location.protocol === 'https:' && !EMBEDDED) navigator.serviceWorker.register('sw.js').catch(() => { });
+if (!EMBEDDED) setTimeout(() => vpLoad(st.animal && st.animal.id), 800);   // 첫 화면을 그린 뒤. 약 1.3 MB, 서비스 워커가 한 번만 받게 한다
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
+// 지도 끌기(한 손가락)와 확대·축소(두 손가락, 휠). 끈 만큼 화면 중심이 옮겨 간다
+{
+  const cv = $('#radar'), pts = new Map(); let pinch0 = 0, zoom0 = 1;
+  const dist = () => { const [p, q] = [...pts.values()]; return Math.hypot(p[0] - q[0], p[1] - q[1]); };
+  cv.addEventListener('pointerdown', e => { try { cv.setPointerCapture(e.pointerId); } catch (er) { } pts.set(e.pointerId, [e.clientX, e.clientY]); if (pts.size === 2) { pinch0 = dist(); zoom0 = MAPV.zoom; } MAPV.at = Date.now(); });
+  cv.addEventListener('pointermove', e => {
+    const prev = pts.get(e.pointerId); if (!prev) return;
+    const cur = [e.clientX, e.clientY]; pts.set(e.pointerId, cur);
+    if (pts.size === 1) mapPan((cur[0] - prev[0]) * cv.width / cv.clientWidth, (cur[1] - prev[1]) * cv.height / cv.clientHeight);
+    else if (pts.size === 2 && pinch0 > 0) mapZoom(zoom0 * dist() / pinch0);
+  });
+  const up = e => { pts.delete(e.pointerId); if (pts.size < 2) pinch0 = 0; };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('lostpointercapture', up);
+  cv.addEventListener('wheel', e => { e.preventDefault(); mapZoom(MAPV.zoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15)); }, { passive: false });
+  $('#recenter').addEventListener('click', mapReset);
+}
 // 주머니 모드. 화면을 덮고 캔버스 그리기를 멈춘다. 소리만 남는다
 $('#pocket').addEventListener('click', () => {
   st.pocket = true; $('#pocketCover').style.display = 'flex';
-  speak('pocket', '주머니 모드. 이제 소리만 듣고 달려라.', { pri: PRI.HIGH });
+  speak('pocket', ['pocket'], { pri: PRI.HIGH });
 });
 $('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
 seg('#voice', v => { VOICE.level = v; });
@@ -1134,11 +1290,12 @@ $('#vkey').addEventListener('change', e => {
   TILE.src = TILE.key ? 'vworld' : 'osm'; TILE.cache.clear(); TILE.loads = 0; TILE.fails = 0; st.tilesOk = null;
 });
 $('#audioTest').addEventListener('click', () => {
-  audioInit(); if (!st.animal) return;
+  audioInit(); if (!st.animal) return; vpLoad(st.animal.id);
   const cls = CLASS[st.animal.id] || 'small';
   // 왼쪽 뒤에서 정면을 지나 오른쪽 뒤로. 좌우와 앞뒤가 구분되는지 귀로 확인한다
   [-2.4, -1.2, 0, 1.2, 2.4].forEach((rel, i) => setTimeout(() => cry('roam', cls, 0.85, 1, rel), i * 750));
-  setTimeout(() => speak('test', `${st.animal.nameKo}. 지금 소리가 왼쪽에서 오른쪽으로 지나갔으면 정상이다.`, { pri: PRI.CRIT }), 4200);
+  // 마지막에 그 동물이 오른쪽 뒤에서 자기 목소리로 한마디. 동물마다 목소리가 다르다는 걸 출발 전에 들려준다
+  setTimeout(() => speak('test', ['name_' + st.animal.id, 'test_tail'], { pri: PRI.CRIT, pre: { k: 'spot', near: 0.85, rel: 2.4 } }), 4200);
 });
 $('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
 $('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });
