@@ -1,11 +1,13 @@
 // 출시 전 헤드리스 QA. docs/app/을 로컬로 띄워 실제 크롬에서 끝까지 돌린다
 // 실행: NODE_PATH=$(npm root -g) node web/qa.mjs   (playwright 필요)
 // 확인: 스크립트 오류 0, 음성 팩 전 조각 디코드, 실내 데모 완주, 구운 음성 재생(브라우저 TTS 미사용),
-//       지도 끌기·복귀, 결과 화면, 음성 팩이 없을 때 브라우저 TTS로 대체
+//       지도 끌기·복귀, 결과 화면, 음성 팩이 없을 때 브라우저 TTS로 대체,
+//       아이폰 에뮬레이션(무음 스위치 대응, 나침반 권한·방위, 캔버스 filter 없는 사파리에서 지도 어둡게)
 import { createRequire } from 'node:module';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'docs', 'app');
@@ -21,6 +23,18 @@ const server = http.createServer((req, res) => {
 });
 await new Promise(r => server.listen(0, '127.0.0.1', r));
 const BASE = `http://127.0.0.1:${server.address().port}/`;
+
+/** 흰색 256×256 PNG. 지도 타일 대역. 흰 타일이 어둡게 그려지면 다크 지도 처리가 동작한 것이다 */
+function whitePng() {
+  const chunk = (t, d) => { const b = Buffer.alloc(12 + d.length); b.writeUInt32BE(d.length, 0); b.write(t, 4, 'ascii'); d.copy(b, 8); b.writeUInt32BE(zlib.crc32(Buffer.concat([Buffer.from(t, 'ascii'), d])) >>> 0, 8 + d.length); return b; };
+  const ih = Buffer.alloc(13); ih.writeUInt32BE(256, 0); ih.writeUInt32BE(256, 4); ih[8] = 8; ih[9] = 2;
+  const raw = Buffer.alloc(256 * (1 + 256 * 3), 255); for (let y = 0; y < 256; y++) raw[y * (1 + 256 * 3)] = 0;
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', ih), chunk('IDAT', zlib.deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]);
+}
+const WHITE = whitePng();
+const tiles = (page) => page.route('**/tile.openstreetmap.org/**', r => r.fulfill({ status: 200, contentType: 'image/png', headers: { 'Access-Control-Allow-Origin': '*' }, body: WHITE }));
+/** 레이더 캔버스 평균 밝기 0~255 */
+const radarLum = (page) => page.evaluate(() => { const c = document.querySelector('#radar'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let s = 0, n = 0; for (let i = 0; i < d.length; i += 28) { s += (d[i] + d[i + 1] + d[i + 2]) / 3; n++; } return s / n; });
 
 let fails = 0;
 const check = (ok, msg) => { console.log((ok ? 'OK   ' : 'FAIL ') + msg); if (!ok) fails++; };
@@ -83,6 +97,8 @@ async function run(opts) {
   });
   check(miss.length === 0, `대사 키 누락 ${miss.length ? miss.join(',') : '없음'}`);
   check(errors.length === 0, `로드 오류 ${errors.join(' | ') || '없음'}`);
+  await page.click('#openSet');
+  check(!(await page.locator('#iosAudioBox').isVisible()), '아이폰 아닌 기기: 아이폰 소리 설정 숨김');
   await ctx.close();
 }
 
@@ -193,7 +209,7 @@ async function run(opts) {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(PROBE);
-  await page.route('**/tile.openstreetmap.org/**', r => r.abort());
+  await tiles(page);
   await page.goto(BASE);
   await page.click('#openSet');
   await page.click('#warmup button[data-v="0"]');
@@ -206,6 +222,8 @@ async function run(opts) {
   const nums = await page.evaluate(() => ({ dist: +document.querySelector('#nDist').textContent, pace: document.querySelector('#nPace').textContent, time: document.querySelector('#nTime').textContent }));
   check(nums.dist >= 0.08 && nums.dist <= 0.16, `GPS 45초 이동 거리 ${nums.dist} km (실제 0.135)`);
   check(!/NaN/.test(nums.pace), `GPS 페이스 표시 ${nums.pace} km/h`);
+  const lum5 = await radarLum(page), dbg5 = await page.locator('#dbg').textContent();
+  check(/지도 OK/.test(dbg5) && lum5 < 60, `다크 지도 (크롬 filter 경로) 평균 밝기 ${lum5.toFixed(0)}/255 · ${dbg5}`);
   await page.click('#stop');
   await page.waitForSelector('#result.on');
   const log = await page.locator('#rLog').textContent();
@@ -214,6 +232,85 @@ async function run(opts) {
   // 'GPS 오류 신호 없음 (2)'는 플레이라이트 위치 에뮬레이션이 갱신마다 내는 것이다(앱 없는 빈 페이지에서도 똑같이 난다). 제외한다
   const bad = log.split('\n').filter(l => /오류/.test(l) && !/GPS 오류 신호 없음 \(2\)/.test(l));
   check(errors.length === 0 && bad.length === 0, `GPS 모드 오류 ${errors.join(' | ') || '없음'} ${bad.join(' / ')}`);
+  await ctx.close();
+}
+
+// 6. 아이폰 에뮬레이션. 사파리에 있고 크롬에 없는 것(오디오 세션, 나침반 권한, webkitCompassHeading)을 흉내 내고
+//    사파리에 없고 크롬에 있는 것(캔버스 filter)을 지운다
+const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1';
+const IOS_SHIM = (withSession) => {
+  window.__ios = { perm: 0, plays: 0 };
+  if (withSession) Object.defineProperty(navigator, 'audioSession', { value: { type: 'auto' }, configurable: true });
+  window.DeviceOrientationEvent.requestPermission = () => { window.__ios.perm++; return Promise.resolve('granted'); };
+  delete CanvasRenderingContext2D.prototype.filter;
+  const pl = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { window.__ios.plays++; return pl.call(this); };
+};
+const compass = (page, deg) => page.evaluate((deg) => {
+  const e = new Event('deviceorientation');
+  Object.assign(e, { alpha: 200, beta: 40, gamma: 0, absolute: false, webkitCompassHeading: deg, webkitCompassAccuracy: 10 });
+  window.dispatchEvent(e);
+}, deg);
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, userAgent: IPHONE, isMobile: true, hasTouch: true, deviceScaleFactor: 3, permissions: ['geolocation'], geolocation: { latitude: 37.8949, longitude: 127.2003, accuracy: 6 } });
+  const page = await ctx.newPage();
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
+  await page.addInitScript(PROBE); await page.addInitScript(IOS_SHIM, true);
+  await tiles(page);
+  await page.goto(BASE);
+  await page.click('#openSet');
+  check(await page.locator('#iosAudioBox').isVisible(), '아이폰: 소리 모드 설정 표시');
+  await page.click('#iosAudio button[data-v="ambient"]');
+  const t1 = await page.evaluate(() => navigator.audioSession.type);
+  await page.click('#iosAudio button[data-v="playback"]');
+  const t2 = await page.evaluate(() => navigator.audioSession.type);
+  check(t1 === 'ambient' && t2 === 'playback', `아이폰: 소리 모드 전환 → 오디오 세션 ${t1} → ${t2}`);
+  await page.click('#warmup button[data-v="0"]');
+  await page.click('#start'); await page.click('#safetyOk'); await page.click('#start');
+  let lat = 37.8949;
+  for (let i = 0; i < 12; i++) { lat += 3 / 111320; await ctx.setGeolocation({ latitude: lat, longitude: 127.2003, accuracy: 6 }); await page.waitForTimeout(1000); }
+  for (let i = 0; i < 8; i++) { await compass(page, 90); await page.waitForTimeout(80); }
+  await page.waitForTimeout(400);
+  const ios = await page.evaluate(() => ({ ...window.__ios, type: navigator.audioSession.type }));
+  const dbg = await page.locator('#dbg').textContent();
+  check(ios.perm === 1, `아이폰: 출발 버튼에서 나침반 권한 요청 ${ios.perm}회`);
+  check(/나침반 90°/.test(dbg), `아이폰: webkitCompassHeading으로 방위 인식 · ${dbg}`);
+  check(ios.type === 'playback', `아이폰: 출발 시 오디오 세션 ${ios.type} (무음 스위치 무시)`);
+  const lum = await radarLum(page);
+  check(/지도 OK/.test(dbg) && lum < 60, `아이폰: 캔버스 filter 없이 다크 지도 평균 밝기 ${lum.toFixed(0)}/255`);
+  // 실제 아이폰처럼 나침반 값을 계속 흘려보내면 지도가 그 방향으로 돈다. 동쪽(90°)을 보면 북쪽 표시(빨간 삼각형)가 화면 왼쪽에 있어야 한다
+  await page.evaluate(() => { window.__cmp = setInterval(() => { const e = new Event('deviceorientation'); Object.assign(e, { alpha: 200, beta: 40, gamma: 0, absolute: false, webkitCompassHeading: 90, webkitCompassAccuracy: 10 }); window.dispatchEvent(e); }, 50); });
+  await page.waitForTimeout(1500);
+  // 떨림 방지 데드밴드(약 3°) 때문에 정확히 90°에서 멈추지 않는다. 한 점이 아니라 가장자리 영역에서 빨간 삼각형을 센다
+  const north = await page.evaluate(() => {
+    const c = document.querySelector('#radar'), g = c.getContext('2d'), W = c.width;
+    const count = (x0, y0, w, h) => { const d = g.getImageData(x0, y0, w, h).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > 180 && d[i + 1] < 130 && d[i + 2] < 130) n++; return n; };
+    return { left: count(8, W / 2 - 80, 40, 160), top: count(W / 2 - 80, 8, 160, 40) };
+  });
+  await page.evaluate(() => clearInterval(window.__cmp));
+  check(north.left > 40 && north.top < 5, `아이폰: 나침반 90°로 지도 회전 (북쪽 표시 빨간 픽셀 왼쪽 ${north.left}, 위 ${north.top})`);
+  if (SHOTS) await page.screenshot({ path: SHOTS + '/ios.png' });
+  const q = await page.evaluate(() => window.__qa);
+  check(q.tts.length === 0 && q.decodes >= 3, `아이폰: 구운 음성 재생 (디코드 ${q.decodes}, 기계음 ${q.tts.length})`);
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  check(errors.length === 0, `아이폰 에뮬레이션 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+// 6b. 오디오 세션 API가 없는 옛 아이폰(16.4 미만): 소리 없는 <audio>로 우회
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, userAgent: IPHONE, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
+  await page.addInitScript(PROBE); await page.addInitScript(IOS_SHIM, false);
+  await page.route('**/tile.openstreetmap.org/**', r => r.abort());
+  await page.goto(BASE);
+  await page.click('#openSet');
+  await page.click('#mode button[data-v="replay"]');
+  await page.click('#start');
+  await page.waitForTimeout(1500);
+  const ios = await page.evaluate(() => window.__ios);
+  check(ios.plays >= 1 && ios.perm === 0, `옛 아이폰: 무음 <audio> 우회 재생 ${ios.plays}회, 실내 데모는 나침반 권한 안 물음`);
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  check(errors.length === 0, `옛 아이폰 오류 ${errors.join(' | ') || '없음'}`);
   await ctx.close();
 }
 

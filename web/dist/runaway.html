@@ -5,7 +5,8 @@
   :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--orange:#ff9a3c;--yellow:#ffd93d;
     --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
   *{box-sizing:border-box}html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  input{user-select:text;-webkit-user-select:text}
   body.flash{background:#5a0f0a}
   .screen{display:none;min-height:100vh;padding:16px 16px 40px;max-width:560px;margin:0 auto}.screen.on{display:block}
   h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--green)}
@@ -100,6 +101,11 @@
     <div class="seg" id="npack"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div>
     <div class="lbl">말 많음</div>
     <div class="seg" id="voice"><button data-v="quiet">적게</button><button data-v="normal" class="on">보통</button><button data-v="chatty">많이</button></div>
+    <div id="iosAudioBox" style="display:none">
+      <div class="lbl">아이폰 소리</div>
+      <div class="seg" id="iosAudio"><button data-v="playback" class="on">무음에서도 들림</button><button data-v="ambient">음악과 같이</button></div>
+      <p class="sub" style="margin-top:6px">무음에서도 들림: 옆 스위치가 무음이어도 소리가 난다. 대신 듣던 음악이 멈춘다.<br>음악과 같이: 음악 위에 겹쳐 들린다. 대신 무음 모드면 아무 소리도 안 난다.</p>
+    </div>
     <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로 지나간다</button>
     <p class="sub" style="margin-top:6px">관제사 목소리: Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p>
     <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap</div>
@@ -338,6 +344,8 @@ if (typeof module !== "undefined") module.exports = VOICE_PACK;
 const $ = (s) => document.querySelector(s);
 const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
 const VP = { op: null, cache: new Map(), opP: null };   // 음성 팩 상태
+// 아이폰·아이패드. 아이패드 사파리는 맥이라고 자칭하므로 터치 여부로 가린다
+const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
@@ -372,8 +380,34 @@ $('#gpsTest').addEventListener('click', () => {
 
 // ---------- 오디오 ----------
 const A = { ctx: null, master: null, noise: null, nextBeat: 0, lastSay: 0, ambient: null, samples: {}, lastCry: 0 };
+// 아이폰은 옆 무음 스위치가 웹 오디오를 통째로 끈다. 게임 소리가 전부 사라지면 앱이 고장 난 걸로 읽힌다.
+// 재생용(playback)으로 선언하면 무음 모드에서도 들린다. 대가로 다른 앱 음악이 멈춘다 → 설정에서 고르게 한다
+const AUD = { mode: 'playback', el: null };
+try { AUD.mode = localStorage.getItem('iosAudio') || 'playback'; } catch (e) { }
+function audioSession() {
+  if (!IOS) return;
+  try { if (navigator.audioSession) { navigator.audioSession.type = AUD.mode; return; } } catch (e) { }
+  // iOS 16.4 이전에는 이 API가 없다. 소리 없는 <audio>를 돌리면 세션이 재생용으로 바뀐다(널리 쓰는 우회). 사용자 동작 안에서만 된다
+  if (AUD.mode !== 'playback') { if (AUD.el) AUD.el.pause(); return; }
+  if (!AUD.el) { AUD.el = new Audio(silentWav()); AUD.el.loop = true; AUD.el.setAttribute('playsinline', ''); }
+  const p = AUD.el.play(); if (p && p.catch) p.catch(() => { });
+}
+/** 0.25초 무음 WAV (8kHz 16bit). 파일 없이 만든다. 옛 사파리는 blob 주소 미디어가 불안정해 data 주소로 */
+function silentWav() {
+  const n = 4000, b = new Uint8Array(44 + n), v = new DataView(b.buffer);   // 데이터 영역은 0 = 무음
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) b[o + i] = t.charCodeAt(i); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n, true);
+  let str = ''; for (let i = 0; i < b.length; i++) str += String.fromCharCode(b[i]);
+  return 'data:audio/wav;base64,' + btoa(str);
+}
+// 전화·알림·다른 앱 소리가 끼어들면 iOS는 오디오를 멈춘다('interrupted'). 화면을 만지거나 앱으로 돌아오면 다시 켠다
+function audioWake() { if (A.ctx && A.ctx.state !== 'running' && A.ctx.state !== 'closed') { const p = A.ctx.resume(); if (p && p.catch) p.catch(() => { }); } }
+document.addEventListener('touchend', audioWake, { passive: true });
+document.addEventListener('click', audioWake);
 function audioInit() {
-  if (A.ctx) { A.ctx.resume(); return; }
+  audioSession();
+  if (A.ctx) { audioWake(); return; }
   const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C();
   A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
   const lim = A.ctx.createDynamicsCompressor();            // 절차 합성이 겹치면 클리핑한다
@@ -637,16 +671,30 @@ function flash() { document.body.classList.add('flash'); setTimeout(() => docume
 // GPS 코스는 "움직이는 방향"이라 제자리에서 돌면 아무 값도 안 나온다. 지자기 센서만이 "지금 어디를 보는가"를 안다
 const HEAD = { compass: NaN, compassAt: 0, course: NaN, courseAt: 0, ok: false, outAt: 0 };
 function nrm(a) { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
+/** 아이폰은 방향 센서를 쓰려면 권한을 받아야 한다. 반드시 버튼 누름 안에서 불러야 창이 뜬다 */
+function askCompass() {
+  const D = window.DeviceOrientationEvent;
+  if (!D || typeof D.requestPermission !== 'function') return;
+  try { D.requestPermission().then(r => { if (r !== 'granted') log('나침반 권한 거부 → GPS 진행 방향만'); }).catch(e => log('나침반 권한 실패 ' + e.message)); } catch (e) { }
+}
 function startCompass() {
-  if (typeof window.DeviceOrientationEvent === 'undefined') return;
+  if (typeof window.DeviceOrientationEvent === 'undefined' || HEAD.listening) return;
+  HEAD.listening = true;                                // 주행마다 리스너가 쌓이지 않게
   const onOrient = (e) => {
-    if (e.alpha === null || e.alpha === undefined) return;
-    if (e.absolute !== true && e.type !== 'deviceorientationabsolute') return;   // 상대 방향은 나침반이 아니다
     const b = (e.beta || 0) * Math.PI / 180, cb = Math.cos(b);
     if (Math.abs(cb) < 0.25) return;                    // 폰이 거의 수직. 윗변의 수평 방향이 정의되지 않는다
-    const sa = (screen.orientation && screen.orientation.angle) || 0;
-    let h = nrm((-e.alpha + sa) * Math.PI / 180);       // 알파는 나침반과 반대 방향으로 증가한다
-    if (cb < 0) h = nrm(h + Math.PI);                   // 폰을 뒤집어 들었다
+    const sa = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+    let h;
+    if (typeof e.webkitCompassHeading === 'number' && e.webkitCompassHeading >= 0) {
+      // 아이폰: iOS가 계산한 방위(북에서 시계 방향, 기기 윗변 기준). 아이폰의 alpha는 기준이 제각각이라 나침반이 아니다
+      if (e.webkitCompassAccuracy < 0) return;          // 보정 전. 틀린 방위보다 GPS 진행 방향이 낫다
+      h = nrm((e.webkitCompassHeading + sa) * Math.PI / 180);
+    } else {
+      if (e.alpha === null || e.alpha === undefined) return;
+      if (e.absolute !== true && e.type !== 'deviceorientationabsolute') return;   // 상대 방향은 나침반이 아니다
+      h = nrm((-e.alpha + sa) * Math.PI / 180);         // 알파는 나침반과 반대 방향으로 증가한다
+      if (cb < 0) h = nrm(h + Math.PI);                 // 폰을 뒤집어 들었다
+    }
     HEAD.compass = h; HEAD.compassAt = Date.now(); HEAD.ok = true;
     applyHeading();
   };
@@ -688,8 +736,15 @@ function startGps() {
     e => { st.gpsErr = (e.code === 1 ? (EMBEDDED ? '이 화면에서는 위치가 차단됨' : '권한 거부') : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
 }
 function stopGps() { if (st.watchId !== null) navigator.geolocation.clearWatch(st.watchId); st.watchId = null; }
-async function wakeLock() { try { st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', () => { st.wake = null; }); } catch (e) { log('wake lock 불가 ' + e.message); } }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && st.session && !st.wake) wakeLock(); });
+async function wakeLock() {
+  try { st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', () => { st.wake = null; }); }
+  catch (e) {
+    log('wake lock 불가 ' + e.message);
+    // 화면이 꺼지면 GPS와 소리가 멈춘다. 모르고 뛰면 기록이 통째로 날아간다. 주행마다 한 번 알린다
+    if (st.session && !st.wakeWarned) { st.wakeWarned = true; st.wakeWarnUntil = Date.now() + 10000; }
+  }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { audioWake(); if (st.session && !st.wake) wakeLock(); } });
 
 // ---------- 지도 타일 (아티팩트 뷰어에서는 차단됨 → 자동으로 레이더만) ----------
 // 타일 공급자. CARTO는 2026년부터 키를 요구해 워터마크가 찍힌다 → 키 없는 OSM 표준 타일 + 캔버스 반전으로 다크맵
@@ -707,14 +762,32 @@ const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0, src: 'osm', key: '' 
 try { TILE.key = localStorage.getItem('vworldKey') || ''; } catch (e) { }
 if (TILE.key) TILE.src = 'vworld';
 const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.22) brightness(0.78) contrast(1.08)';   // 채도가 높으면 반전된 도로가 분홍으로 뜬다
+// 사파리는 캔버스 filter를 지원하지 않는다. 그대로 두면 아이폰에서 지도가 하얗게 뜬다
+const CANVAS_FILTER = (() => { try { return 'filter' in document.createElement('canvas').getContext('2d'); } catch (e) { return false; } })();
+/** 타일을 받을 때 한 번, DARK_FILTER와 같은 계산을 픽셀에 직접 한다. 256×256이라 몇 ms면 끝난다 */
+function darkTile(img) {
+  const c = document.createElement('canvas'); c.width = img.naturalWidth || 256; c.height = img.naturalHeight || 256;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+  let d; try { d = g.getImageData(0, 0, c.width, c.height); } catch (e) { return null; }   // CORS 없이 받은 타일은 못 읽는다
+  const p = d.data, S = 0.22, BR = 0.78, K = 1.08, cl = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+  for (let i = 0; i < p.length; i += 4) {
+    let r = 1 - p[i] / 255, gr = 1 - p[i + 1] / 255, b = 1 - p[i + 2] / 255;                          // invert(1)
+    let r2 = cl(-0.574 * r + 1.430 * gr + 0.144 * b), g2 = cl(0.426 * r + 0.430 * gr + 0.144 * b), b2 = cl(0.426 * r + 1.430 * gr - 0.856 * b);   // hue-rotate(180deg)
+    r = cl((0.213 + 0.787 * S) * r2 + (0.715 - 0.715 * S) * g2 + (0.072 - 0.072 * S) * b2);            // saturate
+    gr = cl((0.213 - 0.213 * S) * r2 + (0.715 + 0.285 * S) * g2 + (0.072 - 0.072 * S) * b2);
+    b = cl((0.213 - 0.213 * S) * r2 + (0.715 - 0.715 * S) * g2 + (0.072 + 0.928 * S) * b2);
+    p[i] = cl((r * BR - 0.5) * K + 0.5) * 255; p[i + 1] = cl((gr * BR - 0.5) * K + 0.5) * 255; p[i + 2] = cl((b * BR - 0.5) * K + 0.5) * 255;   // brightness, contrast
+  }
+  g.putImageData(d, 0, 0); return c;
+}
 function tileUrl(x, y) { return TILE_SRC[TILE.src].url(x, y, TILE.z); }
 function getTile(x, y) {
   const k = TILE.src + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
-  const rec = { img: null, ok: false };
+  const rec = { img: null, ok: false }, dark = !CANVAS_FILTER && TILE_SRC[TILE.src].invert;
   const load = (useCors) => {
     const img = new Image(); rec.img = img; img.decoding = 'async';
     if (useCors) img.crossOrigin = 'anonymous';
-    img.onload = () => { rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
+    img.onload = () => { if (dark) { const c = darkTile(img); if (c) rec.img = c; } rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
     img.onerror = () => { if (useCors) { load(false); return; }   // CORS 헤더 없는 공급자 대비
       TILE.fails++;
       if (TILE.src === 'vworld' && TILE.loads === 0 && TILE.fails >= 4) {   // 키가 틀렸거나 도메인 미등록
@@ -949,6 +1022,7 @@ function tick() {
 }
 function step() {
   const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
+  if (t % 5 === 0) audioWake();                         // 전화가 끝나도 iOS는 오디오를 알아서 다시 켜지 않을 때가 있다
   let fix = null;
   if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now(), spd: null, hdg: null }; }   // 도플러 없음. undefined로 두면 속도가 NaN이 된다
   else { fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null; }
@@ -1071,6 +1145,7 @@ function render(snap, fix) {
   const b = $('#banner'); b.className = 'banner';
   if (st.mode === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr + ' · 홈에서 GPS 확인'; }
   else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
+  else if (Date.now() < (st.wakeWarnUntil || 0)) { b.className = 'banner bad'; b.textContent = IOS ? '화면이 꺼지면 멈춘다 · 설정 > 디스플레이 및 밝기 > 자동 잠금 > 안 함' : '화면이 꺼지면 멈춘다 · 화면 자동 꺼짐 시간을 늘려라'; }
   else b.textContent = snap.warmup ? '녀석이 뒤에 있다. 아직 널 못 봤다' : snap.cooldown ? '쿨다운 · 적 정지' : (snap.paused || st.manualPause) ? '일시정지 · 적도 멈춤' : snap.state === 'lost' ? 'GPS 불안정 · 판정 동결' : '';
   $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'} · 나침반 ${HEAD.ok ? Math.round(((HEAD.compass * 180 / Math.PI) + 360) % 360) + '°' : '없음'}`;
   if (!st.pocket) drawRadar(snap);
@@ -1117,7 +1192,7 @@ function drawRadar(snap) {
     const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
     g.save(); g.globalAlpha = 0.9;
     const SRC = TILE_SRC[TILE.src];
-    if (SRC.invert && 'filter' in g) g.filter = DARK_FILTER;
+    if (SRC.invert && CANVAS_FILTER) g.filter = DARK_FILTER;
     for (let dx = -span; dx <= span; dx++) for (let dy = -span; dy <= span; dy++) {
       const tx = Math.floor(fx) + dx, ty = Math.floor(fy) + dy; const rec = getTile(tx, ty); if (!rec.ok) continue;
       const px = (tx - fx) * tilePx, py = (ty - fy) * tilePx; g.drawImage(rec.img, px, py, tilePx + 0.5, tilePx + 0.5);
@@ -1162,10 +1237,11 @@ function drawRadar(snap) {
 }
 function start() {
   if (!st.animal) return;
+  if (st.mode === 'gps') askCompass();                  // 아이폰: 버튼 누름 안에서 불러야 권한 창이 뜬다
   audioInit(); vpLoad(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
-  st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
+  st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
   mapReset(); hush(); VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
@@ -1254,6 +1330,11 @@ $('#pocket').addEventListener('click', () => {
 });
 $('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
 seg('#voice', v => { VOICE.level = v; });
+if (IOS) {
+  $('#iosAudioBox').style.display = 'block';
+  [...$('#iosAudio').children].forEach(x => x.classList.toggle('on', x.dataset.v === AUD.mode));
+  seg('#iosAudio', v => { AUD.mode = v; try { localStorage.setItem('iosAudio', v); } catch (e) { } audioSession(); });
+}
 $('#vkey').value = TILE.key;
 $('#vkey').addEventListener('change', e => {
   TILE.key = e.target.value.trim();

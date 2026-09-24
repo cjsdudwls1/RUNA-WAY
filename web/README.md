@@ -16,7 +16,7 @@
 python3 web/build.py && NODE_PATH=$(npm root -g) node web/qa.mjs
 ```
 
-- docs/app/을 로컬에 띄워 헤드리스 크롬으로 끝까지 돈다. 음성 팩 전 조각 디코드, 실내 데모 완주, 지도 끌기, 음성 팩 차단 시 대체, GPS 모드(위치 에뮬레이션)
+- docs/app/을 로컬에 띄워 헤드리스 크롬으로 끝까지 돈다. 음성 팩 전 조각 디코드, 실내 데모 완주, 지도 끌기, 음성 팩 차단 시 대체, GPS 모드(위치 에뮬레이션), 아이폰 에뮬레이션
 - 골든 테스트: `node web/test_golden.mjs`, 시뮬: `sh sim/run_tests.sh`
 
 ## 배포
