@@ -1,6 +1,7 @@
 // 출시 전 헤드리스 QA. docs/app/을 로컬로 띄워 실제 크롬에서 끝까지 돌린다
 // 실행: NODE_PATH=$(npm root -g) node web/qa.mjs   (playwright 필요)
-// 확인: 스크립트 오류 0, 음성 팩 전 조각 디코드, 실내 데모 완주, 구운 음성 재생(브라우저 TTS 미사용),
+// 확인: 스크립트 오류 0, 음성 팩 전 조각 디코드, 실내 데모 완주, 구운 음성 재생(브라우저 TTS 미사용), 관제 음성 기본 끔,
+//       실제 동물 녹음(가짜 파일로 경로 확인), 입체 음향 실측(좌우 귀 차이, 거리별 크기와 잔향),
 //       지도 끌기·복귀, 결과 화면, 음성 팩이 없을 때 브라우저 TTS로 대체,
 //       아이폰 에뮬레이션(무음 스위치 대응, 나침반 권한·방위, 캔버스 filter 없는 사파리에서 지도 어둡게)
 import { createRequire } from 'node:module';
@@ -102,10 +103,30 @@ async function run(opts) {
   await ctx.close();
 }
 
+// 1b. 기본값: 관제 음성 끔. 음성 팩(2.8MB)도 안 받고, 말도 안 한다
+{
+  const { ctx, page, errors, reqs } = await run({});
+  await page.waitForTimeout(1500);
+  await page.click('#openSet');
+  const on = await page.evaluate(() => document.querySelector('#voice button.on').dataset.v);
+  await page.click('#mode button[data-v="replay"]');
+  await page.click('#warmup button[data-v="0"]');
+  await page.click('#start');
+  await page.waitForTimeout(6000);
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log = await page.locator('#rLog').textContent(), q = await page.evaluate(() => window.__qa);
+  check(on === 'off', `관제 음성 기본값 ${on}`);
+  check(!reqs.some(u => u.includes('voice/op.bin')), '관제 음성 끔: 음성 팩 안 받음');
+  check(!log.includes('말: ') && q.tts.length === 0, `관제 음성 끔: 말 없음 (로그 ${log.split('\n').filter(l => l.includes('말: ')).length}, 기계음 ${q.tts.length})`);
+  check(errors.length === 0, `기본값 주행 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+
 // 2. 실내 데모 완주 + 구운 음성 + 지도 끌기
 {
   const { ctx, page, errors, reqs } = await run({});
   await page.click('#openSet');
+  await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   await page.click('#mode button[data-v="replay"]');
   await page.click('#warmup button[data-v="0"]');     // 워밍업 없이 바로 쫓기게. 스프린트·피격 대사를 빨리 본다
   await page.click('#start');
@@ -157,6 +178,7 @@ async function run(opts) {
 {
   const { ctx, page, errors } = await run({ blockVoice: true });
   await page.click('#openSet');
+  await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   await page.click('#mode button[data-v="replay"]');
   await page.click('#warmup button[data-v="0"]');
   await page.click('#start');
@@ -179,6 +201,7 @@ async function run(opts) {
   await page.route('**/voice/**', async r => { await new Promise(x => setTimeout(x, 2500)); await r.continue(); });
   await page.goto(BASE);
   await page.click('#openSet');
+  await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   await page.click('#mode button[data-v="replay"]');
   await page.click('#warmup button[data-v="0"]');
   await page.click('#start');
@@ -194,6 +217,7 @@ async function run(opts) {
 {
   const { ctx, page, errors } = await run({});
   await page.click('#openSet');
+  await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   await page.click('#audioTest');
   await page.waitForTimeout(7000);
   const q = await page.evaluate(() => window.__qa);
@@ -212,6 +236,7 @@ async function run(opts) {
   await tiles(page);
   await page.goto(BASE);
   await page.click('#openSet');
+  await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   await page.click('#warmup button[data-v="0"]');
   await page.click('#start');
   check(await page.locator('#safety').isVisible(), '첫 실주행에 안전 고지 표시');
@@ -258,6 +283,7 @@ const compass = (page, deg) => page.evaluate((deg) => {
   await tiles(page);
   await page.goto(BASE);
   await page.click('#openSet');
+  await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   check(await page.locator('#iosAudioBox').isVisible(), '아이폰: 소리 모드 설정 표시');
   await page.click('#iosAudio button[data-v="ambient"]');
   const t1 = await page.evaluate(() => navigator.audioSession.type);
@@ -312,6 +338,100 @@ const compass = (page, deg) => page.evaluate((deg) => {
   await page.click('#stop'); await page.waitForSelector('#result.on');
   check(errors.length === 0, `옛 아이폰 오류 ${errors.join(' | ') || '없음'}`);
   await ctx.close();
+}
+
+// 7. 실제 동물 녹음. 아직 녹음이 없으니 가짜 파일(길이로 구별되는 톤)을 끼워 경로를 본다
+//    고른 동물 것만 받는가, 변형을 번갈아 쓰는가, 녹음이 없는 동물은 동물군 파일로 대체하는가, 방향이 맞게 배치되는가
+function wav(sec, freq) {
+  const sr = 22050, n = Math.round(sr * sec), b = Buffer.alloc(44 + n * 2);
+  b.write('RIFF', 0); b.writeUInt32LE(36 + n * 2, 4); b.write('WAVE', 8); b.write('fmt ', 12); b.writeUInt32LE(16, 16); b.writeUInt16LE(1, 20); b.writeUInt16LE(1, 22);
+  b.writeUInt32LE(sr, 24); b.writeUInt32LE(sr * 2, 28); b.writeUInt16LE(2, 32); b.writeUInt16LE(16, 34); b.write('data', 36); b.writeUInt32LE(n * 2, 40);
+  for (let i = 0; i < n; i++) b.writeInt16LE(Math.round(Math.sin(2 * Math.PI * freq * i / sr) * 12000 * Math.min(1, i / 200, (n - i) / 200)), 44 + i * 2);
+  return b;
+}
+{
+  const FIX = { 'elephant_roam_1.wav': wav(0.61, 220), 'elephant_roam_2.wav': wav(0.73, 247), 'elephant_sprint_1.wav': wav(0.43, 330), 'elephant_tired_1.wav': wav(0.97, 180), 'hoof_roam_1.wav': wav(0.55, 300) };
+  const index = { elephant_roam: ['elephant_roam_1.wav', 'elephant_roam_2.wav'], elephant_sprint: ['elephant_sprint_1.wav'], elephant_tired: ['elephant_tired_1.wav'], hoof_roam: ['hoof_roam_1.wav'] };
+  const ctx = await browser.newContext({ viewport: { width: 400, height: 860 } });
+  const page = await ctx.newPage();
+  const errors = [], reqs = [];
+  page.on('pageerror', e => errors.push(e.message)); page.on('request', r => reqs.push(r.url()));
+  await page.addInitScript(PROBE);
+  await page.addInitScript(() => { window.__pan = []; const cp = BaseAudioContext.prototype.createPanner; BaseAudioContext.prototype.createPanner = function () { const p = cp.call(this); window.__pan.push(p); return p; }; });
+  await page.route('**/tile.openstreetmap.org/**', r => r.abort());
+  await page.route(u => u.pathname === '/' || u.pathname === '/index.html', async r => {
+    const res = await r.fetch(); const body = (await res.text()).replace(/const SOUND_INDEX = \{[^;]*\}, SOUND_VER = "[^"]*";/, 'const SOUND_INDEX = ' + JSON.stringify(index) + ', SOUND_VER = "qa";');
+    await r.fulfill({ response: res, body });
+  });
+  await page.route('**/sounds/**', r => { const f = new URL(r.request().url()).pathname.split('/').pop(); return FIX[f] ? r.fulfill({ status: 200, contentType: 'audio/wav', body: FIX[f] }) : r.fulfill({ status: 404 }); });
+  await page.goto(BASE);
+  await page.waitForTimeout(1200);
+  check(!reqs.some(u => /sounds\/elephant/.test(u)), '녹음: 고르기 전에는 코끼리 파일 안 받음 (기본 닭은 녹음 없음)');
+  await page.click('#openSet');
+  await page.click('#animals .row[data-id="elephant"]');
+  await page.waitForTimeout(800);
+  const got = reqs.filter(u => /sounds\/elephant_/.test(u)).length;
+  check(got === 4, `녹음: 코끼리를 고르면 코끼리 파일 ${got}/4개 받음`);
+  await page.evaluate(() => { window.__pan = []; window.__qa.starts = []; });
+  await page.click('#audioTest');
+  await page.waitForTimeout(9500);
+  const t = await page.evaluate(() => ({ starts: window.__qa.starts, pan: window.__pan.filter(p => p.panningModel === 'HRTF' && !(p.positionX.value === 0 && p.positionZ.value === 0)).map(p => [+p.positionX.value.toFixed(2), +p.positionZ.value.toFixed(2)]) }));
+  const cnt = (d) => t.starts.filter(x => x === d).length;
+  check(cnt(0.61) + cnt(0.73) === 5 && cnt(0.61) >= 2 && cnt(0.73) >= 2, `녹음: 소리 테스트 평상시 울음 5번, 변형 번갈아 (0.61초 ${cnt(0.61)}번, 0.73초 ${cnt(0.73)}번)`);
+  check(cnt(0.43) === 4, `녹음: 다가오는 돌진 소리 4번 (${cnt(0.43)})`);
+  const xs = t.pan.slice(0, 5).map(p => p[0]), back = t.pan.slice(5, 9);
+  check(t.pan.length === 9 && xs[0] < -0.5 && xs[1] < -0.5 && Math.abs(xs[2]) < 0.05 && xs[3] > 0.5 && xs[4] > 0.5, `녹음: 입체 음향 위치 왼쪽→정면→오른쪽 x=${xs.join(',')}`);
+  check(back.length === 4 && back.every(p => p[1] > 0.9 && Math.abs(p[0]) < 0.05), `녹음: 뒤에서 다가오는 소리는 뒤(z>0) ${JSON.stringify(back)}`);
+  // 녹음이 없는 동물(낙타)은 동물군(발굽) 파일로
+  await page.click('#animals .row[data-id="camel"]');
+  await page.waitForTimeout(800);
+  check(reqs.some(u => /sounds\/hoof_roam_1\.wav/.test(u)), '녹음: 낙타는 자기 녹음이 없어 발굽 동물군 파일로 대체');
+  // 코끼리로 주행: 녹음이 실제로 쓰이는가
+  await page.click('#animals .row[data-id="elephant"]');
+  await page.click('#mode button[data-v="replay"]');
+  await page.click('#warmup button[data-v="0"]');
+  await page.evaluate(() => { window.__qa.starts = []; });
+  await page.click('#start');
+  await page.waitForTimeout(8000);
+  const s2 = await page.evaluate(() => window.__qa.starts);
+  const rec = s2.filter(x => [0.61, 0.73, 0.43, 0.97].includes(x)).length;
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log = await page.locator('#rLog').textContent();
+  check(rec >= 3, `녹음: 코끼리 주행 중 녹음 재생 ${rec}번`);
+  check(errors.length === 0 && !/소리 (파일|디코드) 실패/.test(log), `녹음 경로 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+
+// 8. 입체 음향 실측. 앱의 출력 체인(out, makeVerb)을 그대로 꺼내 오프라인으로 렌더링하고 귀별 에너지를 잰다
+{
+  const src = fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), 'app.html'), 'utf8');
+  const outSrc = src.match(/function out\(near, rel, dest, intensity\) \{[\s\S]*?\n\}/)[0], verbSrc = src.match(/function makeVerb\(ctx, dest\) \{[\s\S]*?\n\}/)[0];
+  const page = await browser.newPage();
+  const r = await page.evaluate(async ([outSrc, verbSrc]) => {
+    eval(verbSrc.replace('function makeVerb', 'window.makeVerb = function')); eval(outSrc.replace('function out', 'window.out = function'));
+    async function render(near, rel, verbOnly) {
+      const sr = 48000, ctx = new OfflineAudioContext(2, sr * 2.2, sr), sfx = ctx.createGain(); sfx.connect(ctx.destination);
+      const verb = makeVerb(ctx, sfx);
+      window.A = { ctx, hrtf: true, sfx: verbOnly ? ctx.createGain() : sfx, master: sfx, verb: verbOnly ? verb : null };   // 직접음과 잔향을 따로 잰다
+      const nb = ctx.createBuffer(1, sr * 0.3, sr), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * 0.5;
+      const s = ctx.createBufferSource(); s.buffer = nb; const o = out(near, rel); s.connect(o.node); s.start(0.1);
+      const buf = await ctx.startRendering(), L = buf.getChannelData(0), R = buf.getChannelData(1);
+      let eL = 0, eR = 0; for (let i = 0; i < L.length; i++) { eL += L[i] * L[i]; eR += R[i] * R[i]; }
+      const db = (x) => 10 * Math.log10(x + 1e-12);
+      return { lr: db(eR) - db(eL), e: db(eL + eR) };
+    }
+    const m = {};
+    for (const [k, near, rel] of [['right', 0.8, Math.PI / 2], ['left', 0.8, -Math.PI / 2], ['front', 0.8, 0], ['near', 0.9, Math.PI], ['mid', 0.5, Math.PI], ['far', 0.15, Math.PI]]) {
+      m[k] = await render(near, rel, false); m[k].verb = (await render(near, rel, true)).e;
+    }
+    return m;
+  }, [outSrc, verbSrc]);
+  const f = (x) => x.toFixed(1);
+  check(r.right.lr > 3 && r.left.lr < -3 && Math.abs(r.front.lr) < 1.5, `입체 음향: 오른쪽 소리는 오른쪽 귀 +${f(r.right.lr)}dB, 왼쪽 소리는 ${f(r.left.lr)}dB, 정면 ${f(r.front.lr)}dB`);
+  check(r.near.e - r.mid.e > 6 && r.mid.e - r.far.e > 10, `입체 음향: 거리별 직접음 가까이 ${f(r.near.e)} · 중간 ${f(r.mid.e)} · 멀리 ${f(r.far.e)} dB`);
+  const drr = (k) => r[k].e - r[k].verb;
+  check(drr('near') > 12 && drr('far') < 0 && drr('near') > drr('mid') && drr('mid') > drr('far'), `입체 음향: 직접음/잔향 비 가까이 ${f(drr('near'))} · 중간 ${f(drr('mid'))} · 멀리 ${f(drr('far'))} dB (멀수록 울림)`);
+  await page.close();
 }
 
 await browser.close(); server.close();
