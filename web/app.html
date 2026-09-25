@@ -98,7 +98,7 @@
     <div class="lbl">워밍업 · 이 시간 동안은 안 잡힘</div>
     <div class="seg" id="warmup"><button data-v="0">없음</button><button data-v="60">1분</button><button data-v="120" class="on">2분</button><button data-v="180">3분</button></div>
     <div class="lbl">적 수</div>
-    <div class="seg" id="npack"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div>
+    <div class="seg" id="npack"><button data-v="1" class="on">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="5">5</button></div>
     <div class="lbl">관제 음성</div>
     <div class="seg" id="voice"><button data-v="off" class="on">끔</button><button data-v="quiet">적게</button><button data-v="normal">보통</button><button data-v="chatty">많이</button></div>
     <div id="iosAudioBox" style="display:none">
@@ -166,10 +166,10 @@
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
-const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
+const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 1, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
 // 아티팩트 뷰어와 일부 인앱 브라우저는 iframe 정책으로 위치를 막는다. 코드로 못 푼다
 const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
-const VP = { op: null, cache: new Map(), opP: null };   // 음성 팩 상태
+const VP = { op: null, cache: new Map(), opP: null, hit: null, hitP: null };   // 음성 팩 상태. hit: 잡힘 알림(작다, 항상 받는다)
 // 실제 동물 녹음(web/sounds/). 동물 목록 클릭 핸들러가 로드 중에 쓰므로 위에 둔다
 const SFX = { aid: null, bytes: {}, buf: {}, last: {}, live: 0, loading: null };
 const HAS_SFX = typeof SOUND_INDEX !== 'undefined' && Object.keys(SOUND_INDEX).length > 0;
@@ -262,6 +262,9 @@ function audioInit() {
   if (VOICE.level !== 'off') prewarm();
   sfxDecode();
 }
+/** 거리(m) ↔ near(0~1). 로그 척도라 가까이서도 멀리서도 같은 비율로 변한다. 8m=1, 64m=0.5, 512m=0 */
+function nearOf(m) { return Math.max(0.01, Math.min(1, 1 - Math.log2(Math.max(m, 8) / 8) / 6)); }
+function distOf(near) { return 8 * Math.pow(2, (1 - near) * 6); }
 /** 잔향. 멀리서 난 소리는 직접음보다 주변에 튄 소리가 더 많이 들린다. 사람이 "멀다"를 느끼는 가장 큰 단서다.
  *  야외라 짧고 어둡게: 25ms 뒤 시작, 1.4초 감쇠, 3kHz 위는 깎는다. 좌우 채널을 따로 만들어 넓게 퍼지게 */
 function makeVerb(ctx, dest) {
@@ -281,16 +284,19 @@ function out(near, rel, dest, intensity) {
   const behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;      // 0=정면 1=바로 뒤
   const lvl = intensity === undefined ? 1 : 0.55 + 0.45 * intensity;
   const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass';
-  lp.frequency.value = (300 + 5000 * near * near) * (1 - 0.45 * behind);
-  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 + 0.12 * behind) * lvl;   // 뒤가 더 조용하면 추격 게임이 아니다
+  const dm = distOf(near);
+  // 먹먹함은 완만하게: 16m 11.7kHz, 64m 6.3kHz, 256m 3.4kHz. 예전 곡선은 100m에서 600Hz라 무슨 소리인지 뭉개졌다
+  lp.frequency.value = Math.min(16000, 16000 * Math.pow(8 / dm, 0.45)) * (1 - 0.4 * behind);
+  // 크기: 거리가 두 배가 될 때마다 약 5dB. 512m까지 끊기지 않고 들린다
+  const g = A.ctx.createGain(); g.gain.value = Math.pow(8 / dm, 0.8) * (1 + 0.12 * behind) * lvl;   // 뒤가 더 조용하면 추격 게임이 아니다
   let tail = g;
   if (rel !== undefined && A.hrtf) {
     const pn = A.ctx.createPanner(); pn.panningModel = 'HRTF'; pn.distanceModel = 'linear'; pn.rolloffFactor = 0;   // 거리 감쇠는 위에서 직접 한다
     const x = Math.sin(rel), z = -Math.cos(rel);         // 듣는 사람은 원점에서 -z를 본다. 오른쪽 +x, 뒤 +z
     if (pn.positionX) { pn.positionX.value = x; pn.positionY.value = 0; pn.positionZ.value = z; } else pn.setPosition(x, 0, z);
     g.connect(pn); tail = pn;
-    // HRTF의 좌우 차이는 실제 귀 수준(약 6dB)이라 달리면서 듣기엔 약하다. 게임답게 조금 과장한다(실측 약 8dB, 여기에 좌우 시간차가 더해진다)
-    if (A.ctx.createStereoPanner) { const sp = A.ctx.createStereoPanner(); sp.pan.value = Math.sin(rel) * 0.35; pn.connect(sp); tail = sp; }
+    // HRTF의 좌우 차이는 실제 귀 수준(약 6dB)이라 달리면서 듣기엔 약하다. 게임답게 과장한다(좌우 시간차가 더해진다)
+    if (A.ctx.createStereoPanner) { const sp = A.ctx.createStereoPanner(); sp.pan.value = Math.sin(rel) * 0.55; pn.connect(sp); tail = sp; }
   } else if (rel !== undefined && A.ctx.createStereoPanner) {
     const pn = A.ctx.createStereoPanner();
     pn.pan.value = Math.max(-0.7, Math.min(0.7, Math.sin(rel) * 0.7));   // 한쪽 귀가 완전히 비면 고장으로 들린다
@@ -298,7 +304,7 @@ function out(near, rel, dest, intensity) {
   }
   lp.connect(g); tail.connect(dest || A.sfx || A.master);
   // 잔향은 직접음보다 훨씬 천천히 준다. 붙었을 땐 또렷하게, 멀면 울리게 (web/qa.mjs 8번이 귀별 에너지로 잰다)
-  if (A.verb && !dest) { const w = A.ctx.createGain(); w.gain.value = 0.8 * Math.pow(near, 0.2) * (1 - 0.6 * near) * Math.min(1, near / 0.1) * lvl; lp.connect(w); w.connect(A.verb); }
+  if (A.verb && !dest) { const w = A.ctx.createGain(); w.gain.value = 0.45 * Math.pow(near, 0.2) * (1 - 0.6 * near) * Math.min(1, near / 0.1) * lvl; lp.connect(w); w.connect(A.verb); }
   return { node: lp, gain: g };
 }
 /** 내 진행 방향 기준 적의 상대 방위 */
@@ -364,7 +370,7 @@ function onset(o, t, near, intensity) {
 }
 /** force: 돌진 시작·피격 같은 사건 소리. 겹침 제한을 무시한다 */
 function cry(kind, cls, near, intensity = 1, rel, force) {
-  if (!A.ctx || near <= 0.02) return; const a = st.animal;
+  if (!A.ctx || near <= 0) return; const a = st.animal;
   if (playSample(`${a.id}_${kind}`, near, rel, intensity, force) || playSample(`${cls}_${kind}`, near, rel, intensity, force)) return;
   const t = A.ctx.currentTime, o = out(near, rel);
   if (cls === 'canine' || cls === 'hoof' || cls === 'feline') onset(o, t, near, intensity);
@@ -434,6 +440,8 @@ function vtext(k) { return (HAS_PACK && VOICE_PACK.text[k]) || k; }
 function vpLoad() {
   if (!HAS_PACK || location.protocol === 'file:') return;
   const get = (f) => fetch('voice/' + f + '?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); });
+  if (!VP.hitP && VOICE_PACK.hit) VP.hitP = get('hit.bin').then(b => { VP.hit = b; }).catch(() => { VP.hitP = null; });
+  if (VOICE.level === 'off') return;                    // 관제 음성을 끄면 큰 팩(2.8MB)은 안 받는다
   if (!VP.opP) VP.opP = get('op.bin').then(b => { VP.op = b; prewarm(); }).catch(e => { VP.opP = null; log('음성 팩 실패 → 기본 TTS ' + e.message); });
 }
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -441,9 +449,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 function clip(key) {
   const ck = key;
   if (VP.cache.has(ck)) { const p = VP.cache.get(ck); VP.cache.delete(ck); VP.cache.set(ck, p); return p; }
-  const bin = VP.op;
+  const hit = VOICE_PACK.hit && VOICE_PACK.hit[key], bin = hit ? VP.hit : VP.op;
   if (!A.ctx) return Promise.resolve(null);
-  const idx = VOICE_PACK.op[key];
+  const idx = hit || VOICE_PACK.op[key];
   if (!bin || !idx) return Promise.resolve(null);
   const p = A.ctx.decodeAudioData(bin.slice(idx[0], idx[0] + idx[1])).catch(() => null);
   VP.cache.set(ck, p);
@@ -481,7 +489,7 @@ function pickVar(key, v) { if (!Array.isArray(v[0])) return v; const n = (VOICE.
  *  o.pri/o.cooldown(초)/o.ttl(초) */
 function speak(key, variants, o) {
   o = o || {}; const pri = o.pri === undefined ? PRI.NORM : o.pri, now = Date.now();
-  if (!VOICE.on || VOICE.level === 'off') return;   // 기본은 끔. 소리(녹음)만으로 방향과 거리를 읽는다
+  if (!VOICE.on || (VOICE.level === 'off' && !o.always)) return;   // 기본은 끔. 소리(녹음)만으로 방향과 거리를 읽는다
   if (!HAS_PACK && !('speechSynthesis' in window)) return;
   if (VOICE.level === 'quiet' && pri > PRI.HIGH) return;
   if (pri === PRI.LOW && VOICE.level !== 'chatty') return;
@@ -523,8 +531,10 @@ function pump() {
 async function playPack(it, tok) {
   if (!A.ctx) return null;
   // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새는 것보다 조금 늦는 게 낫다
-  if (!VP.op && VP.opP) await Promise.race([VP.opP, sleep(4000)]);
-  if (!VP.op) return null;
+  const needOp = it.seq.some(k => !(VOICE_PACK.hit && VOICE_PACK.hit[k]));
+  if (needOp && !VP.op && VP.opP) await Promise.race([VP.opP, sleep(4000)]);
+  if (!needOp && !VP.hit && VP.hitP) await Promise.race([VP.hitP, sleep(4000)]);
+  if (needOp ? !VP.op : !VP.hit) return null;
   const bufs = await Promise.all(it.seq.map(k => clip(k)));
   if (bufs.some(b => !b)) return null;
   if (tok !== VOICE.cur) return 0;
@@ -815,7 +825,8 @@ class Session2D {
     const a = this.a; this.enemies = [];
     for (let i = 0; i < this.n; i++) {
       const behind = RW.S.WARMUP_S === 0;
-      const dM = behind ? (a.detectCm - RW.S.REENGAGE_INSIDE_CM) / 100 : a.detectCm / 100 + 80 + Math.random() * 80;
+      // 처음부터 멀리서 보이며 다가온다. 이전 배치의 2배 (2026-09-25 피드백: 안 보이다가 갑자기 덮친다)
+      const dM = 2 * (behind ? (a.detectCm - RW.S.REENGAGE_INSIDE_CM) / 100 : a.detectCm / 100 + 80 + Math.random() * 80);
       const ang = heading + Math.PI + (Math.random() - 0.5) * (behind ? 1.2 : 2.4) + (i / this.n) * 0.6;
       const e = new RW.Enemy(a, Math.round(dM * 100));
       this.enemies.push({ e, x: px + Math.sin(ang) * dM, y: py + Math.cos(ang) * dM, far: 0, prevState: null, lastCycle: 0, id: i });
@@ -858,15 +869,17 @@ class Session2D {
       if (state === 'lost') this.lost++;
       if (!frozen) { this.enemyActive++; this.enemyMoved += e.speed; }
       // 이동: 플레이어 방향으로
-      const step = Math.min(e.speed / 100, d);
+      // 감지 밖에서 배회 중이면 따라잡는다. 러너보다 초속 1.5m 빠르게, 단 그 동물 전력질주의 85%를 넘지 않는다.
+      // 60%로 두면 닭(14km/h)이 10km/h 러너를 영영 못 따라와 판이 끝날 때까지 아무 일도 없다
+      // 예전엔 감지 반경 안으로 순간이동시켰다. 화면 밖에서 사라졌다가 갑자기 나타나 덮치는 원인이었다
+      let v = e.speed;
+      if (!warmup && !frozen && e.state === 'roam' && e.gap > a.detectCm && !a.constant) v = Math.max(v, Math.min(Math.floor(a.sprintCms * 0.85), Math.max(0, row.speedCms) + 150));
+      if (v !== e.speed && !frozen) this.enemyMoved += v - e.speed;
+      const step = Math.min(v / 100, d);
       if (step > 0 && d > 0.01) { en.x += (px - en.x) / d * step; en.y += (py - en.y) / d * step; }
       d = Math.hypot(en.x - px, en.y - py);
       if (warmup && d * 100 < this.warmGap) { const ang = Math.atan2(en.x - px, en.y - py); this.place(en, px, py, ang, this.warmGap / 100); d = this.warmGap / 100; }
       e.gap = Math.round(d * 100);
-      // 회복 끝났는데 감지 밖 → 따라잡음(뒤·옆 재배치)
-      if (e.cycle > en.lastCycle) { en.lastCycle = e.cycle; if (!warmup && !frozen && e.gap > a.detectCm) { this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'reengage', en }); } }
-      // 배회 중 너무 멀어진 놈은 30초 뒤 뒤·옆에서 재출현 (앞 배치는 직진 러너가 무조건 잡히므로 금지. 지침·회복 중엔 재출현 없음 = 피로 우회 방지)
-      if (!warmup && !frozen && e.state === 'roam' && e.gap > a.detectCm * 2) { en.far++; if (en.far >= 30) { en.far = 0; this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2.0, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'ambush', en }); } } else en.far = 0;
       en.prevState = prev;
     }
     // 최근접 교체에 히스테리시스. 없으면 아무 사건 없이 소리의 상태와 방향이 튄다
@@ -923,7 +936,7 @@ function step() {
   if (st.manualPause) row.speedCms = 0;
   const [px, py] = playerXY();
   const snap = s.tick(row, px, py, playerHeading());
-  const near = Math.max(0, 1 - snap.gapCm / Math.max(a.detectCm + 5000, 8000));
+  const near = nearOf(snap.gapCm / 100);
   const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const nrel = nearEn ? relBearing(nearEn) : undefined;
   const left = RW.S.WARMUP_S - s.elapsed + 1;
@@ -936,7 +949,7 @@ function step() {
   if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
   if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel, true); } }
   for (const ev of snap.events) {
-    const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
+    const eNear = nearOf(ev.en.e.gap / 100);
     const erel = relBearing(ev.en), dk = dirKey(erel), em = Math.round(ev.en.e.gap / 100);
     const ek = (ev.type === 'ambush') ? 'reengage' : ev.type;
     const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
@@ -951,7 +964,7 @@ function step() {
     }
     else if (ev.type === 'hit') {
       cry('sprint', cls, 1, 1.0, erel, true); buzz(500); flash();
-      speak('hit', ['hit' + Math.min(3, snap.hits)], { pri: PRI.CRIT });
+      speak('hit', ['caught' + Math.min(3, snap.hits)], { pri: PRI.CRIT, always: true });   // 잡힌 건 반드시 알아야 한다. 관제 음성을 꺼도 말한다
     }
     else if (ev.type === 'reengage' || ev.type === 'ambush') {
       // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
@@ -994,10 +1007,11 @@ function step() {
 /** 거리(m) → 울음 주기(초). 주차 센서와 가이거 카운터가 쓰는 기하 곡선.
  *  30m = 위협 반경에서 소리가 거의 안 끊긴다. "안 끊기면 게이지가 차는 중"을 귀로 배우게 된다 */
 function cryPeriodS(gapM, state) {
-  if (state === 'recover') return 12;
-  if (state === 'warm') return 20;
+  // 멀어도 3초 넘게 조용하지 않는다. 계속 들려야 거리가 느껴진다 (예전엔 멀면 12~20초 침묵)
+  if (state === 'recover') return 3;
+  if (state === 'warm') return 3.5;
   const k = state === 'sprint' ? 0.7 : state === 'tired' ? 1.7 : 1.0;
-  return Math.max(0.34, Math.min(12, 0.45 * Math.pow(Math.max(gapM, 10) / 30, 1.35) * k));
+  return Math.max(0.34, Math.min(3, 0.45 * Math.pow(Math.max(gapM, 10) / 30, 1.35) * k));
 }
 /** 1초에 한 번 도는 루프에서 1초보다 짧은 주기를 내려면 그 초 안에 나눠 쏜다 */
 function beacon(per, fn) {
@@ -1097,13 +1111,14 @@ function drawRadar(snap) {
   g.strokeStyle = 'rgba(63,242,165,0.55)'; g.lineWidth = 3; g.beginPath();
   for (let i = Math.max(0, P.length - 400); i < P.length; i++) { const [x, y] = toS(P[i]); if (i === Math.max(0, P.length - 400)) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
   for (const en of snap.enemies) {
-    if (en.state === 'lost') continue;
-    const [x, y] = toS([en.x, en.y]); if (Math.hypot(x, y) > (W / 2) * 1.3) continue;
+    // 처음부터 끝까지 어디 있는지 보인다. 레이더 밖이면 가장자리에 붙여 그리고 바깥쪽 화살표를 단다
+    let [x, y] = toS([en.x, en.y]); const edge = W / 2 - 80, dd = Math.hypot(x, y), off = dd > edge;
+    if (off) { x *= edge / dd; y *= edge / dd; g.save(); g.translate(x, y); g.rotate(Math.atan2(y, x)); g.fillStyle = 'rgba(255,217,61,0.9)'; g.beginPath(); g.moveTo(66, 0); g.lineTo(46, -14); g.lineTo(46, 14); g.closePath(); g.fill(); g.restore(); }
     const col = en.state === 'sprint' ? '255,74,61' : en.state === 'tired' ? '255,154,60' : en.state === 'recover' ? '120,140,135' : '150,150,150';
     const pulse = en.state === 'sprint' ? 1 + 0.25 * Math.sin(Date.now() / 90) : 1; const rad = (en.state === 'sprint' ? 34 : 22) * pulse;
     const rg = g.createRadialGradient(x, y, 0, x, y, rad * 2); rg.addColorStop(0, `rgba(${col},0.7)`); rg.addColorStop(1, `rgba(${col},0)`); g.fillStyle = rg; g.beginPath(); g.arc(x, y, rad * 2, 0, Math.PI * 2); g.fill();
     if (en.state === 'sprint') { g.strokeStyle = `rgba(${col},0.6)`; g.lineWidth = 2; g.beginPath(); g.arc(x, y, 30 * k, 0, Math.PI * 2); g.stroke(); }
-    g.save(); g.translate(x, y); g.rotate(bearing); g.font = `${Math.round(rad * 1.6)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = en.state === 'recover' ? 0.6 : 1; g.fillText(EMOJI[a.id] || '🐾', 0, 0); g.globalAlpha = 1;
+    g.save(); g.translate(x, y); g.rotate(bearing); g.font = `${Math.round(rad * 1.6)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = en.state === 'recover' || en.state === 'lost' ? 0.55 : 1; g.fillText(EMOJI[a.id] || '🐾', 0, 0); g.globalAlpha = 1;
     g.fillStyle = '#dfe9e4'; g.font = '20px "IBM Plex Mono", monospace'; g.fillText(`${Math.round(en.gap / 100)}m`, 0, -rad - 12); g.restore();
   }
   g.restore();
@@ -1126,7 +1141,7 @@ function start() {
   if (!st.animal) return;
   if (st.mode === 'gps') askCompass();                  // 아이폰: 버튼 누름 안에서 불러야 권한 창이 뜬다
   audioInit(); sfxLoad(st.animal.id); sfxDecode();
-  if (VOICE.level !== 'off') { vpLoad(); if ('speechSynthesis' in window) speechSynthesis.getVoices(); }
+  vpLoad(); if (VOICE.level !== 'off' && 'speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
   st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
@@ -1194,7 +1209,7 @@ if (EMBEDDED) {
 // 오프라인 캐시. 음성 팩을 한 번 받으면 신호가 약한 코스에서도 말이 끊기지 않는다
 if ('serviceWorker' in navigator && location.protocol === 'https:' && !EMBEDDED) navigator.serviceWorker.register('sw.js').catch(() => { });
 // 첫 화면을 그린 뒤 미리 받는다. 녹음은 고른 동물 것만(작다). 관제 음성 팩(약 2.8MB)은 켰을 때만
-if (!EMBEDDED) setTimeout(() => { if (st.animal) sfxLoad(st.animal.id); if (VOICE.level !== 'off') vpLoad(); }, 800);
+if (!EMBEDDED) setTimeout(() => { if (st.animal) sfxLoad(st.animal.id); vpLoad(); }, 800);
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
 // 지도 끌기(한 손가락)와 확대·축소(두 손가락, 휠). 끈 만큼 화면 중심이 옮겨 간다
 {

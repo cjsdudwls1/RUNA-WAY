@@ -212,6 +212,13 @@ def main():
     b, idx = pack(items)
     open(os.path.join(OUT, 'op.bin'), 'wb').write(b)
     man = {'op': idx, 'text': text}
+    items = []
+    for key, t, tempo in L.HIT:
+        meta, data = bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
+        items.append((key, data)); text[key] = t; qa.append(('hit', key, meta))
+        print(f'[hit] {key} cer={meta["cer"]} {t} → {meta["asr"]}', flush=True)
+    b, man['hit'] = pack(items)
+    open(os.path.join(OUT, 'hit.bin'), 'wb').write(b)
     ver = hashlib.sha1(json.dumps(man, sort_keys=True).encode()).hexdigest()[:10]
     man['ver'] = ver
     open(os.path.join(HERE, '..', 'voice_manifest.js'), 'w', encoding='utf-8').write(

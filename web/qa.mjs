@@ -349,6 +349,41 @@ const compass = (page, deg) => page.evaluate((deg) => {
   await ctx.close();
 }
 
+// 9. 치타 추격 (2026-09-25 피드백): 처음부터 보이는가, 순간이동 없이 다가오는가, 관제 음성을 꺼도 잡히면 알려주는가
+{
+  const { ctx, page, errors, reqs } = await run({});
+  await page.click('#openSet');
+  await page.click('#animals .row[data-id="cheetah"]');
+  await page.click('#mode button[data-v="replay"]');
+  await page.click('#warmup button[data-v="0"]');
+  const pack = await page.evaluate(() => document.querySelector('#npack button.on').dataset.v);
+  await page.waitForTimeout(1000);
+  await page.click('#start');
+  await page.waitForTimeout(700);
+  if (SHOTS) await page.screenshot({ path: SHOTS + '/edge.png' });
+  // 레이더 밖이면 가장자리 노란 화살표
+  const arrow = await page.evaluate(() => { const c = document.querySelector('#radar'), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > 200 && d[i + 1] > 160 && d[i + 1] < 235 && d[i + 2] < 100) n++; return n; });
+  const gaps = []; let caught = false;
+  for (let i = 0; i < 400 && !caught; i++) {
+    const v = await page.evaluate(() => ({ g: +document.querySelector('#nGap').textContent, h: document.querySelector('#hitsDots').textContent }));
+    if (!isNaN(v.g)) gaps.push(v.g); caught = v.h.includes('●');
+    await page.waitForTimeout(60);
+  }
+  await page.waitForTimeout(2500);
+  const q = await page.evaluate(() => window.__qa);
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log = await page.locator('#rLog').textContent();
+  let maxDrop = 0; for (let i = 1; i < gaps.length; i++) maxDrop = Math.max(maxDrop, gaps[i - 1] - gaps[i]);
+  check(pack === '1', `기본 무리 수 ${pack}마리`);
+  check(gaps[0] >= 200, `치타 시작 거리 ${gaps[0]}m (예전의 2배, 200m 이상)`);
+  check(arrow > 30, `레이더 밖 적을 가장자리 화살표로 표시 (노란 픽셀 ${arrow})`);
+  check(maxDrop < 60, `순간이동 없음: 한 번에 줄어든 거리 최대 ${maxDrop}m (돌진 시속 114km = 틱당 32m)`);
+  check(caught && /말: 한 번 잡혔다/.test(log) && q.tts.length === 0, `관제 음성 끔 상태에서도 잡히면 "한 번 잡혔다" (잡힘 ${caught}, 기계음 ${q.tts.length})`);
+  check(reqs.some(u => u.includes('voice/hit.bin')) && !reqs.some(u => u.includes('voice/op.bin')), '잡힘 알림 팩만 받고 큰 음성 팩(2.8MB)은 안 받음');
+  check(errors.length === 0, `치타 추격 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+
 // 7. 실제 동물 녹음. 아직 녹음이 없으니 가짜 파일(길이로 구별되는 톤)을 끼워 경로를 본다
 //    고른 동물 것만 받는가, 변형을 번갈아 쓰는가, 녹음이 없는 동물은 동물군 파일로 대체하는가, 방향이 맞게 배치되는가
 function wav(sec, freq) {
@@ -414,7 +449,8 @@ function wav(sec, freq) {
 // 8. 입체 음향 실측. 앱의 출력 체인(out, makeVerb)을 그대로 꺼내 오프라인으로 렌더링하고 귀별 에너지를 잰다
 {
   const src = fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), 'app.html'), 'utf8');
-  const outSrc = src.match(/function out\(near, rel, dest, intensity\) \{[\s\S]*?\n\}/)[0], verbSrc = src.match(/function makeVerb\(ctx, dest\) \{[\s\S]*?\n\}/)[0];
+  const outSrc = src.match(/function out\(near, rel, dest, intensity\) \{[\s\S]*?\n\}/)[0], verbSrc = src.match(/function makeVerb\(ctx, dest\) \{[\s\S]*?\n\}/)[0]
+    + '\n' + src.match(/function nearOf\(m\) \{.*\}/)[0].replace('function nearOf', 'window.nearOf = function') + '\n' + src.match(/function distOf\(near\) \{.*\}/)[0].replace('function distOf', 'window.distOf = function');
   const page = await browser.newPage();
   const r = await page.evaluate(async ([outSrc, verbSrc]) => {
     eval(verbSrc.replace('function makeVerb', 'window.makeVerb = function')); eval(outSrc.replace('function out', 'window.out = function'));
@@ -430,7 +466,7 @@ function wav(sec, freq) {
       return { lr: db(eR) - db(eL), e: db(eL + eR) };
     }
     const m = {};
-    for (const [k, near, rel] of [['right', 0.8, Math.PI / 2], ['left', 0.8, -Math.PI / 2], ['front', 0.8, 0], ['near', 0.9, Math.PI], ['mid', 0.5, Math.PI], ['far', 0.15, Math.PI]]) {
+    for (const [k, near, rel] of [['right', 0.8, Math.PI / 2], ['left', 0.8, -Math.PI / 2], ['front', 0.8, 0], ['near', 0.9, Math.PI], ['mid', 0.5, Math.PI], ['far', 0.15, Math.PI], ['d16', 5 / 6, Math.PI], ['d32', 4 / 6, Math.PI], ['d64', 3 / 6, Math.PI], ['d128', 2 / 6, Math.PI], ['d256', 1 / 6, Math.PI]]) {
       m[k] = await render(near, rel, false); m[k].verb = (await render(near, rel, true)).e;
     }
     return m;
@@ -438,6 +474,8 @@ function wav(sec, freq) {
   const f = (x) => x.toFixed(1);
   check(r.right.lr > 3 && r.left.lr < -3 && Math.abs(r.front.lr) < 1.5, `입체 음향: 오른쪽 소리는 오른쪽 귀 +${f(r.right.lr)}dB, 왼쪽 소리는 ${f(r.left.lr)}dB, 정면 ${f(r.front.lr)}dB`);
   check(r.near.e - r.mid.e > 6 && r.mid.e - r.far.e > 10, `입체 음향: 거리별 직접음 가까이 ${f(r.near.e)} · 중간 ${f(r.mid.e)} · 멀리 ${f(r.far.e)} dB`);
+  const steps = ['d16', 'd32', 'd64', 'd128', 'd256'].map((k, i, a) => i ? r[a[i - 1]].e - r[k].e : null).slice(1);
+  check(steps.every(x => x > 3), `입체 음향: 거리가 두 배가 될 때마다 작아짐 16→32→64→128→256m: ${steps.map(f).join(' / ')} dB`);
   const drr = (k) => r[k].e - r[k].verb;
   check(drr('near') > 12 && drr('far') < 0 && drr('near') > drr('mid') && drr('mid') > drr('far'), `입체 음향: 직접음/잔향 비 가까이 ${f(drr('near'))} · 중간 ${f(drr('mid'))} · 멀리 ${f(drr('far'))} dB (멀수록 울림)`);
   await page.close();

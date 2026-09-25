@@ -135,13 +135,13 @@
     "file": "cat_sprint_1.mp3",
     "animal": "cat",
     "kind": "sprint",
-    "title": "Cat Hissing",
-    "source_url": "https://freesound.org/people/aunrea/sounds/485952/",
-    "author": "aunrea",
+    "title": "catHisses1.wav",
+    "source_url": "https://freesound.org/people/Zabuhailo/sounds/146963/",
+    "author": "Zabuhailo",
     "license": "CC0 1.0",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "original_file": "Cat Hissing",
-    "edits": "0.00~0.67초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -4.1dBFS), Freesound HQ 미리듣기 mp3에서 작업"
+    "original_file": "catHisses1.wav",
+    "edits": "0.24~1.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 고양이 하악 (feline_sprint_1과 같은 파일. 원래 cat_sprint_1은 제목과 달리 하악이 아닌 낮은 소리라 돼지처럼 들려 교체, 2026-09-25)"
   },
   {
     "file": "cat_sprint_2.mp3",

@@ -22,6 +22,7 @@
 | docs/prd/09-feedback.md | 사용자 피드백 로그와 조치 |
 | docs/prd/15-voice-pack.md | 신경망 음성 팩. TTS 선택, 굽기, ASR 역검증 |
 | docs/prd/16-ios.md | 아이폰 대응. 무음 스위치, 나침반, 다크 지도 |
+| docs/prd/17-monster.md | 몬스터 추가 기획 토의 초안. 적응형 속도, 소리 도구 |
 | web/sounds/README.md | 실제 동물 녹음 규격. 파일 이름, 길이, 음량, 라이선스, 출처 기록 |
 | docs/app/index.html | 웹 프로토타입 (GitHub Pages용 사본) |
 | sim/ | GPX 리플레이 시뮬레이터 (Python, 정수 코어) |
