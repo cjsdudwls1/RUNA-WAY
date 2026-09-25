@@ -1,0 +1,50 @@
+[
+  {
+    "file": "animal_home.mp3",
+    "animal": "animal",
+    "kind": "home",
+    "title": "러너웨이 동물 사파리 홈 (ACE-Step 생성)",
+    "source_url": "https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B",
+    "author": "러너웨이",
+    "license": "생성: ACE-Step v1-3.5B (Apache-2.0)",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "original_file": "ACE-Step-v1-3.5B 리비전 82cd0d7, 시드 66, 후보 animal_home_D66",
+    "edits": "프롬프트 태그 \"world music, african percussion, marimba, xylophone, kalimba, acoustic guitar, bright, joyful, playful, adventurous, cinematic, instrumental, 100 bpm\", 가사 없음(instrumental), 110초 생성, 24.18~88.75초를 반복 구간으로(24마디, 64.57초, 박 89.2 BPM), 반복 이음새(끝 5.38초 + 처음 5.38초)를 같은 모델 repaint(시드 1002)로 다시 그려 끝이 처음으로 이어지게 함, 다시 그린 구역 양쪽 0.67초 교차 페이드, 음량 -18.0 LUFS·트루피크 -4.2dBTP로 맞춤, 128kbps 스테레오 mp3, 반복 끝·처음 샘플 2048개씩 앞뒤에 붙여 인코딩하고 LAME 태그 지연·패딩으로 잘라 냄(반복 이음새 인코더 가장자리 왜곡 방지)"
+  },
+  {
+    "file": "animal_run.mp3",
+    "animal": "animal",
+    "kind": "run",
+    "title": "러너웨이 동물 사파리 달리기 (ACE-Step 생성)",
+    "source_url": "https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B",
+    "author": "러너웨이",
+    "license": "생성: ACE-Step v1-3.5B (Apache-2.0)",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "original_file": "ACE-Step-v1-3.5B 리비전 82cd0d7, 시드 202, 후보 animal_run_A202",
+    "edits": "프롬프트 태그 \"african tribal percussion, djembe, congas, talking drum, shakers, deep kick drum, driving groove, energetic, running, percussion only, minimal melody, instrumental, 170 bpm\", 가사 없음(instrumental), 110초 생성, 19.30~87.06초를 반복 구간으로(48마디, 67.76초, 박 170.0 BPM), 마지막 2마디(2.82초)를 반복 시작 바로 앞 2마디와 교차 페이드해 끝이 처음으로 이어지게 함, 800Hz~3kHz 15dB 깎음(대역 비율 4.7% -> 0.2%), 음량 -18.0 LUFS·트루피크 -4.3dBTP로 맞춤, 128kbps 스테레오 mp3, 반복 끝·처음 샘플 2048개씩 앞뒤에 붙여 인코딩하고 LAME 태그 지연·패딩으로 잘라 냄(반복 이음새 인코더 가장자리 왜곡 방지)"
+  },
+  {
+    "file": "monster_home.mp3",
+    "animal": "monster",
+    "kind": "home",
+    "title": "러너웨이 괴물 추격 홈 (ACE-Step 생성)",
+    "source_url": "https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B",
+    "author": "러너웨이",
+    "license": "생성: ACE-Step v1-3.5B (Apache-2.0)",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "original_file": "ACE-Step-v1-3.5B 리비전 82cd0d7, 시드 303, 후보 monster_home_B303",
+    "edits": "프롬프트 태그 \"spooky halloween game music, erhu, bamboo flute, low drone, pizzicato, mischievous, eerie but playful, night, asian folk, instrumental, 90 bpm\", 가사 없음(instrumental), 110초 생성, 26.61~90.51초를 반복 구간으로(28마디, 63.90초, 박 105.2 BPM), 마지막 1마디(2.28초)를 반복 시작 바로 앞 1마디와 교차 페이드해 끝이 처음으로 이어지게 함, 음량 -18.0 LUFS·트루피크 -5.7dBTP로 맞춤, 128kbps 스테레오 mp3, 반복 끝·처음 샘플 2048개씩 앞뒤에 붙여 인코딩하고 LAME 태그 지연·패딩으로 잘라 냄(반복 이음새 인코더 가장자리 왜곡 방지)"
+  },
+  {
+    "file": "monster_run.mp3",
+    "animal": "monster",
+    "kind": "run",
+    "title": "러너웨이 괴물 추격 달리기 (ACE-Step 생성)",
+    "source_url": "https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B",
+    "author": "러너웨이",
+    "license": "생성: ACE-Step v1-3.5B (Apache-2.0)",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "original_file": "ACE-Step-v1-3.5B 리비전 82cd0d7, 시드 42, 후보 monster_run_C42",
+    "edits": "프롬프트 태그 \"korean percussion, janggu, buk, taiko, war drums, dark drone, tense, suspense, chase, fast, pounding, action game soundtrack, instrumental, 170 bpm\", 가사 없음(instrumental), 110초 생성, 28.26~88.95초를 반복 구간으로(44마디, 60.69초, 박 174.0 BPM), 마지막 2마디(2.76초)를 반복 시작 바로 앞 2마디와 교차 페이드해 끝이 처음으로 이어지게 함, 800Hz~3kHz 15dB 깎음(대역 비율 8.2% -> 0.3%), 음량 -18.0 LUFS·트루피크 -4.4dBTP로 맞춤, 128kbps 스테레오 mp3, 반복 끝·처음 샘플 2048개씩 앞뒤에 붙여 인코딩하고 LAME 태그 지연·패딩으로 잘라 냄(반복 이음새 인코더 가장자리 왜곡 방지)"
+  }
+]
