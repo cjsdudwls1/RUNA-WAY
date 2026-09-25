@@ -1,5 +1,77 @@
 [
   {
+    "file": "chicken_roam_1.mp3",
+    "animal": "chicken",
+    "kind": "roam",
+    "title": "Chicken Cluck Soft",
+    "source_url": "https://freesound.org/people/DrinkingWindGames/sounds/572955/",
+    "author": "DrinkingWindGames",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "Chicken Cluck Soft",
+    "edits": "0.17~1.66초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chicken_roam_2.mp3",
+    "animal": "chicken",
+    "kind": "roam",
+    "title": "clucking_chicken.wav",
+    "source_url": "https://freesound.org/people/pillonoise/sounds/164216/",
+    "author": "pillonoise",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "clucking_chicken.wav",
+    "edits": "0.22~1.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chicken_sprint_1.mp3",
+    "animal": "chicken",
+    "kind": "sprint",
+    "title": "Chicken Single Alarm Call",
+    "source_url": "https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/",
+    "author": "Rudmer_Rotteveel",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Chicken Single Alarm Call",
+    "edits": "0.00~0.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chicken_sprint_2.mp3",
+    "animal": "chicken",
+    "kind": "sprint",
+    "title": "Hen scared",
+    "source_url": "https://bigsoundbank.com/hen-scared-s1040.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1040.flac",
+    "edits": "4.12~4.62초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업"
+  },
+  {
+    "file": "chicken_tired_1.mp3",
+    "animal": "chicken",
+    "kind": "tired",
+    "title": "clucking_chicken.wav",
+    "source_url": "https://freesound.org/people/pillonoise/sounds/164216/",
+    "author": "pillonoise",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "clucking_chicken.wav",
+    "edits": "17.44~18.58초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chicken_tired_2.mp3",
+    "animal": "chicken",
+    "kind": "tired",
+    "title": "clucking_chicken.wav",
+    "source_url": "https://freesound.org/people/pillonoise/sounds/164216/",
+    "author": "pillonoise",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "clucking_chicken.wav",
+    "edits": "2.34~3.16초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
     "file": "elephant_roam_1.mp3",
     "animal": "elephant",
     "kind": "roam",
