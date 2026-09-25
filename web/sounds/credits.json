@@ -1164,6 +1164,66 @@
     "edits": "40.56~42.52초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.8dBFS), Freesound HQ 미리듣기 mp3에서 작업, 알래스카 랭겔-세인트일라이어스 국립공원 야생 단독 늑대 하울링 앞부분, 계곡 반사음 약간 포함"
   },
   {
+    "file": "dokkaebi_roam_1.mp3",
+    "animal": "dokkaebi",
+    "kind": "roam",
+    "title": "도깨비 콧김·그르렁: 곰 콧김, 곰 그르렁, 돼지 꿀꿀을 겹쳐 4~5반음 내림",
+    "source_url": "https://freesound.org/people/Nivatius/sounds/519598/",
+    "author": "Nivatius, felix.blume",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "huf grizzly (519598); Grizzly Bear growl eating (519599); A pig grunting, grumbling and falling asleep (France, Limousin) (158746)",
+    "edits": "층1 곰 콧김(freesound 519598) 0.06~0.31초, 4반음 내림, 층2 곰 그르렁(freesound 519599) 10.45~11.15초, 4반음 내림, 0.20초에 겹침, 층3 돼지 꿀꿀(freesound 158746) 8.20~8.75초, 4000Hz 저역 통과, 5반음 내림, -8dB, 0.34초에 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.12초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.2dBFS), Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/Nivatius/sounds/519598/ https://freesound.org/people/Nivatius/sounds/519599/ https://freesound.org/people/felix.blume/sounds/158746/"
+  },
+  {
+    "file": "dokkaebi_roam_2.mp3",
+    "animal": "dokkaebi",
+    "kind": "roam",
+    "title": "도깨비 콧김·그르렁: 돼지 그르렁, 들소 울음, 곰 그르렁을 겹쳐 4~5반음 내림",
+    "source_url": "https://freesound.org/people/TheKingOfGeeks360/sounds/842313/",
+    "author": "TheKingOfGeeks360, Nivatius",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Swine - Pig; Dinosaur-like Grunt (842313); Bison bellowing - Yellowstone National Park (519594); Grizzly Bear growl eating (519599)",
+    "edits": "층1 돼지 그르렁(freesound 842313) 0.97~1.48초, 6000Hz 저역 통과, 5반음 내림, 층2 들소 울음(freesound 519594) 6.15~7.00초, 5반음 내림, -4dB, 0.04초에 겹침, 층3 곰 그르렁(freesound 519599) 12.70~13.50초, 4반음 내림, -3dB, 0.02초에 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.15초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.0dBFS), Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/TheKingOfGeeks360/sounds/842313/ https://freesound.org/people/Nivatius/sounds/519594/ https://freesound.org/people/Nivatius/sounds/519599/"
+  },
+  {
+    "file": "dokkaebi_sprint_1.mp3",
+    "animal": "dokkaebi",
+    "kind": "sprint",
+    "title": "도깨비 포효: 곰 포효, 사자 으르렁, 사자 포효를 겹쳐 3반음 내림",
+    "source_url": "https://freesound.org/people/craigsmith/sounds/479825/",
+    "author": "craigsmith, Bidone",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "R19-13-Bear Roaring.wav (479825); S01-20_Lion growls close up.wav (675437); Lion loud.mp3 (69570)",
+    "edits": "층1 곰 포효(freesound 479825) 0.30~1.10초, 3반음 내림, 층2 사자 으르렁(freesound 675437) 0.40~1.00초, 3반음 내림, 층3 사자 포효(freesound 69570) 12.10~12.90초, 3반음 내림, -4dB, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), EQ(150Hz 아래 -3dB, 1.2kHz +3dB), 끝 0.15초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.2dBFS), Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/craigsmith/sounds/479825/ https://freesound.org/people/craigsmith/sounds/675437/ https://freesound.org/people/Bidone/sounds/69570/"
+  },
+  {
+    "file": "dokkaebi_sprint_2.mp3",
+    "animal": "dokkaebi",
+    "kind": "sprint",
+    "title": "도깨비 포효: 깊은 흙 발소리(쿵), 돼지 그르렁, 들소 울음, 사자 포효를 겹쳐 3~5반음 내림",
+    "source_url": "https://freesound.org/people/craigsmith/sounds/480668/",
+    "author": "craigsmith, TheKingOfGeeks360, Nivatius, Bidone",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "R19-19-Slow Footsteps Deep Dirt.wav (480668); Swine - Pig; Dinosaur-like Grunt (842313); Bison bellowing - Yellowstone National Park (519594); Lion loud.mp3 (69570)",
+    "edits": "층1 깊은 흙 발소리(쿵)(freesound 480668) 0.24~0.50초, 3반음 내림, -6dB, 층2 돼지 그르렁(freesound 842313) 0.06~0.50초, 6000Hz 저역 통과, 5반음 내림, 0.02초에 겹침, 층3 들소 울음(freesound 519594) 9.72~10.50초, 5반음 내림, 0.10초에 겹침, 층4 사자 포효(freesound 69570) 14.60~15.30초, 5반음 내림, -3dB, 0.10초에 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), EQ(150Hz 아래 -3dB, 1.2kHz +3dB), 끝 0.15초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.8dBFS), Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/craigsmith/sounds/480668/ https://freesound.org/people/TheKingOfGeeks360/sounds/842313/ https://freesound.org/people/Nivatius/sounds/519594/ https://freesound.org/people/Bidone/sounds/69570/"
+  },
+  {
+    "file": "dokkaebi_tired_1.mp3",
+    "animal": "dokkaebi",
+    "kind": "tired",
+    "title": "도깨비 헐떡임: 소 숨, 돼지 숨, 곰 그르렁을 겹쳐 4~5반음 내림",
+    "source_url": "https://freesound.org/people/JarredGibb/sounds/233137/",
+    "author": "JarredGibb, Nivatius",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Cow - Breath Multiple 1 - 96kHz.wav (233137); Cow - Breath Multiple 3 - 96kHz.wav (233143); Pig - Breath 1 - 96kHz.wav (233115); Grizzly Bear growl eating (519599)",
+    "edits": "층1 소 숨(freesound 233137) 2.77~3.12초, 4반음 내림, 피크 -1dBFS로 맞춤, 층2 소 숨(freesound 233143) 1.50~1.76초, 4반음 내림, 피크 -1dBFS로 맞춤, -2dB, 0.46초에 겹침, 층3 소 숨(freesound 233143) 2.20~2.56초, 4반음 내림, 피크 -1dBFS로 맞춤, 0.86초에 겹침, 층4 소 숨(freesound 233137) 2.10~2.30초, 4반음 내림, 피크 -1dBFS로 맞춤, -3dB, 1.36초에 겹침, 층5 돼지 숨(freesound 233115) 0.06~0.22초, 4반음 내림, 피크 -1dBFS로 맞춤, -6dB, 0.02초에 겹침, 층6 돼지 숨(freesound 233115) 0.06~0.22초, 4반음 내림, 피크 -1dBFS로 맞춤, -6dB, 0.88초에 겹침, 층7 곰 그르렁(freesound 519599) 10.50~10.85초, 5반음 내림, 피크 -1dBFS로 맞춤, -22dB, 층8 곰 그르렁(freesound 519599) 11.30~11.65초, 5반음 내림, 피크 -1dBFS로 맞춤, -22dB, 0.86초에 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.1초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/JarredGibb/sounds/233137/ https://freesound.org/people/JarredGibb/sounds/233143/ https://freesound.org/people/JarredGibb/sounds/233115/ https://freesound.org/people/Nivatius/sounds/519599/"
+  },
+  {
     "file": "dokkaebi_line_spot_1.mp3",
     "animal": "dokkaebi",
     "kind": "line_spot",
@@ -1330,6 +1390,42 @@
     "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
     "original_file": "Qwen3-TTS-12Hz-1.7B-VoiceDesign 리비전 5ecdb67, 시드 7",
     "edits": "설계문(README 원문 그대로 입력): 거대하고 걸걸한 늙은 남자 도깨비의 낮고 거친 우렁찬 목소리, 사극 말투의 장난스럽고 위협적인 호통, 8번 생성 중 선택, 앞뒤 무음 자름, 말 사이 쉼 0.28초로 줄임, Rubber Band로 1.053배 빠르게(음높이·포먼트 유지), 후처리 체인 \"rubberband=pitch=0.84:formant=shifted,bass=g=5:f=120,asoftclip=type=tanh:param=1.5,volume=-2dB\", 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.3dBFS)"
+  },
+  {
+    "file": "jeoseung_roam_1.mp3",
+    "animal": "jeoseung",
+    "kind": "roam",
+    "title": "저승사자 짚신 끄는 발소리: 자갈 위 발 끌기 녹음을 3반음 내림",
+    "source_url": "https://freesound.org/people/DigPro120/sounds/811939/",
+    "author": "DigPro120",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "dragging feet in gravel (811939)",
+    "edits": "층1 자갈 위 발 끌기(freesound 811939) 2.30~3.05초, 250Hz 고역 통과, 3반음 내림, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.1초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/DigPro120/sounds/811939/"
+  },
+  {
+    "file": "jeoseung_roam_2.mp3",
+    "animal": "jeoseung",
+    "kind": "roam",
+    "title": "저승사자 방울(요령) 한 번: 손종(ghantee) 녹음을 3반음 내림",
+    "source_url": "https://freesound.org/people/pbimal/sounds/547703/",
+    "author": "pbimal",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "ghantee-10.flac (547703)",
+    "edits": "층1 손종(ghantee)(freesound 547703) 0.00~1.55초, 8000Hz 저역 통과, 3반음 내림, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 2초에서 자름, 끝 0.45초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.8dBFS), Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/pbimal/sounds/547703/"
+  },
+  {
+    "file": "jeoseung_roam_3.mp3",
+    "animal": "jeoseung",
+    "kind": "roam",
+    "title": "저승사자 낮은 숨: 깊은 숨 녹음을 5반음 내림",
+    "source_url": "https://freesound.org/people/rrehl/sounds/717167/",
+    "author": "rrehl",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "- Deep Breath (717167)",
+    "edits": "층1 깊은 숨(freesound 717167) 1.90~3.20초, 2500Hz 저역 통과, 5반음 내림, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.12초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/rrehl/sounds/717167/"
   },
   {
     "file": "jeoseung_line_spot_1.mp3",
