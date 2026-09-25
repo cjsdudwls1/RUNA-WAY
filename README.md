@@ -7,7 +7,8 @@
 ## 상태
 
 - PRD v0.9
-- M0 완료(`sim/`), Kotlin 코어 이식·검증 완료(`core/`). 다음: 폰에서 바로 써보는 웹 프로토타입
+- M0 완료(`sim/`), Kotlin 코어 이식·검증 완료(`core/`)
+- 웹 앱 출시 가능 (2026-09-24). 신경망 음성 팩, 지도 끌기, 오프라인 캐시, 헤드리스 QA 통과. 판정은 docs/prd/12-launch.md
 
 ## 문서
 
@@ -19,6 +20,9 @@
 | docs/prd/07-art-directions.md | 아트·프론트엔드 방향 초안 5종 |
 | docs/prd/08-m0-findings.md | M0 시뮬 결과와 티어 재배치 제안 |
 | docs/prd/09-feedback.md | 사용자 피드백 로그와 조치 |
+| docs/prd/15-voice-pack.md | 신경망 음성 팩. TTS 선택, 굽기, ASR 역검증 |
+| docs/prd/16-ios.md | 아이폰 대응. 무음 스위치, 나침반, 다크 지도 |
+| web/sounds/README.md | 실제 동물 녹음 규격. 파일 이름, 길이, 음량, 라이선스, 출처 기록 |
 | docs/app/index.html | 웹 프로토타입 (GitHub Pages용 사본) |
 | sim/ | GPX 리플레이 시뮬레이터 (Python, 정수 코어) |
 | core/ | Kotlin 코어. 상태 머신·판정·세션·GPX. Python과 골든 테스트로 일치 검증 |

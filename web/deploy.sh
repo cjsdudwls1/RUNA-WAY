@@ -8,8 +8,8 @@ python3 web/build.py
 WT=$(mktemp -d)
 git fetch -q origin gh-pages
 git worktree add -q -f --detach "$WT" FETCH_HEAD
-rm -f "$WT"/*.html "$WT"/*.png "$WT"/*.webmanifest
-cp docs/app/* "$WT"/
+rm -rf "$WT"/*.html "$WT"/*.png "$WT"/*.webmanifest "$WT"/*.js "$WT"/voice "$WT"/sounds
+cp -R docs/app/. "$WT"/
 touch "$WT/.nojekyll"
 git -C "$WT" add -A
 if git -C "$WT" diff --cached --quiet; then

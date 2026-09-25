@@ -5,7 +5,8 @@
   :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--orange:#ff9a3c;--yellow:#ffd93d;
     --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
   *{box-sizing:border-box}html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  input{user-select:text;-webkit-user-select:text}
   body.flash{background:#5a0f0a}
   .screen{display:none;min-height:100vh;padding:16px 16px 40px;max-width:560px;margin:0 auto}.screen.on{display:block}
   h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--green)}
@@ -41,6 +42,8 @@
   .num{background:var(--panel);border:1px solid var(--line);padding:6px 8px}
   .num b{display:block;font-family:var(--mono);font-size:20px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
   canvas{width:100%;aspect-ratio:1/1;display:block;background:#070b0a;border:1px solid var(--line)}
+  .mapwrap{position:relative}#radar{touch-action:none;cursor:grab}
+  #recenter{position:absolute;right:10px;bottom:10px;display:none;background:rgba(10,15,13,.88);border:1px solid var(--green);color:var(--green);padding:10px 14px;font-family:var(--mono);font-size:13px}
   .enemy{margin-top:8px;padding:10px 12px;border:1px solid var(--line);background:var(--panel);display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center}
   .enemy .big-ico{font-size:40px;line-height:1;text-align:center}
   .enemy b{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.1}
@@ -96,9 +99,15 @@
     <div class="seg" id="warmup"><button data-v="0">없음</button><button data-v="60">1분</button><button data-v="120" class="on">2분</button><button data-v="180">3분</button></div>
     <div class="lbl">적 수</div>
     <div class="seg" id="npack"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div>
-    <div class="lbl">말 많음</div>
-    <div class="seg" id="voice"><button data-v="quiet">적게</button><button data-v="normal" class="on">보통</button><button data-v="chatty">많이</button></div>
-    <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로 지나간다</button>
+    <div class="lbl">관제 음성</div>
+    <div class="seg" id="voice"><button data-v="off" class="on">끔</button><button data-v="quiet">적게</button><button data-v="normal">보통</button><button data-v="chatty">많이</button></div>
+    <div id="iosAudioBox" style="display:none">
+      <div class="lbl">아이폰 소리</div>
+      <div class="seg" id="iosAudio"><button data-v="playback" class="on">무음에서도 들림</button><button data-v="ambient">음악과 같이</button></div>
+      <p class="sub" style="margin-top:6px">무음에서도 들림: 옆 스위치가 무음이어도 소리가 난다. 대신 듣던 음악이 멈춘다.<br>음악과 같이: 음악 위에 겹쳐 들린다. 대신 무음 모드면 아무 소리도 안 난다.</p>
+    </div>
+    <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로, 그다음 뒤에서 다가온다</button>
+    <p class="sub" style="margin-top:6px">관제사 목소리: Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p><!--CREDITS-->
     <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap</div>
     <input id="vkey" class="card" style="width:100%" placeholder="vworld.kr 인증키를 넣으면 한국 상세 다크 지도">
     <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
@@ -113,7 +122,7 @@
     <div class="num"><b id="nPace">-</b><span>내 km/h</span></div>
     <div class="num"><b id="nTime">0:00</b><span>시간 · <em id="nDist">0.00</em>km</span></div>
   </div>
-  <canvas id="radar" width="720" height="720"></canvas>
+  <div class="mapwrap"><canvas id="radar" width="720" height="720"></canvas><button id="recenter">내 위치로</button></div>
   <div class="enemy" id="enemyBox"><div class="big-ico" id="eIco">🐔</div><div><b id="eName">-</b><div class="st" id="eState">-</div></div></div>
   <div class="banner" id="banner"></div>
   <div class="ctl"><button id="pause">일시정지</button><button id="mapToggle">지도/레이더</button><button id="pocket">주머니</button><button id="stop">종료</button></div>
@@ -153,10 +162,19 @@
 <script><!--ANIMALS--></script>
 <script><!--REPLAYS--></script>
 <script><!--SOUNDS--></script>
+<script><!--VOICE--></script>
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
 const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
+// 아티팩트 뷰어와 일부 인앱 브라우저는 iframe 정책으로 위치를 막는다. 코드로 못 푼다
+const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+const VP = { op: null, cache: new Map(), opP: null };   // 음성 팩 상태
+// 실제 동물 녹음(web/sounds/). 동물 목록 클릭 핸들러가 로드 중에 쓰므로 위에 둔다
+const SFX = { aid: null, bytes: {}, buf: {}, last: {}, live: 0, loading: null };
+const HAS_SFX = typeof SOUND_INDEX !== 'undefined' && Object.keys(SOUND_INDEX).length > 0;
+// 아이폰·아이패드. 아이패드 사파리는 맥이라고 자칭하므로 터치 여부로 가린다
+const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
 const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
 
@@ -169,7 +187,7 @@ for (const a of sorted) {
   const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
   const sp = a.constant ? `${a.sprintKmh} km/h 등속` : `스프린트 ${a.sprintKmh} km/h × ${a.sprintS}s`;
   d.innerHTML = `<div class="ico">${EMOJI[a.id] || '🐾'}<small class="${a.track === 'B' ? 'b' : ''}">${a.track === 'A' ? 'A' + a.tier : 'B'}</small></div><div><div class="name">${a.nameKo}</div><div class="meta">${sp}</div></div><div class="hits">${a.track === 'B' ? '못 깸' : '난이도 ' + a.tier}</div>`;
-  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); });
+  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); if (HAS_SFX && !EMBEDDED) setTimeout(() => sfxLoad(a.id), 0); });
   list.appendChild(d);
 }
 function refreshPick() {
@@ -191,8 +209,34 @@ $('#gpsTest').addEventListener('click', () => {
 
 // ---------- 오디오 ----------
 const A = { ctx: null, master: null, noise: null, nextBeat: 0, lastSay: 0, ambient: null, samples: {}, lastCry: 0 };
+// 아이폰은 옆 무음 스위치가 웹 오디오를 통째로 끈다. 게임 소리가 전부 사라지면 앱이 고장 난 걸로 읽힌다.
+// 재생용(playback)으로 선언하면 무음 모드에서도 들린다. 대가로 다른 앱 음악이 멈춘다 → 설정에서 고르게 한다
+const AUD = { mode: 'playback', el: null };
+try { AUD.mode = localStorage.getItem('iosAudio') || 'playback'; } catch (e) { }
+function audioSession() {
+  if (!IOS) return;
+  try { if (navigator.audioSession) { navigator.audioSession.type = AUD.mode; return; } } catch (e) { }
+  // iOS 16.4 이전에는 이 API가 없다. 소리 없는 <audio>를 돌리면 세션이 재생용으로 바뀐다(널리 쓰는 우회). 사용자 동작 안에서만 된다
+  if (AUD.mode !== 'playback') { if (AUD.el) AUD.el.pause(); return; }
+  if (!AUD.el) { AUD.el = new Audio(silentWav()); AUD.el.loop = true; AUD.el.setAttribute('playsinline', ''); }
+  const p = AUD.el.play(); if (p && p.catch) p.catch(() => { });
+}
+/** 0.25초 무음 WAV (8kHz 16bit). 파일 없이 만든다. 옛 사파리는 blob 주소 미디어가 불안정해 data 주소로 */
+function silentWav() {
+  const n = 4000, b = new Uint8Array(44 + n), v = new DataView(b.buffer);   // 데이터 영역은 0 = 무음
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) b[o + i] = t.charCodeAt(i); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n, true);
+  let str = ''; for (let i = 0; i < b.length; i++) str += String.fromCharCode(b[i]);
+  return 'data:audio/wav;base64,' + btoa(str);
+}
+// 전화·알림·다른 앱 소리가 끼어들면 iOS는 오디오를 멈춘다('interrupted'). 화면을 만지거나 앱으로 돌아오면 다시 켠다
+function audioWake() { if (A.ctx && A.ctx.state !== 'running' && A.ctx.state !== 'closed') { const p = A.ctx.resume(); if (p && p.catch) p.catch(() => { }); } }
+document.addEventListener('touchend', audioWake, { passive: true });
+document.addEventListener('click', audioWake);
 function audioInit() {
-  if (A.ctx) { A.ctx.resume(); return; }
+  audioSession();
+  if (A.ctx) { audioWake(); return; }
   const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C();
   A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
   const lim = A.ctx.createDynamicsCompressor();            // 절차 합성이 겹치면 클리핑한다
@@ -206,24 +250,56 @@ function audioInit() {
   const g = A.ctx.createGain(); g.gain.value = 0.06; src.connect(lp); lp.connect(g); g.connect(A.master); src.start(); A.ambient = g;
   A.sfx = A.ctx.createGain(); A.sfx.gain.value = 1; A.sfx.connect(A.master);      // 동물 소리 버스. 말할 때 여기를 줄인다
   A.duck = 1;
-  // 실제 샘플(있으면) 디코드
-  for (const k in (window.SOUNDS || {})) { const b = atob(SOUNDS[k]); const arr = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) arr[i] = b.charCodeAt(i); A.ctx.decodeAudioData(arr.buffer.slice(0)).then(buf => { A.samples[k] = buf; }).catch(() => { }); }
+  // 목소리 버스. 동물 소리처럼 줄이지 않는다. 관제사는 무전기처럼 저역을 깎고 명료도 대역을 살린다(바람 속에서 들리게)
+  A.voice = A.ctx.createGain(); A.voice.gain.value = 1.1; A.voice.connect(A.master);
+  const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 200;
+  const pk = A.ctx.createBiquadFilter(); pk.type = 'peaking'; pk.frequency.value = 2600; pk.Q.value = 0.9; pk.gain.value = 4;
+  hp.connect(pk); pk.connect(A.voice); A.radio = hp;
+  A.verb = makeVerb(A.ctx, A.sfx);
+  // 입체 음향(HRTF). 이어폰으로 들으면 좌우뿐 아니라 앞뒤도 머리 밖에서 난다. 크롬은 첫 사용 때 데이터를 읽느라 잠깐 무음이라 미리 깨운다
+  A.hrtf = typeof A.ctx.createPanner === 'function';
+  if (A.hrtf) { try { const w = A.ctx.createPanner(); w.panningModel = 'HRTF'; } catch (e) { A.hrtf = false; } }
+  if (VOICE.level !== 'off') prewarm();
+  sfxDecode();
 }
-/** 거리 기반 출력 체인: 게인은 거리^1.5로, 멀면 로우패스로 먹먹하게. 피치는 건드리지 않는다(기계음 방지). */
-/** near=0(멀다)~1(붙었다), rel=내 진행방향 기준 상대 방위(0 정면, +오른쪽, ±π 뒤).
- *  좌우는 스테레오 패닝, 앞뒤는 음색으로 구분한다. 뒤는 둔탁, 앞은 밝게. 사람 귀가 실제로 그렇게 듣는다 */
-function out(near, rel) {
+/** 잔향. 멀리서 난 소리는 직접음보다 주변에 튄 소리가 더 많이 들린다. 사람이 "멀다"를 느끼는 가장 큰 단서다.
+ *  야외라 짧고 어둡게: 25ms 뒤 시작, 1.4초 감쇠, 3kHz 위는 깎는다. 좌우 채널을 따로 만들어 넓게 퍼지게 */
+function makeVerb(ctx, dest) {
+  const sr = ctx.sampleRate, n = Math.floor(sr * 1.4), pre = Math.floor(sr * 0.025), ir = ctx.createBuffer(2, n, sr);
+  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = pre; i < n; i++) { const t = (i - pre) / sr; d[i] = (Math.random() * 2 - 1) * Math.exp(-t / 0.32) * Math.min(1, t / 0.01); } }
+  const cv = ctx.createConvolver(); cv.buffer = ir;
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3000; cv.connect(lp); lp.connect(dest);
+  return cv;
+}
+/** 거리 기반 출력 체인. near=0(멀다)~1(붙었다), rel=내 진행방향 기준 상대 방위(0 정면, +오른쪽, ±π 뒤).
+ *  - 크기: 거리^1.5. 가까울수록 크다
+ *  - 음색: 멀수록 고음이 빠져 먹먹하다(공기가 고음을 먼저 먹는다). 뒤는 더 둔탁하게
+ *  - 거리감: 멀수록 직접음은 빨리 줄고 잔향은 천천히 준다. 둘의 비율이 "멀리서 난다"로 들린다
+ *  - 방향: HRTF 입체 음향. 없으면 스테레오 패닝
+ *  - 피치는 거리로 건드리지 않는다(기계음 방지) */
+function out(near, rel, dest, intensity) {
   const behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;      // 0=정면 1=바로 뒤
+  const lvl = intensity === undefined ? 1 : 0.55 + 0.45 * intensity;
   const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass';
   lp.frequency.value = (300 + 5000 * near * near) * (1 - 0.45 * behind);
-  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 + 0.12 * behind);   // 뒤가 더 조용하면 추격 게임이 아니다
+  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 + 0.12 * behind) * lvl;   // 뒤가 더 조용하면 추격 게임이 아니다
   let tail = g;
-  if (rel !== undefined && A.ctx.createStereoPanner) {
+  if (rel !== undefined && A.hrtf) {
+    const pn = A.ctx.createPanner(); pn.panningModel = 'HRTF'; pn.distanceModel = 'linear'; pn.rolloffFactor = 0;   // 거리 감쇠는 위에서 직접 한다
+    const x = Math.sin(rel), z = -Math.cos(rel);         // 듣는 사람은 원점에서 -z를 본다. 오른쪽 +x, 뒤 +z
+    if (pn.positionX) { pn.positionX.value = x; pn.positionY.value = 0; pn.positionZ.value = z; } else pn.setPosition(x, 0, z);
+    g.connect(pn); tail = pn;
+    // HRTF의 좌우 차이는 실제 귀 수준(약 6dB)이라 달리면서 듣기엔 약하다. 게임답게 조금 과장한다(실측 약 8dB, 여기에 좌우 시간차가 더해진다)
+    if (A.ctx.createStereoPanner) { const sp = A.ctx.createStereoPanner(); sp.pan.value = Math.sin(rel) * 0.35; pn.connect(sp); tail = sp; }
+  } else if (rel !== undefined && A.ctx.createStereoPanner) {
     const pn = A.ctx.createStereoPanner();
     pn.pan.value = Math.max(-0.7, Math.min(0.7, Math.sin(rel) * 0.7));   // 한쪽 귀가 완전히 비면 고장으로 들린다
     g.connect(pn); tail = pn;
   }
-  lp.connect(g); tail.connect(A.sfx || A.master); return { node: lp, gain: g };
+  lp.connect(g); tail.connect(dest || A.sfx || A.master);
+  // 잔향은 직접음보다 훨씬 천천히 준다. 붙었을 땐 또렷하게, 멀면 울리게 (web/qa.mjs 8번이 귀별 에너지로 잰다)
+  if (A.verb && !dest) { const w = A.ctx.createGain(); w.gain.value = 0.8 * Math.pow(near, 0.2) * (1 - 0.6 * near) * Math.min(1, near / 0.1) * lvl; lp.connect(w); w.connect(A.verb); }
+  return { node: lp, gain: g };
 }
 /** 내 진행 방향 기준 적의 상대 방위 */
 function relBearing(en) {
@@ -242,7 +318,40 @@ function dirWord(rel) {
   if (d < Math.PI * 5 / 8) return side;
   return side + ' 뒤';
 }
-function playSample(key, near, rel) { const b = A.samples[key]; if (!b) return false; const s = A.ctx.createBufferSource(); s.buffer = b; const o = out(near, rel); s.connect(o.node); s.start(); return true; }
+/** 녹음 재생. 같은 종류 녹음이 여러 개면 직전 것과 다른 것을 고른다(같은 소리 반복이 제일 먼저 질린다) */
+function playSample(key, near, rel, intensity, force) {
+  const list = SFX.buf[key]; if (!list || !list.length) return false;
+  if (!force && SFX.live >= 2) return true;             // 녹음은 합성음보다 길다. 세 겹 넘게 겹치면 소음이다. 합성음으로 새지 않게 true
+  let i = Math.floor(Math.random() * list.length);
+  if (list.length > 1 && i === SFX.last[key]) i = (i + 1) % list.length;
+  SFX.last[key] = i;
+  const s = A.ctx.createBufferSource(); s.buffer = list[i];
+  s.playbackRate.value = 0.97 + Math.random() * 0.06;   // 한 마리가 매번 똑같은 톤으로 울지 않는다
+  const o = out(near, rel, undefined, intensity); s.connect(o.node); s.start();
+  SFX.live++; s.onended = () => { SFX.live = Math.max(0, SFX.live - 1); };
+  return true;
+}
+function hasSample(kind) { const a = st.animal; return !!(a && ((SFX.buf[a.id + '_' + kind] || []).length || (SFX.buf[(CLASS[a.id] || 'small') + '_' + kind] || []).length)); }
+/** 고른 동물의 녹음만 받는다(동물당 100~200KB). 받기는 바로, 디코드는 오디오가 켜진 뒤(버튼 누름) */
+function sfxLoad(aid) {
+  if (!HAS_SFX || !aid || location.protocol === 'file:') return null;
+  if (SFX.aid === aid) return SFX.loading;
+  SFX.aid = aid; SFX.bytes = {}; SFX.buf = {}; SFX.last = {};
+  const cls = CLASS[aid] || 'small', keys = [];
+  for (const k of ['roam', 'sprint', 'tired']) { const key = SOUND_INDEX[aid + '_' + k] ? aid + '_' + k : SOUND_INDEX[cls + '_' + k] ? cls + '_' + k : null; if (key) keys.push(key); }
+  SFX.loading = Promise.all(keys.flatMap(key => SOUND_INDEX[key].map(f => fetch('sounds/' + f + '?v=' + SOUND_VER)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+    .then(b => { if (SFX.aid === aid) (SFX.bytes[key] = SFX.bytes[key] || []).push(b); })
+    .catch(e => log('소리 파일 실패 ' + f + ' ' + e.message))))).then(sfxDecode);
+  return SFX.loading;
+}
+function sfxDecode() {
+  if (!A.ctx) return;
+  for (const key in SFX.bytes) {
+    const arr = SFX.buf[key] = SFX.buf[key] || [];
+    for (const b of SFX.bytes[key].splice(0)) A.ctx.decodeAudioData(b).then(buf => arr.push(buf)).catch(() => log('소리 디코드 실패 ' + key));
+  }
+}
 function env(g, t, a, peak, dur) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); }
 // 동물군별 절차 합성. 실제 샘플이 있으면 그걸 우선.
 /** 야외에서 정보를 지는 단서는 800Hz~3kHz에 있어야 한다. 바람소리는 저역을 통째로 덮는다.
@@ -253,9 +362,10 @@ function onset(o, t, near, intensity) {
   const g = A.ctx.createGain(); env(g, t, 0.004, 0.16 * intensity * (0.4 + 0.6 * near), 0.07);
   src.connect(bp); bp.connect(g); g.connect(o.node); src.start(t); src.stop(t + 0.1);
 }
-function cry(kind, cls, near, intensity = 1, rel) {
+/** force: 돌진 시작·피격 같은 사건 소리. 겹침 제한을 무시한다 */
+function cry(kind, cls, near, intensity = 1, rel, force) {
   if (!A.ctx || near <= 0.02) return; const a = st.animal;
-  if (playSample(`${a.id}_${kind}`, near, rel) || playSample(`${cls}_${kind}`, near, rel)) return;
+  if (playSample(`${a.id}_${kind}`, near, rel, intensity, force) || playSample(`${cls}_${kind}`, near, rel, intensity, force)) return;
   const t = A.ctx.currentTime, o = out(near, rel);
   if (cls === 'canine' || cls === 'hoof' || cls === 'feline') onset(o, t, near, intensity);
   if (cls === 'bird') {            // 꼬꼬댁: FM 버스트 3~5회
@@ -300,7 +410,7 @@ function heartbeat(bpm, vol) { if (!A.ctx) return; const now = A.ctx.currentTime
 const PRI = { CRIT: 0, HIGH: 1, NORM: 2, LOW: 3 };
 // 발화 스케줄러. 우선순위 큐 + 최소 간격 + 키별 쿨다운 + 유통기한.
 // 러너는 화면을 못 본다. 그렇다고 쉴 새 없이 떠들면 다음 세션에 음소거당한다.
-const VOICE = { on: true, level: 'normal', q: [], speaking: false, lastAt: 0, keyAt: {}, rot: {}, GAP_MS: 3500,
+const VOICE = { on: true, level: 'off', q: [], speaking: false, lastAt: 0, keyAt: {}, rot: {}, GAP_MS: 3500,
   tok: 3, CAP: 3, REFILL_S: 90, refAt: 0, seen: {} };
 /** 말 예산. 중요한 말은 공짜, 부연 설명은 토큰을 쓴다. 30분에 스무 마디 남짓으로 묶인다 */
 function budgetOk(cost) {
@@ -314,15 +424,65 @@ function budgetOk(cost) {
 }
 // 리플레이는 10배속. 벽시계 기준 쿨다운이 세션 시간으로는 10배가 되므로 배속만큼 줄인다
 function vrate() { return st.mode === 'replay' ? 10 : 1; }
-function speakIntro(t) { speak('intro', t, { pri: PRI.CRIT }); }
-const NUM_KO = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
-/** TTS는 "3마리"를 "삼마리"로 읽는다. 수 세는 말은 고유어로 바꿔 넣는다 */
-function numKo(n) { return NUM_KO[n] || String(n); }
-function pickVar(key, v) { if (!Array.isArray(v)) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
-/** key: 같은 종류의 말을 묶는 이름. variants: 문장 배열(돌아가며 쓴다). o.pri/o.cooldown(초)/o.ttl(초) */
+// ---------- 음성 팩 ----------
+// 미리 구운 신경망 TTS(web/voice/bake.py). 관제사 문장은 조각을 이어 붙인다.
+// 동물 목소리(사람이 의성어를 읽는 것)는 어색해서 뺐다. 동물은 울음 합성음만 낸다
+// 팩을 못 받으면(오프라인, 단일 파일 실행) 브라우저 TTS로 같은 문장을 읽는다
+const HAS_PACK = typeof VOICE_PACK !== 'undefined' && VOICE_PACK.op;
+function vtext(k) { return (HAS_PACK && VOICE_PACK.text[k]) || k; }
+/** 바이트만 받는다(오디오 컨텍스트 불필요). 홈 화면에서 미리 받아 두어야 출발 직후 첫 말부터 구운 목소리가 나온다 */
+function vpLoad() {
+  if (!HAS_PACK || location.protocol === 'file:') return;
+  const get = (f) => fetch('voice/' + f + '?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); });
+  if (!VP.opP) VP.opP = get('op.bin').then(b => { VP.op = b; prewarm(); }).catch(e => { VP.opP = null; log('음성 팩 실패 → 기본 TTS ' + e.message); });
+}
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+/** 조각 하나를 필요할 때 디코드한다. 전부 풀어두면 수십 MB라 저가 폰에서 위험하다 */
+function clip(key) {
+  const ck = key;
+  if (VP.cache.has(ck)) { const p = VP.cache.get(ck); VP.cache.delete(ck); VP.cache.set(ck, p); return p; }
+  const bin = VP.op;
+  if (!A.ctx) return Promise.resolve(null);
+  const idx = VOICE_PACK.op[key];
+  if (!bin || !idx) return Promise.resolve(null);
+  const p = A.ctx.decodeAudioData(bin.slice(idx[0], idx[0] + idx[1])).catch(() => null);
+  VP.cache.set(ck, p);
+  if (VP.cache.size > 90) VP.cache.delete(VP.cache.keys().next().value);
+  return p;
+}
+/** 급할 때 디코드 지연이 없도록 방향과 자주 쓰는 말은 미리 풀어둔다 */
+function prewarm() {
+  if (!A.ctx || !VP.op) return;
+  for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) { clip('dc_' + d); clip('dx_' + d); }
+  for (const k of ['spotted', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip(k);
+}
+/** 수 → 조각 키. 235 = 이백 + 삼십오 */
+function numSeq(n) {
+  n = Math.max(0, Math.min(999, Math.round(n)));
+  if (n === 0) return ['zero'];
+  const h = Math.floor(n / 100) * 100, r = n % 100;
+  return [...(h ? ['n' + h] : []), ...(r ? ['n' + r] : [])];
+}
+/** 거리는 50m 밖이면 10m 단위로. "이백삼십칠 미터"는 들어도 못 쓴다.
+ *  숫자는 구절째 구운 조각을 쓴다. 조각을 이으면 "육십"이 "6시"로 들리는 일이 잦았다(ASR 실측 60~70%) */
+function meterSeq(m) {
+  const v = Math.max(1, m < 50 ? Math.round(m) : Math.round(m / 10) * 10);
+  return HAS_PACK && VOICE_PACK.op['m' + v] ? ['m' + v] : [...numSeq(v), 'meter'];
+}
+function kmhSeq(k) {
+  const v = Math.max(1, Math.round(k));
+  return HAS_PACK && VOICE_PACK.op['kmh' + v] ? ['kmh' + v] : ['sisok', ...numSeq(v), 'intro_kmh'];
+}
+const DIR_KEYS = { '정면': 'front', '바로 뒤': 'back', '왼쪽 앞': 'lf', '오른쪽 앞': 'rf', '왼쪽': 'l', '오른쪽': 'r', '왼쪽 뒤': 'lb', '오른쪽 뒤': 'rb' };
+function dirKey(rel) { return DIR_KEYS[dirWord(rel)]; }
+function speakIntro(seq) { speak('intro', seq, { pri: PRI.CRIT }); }
+function pickVar(key, v) { if (!Array.isArray(v[0])) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
+/** key: 같은 종류의 말을 묶는 이름. variants: 조각 키 배열 하나, 또는 그 배열들(돌아가며 쓴다).
+ *  o.pri/o.cooldown(초)/o.ttl(초) */
 function speak(key, variants, o) {
   o = o || {}; const pri = o.pri === undefined ? PRI.NORM : o.pri, now = Date.now();
-  if (!VOICE.on || !('speechSynthesis' in window)) return;
+  if (!VOICE.on || VOICE.level === 'off') return;   // 기본은 끔. 소리(녹음)만으로 방향과 거리를 읽는다
+  if (!HAS_PACK && !('speechSynthesis' in window)) return;
   if (VOICE.level === 'quiet' && pri > PRI.HIGH) return;
   if (pri === PRI.LOW && VOICE.level !== 'chatty') return;
   const cd = (o.cooldown || 0) * 1000 / vrate();
@@ -330,24 +490,59 @@ function speak(key, variants, o) {
   if (!budgetOk(o.cost)) return;
   VOICE.keyAt[key] = now;
   VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
-  VOICE.q.push({ key, text: pickVar(key, variants), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
+  const seq = pickVar(key, variants);
+  VOICE.q.push({ key, seq, text: seq.map(vtext).join(' '), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
   VOICE.q.sort((a, b) => a.pri - b.pri);
-  if (pri === PRI.CRIT && VOICE.speaking) { speechSynthesis.cancel(); VOICE.speaking = false; setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
+  if (pri === PRI.CRIT && VOICE.speaking) { hush(); setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
   pump();
+}
+/** 지금 하던 말을 끊는다. 더 급한 말이 왔을 때 */
+function hush() {
+  VOICE.cur = (VOICE.cur || 0) + 1;
+  for (const s of VOICE.srcs || []) { try { s.stop(); } catch (e) { } }
+  VOICE.srcs = [];
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  VOICE.speaking = false;
 }
 function pump() {
   if (VOICE.speaking || !VOICE.q.length) return;
   const now = Date.now(), wait = VOICE.GAP_MS / vrate() - (now - VOICE.lastAt);
   if (wait > 0 && VOICE.q[0].pri > PRI.CRIT) { clearTimeout(VOICE.t); VOICE.t = setTimeout(pump, wait); return; }
   const it = VOICE.q.shift(); if (!it || now > it.ttl) { if (VOICE.q.length) pump(); return; }
+  VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
+  const tok = VOICE.cur = (VOICE.cur || 0) + 1;
+  const done = () => { if (tok !== VOICE.cur || !VOICE.speaking) return; VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
+  log('말: ' + it.text);
+  playPack(it, tok).then(dur => {
+    if (tok !== VOICE.cur) return;
+    if (dur !== null) { setTimeout(done, dur * 1000 + 60); return; }
+    ttsFallback(it, done);
+  });
+}
+/** 구운 조각을 이어서 재생. 하나라도 없으면 null → 브라우저 TTS */
+async function playPack(it, tok) {
+  if (!A.ctx) return null;
+  // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새는 것보다 조금 늦는 게 낫다
+  if (!VP.op && VP.opP) await Promise.race([VP.opP, sleep(4000)]);
+  if (!VP.op) return null;
+  const bufs = await Promise.all(it.seq.map(k => clip(k)));
+  if (bufs.some(b => !b)) return null;
+  if (tok !== VOICE.cur) return 0;
+  if (A.ctx.state !== 'running') A.ctx.resume();
+  const t0 = A.ctx.currentTime + 0.03; let t = t0; VOICE.srcs = [];
+  const play = (b, dest, at) => { const s = A.ctx.createBufferSource(); s.buffer = b; s.connect(dest); s.start(at); VOICE.srcs.push(s); };
+  bufs.forEach((b, i) => { play(b, A.radio, t); t += b.duration + (/[.!?]$/.test(vtext(it.seq[i])) ? 0.1 : 0.035); });
+  return t - A.ctx.currentTime;
+}
+function ttsFallback(it, done) {
+  if (!('speechSynthesis' in window)) { done(); return; }
   const u = new SpeechSynthesisUtterance(it.text); u.lang = 'ko-KR';
   u.rate = it.pri === PRI.CRIT ? 1.2 : it.pri === PRI.HIGH ? 1.1 : 1.0;
   const v = speechSynthesis.getVoices().find(x => x.lang && x.lang.startsWith('ko')); if (v) u.voice = v;
   // 이벤트에만 의존하면 안 된다. 일부 안드로이드 웹뷰는 onstart/onend를 안 쏜다
-  VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
-  u.onend = u.onerror = () => { VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
-  speechSynthesis.speak(u); log('말: ' + it.text);
-  setTimeout(() => { if (VOICE.speaking) { VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); } }, 1000 + it.text.length * 220);  // onend 유실 대비
+  u.onend = u.onerror = done;
+  speechSynthesis.speak(u);
+  setTimeout(done, 1000 + it.text.length * 220);  // onend 유실 대비
 }
 /** 말할 때 동물 소리와 바람을 낮춘다. 말이 묻히면 말한 의미가 없다 */
 function duck(k) {
@@ -355,8 +550,6 @@ function duck(k) {
   A.sfx.gain.cancelScheduledValues(t); A.sfx.gain.linearRampToValueAtTime(k, t + 0.15);
   if (A.ambient) { A.ambient.gain.cancelScheduledValues(t); A.ambient.gain.linearRampToValueAtTime(Math.max(0.015, 0.06 * (k < 1 ? 0.4 : 1)), t + 0.15); }
 }
-// 기존 호출부 호환
-function say(text, urgent = false) { speak('legacy:' + text.slice(0, 12), text, { pri: urgent ? PRI.HIGH : PRI.NORM, cooldown: urgent ? 0 : 6 }); }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
 
@@ -367,16 +560,30 @@ function flash() { document.body.classList.add('flash'); setTimeout(() => docume
 // GPS 코스는 "움직이는 방향"이라 제자리에서 돌면 아무 값도 안 나온다. 지자기 센서만이 "지금 어디를 보는가"를 안다
 const HEAD = { compass: NaN, compassAt: 0, course: NaN, courseAt: 0, ok: false, outAt: 0 };
 function nrm(a) { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
+/** 아이폰은 방향 센서를 쓰려면 권한을 받아야 한다. 반드시 버튼 누름 안에서 불러야 창이 뜬다 */
+function askCompass() {
+  const D = window.DeviceOrientationEvent;
+  if (!D || typeof D.requestPermission !== 'function') return;
+  try { D.requestPermission().then(r => { if (r !== 'granted') log('나침반 권한 거부 → GPS 진행 방향만'); }).catch(e => log('나침반 권한 실패 ' + e.message)); } catch (e) { }
+}
 function startCompass() {
-  if (typeof window.DeviceOrientationEvent === 'undefined') return;
+  if (typeof window.DeviceOrientationEvent === 'undefined' || HEAD.listening) return;
+  HEAD.listening = true;                                // 주행마다 리스너가 쌓이지 않게
   const onOrient = (e) => {
-    if (e.alpha === null || e.alpha === undefined) return;
-    if (e.absolute !== true && e.type !== 'deviceorientationabsolute') return;   // 상대 방향은 나침반이 아니다
     const b = (e.beta || 0) * Math.PI / 180, cb = Math.cos(b);
     if (Math.abs(cb) < 0.25) return;                    // 폰이 거의 수직. 윗변의 수평 방향이 정의되지 않는다
-    const sa = (screen.orientation && screen.orientation.angle) || 0;
-    let h = nrm((-e.alpha + sa) * Math.PI / 180);       // 알파는 나침반과 반대 방향으로 증가한다
-    if (cb < 0) h = nrm(h + Math.PI);                   // 폰을 뒤집어 들었다
+    const sa = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+    let h;
+    if (typeof e.webkitCompassHeading === 'number' && e.webkitCompassHeading >= 0) {
+      // 아이폰: iOS가 계산한 방위(북에서 시계 방향, 기기 윗변 기준). 아이폰의 alpha는 기준이 제각각이라 나침반이 아니다
+      if (e.webkitCompassAccuracy < 0) return;          // 보정 전. 틀린 방위보다 GPS 진행 방향이 낫다
+      h = nrm((e.webkitCompassHeading + sa) * Math.PI / 180);
+    } else {
+      if (e.alpha === null || e.alpha === undefined) return;
+      if (e.absolute !== true && e.type !== 'deviceorientationabsolute') return;   // 상대 방향은 나침반이 아니다
+      h = nrm((-e.alpha + sa) * Math.PI / 180);         // 알파는 나침반과 반대 방향으로 증가한다
+      if (cb < 0) h = nrm(h + Math.PI);                 // 폰을 뒤집어 들었다
+    }
     HEAD.compass = h; HEAD.compassAt = Date.now(); HEAD.ok = true;
     applyHeading();
   };
@@ -402,8 +609,6 @@ function applyHeading() {
   const dt = Math.min(0.5, Math.max(0.01, (now - (HEAD.outAt || now)) / 1000)); HEAD.outAt = now;
   st.headRad = nrm(st.headRad + d * (1 - Math.exp(-dt / (soft ? GPSF.HEAD_TAU_SOFT : GPSF.HEAD_TAU))));
 }
-// 아티팩트 뷰어와 일부 인앱 브라우저는 iframe 정책으로 위치를 막는다. 코드로 못 푼다
-const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
 function startGps() {
   startCompass();
   st.gpsErr = null; st.fixCount = 0;
@@ -418,8 +623,15 @@ function startGps() {
     e => { st.gpsErr = (e.code === 1 ? (EMBEDDED ? '이 화면에서는 위치가 차단됨' : '권한 거부') : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
 }
 function stopGps() { if (st.watchId !== null) navigator.geolocation.clearWatch(st.watchId); st.watchId = null; }
-async function wakeLock() { try { st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', () => { st.wake = null; }); } catch (e) { log('wake lock 불가 ' + e.message); } }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && st.session && !st.wake) wakeLock(); });
+async function wakeLock() {
+  try { st.wake = await navigator.wakeLock.request('screen'); st.wake.addEventListener('release', () => { st.wake = null; }); }
+  catch (e) {
+    log('wake lock 불가 ' + e.message);
+    // 화면이 꺼지면 GPS와 소리가 멈춘다. 모르고 뛰면 기록이 통째로 날아간다. 주행마다 한 번 알린다
+    if (st.session && !st.wakeWarned) { st.wakeWarned = true; st.wakeWarnUntil = Date.now() + 10000; }
+  }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { audioWake(); if (st.session && !st.wake) wakeLock(); } });
 
 // ---------- 지도 타일 (아티팩트 뷰어에서는 차단됨 → 자동으로 레이더만) ----------
 // 타일 공급자. CARTO는 2026년부터 키를 요구해 워터마크가 찍힌다 → 키 없는 OSM 표준 타일 + 캔버스 반전으로 다크맵
@@ -437,14 +649,32 @@ const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0, src: 'osm', key: '' 
 try { TILE.key = localStorage.getItem('vworldKey') || ''; } catch (e) { }
 if (TILE.key) TILE.src = 'vworld';
 const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.22) brightness(0.78) contrast(1.08)';   // 채도가 높으면 반전된 도로가 분홍으로 뜬다
+// 사파리는 캔버스 filter를 지원하지 않는다. 그대로 두면 아이폰에서 지도가 하얗게 뜬다
+const CANVAS_FILTER = (() => { try { return 'filter' in document.createElement('canvas').getContext('2d'); } catch (e) { return false; } })();
+/** 타일을 받을 때 한 번, DARK_FILTER와 같은 계산을 픽셀에 직접 한다. 256×256이라 몇 ms면 끝난다 */
+function darkTile(img) {
+  const c = document.createElement('canvas'); c.width = img.naturalWidth || 256; c.height = img.naturalHeight || 256;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+  let d; try { d = g.getImageData(0, 0, c.width, c.height); } catch (e) { return null; }   // CORS 없이 받은 타일은 못 읽는다
+  const p = d.data, S = 0.22, BR = 0.78, K = 1.08, cl = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+  for (let i = 0; i < p.length; i += 4) {
+    let r = 1 - p[i] / 255, gr = 1 - p[i + 1] / 255, b = 1 - p[i + 2] / 255;                          // invert(1)
+    let r2 = cl(-0.574 * r + 1.430 * gr + 0.144 * b), g2 = cl(0.426 * r + 0.430 * gr + 0.144 * b), b2 = cl(0.426 * r + 1.430 * gr - 0.856 * b);   // hue-rotate(180deg)
+    r = cl((0.213 + 0.787 * S) * r2 + (0.715 - 0.715 * S) * g2 + (0.072 - 0.072 * S) * b2);            // saturate
+    gr = cl((0.213 - 0.213 * S) * r2 + (0.715 + 0.285 * S) * g2 + (0.072 - 0.072 * S) * b2);
+    b = cl((0.213 - 0.213 * S) * r2 + (0.715 - 0.715 * S) * g2 + (0.072 + 0.928 * S) * b2);
+    p[i] = cl((r * BR - 0.5) * K + 0.5) * 255; p[i + 1] = cl((gr * BR - 0.5) * K + 0.5) * 255; p[i + 2] = cl((b * BR - 0.5) * K + 0.5) * 255;   // brightness, contrast
+  }
+  g.putImageData(d, 0, 0); return c;
+}
 function tileUrl(x, y) { return TILE_SRC[TILE.src].url(x, y, TILE.z); }
 function getTile(x, y) {
   const k = TILE.src + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
-  const rec = { img: null, ok: false };
+  const rec = { img: null, ok: false }, dark = !CANVAS_FILTER && TILE_SRC[TILE.src].invert;
   const load = (useCors) => {
     const img = new Image(); rec.img = img; img.decoding = 'async';
     if (useCors) img.crossOrigin = 'anonymous';
-    img.onload = () => { rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
+    img.onload = () => { if (dark) { const c = darkTile(img); if (c) rec.img = c; } rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
     img.onerror = () => { if (useCors) { load(false); return; }   // CORS 헤더 없는 공급자 대비
       TILE.fails++;
       if (TILE.src === 'vworld' && TILE.loads === 0 && TILE.fails >= 4) {   // 키가 틀렸거나 도메인 미등록
@@ -679,13 +909,14 @@ function tick() {
 }
 function step() {
   const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
+  if (t % 5 === 0) audioWake();                         // 전화가 끝나도 iOS는 오디오를 알아서 다시 켜지 않을 때가 있다
   let fix = null;
-  if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now() }; }
+  if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now(), spd: null, hdg: null }; }   // 도플러 없음. undefined로 두면 속도가 NaN이 된다
   else { fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null; }
   const row = fixToRow(t, fix);
   if (!row) {                                   // GPS 첫 위치 대기. 타이머도 적도 아직 없다
     st.tickN = 0;
-    if (!st.saidWait) { st.saidWait = true; speak('wait', st.coarse ? '위치 정확도가 너무 낮다. 크롬 위치 권한에서 정확한 위치를 켜라.' : '위치 잡는 중이다. 하늘이 보이는 곳에서 잠깐 기다려라.', { pri: PRI.CRIT }); }
+    if (!st.saidWait) { st.saidWait = true; speak('wait', [st.coarse ? 'wait_coarse' : 'wait'], { pri: PRI.CRIT }); }
     render(null, fix); return;
   }
   if (!st.gpsReady) { st.gpsReady = true; if (st.mode === 'gps') log('첫 위치 확보 acc ' + Math.round(st.hold.acc) + 'm'); }
@@ -696,47 +927,51 @@ function step() {
   const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const nrel = nearEn ? relBearing(nearEn) : undefined;
   const left = RW.S.WARMUP_S - s.elapsed + 1;
-  if (s.elapsed === 1) speakIntro(st.warmupS === 0 ? `여기는 러너웨이 관제. ${a.nameKo} ${numKo(st.nPack)} 마리가 근처에 있다. 이미 널 봤다. 뛰어!` : `여기는 러너웨이 관제. ${a.nameKo} ${numKo(st.nPack)} 마리가 근처 풀숲에 있다. ${a.constant ? '' : '최고 시속 ' + a.sprintKmh + '킬로.'} 아직 널 못 봤다. 조용히 페이스를 올려라.`, true);
-  if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', '1분 뒤 녀석들이 널 본다.', { pri: PRI.HIGH }); }
-  if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', '곧이다. 페이스 올려.', { pri: PRI.HIGH }); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', '들켰다!', { pri: PRI.HIGH, ttl: 2 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel); } }
+  if (s.elapsed === 1) {
+    const head = ['intro_head', 'name_' + a.id, 'cnt' + Math.min(5, st.nPack)];
+    if (st.warmupS === 0) speakIntro([...head, 'intro_now']);
+    else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);
+  }
+  if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', ['warn60'], { pri: PRI.HIGH }); }
+  if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel, true); } }
   for (const ev of snap.events) {
     const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
-    const erel = relBearing(ev.en), dw = dirWord(erel), em = Math.round(ev.en.e.gap / 100);
+    const erel = relBearing(ev.en), dk = dirKey(erel), em = Math.round(ev.en.e.gap / 100);
     const ek = (ev.type === 'ambush') ? 'reengage' : ev.type;
     const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
     if (ev.type === 'sprint') {
-      cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel); buzz([80, 60, 200]); flash();
+      cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel, true); buzz([80, 60, 200]); flash();
       const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
       // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
-      if (n === 1) speak('sprint', `${dw}에서 온다. 시속 ${kmh}. 버텨!`, { pri: PRI.CRIT });
-      else if (n === 2) speak('sprint', `또 온다. ${dw}. 시속 ${kmh}.`, { pri: PRI.HIGH });
-      else if (n <= 4) speak('sprint', [`온다. ${dw}.`, `${dw}. 붙는다.`], { pri: PRI.HIGH, cooldown: 15 });
-      else speak('sprint', [`${dw} ${em}미터.`, `${dw}.`], { pri: PRI.NORM, cooldown: 50, cost: 1 });
+      if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT });
+      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, ...kmhSeq(kmh)], { pri: PRI.HIGH });
+      else if (n <= 4) speak('sprint', [['dc_' + dk], ['dx_' + dk, 'stick']], { pri: PRI.HIGH, cooldown: 15 });
+      else speak('sprint', [['dx_' + dk, ...meterSeq(em)], ['dx_' + dk]], { pri: PRI.NORM, cooldown: 50, cost: 1 });
     }
     else if (ev.type === 'hit') {
-      cry('sprint', cls, 1, 1.0, erel); buzz(500); flash();
-      speak('hit', snap.hits >= 3 ? '세 번째다. 끝났다.' : `잡혔다. ${numKo(snap.hits)} 번째. 물러난다.`, { pri: PRI.CRIT });
+      cry('sprint', cls, 1, 1.0, erel, true); buzz(500); flash();
+      speak('hit', ['hit' + Math.min(3, snap.hits)], { pri: PRI.CRIT });
     }
     else if (ev.type === 'reengage' || ev.type === 'ambush') {
       // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
-      cry('roam', cls, 0.65, 1, erel);
-      if (n <= 2) speak('rejoin', `한 마리가 돌아왔다. ${dw} ${em}미터.`, { pri: PRI.HIGH });
+      cry('roam', cls, 0.65, 1, erel, true);
+      if (n <= 2) speak('rejoin', ['dr_' + dk, ...meterSeq(em)], { pri: PRI.HIGH });
     }
   }
   if (snap.state === 'tired' && prevState === 'sprint') {
-    cry('tired', cls, Math.max(near, 0.5), 1, nrel);
+    cry('tired', cls, Math.max(near, 0.5), 1, nrel, true);
     const tn = (VOICE.seen.tired = (VOICE.seen.tired || 0) + 1);
     // 지침은 유일하게 행동을 바꾸는 정보다. 계속 알리되 갈수록 짧게
-    if (tn === 1) speak('tired', '지쳤다. 헐떡인다. 지금이 기회다, 밟아!', { pri: PRI.HIGH });
-    else if (tn <= 3) speak('tired', ['지쳤다. 벌려!', '헐떡인다. 지금이다.'], { pri: PRI.HIGH, cooldown: 30 });
-    else speak('tired', ['지쳤다.', '기회다.'], { pri: PRI.NORM, cooldown: 120, cost: 1 });
+    if (tn === 1) speak('tired', ['tired1'], { pri: PRI.HIGH });
+    else if (tn <= 3) speak('tired', [['tired2'], ['tired3']], { pri: PRI.HIGH, cooldown: 30 });
+    else speak('tired', [['tired4'], ['tired5']], { pri: PRI.NORM, cooldown: 120, cost: 1 });
   }
-  else if (snap.state === 'recover' && prevState === 'tired') speak('recover', ['숨 고르는 중. 다시 올 거다.', '멀어진다. 아직 끝난 게 아니다.'], { pri: PRI.LOW, cooldown: 60, cost: 1 });
-  else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', 'GPS가 흔들린다. 녀석들이 냄새를 잃었다.', { pri: PRI.NORM, cooldown: 120 }); }
+  else if (snap.state === 'recover' && prevState === 'tired') speak('recover', [['recover1'], ['recover2']], { pri: PRI.LOW, cooldown: 60, cost: 1 });
+  else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', ['lost'], { pri: PRI.NORM, cooldown: 120 }); }
   if (snap.gauge < 200) saidHalf = false;                 // 벗어나면 다시 무장. 교전마다 한 번은 경고해야 한다
-  if (snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', ['절반이다. 뛰어!', '잡힌다. 밟아!'], { pri: PRI.CRIT }); }
-  if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', '쿨다운 구간. 녀석들은 포기했다. 천천히.', { pri: PRI.HIGH }); }
+  if (snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', [['half1'], ['half2']], { pri: PRI.CRIT }); }
+  if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', ['cool'], { pri: PRI.HIGH }); }
   // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
   const gapM = snap.gapCm / 100, frozen = snap.paused || snap.cooldown || st.manualPause;
   const phase = snap.warmup ? 'warm' : frozen ? 'recover' : snap.state;
@@ -744,7 +979,7 @@ function step() {
   const per = frozen ? 14 : cryPeriodS(gapM, phase);
   if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); beacon(per, () => cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel)); }
   else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); beacon(per, () => cry('sprint', cls, near, 0.6 + 0.4 * near, nrel)); }
-  else if (snap.state === 'tired') { heartbeat(80, 0.15); breath(near, 0.4 + 0.6 * near); beacon(per, () => cry('tired', cls, near * 0.8, 0.5, nrel)); }
+  else if (snap.state === 'tired') { heartbeat(80, 0.15); if (!hasSample('tired')) breath(near, 0.4 + 0.6 * near); beacon(per, () => cry('tired', cls, near * 0.8, 0.5, nrel)); }
   else if (snap.state === 'recover') { heartbeat(60, 0.06); beacon(per, () => cry('roam', cls, near * 0.5, 0.3, nrel)); }
   else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); beacon(per, () => cry('roam', cls, near, 0.4, nrel)); }
   // 진동은 사건에만. 상시 진동은 화면 꺼지면 죽고, 배터리와 습관화 양쪽에서 손해다
@@ -797,10 +1032,22 @@ function render(snap, fix) {
   const b = $('#banner'); b.className = 'banner';
   if (st.mode === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr + ' · 홈에서 GPS 확인'; }
   else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
+  else if (Date.now() < (st.wakeWarnUntil || 0)) { b.className = 'banner bad'; b.textContent = IOS ? '화면이 꺼지면 멈춘다 · 설정 > 디스플레이 및 밝기 > 자동 잠금 > 안 함' : '화면이 꺼지면 멈춘다 · 화면 자동 꺼짐 시간을 늘려라'; }
   else b.textContent = snap.warmup ? '녀석이 뒤에 있다. 아직 널 못 봤다' : snap.cooldown ? '쿨다운 · 적 정지' : (snap.paused || st.manualPause) ? '일시정지 · 적도 멈춤' : snap.state === 'lost' ? 'GPS 불안정 · 판정 동결' : '';
   $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'} · 나침반 ${HEAD.ok ? Math.round(((HEAD.compass * 180 / Math.PI) + 360) % 360) + '°' : '없음'}`;
   if (!st.pocket) drawRadar(snap);
 }
+const MAPV = { e: 0, n: 0, zoom: 1, at: 0, k: 1, bearing: 0, IDLE_MS: 12000 };
+/** 화면에서 (dx, dy)px 끌었다 → 세계 좌표(동, 북 m)로. 지도가 진행 방향으로 돌아가 있으니 회전을 되돌린다 */
+function mapPan(dx, dy) {
+  const b = MAPV.bearing, wx = dx * Math.cos(b) - dy * Math.sin(b), wy = dx * Math.sin(b) + dy * Math.cos(b);
+  MAPV.e -= wx / MAPV.k; MAPV.n += wy / MAPV.k;
+  const lim = 1500; MAPV.e = Math.max(-lim, Math.min(lim, MAPV.e)); MAPV.n = Math.max(-lim, Math.min(lim, MAPV.n));   // 타일 폭주 방지
+  MAPV.at = Date.now(); mapUi();
+}
+function mapZoom(z) { MAPV.zoom = Math.max(0.5, Math.min(3, z)); MAPV.at = Date.now(); mapUi(); }
+function mapReset() { MAPV.e = 0; MAPV.n = 0; MAPV.zoom = 1; mapUi(); }
+function mapUi() { const off = Math.hypot(MAPV.e, MAPV.n) > 3 || Math.abs(MAPV.zoom - 1) > 0.02; $('#recenter').style.display = off ? 'block' : 'none'; }
 /** GPS는 1초에 한 번 온다. 그 사이를 진행 방향으로 메워야 즉각 반응하는 것처럼 보인다.
  *  내비 앱이 부드러운 이유가 이것이다. 값을 지어내는 게 아니라 다음 수신까지 관성으로 잇는 것 */
 function predictOffset() {
@@ -813,35 +1060,40 @@ function predictOffset() {
 }
 function drawRadar(snap) {
   const c = $('#radar'), g = c.getContext('2d'), W = c.width, cx = W / 2, cy = W / 2; const a = st.animal;
-  const viewM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), k = (W / 2 - 10) / viewM;
+  if (MAPV.e || MAPV.n || MAPV.zoom !== 1) { if (Date.now() - MAPV.at > MAPV.IDLE_MS) mapReset(); }   // 달리는 중이다. 손을 떼고 잠시 지나면 내 위치로 돌아온다
+  const baseM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), viewM = Math.round(baseM / MAPV.zoom), k = (W / 2 - 10) / viewM;
+  MAPV.k = k;
   g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
   const [pdE, pdN] = predictOffset();
   const P = st.trail, raw = P.length ? P[P.length - 1] : [0, 0], me = [raw[0] + pdE, raw[1] + pdN];
+  const ctr = [me[0] + MAPV.e, me[1] + MAPV.n];                   // 화면 중심. 끌면 내 위치에서 벗어난다
   const bearing = Number.isNaN(st.headRad) ? 0 : st.headRad;   // 소리와 지도가 같은 방향을 써야 한다. 어긋나면 러너가 소리를 안 믿는다
+  MAPV.bearing = bearing;
   g.save(); g.translate(cx, cy); g.rotate(-bearing);
   // 지도 타일
   if (st.useMap && st.tilesOk !== false && st.lastLatLon) {
     const [rlat, rlon] = st.lastLatLon;
-    const lat = rlat + pdN / 111320, lon = rlon + pdE / (111320 * Math.cos(rlat * Math.PI / 180) || 1);
+    const lat = rlat + (pdN + MAPV.n) / 111320, lon = rlon + (pdE + MAPV.e) / (111320 * Math.cos(rlat * Math.PI / 180) || 1);
     const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
     const mPerTile = 40075016.686 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), tilePx = mPerTile * k;
     const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
     g.save(); g.globalAlpha = 0.9;
     const SRC = TILE_SRC[TILE.src];
-    if (SRC.invert && 'filter' in g) g.filter = DARK_FILTER;
+    if (SRC.invert && CANVAS_FILTER) g.filter = DARK_FILTER;
     for (let dx = -span; dx <= span; dx++) for (let dy = -span; dy <= span; dy++) {
       const tx = Math.floor(fx) + dx, ty = Math.floor(fy) + dy; const rec = getTile(tx, ty); if (!rec.ok) continue;
       const px = (tx - fx) * tilePx, py = (ty - fy) * tilePx; g.drawImage(rec.img, px, py, tilePx + 0.5, tilePx + 0.5);
     }
     g.restore();
   }
+  const toS = ([e, n]) => [(e - ctr[0]) * k, -(n - ctr[1]) * k];
+  const [mx, my] = toS(me);                                      // 반경 원과 레이더 스윕은 화면 중심이 아니라 나를 따라간다
   g.strokeStyle = '#173129'; g.lineWidth = 1;
-  for (const r of [30, 50, 100, 150, 200, 250]) { if (r > viewM) break; g.beginPath(); g.arc(0, 0, r * k, 0, Math.PI * 2); g.stroke(); }
-  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(0, 0, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(0, 0, Math.min(viewM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, 0, 0) : null;
-  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.16)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(0, 0, viewM * k, 0, Math.PI * 2); g.fill(); }
-  const toS = ([e, n]) => [(e - me[0]) * k, -(n - me[1]) * k];
+  for (const r of [30, 50, 100, 150, 200, 250]) { if (r > baseM) break; g.beginPath(); g.arc(mx, my, r * k, 0, Math.PI * 2); g.stroke(); }
+  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(mx, my, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(mx, my, Math.min(baseM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, mx, my) : null;
+  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.16)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(mx, my, baseM * k, 0, Math.PI * 2); g.fill(); }
   g.strokeStyle = 'rgba(63,242,165,0.55)'; g.lineWidth = 3; g.beginPath();
   for (let i = Math.max(0, P.length - 400); i < P.length; i++) { const [x, y] = toS(P[i]); if (i === Math.max(0, P.length - 400)) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
   for (const en of snap.enemies) {
@@ -863,17 +1115,22 @@ function drawRadar(snap) {
     g.fillStyle = '#dfe9e4'; g.font = 'bold 18px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText('N', 0, 26); g.restore();
   }
-  g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(cx, cy - 14); g.lineTo(cx - 9, cy + 9); g.lineTo(cx + 9, cy + 9); g.closePath(); g.fill();
+  { // 내 위치. 지도를 끌었으면 화면 중심이 아니라 실제 위치에 그린다
+    const c0 = Math.cos(-bearing), s0 = Math.sin(-bearing), ax = cx + mx * c0 - my * s0, ay = cy + mx * s0 + my * c0;
+    g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(ax, ay - 14); g.lineTo(ax - 9, ay + 9); g.lineTo(ax + 9, ay + 9); g.closePath(); g.fill();
+  }
   g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
   if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(TILE_SRC[TILE.src].credit, W - 8, W - 8); }
 }
 function start() {
   if (!st.animal) return;
-  audioInit(); if ('speechSynthesis' in window) speechSynthesis.getVoices();
+  if (st.mode === 'gps') askCompass();                  // 아이폰: 버튼 누름 안에서 불러야 권한 창이 뜬다
+  audioInit(); sfxLoad(st.animal.id); sfxDecode();
+  if (VOICE.level !== 'off') { vpLoad(); if ('speechSynthesis' in window) speechSynthesis.getVoices(); }
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
-  st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false;
-  VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
+  st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
+  mapReset(); hush(); VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
   wakeLock();
@@ -886,7 +1143,8 @@ function start() {
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
   const s = st.session, a = st.animal; if (!s) return;
-  speak('end', s.failed ? '세 번째다. 잡혔다. 탈출 실패.' : s.done ? `도착. ${numKo(s.hits) || '영'} 번 잡혔다. 최종 ${fmt(s.finalTimeS)}.` : '세션 종료.', { pri: PRI.CRIT });
+  { const m = Math.floor(s.finalTimeS / 60), sec = s.finalTimeS % 60;
+    speak('end', s.failed ? ['end_fail'] : s.done ? ['end_arrive', 'end_hits' + Math.min(2, s.hits), 'end_final', ...(m ? [...numSeq(m), 'unit_min'] : []), ...(sec || !m ? [...numSeq(sec), 'unit_sec'] : [])] : ['end_stop'], { pri: s.failed ? PRI.HIGH : PRI.CRIT, ttl: 30 }); }   // 실패는 '세 번째다'를 끊지 않고 뒤에 붙인다
   const title = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
   $('#rLabel').textContent = title + ' · 최종 시간(이동 + 페널티)'; $('#rHero').textContent = fmt(s.finalTimeS); $('#rHero').className = 'hero' + (s.failed ? ' fail' : '');
   $('#rSub').textContent = `${EMOJI[a.id] || ''} ${a.nameKo} ${st.nPack}마리 · ${st.courseM / 1000}km · ${st.mode === 'gps' ? '실주행' : '리플레이'}`;
@@ -933,26 +1191,57 @@ if (EMBEDDED) {
   if (demo) demo.click();                      // 여기서는 실내 데모만 돌아간다
   $('#setBox').open = false;
 }
+// 오프라인 캐시. 음성 팩을 한 번 받으면 신호가 약한 코스에서도 말이 끊기지 않는다
+if ('serviceWorker' in navigator && location.protocol === 'https:' && !EMBEDDED) navigator.serviceWorker.register('sw.js').catch(() => { });
+// 첫 화면을 그린 뒤 미리 받는다. 녹음은 고른 동물 것만(작다). 관제 음성 팩(약 2.8MB)은 켰을 때만
+if (!EMBEDDED) setTimeout(() => { if (st.animal) sfxLoad(st.animal.id); if (VOICE.level !== 'off') vpLoad(); }, 800);
 $('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
+// 지도 끌기(한 손가락)와 확대·축소(두 손가락, 휠). 끈 만큼 화면 중심이 옮겨 간다
+{
+  const cv = $('#radar'), pts = new Map(); let pinch0 = 0, zoom0 = 1;
+  const dist = () => { const [p, q] = [...pts.values()]; return Math.hypot(p[0] - q[0], p[1] - q[1]); };
+  cv.addEventListener('pointerdown', e => { try { cv.setPointerCapture(e.pointerId); } catch (er) { } pts.set(e.pointerId, [e.clientX, e.clientY]); if (pts.size === 2) { pinch0 = dist(); zoom0 = MAPV.zoom; } MAPV.at = Date.now(); });
+  cv.addEventListener('pointermove', e => {
+    const prev = pts.get(e.pointerId); if (!prev) return;
+    const cur = [e.clientX, e.clientY]; pts.set(e.pointerId, cur);
+    if (pts.size === 1) mapPan((cur[0] - prev[0]) * cv.width / cv.clientWidth, (cur[1] - prev[1]) * cv.height / cv.clientHeight);
+    else if (pts.size === 2 && pinch0 > 0) mapZoom(zoom0 * dist() / pinch0);
+  });
+  const up = e => { pts.delete(e.pointerId); if (pts.size < 2) pinch0 = 0; };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('lostpointercapture', up);
+  cv.addEventListener('wheel', e => { e.preventDefault(); mapZoom(MAPV.zoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15)); }, { passive: false });
+  $('#recenter').addEventListener('click', mapReset);
+}
 // 주머니 모드. 화면을 덮고 캔버스 그리기를 멈춘다. 소리만 남는다
 $('#pocket').addEventListener('click', () => {
   st.pocket = true; $('#pocketCover').style.display = 'flex';
-  speak('pocket', '주머니 모드. 이제 소리만 듣고 달려라.', { pri: PRI.HIGH });
+  speak('pocket', ['pocket'], { pri: PRI.HIGH });
 });
 $('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
-seg('#voice', v => { VOICE.level = v; });
+// 관제 음성 설정은 기억한다. 켜 둔 사람이 매번 다시 켜지 않게
+try { const v0 = localStorage.getItem('voiceLevel'); if (v0) { VOICE.level = v0; [...$('#voice').children].forEach(x => x.classList.toggle('on', x.dataset.v === v0)); } } catch (e) { }
+seg('#voice', v => { VOICE.level = v; try { localStorage.setItem('voiceLevel', v); } catch (e) { } if (v !== 'off') vpLoad(); });
+if (IOS) {
+  $('#iosAudioBox').style.display = 'block';
+  [...$('#iosAudio').children].forEach(x => x.classList.toggle('on', x.dataset.v === AUD.mode));
+  seg('#iosAudio', v => { AUD.mode = v; try { localStorage.setItem('iosAudio', v); } catch (e) { } audioSession(); });
+}
 $('#vkey').value = TILE.key;
 $('#vkey').addEventListener('change', e => {
   TILE.key = e.target.value.trim();
   try { localStorage.setItem('vworldKey', TILE.key); } catch (er) { }
   TILE.src = TILE.key ? 'vworld' : 'osm'; TILE.cache.clear(); TILE.loads = 0; TILE.fails = 0; st.tilesOk = null;
 });
-$('#audioTest').addEventListener('click', () => {
+$('#audioTest').addEventListener('click', async () => {
   audioInit(); if (!st.animal) return;
-  const cls = CLASS[st.animal.id] || 'small';
-  // 왼쪽 뒤에서 정면을 지나 오른쪽 뒤로. 좌우와 앞뒤가 구분되는지 귀로 확인한다
-  [-2.4, -1.2, 0, 1.2, 2.4].forEach((rel, i) => setTimeout(() => cry('roam', cls, 0.85, 1, rel), i * 750));
-  setTimeout(() => speak('test', `${st.animal.nameKo}. 지금 소리가 왼쪽에서 오른쪽으로 지나갔으면 정상이다.`, { pri: PRI.CRIT }), 4200);
+  const cls = CLASS[st.animal.id] || 'small', load = sfxLoad(st.animal.id); sfxDecode();
+  if (load) await Promise.race([load, sleep(3000)]);   // 녹음이 있으면 녹음으로 들려준다
+  await sleep(150);
+  // 1) 왼쪽 뒤에서 정면을 지나 오른쪽 뒤로. 좌우와 앞뒤가 구분되는지
+  [-2.4, -1.2, 0, 1.2, 2.4].forEach((rel, i) => setTimeout(() => cry('roam', cls, 0.85, 1, rel, true), i * 750));
+  // 2) 바로 뒤에서 멀리 → 가까이. 멀면 작고 먹먹하고 울리며, 가까우면 크고 또렷한지
+  [0.12, 0.35, 0.65, 0.95].forEach((near, i) => setTimeout(() => cry('sprint', cls, near, 1, Math.PI, true), 4200 + i * 1100));
+  if (VOICE.level !== 'off') { vpLoad(); setTimeout(() => speak('test', ['name_' + st.animal.id, 'test_tail'], { pri: PRI.CRIT }), 9000); }
 });
 $('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
 $('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });
