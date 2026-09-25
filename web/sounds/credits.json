@@ -1,0 +1,62 @@
+[
+  {
+    "file": "elephant_roam_1.mp3",
+    "animal": "elephant",
+    "kind": "roam",
+    "title": "Elephant-Grognement.aif",
+    "source_url": "https://freesound.org/people/roubignolle/sounds/35142/",
+    "author": "roubignolle (녹음 G de Courtivron)",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "Elephant-Grognement.aif",
+    "edits": "0.74~2.50초 자름, 4000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.1dBFS), Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "elephant_roam_2.mp3",
+    "animal": "elephant",
+    "kind": "roam",
+    "title": "Elephant sound",
+    "source_url": "https://freesound.org/people/ikbenraar/sounds/819668/",
+    "author": "ikbenraar",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Elephant sound",
+    "edits": "1.60~3.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "elephant_sprint_1.mp3",
+    "animal": "elephant",
+    "kind": "sprint",
+    "title": "Elephant voice - trumpeting",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg",
+    "author": "தகவலுழவன் (Wikimedia Commons)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Elephant_voice_-_trumpeting.ogg",
+    "edits": "0.14~1.02초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화"
+  },
+  {
+    "file": "elephant_sprint_2.mp3",
+    "animal": "elephant",
+    "kind": "sprint",
+    "title": "Elephant sound",
+    "source_url": "https://freesound.org/people/ikbenraar/sounds/819668/",
+    "author": "ikbenraar",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Elephant sound",
+    "edits": "0.00~0.86초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.1dBFS), Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "elephant_tired_1.mp3",
+    "animal": "elephant",
+    "kind": "tired",
+    "title": "Elephant sound",
+    "source_url": "https://freesound.org/people/ikbenraar/sounds/819668/",
+    "author": "ikbenraar",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Elephant sound",
+    "edits": "6.11~7.62초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  }
+]
