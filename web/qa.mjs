@@ -81,6 +81,15 @@ async function run(opts) {
     }
     return out;
   });
+  // 실제 동물 녹음: 목록의 모든 파일이 크롬에서 디코드되는가
+  const sr = await page.evaluate(async () => {
+    const ac = new OfflineAudioContext(1, 48000, 48000), bad = []; let n = 0;
+    for (const fs of Object.values(SOUND_INDEX)) for (const f of fs) {
+      try { const b = await (await fetch('sounds/' + f + '?v=' + SOUND_VER)).arrayBuffer(); const a = await ac.decodeAudioData(b); if (a.duration < 0.2) bad.push(f); n++; } catch (e) { bad.push(f); }
+    }
+    return { n, bad };
+  });
+  check(sr.bad.length === 0 && sr.n > 0, `동물 녹음 ${sr.n}개 디코드, 불량 ${sr.bad.join(',') || 0}`);
   check(r.opBad.length === 0 && r.op >= 400, `관제 음성 ${r.op}조각 디코드 (${r.opSec.toFixed(0)}초) 불량 ${r.opBad.join(',') || 0}`);
   // 대사에서 쓰는 키가 전부 팩에 있는가 (조각 누락 = 그 문장만 기계음으로 빠진다)
   const miss = await page.evaluate(() => {
