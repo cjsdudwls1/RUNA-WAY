@@ -399,6 +399,8 @@ op	name_camel	0.25	0.657	단봉낙타	단복낙타.
 op	name_sleddog	0.286	0.806	알래스칸허스키	알래스카너스키
 op	name_ostrich	1.0	0.425	타조	다줘.
 op	name_pronghorn	0.667	0.51	프롱혼	프론트.
+op	name_dokkaebi	0.0	0.463	도깨비	도깨비
+op	name_jeoseung	0.0	0.701	저승사자	저승사자.
 hit	caught1	0.0	0.702	한 번 잡혔다!	한번잡혔다.
 hit	caught2	0.0	0.749	두 번 잡혔다!	두번잡혔다.
 hit	caught3	0.0	1.202	세 번 잡혔다. 끝났다.	세번잡혔다끝났다.

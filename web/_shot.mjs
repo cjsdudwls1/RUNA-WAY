@@ -1,0 +1,16 @@
+import { createRequire } from 'node:module'; import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
+const require = createRequire(import.meta.url); const { chromium } = require('playwright');
+const ROOT = path.resolve('docs/app'); const S = process.argv[2];
+const T = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.png': 'image/png', '.mp3': 'audio/mpeg', '.bin': 'application/octet-stream' };
+const srv = http.createServer((q, r) => { let p = decodeURIComponent(new URL(q.url, 'http://x').pathname); if (p.endsWith('/')) p += 'index.html'; const f = path.join(ROOT, p); if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); });
+await new Promise(r => srv.listen(0, '127.0.0.1', r)); const B = `http://127.0.0.1:${srv.address().port}/`;
+const b = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] }); const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const p = await ctx.newPage();
+const errs = []; p.on('pageerror', e => errs.push(e.message)); await p.route('**/tile.openstreetmap.org/**', r => r.abort());
+await p.goto(B); await p.waitForTimeout(1500); await p.screenshot({ path: S + '/home_animal.png', fullPage: false });
+await p.click('#openSet'); await p.waitForTimeout(300); await p.screenshot({ path: S + '/list_animal.png', fullPage: false, clip: { x: 0, y: 900, width: 390, height: 844 } }).catch(() => {});
+await p.click('#modeTabs [data-m="monster"]'); await p.waitForTimeout(600); await p.evaluate(() => window.scrollTo(0, 0)); await p.screenshot({ path: S + '/home_monster.png' });
+await p.evaluate(() => document.querySelector('#animals').scrollIntoView()); await p.waitForTimeout(200); await p.screenshot({ path: S + '/list_monster.png' });
+await p.click('#mode button[data-v="replay"]'); await p.click('#warmup button[data-v="0"]'); await p.click('#start'); await p.waitForTimeout(5000); await p.screenshot({ path: S + '/run_monster.png' });
+await p.click('#stop'); await p.waitForTimeout(800); await p.screenshot({ path: S + '/result_monster.png', fullPage: true });
+await p.click('#again'); await p.click('#modeTabs [data-m="animal"]'); await p.click('#start'); await p.waitForTimeout(5000); await p.screenshot({ path: S + '/run_animal.png' });
+console.log('errors', errs); await b.close(); srv.close();

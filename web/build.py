@@ -16,12 +16,22 @@ if os.path.isdir(sd):
         k, ext = os.path.splitext(f)
         if ext.lower() not in ('.mp3', '.ogg', '.m4a', '.wav'):
             continue
-        m = re.match(r'^([a-z]+)_(roam|sprint|tired)(?:_\d+)?$', k)
+        m = re.match(r'^([a-z]+)_(roam|sprint|tired|line_(?:spot|sprint|near|hit|escape|taunt))(?:_\d+)?$', k)
         if not m:
             print('소리 파일 이름 규칙 위반, 건너뜀:', f); continue
         sidx.setdefault(m.group(1) + '_' + m.group(2), []).append(f); sfiles.append(f)
 sver = hashlib.sha1(b''.join(open(os.path.join(sd, f), 'rb').read() for f in sfiles)).hexdigest()[:10] if sfiles else ''
-sounds_js = 'const SOUND_INDEX = ' + json.dumps(sidx) + ', SOUND_VER = ' + json.dumps(sver) + ';\n'
+# 배경음악: web/music/<animal|monster>_<home|run>.mp3
+md = os.path.join(here, 'music')
+midx = {}
+if os.path.isdir(md):
+    for f in sorted(os.listdir(md)):
+        k, ext = os.path.splitext(f)
+        if ext.lower() in ('.mp3', '.m4a', '.ogg') and re.match(r'^(animal|monster)_(home|run)$', k):
+            midx[k] = f
+mver = hashlib.sha1(b''.join(open(os.path.join(md, f), 'rb').read() for f in midx.values())).hexdigest()[:10] if midx else ''
+sounds_js = ('const SOUND_INDEX = ' + json.dumps(sidx) + ', SOUND_VER = ' + json.dumps(sver) + ';\n'
+             'const MUSIC_INDEX = ' + json.dumps(midx) + ', MUSIC_VER = ' + json.dumps(mver) + ';\n')
 # 음성 팩 목차(web/voice/bake.py 산출물). 조각 파일은 static/voice/에 있고 런타임에 받는다
 vm = r('voice_manifest.js') if os.path.exists(os.path.join(here, 'voice_manifest.js')) else ''
 has_credits = os.path.exists(os.path.join(here, 'sounds', 'credits.json'))
@@ -74,16 +84,24 @@ if sfiles:
     os.makedirs(sp)
     for f in sfiles:
         shutil.copy2(os.path.join(sd, f), os.path.join(sp, f))
+mp = os.path.join(pages, 'music'); shutil.rmtree(mp, ignore_errors=True)
+if midx:
+    os.makedirs(mp)
+    for f in midx.values():
+        shutil.copy2(os.path.join(md, f), os.path.join(mp, f))
 cj = os.path.join(sd, 'credits.json')
 if os.path.exists(cj):
     rows = json.load(open(cj, encoding='utf-8'))
+    mc = os.path.join(md, 'credits.json')
+    if os.path.exists(mc):
+        rows += json.load(open(mc, encoding='utf-8'))
     tr = ''.join('<tr><td>%s</td><td><a href="%s">%s</a></td><td>%s</td><td>%s</td></tr>' % tuple(H.escape(str(x)) for x in (
         r.get('file', ''), r.get('source_url', ''), r.get('title') or r.get('source_url', ''), r.get('author', ''), r.get('license', ''))) for r in rows)
     open(os.path.join(pages, 'credits.html'), 'w', encoding='utf-8').write(
         '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
         '<title>러너웨이 · 소리 출처</title><style>body{background:#0a0f0d;color:#dfe9e4;font:14px/1.5 system-ui,sans-serif;margin:16px}'
         'a{color:#3ff2a5;word-break:break-all}table{border-collapse:collapse;width:100%}td{border-bottom:1px solid #1f2b27;padding:6px 4px;vertical-align:top}</style></head>'
-        '<body><h1>소리 출처</h1><table>' + tr + '</table></body></html>')
+        '<body><h1>소리·음악 출처</h1><table>' + tr + '</table></body></html>')
 elif os.path.exists(os.path.join(pages, 'credits.html')):
     os.remove(os.path.join(pages, 'credits.html'))
 print('wrote', out, len(html.encode()) // 1024, 'KB, sounds:', len(sfiles), 'files', sorted(sidx) or '', '; pages: docs/app/index.html +', copied)

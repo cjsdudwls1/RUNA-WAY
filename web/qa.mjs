@@ -153,7 +153,7 @@ async function run(opts) {
   const after = await page.locator('#recenter').isVisible();
   check(!before && after, `지도 끌기 → '내 위치로' 버튼 표시 (${before} → ${after})`);
   // 끌린 상태에서 내 위치 화살표가 중심을 벗어났는가 (중심 픽셀이 초록 화살표가 아니어야 한다)
-  const centerGreen = async () => page.evaluate(() => { const c = document.querySelector('#radar'); const d = c.getContext('2d').getImageData(c.width / 2, c.height / 2 - 4, 1, 1).data; return d[1] > 200 && d[0] < 120; });
+  const centerGreen = async () => page.evaluate(() => { const c = document.querySelector('#radar'); const d = c.getContext('2d').getImageData(c.width / 2, c.height / 2 - 4, 1, 1).data; return d[1] > d[0] + 30 && d[1] > d[2] + 30; });
   check(!(await centerGreen()), '끈 뒤 화면 중심에 내 위치가 없다 (지도가 따라 움직였다)');
   if (SHOTS) await page.screenshot({ path: SHOTS + '/dragged.png' });
   await page.mouse.wheel(0, -300); await page.waitForTimeout(100);
@@ -244,6 +244,7 @@ async function run(opts) {
   await page.addInitScript(PROBE);
   await tiles(page);
   await page.goto(BASE);
+  await page.click('#modeTabs [data-m="monster"]');   // 어두운 지도는 괴물 모드
   await page.click('#openSet');
   await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   await page.click('#warmup button[data-v="0"]');
@@ -257,7 +258,7 @@ async function run(opts) {
   check(nums.dist >= 0.08 && nums.dist <= 0.16, `GPS 45초 이동 거리 ${nums.dist} km (실제 0.135)`);
   check(!/NaN/.test(nums.pace), `GPS 페이스 표시 ${nums.pace} km/h`);
   const lum5 = await radarLum(page), dbg5 = await page.locator('#dbg').textContent();
-  check(/지도 OK/.test(dbg5) && lum5 < 60, `다크 지도 (크롬 filter 경로) 평균 밝기 ${lum5.toFixed(0)}/255 · ${dbg5}`);
+  check(/지도 OK/.test(dbg5) && lum5 < 60, `괴물 모드 어두운 지도 (크롬 filter 경로) 평균 밝기 ${lum5.toFixed(0)}/255 · ${dbg5}`);
   await page.click('#stop');
   await page.waitForSelector('#result.on');
   const log = await page.locator('#rLog').textContent();
@@ -291,6 +292,7 @@ const compass = (page, deg) => page.evaluate((deg) => {
   await page.addInitScript(PROBE); await page.addInitScript(IOS_SHIM, true);
   await tiles(page);
   await page.goto(BASE);
+  await page.click('#modeTabs [data-m="monster"]');   // 어두운 지도는 괴물 모드
   await page.click('#openSet');
   await page.click('#voice button[data-v="normal"]');   // 관제 음성은 기본 끔. 음성 경로를 보려면 켠다
   check(await page.locator('#iosAudioBox').isVisible(), '아이폰: 소리 모드 설정 표시');
@@ -443,6 +445,81 @@ function wav(sec, freq) {
   const log = await page.locator('#rLog').textContent();
   check(rec >= 3, `녹음: 코끼리 주행 중 녹음 재생 ${rec}번`);
   check(errors.length === 0 && !/소리 (파일|디코드) 실패/.test(log), `녹음 경로 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+
+// 10. 모드와 괴물 (2026-09-25): 사파리/괴물 테마, 적응형 속도, 괴물 대사, 배경음악
+{
+  const FX = { 'dokkaebi_roam_1.wav': wav(0.81, 70), 'dokkaebi_sprint_1.wav': wav(0.66, 90), 'dokkaebi_line_spot_1.wav': wav(1.11, 150), 'dokkaebi_line_sprint_1.wav': wav(0.91, 160), 'dokkaebi_line_hit_1.wav': wav(1.21, 170) };
+  const index = { dokkaebi_roam: ['dokkaebi_roam_1.wav'], dokkaebi_sprint: ['dokkaebi_sprint_1.wav'], dokkaebi_line_spot: ['dokkaebi_line_spot_1.wav'], dokkaebi_line_sprint: ['dokkaebi_line_sprint_1.wav'], dokkaebi_line_hit: ['dokkaebi_line_hit_1.wav'] };
+  const MUS = { 'monster_home.wav': wav(3.03, 110), 'monster_run.wav': wav(2.97, 130) };
+  const music = { monster_home: 'monster_home.wav', monster_run: 'monster_run.wav' };
+  const ctx = await browser.newContext({ viewport: { width: 400, height: 860 } });
+  const page = await ctx.newPage();
+  const errors = [], reqs = [];
+  page.on('pageerror', e => errors.push(e.message)); page.on('request', r => reqs.push(r.url()));
+  await page.addInitScript(PROBE);
+  await page.addInitScript(() => { window.__loops = []; const st = AudioBufferSourceNode.prototype.start; AudioBufferSourceNode.prototype.start = function (...a) { if (this.loop && this.buffer && this.buffer.duration > 2.5) window.__loops.push(+this.buffer.duration.toFixed(2)); return st.apply(this, a); }; });
+  await tiles(page);
+  await page.route(u => u.pathname === '/' || u.pathname === '/index.html', async r => {
+    const res = await r.fetch();
+    const body = (await res.text()).replace(/const SOUND_INDEX = \{[^;]*\}, SOUND_VER = "[^"]*";/, 'const SOUND_INDEX = ' + JSON.stringify(index) + ', SOUND_VER = "qa";')
+      .replace(/const MUSIC_INDEX = \{[^;]*\}, MUSIC_VER = "[^"]*";/, 'const MUSIC_INDEX = ' + JSON.stringify(music) + ', MUSIC_VER = "qa";');
+    await r.fulfill({ response: res, body });
+  });
+  await page.route('**/sounds/**', r => { const f = new URL(r.request().url()).pathname.split('/').pop(); return FX[f] ? r.fulfill({ status: 200, contentType: 'audio/wav', body: FX[f] }) : r.fulfill({ status: 404 }); });
+  await page.route('**/music/**', r => { const f = new URL(r.request().url()).pathname.split('/').pop(); return MUS[f] ? r.fulfill({ status: 200, contentType: 'audio/wav', body: MUS[f] }) : r.fulfill({ status: 404 }); });
+  await page.goto(BASE);
+  const t0 = await page.evaluate(() => ({ mode: document.body.dataset.mode, title: document.querySelector('#title').textContent, rows: document.querySelectorAll('#animals .row').length, pick: document.querySelector('#pickName').textContent }));
+  check(t0.mode === 'animal' && t0.title === '사바나 추격' && t0.rows === 25 && t0.pick === '닭', `기본 모드 동물 사파리 (${t0.mode}, "${t0.title}", 도감 ${t0.rows}종, 기본 ${t0.pick})`);
+  await page.click('#modeTabs [data-m="monster"]');
+  const t1 = await page.evaluate(() => ({ mode: document.body.dataset.mode, title: document.querySelector('#title').textContent, rows: [...document.querySelectorAll('#animals .row')].map(r => r.dataset.id).join(','), pick: document.querySelector('#pickName').textContent, art: !!document.querySelector('#art svg') }));
+  check(t1.mode === 'monster' && t1.rows === 'jeoseung,dokkaebi' && t1.pick === '도깨비' && t1.art, `괴물 모드 전환 (${t1.mode}, 목록 ${t1.rows}, 기본 ${t1.pick}, 일러스트 ${t1.art})`);
+  await page.reload();
+  check(await page.evaluate(() => document.body.dataset.mode) === 'monster', '고른 모드는 다시 열어도 유지');
+  // 첫 터치에 홈 배경음악
+  await page.mouse.click(200, 30); await page.waitForTimeout(1200);
+  const homeLoop = await page.evaluate(() => window.__loops.slice());
+  check(homeLoop.includes(3.03), `괴물 홈 배경음악 반복 재생 (${homeLoop.join(',') || '없음'})`);
+  await page.click('#openSet');
+  await page.click('#mode button[data-v="replay"]');
+  await page.click('#warmup button[data-v="0"]');
+  await page.click('#start');
+  await page.waitForFunction(() => { const t = document.querySelector('#nTime').textContent.split(':'); return +t[0] * 60 + +t[1] >= 125; }, null, { timeout: 60000 }).catch(() => { });   // 페이스 측정(60초)과 첫 돌진까지
+  const loops = await page.evaluate(() => window.__loops.slice());
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log = await page.locator('#rLog').textContent();
+  check(loops.includes(2.97), `괴물 주행 배경음악으로 바뀜 (${loops.join(',')})`);
+  const m = log.match(/페이스 ([\d.]+) km\/h → 도깨비 돌진 (\d+) km\/h/);
+  check(m && Math.abs(+m[2] - 1.6 * +m[1]) <= 1.2, `적응형 속도: ${m ? `내 페이스 ${m[1]} km/h → 도깨비 돌진 ${m[2]} km/h (×1.6)` : '측정 로그 없음'}`);
+  check(/괴물: spot/.test(log) && /괴물: sprint/.test(log), `도깨비 대사 재생 (발견 ${/괴물: spot/.test(log)}, 돌진 ${/괴물: sprint/.test(log)})`);
+  check(reqs.some(u => /sounds\/dokkaebi_line_sprint_1/.test(u)), '괴물 대사 파일은 고른 괴물 것만 받음');
+  // 저승사자: 지속주. 등속 = 내 페이스
+  await page.click('#again');
+  await page.click('#openSet');
+  await page.click('#animals .row[data-id="jeoseung"]');
+  await page.click('#start');
+  await page.waitForFunction(() => { const t = document.querySelector('#nTime').textContent.split(':'); return +t[0] * 60 + +t[1] >= 75; }, null, { timeout: 60000 }).catch(() => { });
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log2 = await page.locator('#rLog').textContent();
+  const m2 = log2.match(/페이스 ([\d.]+) km\/h → 저승사자 등속 ([\d.]+) km\/h/);
+  check(m2 && Math.abs(+m2[2] - +m2[1]) <= 0.2, `적응형 속도: ${m2 ? `내 페이스 ${m2[1]} km/h → 저승사자 등속 ${m2[2]} km/h (×1.0)` : '측정 로그 없음'}`);
+  // 배경음악 끄기
+  await page.click('#again'); await page.click('#openSet');
+  await page.click('#bgm button[data-v="off"]');
+  check(await page.evaluate(() => localStorage.getItem('bgm')) === 'off', '배경음악 끄기 저장');
+  check(errors.length === 0 && !/오류/.test(log + log2), `모드·괴물 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+// 10b. 사파리 지도는 밝은 탐험 지도(흰 타일이 어둡게 뒤집히지 않는다)
+{
+  const ctx = await browser.newContext({ viewport: { width: 400, height: 860 }, permissions: ['geolocation'], geolocation: { latitude: 37.8949, longitude: 127.2003, accuracy: 6 } });
+  const page = await ctx.newPage(); await tiles(page); await page.goto(BASE);
+  await page.evaluate(() => localStorage.setItem('safetyOk', '1')); await page.reload();
+  await page.click('#start');
+  let lat = 37.8949; for (let i = 0; i < 8; i++) { lat += 3 / 111320; await ctx.setGeolocation({ latitude: lat, longitude: 127.2003, accuracy: 6 }); await page.waitForTimeout(1000); }
+  const lum = await radarLum(page);
+  check(lum > 150, `사파리 지도 밝은 톤 평균 밝기 ${lum.toFixed(0)}/255`);
   await ctx.close();
 }
 

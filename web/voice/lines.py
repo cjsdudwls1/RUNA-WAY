@@ -97,6 +97,7 @@ NAMES = {
     'pig': '돼지', 'armadillo': '아홉띠아르마딜로', 'hippo': '하마', 'elephant': '코끼리', 'greyhound': '그레이하운드',
     'kangaroo': '붉은캥거루', 'cheetah': '치타', 'hare': '유럽산토끼', 'wolf': '회색늑대', 'jindo': '진돗개',
     'horse': '지구력경주마', 'camel': '단봉낙타', 'sleddog': '알래스칸허스키', 'ostrich': '타조', 'pronghorn': '프롱혼',
+    'dokkaebi': '도깨비', 'jeoseung': '저승사자',
 }
 for k, w in NAMES.items():
     OP.append((f'name_{k}', w, 1.0))

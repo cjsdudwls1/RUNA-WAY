@@ -127,3 +127,89 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
 - 들어보기: `python3 -m http.server -d docs/app 8000` → 브라우저에서 설정 > 동물 고르기 > 소리 테스트
   - 왼쪽 뒤에서 오른쪽 뒤로 한 바퀴, 그다음 바로 뒤에서 멀리서 가까이 다가온다
 - 커밋은 `web/sounds/` 안의 파일만. 빌드 결과(docs/app, web/dist)는 커밋하지 않는다
+
+## 괴물 (2026-09-25 추가)
+
+- 괴물은 동물과 같은 폴더, 같은 규격이다. 차이는 두 가지
+  - 녹음이 아니라 만들어진 소리다. 라이선스는 "생성 모델 출력"으로 기록한다
+  - 대사 파일이 있다: `<괴물id>_line_<사건>_<번호>.mp3`
+- 괴물 id: `dokkaebi`(도깨비, 인터벌), `jeoseung`(저승사자, 지속주)
+- 동물군 공용 `monster_<상태>_<번호>.mp3`를 넣으면 괴물 녹음이 없을 때 대신 쓴다
+
+### 괴성 (말이 아닌 소리)
+
+| 파일 | 내용 | 길이 |
+|---|---|---|
+| dokkaebi_roam_1~2 | 큰 몸집의 콧김, 낮은 그르렁 | 0.6~1.5초 |
+| dokkaebi_sprint_1~2 | 괴성 포효. 쿵쿵 발소리가 섞여도 좋다 | 0.5~1.2초 |
+| dokkaebi_tired_1 | 낮고 거친 헐떡임 | 1.0~2.0초 |
+| jeoseung_roam_1~3 | 짚신 끄는 발소리, 방울(요령) 한 번, 낮은 바람 같은 숨. 셋 중 하나씩 | 0.8~2.0초 |
+
+- 만드는 법 1순위: CC0 동물 녹음(곰, 사자, 멧돼지, 소)을 겹치고 피치를 3~7반음 내린다. 영화 괴물 소리의 표준 방식
+- 2순위: Stable Audio Open 1.0 같은 효과음 생성 모델. 라이선스 조건(상업 이용 한도)을 credits.json에 적는다
+- TTS로 괴성을 만들지 않는다. 말 모델이라 포효를 못 만든다
+
+### 대사
+
+- 도구: Qwen3-TTS VoiceDesign (`Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign`, Apache-2.0). 목소리를 글로 설계한다
+- 문장마다 3번 이상 생성해 가장 좋은 것. 끝 음절이 잘리거나 말이 뭉개진 건 버린다
+- 앱은 대사를 괴물이 있는 방향에서, 약간 멀게 튼다. 파일은 가까이서 말한 마른 소리로
+
+도깨비. 목소리 설계문
+
+```
+Korean. A huge, gruff old male dokkaebi (Korean goblin). Deep, raspy, booming voice. Shouts in an old-fashioned Korean historical-drama tone, mischievous but threatening, like a village ogre scolding a thief.
+```
+
+| 파일 | 대사 |
+|---|---|
+| dokkaebi_line_spot_1 | 킁킁… 사람 냄새가 나는구나! |
+| dokkaebi_line_spot_2 | 게 누구냐! |
+| dokkaebi_line_sprint_1 | 네 이노오옴!!! |
+| dokkaebi_line_sprint_2 | 게 섰거라아!! |
+| dokkaebi_line_sprint_3 | 이놈! 거기 서지 못할까! |
+| dokkaebi_line_near_1 | 방망이 맛 좀 보아라! |
+| dokkaebi_line_near_2 | 코앞이다, 이놈! |
+| dokkaebi_line_hit_1 | 으하하하! 잡았다! |
+| dokkaebi_line_hit_2 | 혼쭐이 나 봐라! |
+| dokkaebi_line_escape_1 | 헉… 헉… 날쌘 놈이로구나… |
+| dokkaebi_line_escape_2 | 어이쿠, 숨이야… |
+| dokkaebi_line_taunt_1 | 어딜 도망가느냐! |
+| dokkaebi_line_taunt_2 | 도망쳐 봐야 도깨비 손바닥 안이다! |
+| dokkaebi_line_taunt_3 | 금 나와라 뚝딱! 네 다리 느려져라 뚝딱! |
+
+저승사자. 목소리 설계문
+
+```
+Korean. An ancient Korean grim reaper (jeoseung saja). Low, slow, cold male voice, almost a whisper, with long pauses between words. Calm, emotionless and chilling.
+```
+
+| 파일 | 대사 |
+|---|---|
+| jeoseung_line_spot_1 | …찾았다. |
+| jeoseung_line_spot_2 | 명부에… 네 이름이 있구나. |
+| jeoseung_line_near_1 | 멈추면… 데려간다. |
+| jeoseung_line_near_2 | 숨소리가… 들린다. |
+| jeoseung_line_hit_1 | 가자… 저승으로. |
+| jeoseung_line_hit_2 | 네 차례다… |
+| jeoseung_line_escape_1 | 도망쳐도… 소용없다. |
+| jeoseung_line_escape_2 | 언젠가는… 따라잡는다. |
+| jeoseung_line_taunt_1 | 발이… 느려졌구나. |
+| jeoseung_line_taunt_2 | 거기… 서거라… |
+
+- 저승사자는 돌진하지 않는다. sprint 대사와 sprint 괴성은 필요 없다
+
+### 괴물 목소리로 만드는 후처리
+
+TTS 날것은 "사람이 무섭게 연기한 소리"다. 괴물처럼 들리게 하는 건 후처리다.
+
+```
+# 도깨비: 3반음 내림(목이 커 보이게 포먼트도 같이), 저역 강조, 약한 찌그러짐
+ffmpeg -i raw.wav -af "rubberband=pitch=0.84:formant=shifted,bass=g=5:f=120,asoftclip=type=tanh:param=1.5,volume=-2dB" -ac 1 tmp.wav
+# 저승사자: 2반음 내림, 고역을 조금 깎아 어둡게, 짧은 메아리
+ffmpeg -i raw.wav -af "rubberband=pitch=0.89:formant=preserved,lowpass=f=5500,aecho=0.8:0.6:70|140:0.25|0.15" -ac 1 tmp.wav
+```
+
+- 그다음은 위 음향 규격 그대로: 앞 무음 제거, 피크 -1dB, 모노 mp3 96kbps
+- 대사 길이: 0.6~3.0초
+- credits.json: `"license": "생성: Qwen3-TTS VoiceDesign (Apache-2.0)"`, `"source_url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"`, `"author": "러너웨이"`, edits에 설계문 요약과 후처리 체인

@@ -1,9 +1,13 @@
 <title>러너웨이</title>
 <meta name="theme-color" content="#0a0f0d">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Myeongjo:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
 <style>
   :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--orange:#ff9a3c;--yellow:#ffd93d;
     --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+  /* 동물 모드: 사파리 탐험 일지. 모래, 흙, 노을 */
+  body[data-mode="animal"]{--bg:#efe4c8;--panel:#f7efda;--line:#d8c69c;--text:#2b2415;--dim:#7a6a48;--green:#b85a18;--green-dim:#dba56a;--red:#b3261e;--orange:#c96f10;--yellow:#7a5c00;--on-accent:#fff7e8;--display:"Nanum Myeongjo",serif}
+  /* 괴물 모드: 한밤의 괴담. 먹빛, 핏빛, 도깨비불 보라 */
+  body[data-mode="monster"]{--bg:#0c0710;--panel:#170d1c;--line:#35213f;--text:#f0e4f3;--dim:#a08aab;--green:#ff3b4e;--green-dim:#8a1f2e;--red:#ff3b4e;--orange:#ff8a3d;--yellow:#ffcf5a;--on-accent:#fff}
   *{box-sizing:border-box}html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
   input{user-select:text;-webkit-user-select:text}
@@ -30,8 +34,17 @@
   .ghost.sm{width:auto;margin:0;padding:8px 12px;font-size:12px}
   details#setBox{margin-top:26px;border-top:1px solid var(--line)}
   details#setBox summary{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim);padding:14px 2px;cursor:pointer}
-  .big{display:block;width:100%;background:var(--green);color:#04120c;border:0;padding:16px;font-family:var(--display);font-size:24px;margin-top:22px}
+  .big{display:block;width:100%;background:var(--green);color:var(--on-accent,#04120c);border:0;padding:16px;font-family:var(--display);font-size:24px;margin-top:22px}
   .ghost{background:transparent;border:1px solid var(--line);color:var(--text);padding:12px;font-family:var(--mono);font-size:13px;width:100%;margin-top:8px}
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0 12px}
+  .modes button{background:var(--panel);border:1px solid var(--line);color:var(--dim);padding:12px 6px;font-family:var(--display);font-size:18px}
+  .modes button.on{border-color:var(--green);color:var(--green);box-shadow:inset 0 -3px 0 var(--green)}
+  .brand{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--dim);margin-top:10px}
+  .art{border:1px solid var(--line);overflow:hidden;line-height:0;margin-bottom:6px}.art svg{width:100%;height:auto;display:block}
+  .row .ico img,.pick-ico img,.enemy .big-ico img{width:1.1em;height:1.1em;vertical-align:middle}
+  .row .desc{font-size:12px;color:var(--dim);line-height:1.45;margin-top:2px}
+  body[data-mode="animal"] .row .name{font-family:var(--display)}
+  body[data-mode="animal"] h1,body[data-mode="animal"] .modes button,body[data-mode="animal"] .pick-t b{font-weight:800}
   /* run */
   #run{padding:10px 12px 20px}
   .top{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
@@ -41,9 +54,9 @@
   .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
   .num{background:var(--panel);border:1px solid var(--line);padding:6px 8px}
   .num b{display:block;font-family:var(--mono);font-size:20px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
-  canvas{width:100%;aspect-ratio:1/1;display:block;background:#070b0a;border:1px solid var(--line)}
+  canvas{width:100%;aspect-ratio:1/1;display:block;background:var(--panel);border:1px solid var(--line)}
   .mapwrap{position:relative}#radar{touch-action:none;cursor:grab}
-  #recenter{position:absolute;right:10px;bottom:10px;display:none;background:rgba(10,15,13,.88);border:1px solid var(--green);color:var(--green);padding:10px 14px;font-family:var(--mono);font-size:13px}
+  #recenter{position:absolute;right:10px;bottom:10px;display:none;background:var(--panel);border:1px solid var(--green);color:var(--green);padding:10px 14px;font-family:var(--mono);font-size:13px}
   .enemy{margin-top:8px;padding:10px 12px;border:1px solid var(--line);background:var(--panel);display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center}
   .enemy .big-ico{font-size:40px;line-height:1;text-align:center}
   .enemy b{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.1}
@@ -67,8 +80,12 @@
 </style>
 
 <div id="home" class="screen on">
-  <h1>러너웨이</h1>
-  <p class="hook">뒤에서 진짜 동물이 쫓아온다.<br>실측 속도와 지구력 그대로. 잡히기 전에 도망쳐라.</p>
+<script>try { document.body.dataset.mode = localStorage.getItem('mode') === 'monster' ? 'monster' : 'animal'; } catch (e) { document.body.dataset.mode = 'animal'; }</script>
+  <div class="brand">RUNAWAY · 러너웨이</div>
+  <div class="modes" id="modeTabs"><button data-m="animal" class="on">동물 사파리</button><button data-m="monster">괴물 추격</button></div>
+  <div class="art" id="art"></div>
+  <h1 id="title">사바나 추격</h1>
+  <p class="hook" id="hook"></p>
 
   <div class="card bad" id="embedWarn" style="display:none;white-space:normal;line-height:1.6">
     <b style="color:var(--red)">여기서는 실주행이 안 된다.</b><br>
@@ -84,10 +101,10 @@
   </div>
 
   <button class="big" id="start">도망치기</button>
-  <p class="sub" style="margin-top:14px">이어폰을 끼면 소리만으로 방향과 거리를 안다. 화면은 안 봐도 된다.<br>차도와 횡단보도에서는 게임보다 신호를 먼저 본다.</p>
+  <p class="sub" style="margin-top:14px" id="startSub">이어폰을 끼면 소리만으로 방향과 거리를 안다. 화면은 안 봐도 된다.<br>차도와 횡단보도에서는 게임보다 신호를 먼저 본다.</p>
 
   <details id="setBox">
-    <summary>설정 · GPS 확인 · 다른 동물</summary>
+    <summary id="setSum">설정 · GPS 확인 · 다른 동물</summary>
     <div class="lbl">GPS 상태</div>
     <div class="card" id="gpsCard">확인 전. 아래 버튼을 눌러 권한과 신호를 확인한다.</div>
     <button class="ghost" id="gpsTest">GPS 확인</button>
@@ -110,7 +127,9 @@
     <p class="sub" style="margin-top:6px">관제사 목소리: Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p><!--CREDITS-->
     <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap</div>
     <input id="vkey" class="card" style="width:100%" placeholder="vworld.kr 인증키를 넣으면 한국 상세 다크 지도">
-    <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
+    <div class="lbl">배경음악</div>
+    <div class="seg" id="bgm"><button data-v="on" class="on">켬</button><button data-v="off">끔</button></div>
+    <div class="lbl" id="listLbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
     <div class="list" id="animals"></div>
   </details>
 </div>
@@ -166,7 +185,7 @@
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
-const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 1, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
+const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 1, theme: 'animal', animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
 // 아티팩트 뷰어와 일부 인앱 브라우저는 iframe 정책으로 위치를 막는다. 코드로 못 푼다
 const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
 const VP = { op: null, cache: new Map(), opP: null, hit: null, hitP: null };   // 음성 팩 상태. hit: 잡힘 알림(작다, 항상 받는다)
@@ -181,23 +200,103 @@ const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound
 // ---------- 홈 ----------
 function seg(id, key, cast) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.remove('on')); b.classList.add('on'); if (typeof key === 'function') key(b.dataset.v); else st[key] = cast(b.dataset.v); if (typeof refreshPick === 'function') refreshPick(); }); }
 seg('#mode', 'mode', String); seg('#course', 'courseM', Number); seg('#warmup', 'warmupS', Number); seg('#npack', 'nPack', Number);
+// ---------- 모드: 동물 사파리 / 괴물 추격 ----------
+// 일러스트는 SVG로 직접 그린다. 파일이 없어도, 오프라인이어도 뜬다
+const SVG_ICON = {
+  dokkaebi: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M26 34 L17 5 L38 26 Z' fill='#f2d38a'/><path d='M74 34 L83 5 L62 26 Z' fill='#f2d38a'/><path d='M13 44 Q12 18 50 16 Q88 18 87 44 L90 70 Q84 95 50 97 Q16 95 10 70 Z' fill='#d8332f'/><path d='M13 42 Q30 22 50 27 Q70 22 87 42 Q70 31 50 35 Q30 31 13 42Z' fill='#2a1616'/><path d='M24 50 L44 57' stroke='#2a1616' stroke-width='6' stroke-linecap='round'/><path d='M76 50 L56 57' stroke='#2a1616' stroke-width='6' stroke-linecap='round'/><circle cx='36' cy='63' r='8' fill='#fff7d6'/><circle cx='64' cy='63' r='8' fill='#fff7d6'/><circle cx='37' cy='64' r='4' fill='#111'/><circle cx='63' cy='64' r='4' fill='#111'/><ellipse cx='50' cy='73' rx='6' ry='3.5' fill='#a42420'/><path d='M28 80 Q50 94 72 80 Q50 87 28 80Z' fill='#4a0b0b'/><path d='M35 81 L39 91 L43 82Z' fill='#fff7d6'/><path d='M65 81 L61 91 L57 82Z' fill='#fff7d6'/></svg>",
+  jeoseung: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M16 100 Q20 68 50 64 Q80 68 84 100Z' fill='#141119'/><path d='M44 64 L50 80 L56 64Z' fill='#e9e2d4'/><ellipse cx='50' cy='50' rx='17' ry='21' fill='#dcdfe6'/><ellipse cx='43' cy='50' rx='4.5' ry='2.6' fill='#18161f'/><ellipse cx='57' cy='50' rx='4.5' ry='2.6' fill='#18161f'/><path d='M43 62 Q50 64 57 62' stroke='#7a1d2a' stroke-width='2.5' fill='none'/><path d='M34 33 Q34 10 50 10 Q66 10 66 33Z' fill='#0b0a0e'/><ellipse cx='50' cy='33' rx='46' ry='7' fill='#0b0a0e'/><path d='M34 29 L66 29' stroke='#4b3a60' stroke-width='3'/></svg>",
+};
+const ART = {
+  animal: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 170'><defs><linearGradient id='sk' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#f7cf7a'/><stop offset='.6' stop-color='#f0913f'/><stop offset='1' stop-color='#c8561f'/></linearGradient></defs><rect width='400' height='170' fill='url(#sk)'/><circle cx='282' cy='104' r='44' fill='#fde7ad' opacity='.9'/><path d='M0 132 Q90 120 200 128 T400 124 L400 170 L0 170Z' fill='#7a4518'/><path d='M0 146 Q120 138 240 146 T400 142 L400 170 L0 170Z' fill='#5a3010'/><g fill='#2d1a0b'><path d='M318 132 L322 100 L312 88 M322 100 L336 84' stroke='#2d1a0b' stroke-width='5' fill='none'/><path d='M276 90 Q322 66 372 86 Q322 96 276 90Z'/><path d='M20 131 L24 110 Q20 90 42 86 Q72 80 96 92 Q110 98 108 118 L106 131 L98 131 L96 116 L88 118 L86 131 L78 131 L77 117 L50 116 L48 131 L40 131 L38 116 L32 114 L30 131Z'/><path d='M34 98 Q18 102 16 120 Q15 128 20 130 Q20 118 30 110Z'/><path d='M102 96 Q112 104 110 120' stroke='#2d1a0b' stroke-width='3' fill='none'/><path d='M38 92 Q52 88 56 104 Q50 116 38 110Z' fill='#4a2a10'/><circle cx='150' cy='98' r='6'/><path d='M150 104 L146 120 L138 132 M146 120 L156 132 M149 108 L138 116 M149 108 L160 112' stroke='#2d1a0b' stroke-width='5' stroke-linecap='round' fill='none'/></g><path d='M0 150 L6 140 L10 150 L16 138 L20 150 L380 150 L386 139 L390 150 L396 141 L400 150' stroke='#3b200b' stroke-width='2' fill='none'/></svg>",
+  monster: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 170'><defs><linearGradient id='ng' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#1a0b2e'/><stop offset='.7' stop-color='#3b0f2b'/><stop offset='1' stop-color='#0c0710'/></linearGradient><radialGradient id='mg'><stop offset='0' stop-color='#f6ead0' stop-opacity='.55'/><stop offset='1' stop-color='#f6ead0' stop-opacity='0'/></radialGradient></defs><rect width='400' height='170' fill='url(#ng)'/><circle cx='310' cy='50' r='60' fill='url(#mg)'/><circle cx='310' cy='50' r='26' fill='#f3e7c9'/><path d='M230 120 Q270 104 300 100 Q330 104 370 120 L360 122 L360 150 L240 150 L240 122Z' fill='#08050c'/><path d='M222 122 Q300 92 378 122' stroke='#08050c' stroke-width='6' fill='none'/><g fill='#08050c'><path d='M40 150 L44 118 Q30 110 34 86 Q38 66 60 64 L58 50 L66 62 L78 62 L86 50 L84 64 Q104 70 104 92 Q106 110 92 118 L96 150 L82 150 L78 126 L62 126 L56 150Z'/><path d='M100 90 L128 58 L136 64 L108 98Z'/><circle cx='131' cy='60' r='9'/></g><circle cx='64' cy='84' r='3.2' fill='#ff3b4e'/><circle cx='80' cy='84' r='3.2' fill='#ff3b4e'/><g fill='#08050c'><circle cx='190' cy='112' r='6'/><path d='M190 118 L186 134 L178 146 M186 134 L196 146 M189 122 L178 130 M189 122 L200 126' stroke='#08050c' stroke-width='5' stroke-linecap='round' fill='none'/></g><ellipse cx='120' cy='152' rx='140' ry='10' fill='#b9a6d6' opacity='.12'/><ellipse cx='300' cy='156' rx='120' ry='8' fill='#b9a6d6' opacity='.1'/><circle cx='160' cy='70' r='4' fill='#7b6cff' opacity='.8'/><circle cx='210' cy='56' r='3' fill='#7b6cff' opacity='.6'/></svg>",
+};
+const ICON_IMG = {};
+for (const k in SVG_ICON) { const im = new Image(); im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(SVG_ICON[k]); ICON_IMG[k] = im; }
+function icoHTML(id) { return SVG_ICON[id] ? `<img alt="" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(SVG_ICON[id])}">` : (EMOJI[id] || '🐾'); }
+/** 캔버스에 추격자 얼굴. 괴물은 SVG 그림, 동물은 이모지 */
+function drawFace(g, id, size) {
+  const im = ICON_IMG[id];
+  if (im && im.complete && im.naturalWidth) { g.drawImage(im, -size / 2, -size / 2, size, size); return; }
+  g.font = `${Math.round(size)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(EMOJI[id] || '🐾', 0, 0);
+}
+// 사파리 도감 한 줄. 속도·지구력 수치는 실측 데이터에서 자동으로 붙는다
+const GUIDE = {
+  sloth: '하루 대부분을 나무에 매달려 보낸다. 땅에서는 거의 기어 다닌다.', loris: '야행성 영장류. 느리지만 팔 안쪽에 독샘이 있다.',
+  gila: '미국 남서부 사막의 독도마뱀. 한 번 물면 잘 놓지 않는다.', chicken: '마당의 폭군. 짧게는 제법 빠르다.',
+  chihuahua: '가장 작은 개 품종 중 하나. 기세만은 늑대급.', crocodile: '물가의 기습꾼. 땅 위 전력질주는 짧다.',
+  komodo: '현존 최대의 도마뱀. 짧은 돌진 뒤 끈질기게 따라온다.', squirrel: '지그재그로 튄다. 짧은 거리는 순식간.',
+  koala: '하루 18~22시간을 잔다. 땅에선 뜻밖에 빨리 달린다.', cat: '매복형 사냥꾼. 순간 가속은 빠르지만 오래 못 간다.',
+  pig: '생각보다 빠르다. 멧돼지 혈통의 돌진.', armadillo: '놀라면 공중으로 튀어 오른다. 짧게는 꽤 빠르다.',
+  hippo: '아프리카에서 가장 위험한 대형 동물로 꼽힌다. 땅에서도 빠르다.', elephant: '뛰지 않고 빠르게 걷는다. 그래도 사람보다 빠르다.',
+  greyhound: '가장 빠른 개. 순간 속도는 경주마급, 지구력은 짧다.', kangaroo: '꼬리로 균형을 잡고 뛴다. 속도를 오래 유지한다.',
+  cheetah: '지상에서 가장 빠른 동물. 전력질주는 수십 초면 끝난다.', hare: '지그재그 도약의 달인.',
+  wolf: '무리로 오래 쫓는 지구력 사냥꾼.', jindo: '한국 토종 사냥개. 한 번 쫓으면 끈질기다.',
+  horse: '지구력 경주마. 하루 수십 km를 달린다.', camel: '사막의 장거리 주자. 속도를 오래 유지한다.',
+  sleddog: '썰매를 끌며 하루 수십 km를 달린다.', ostrich: '날지 못하는 대신 가장 빠른 새. 한 걸음이 몇 미터.',
+  pronghorn: '북미의 장거리 스프린터. 치타보다 오래 빠르다.',
+};
+// 괴물은 속도를 내 페이스에 맞춘다(적응형). 동물은 실측 그대로라 사람마다 너무 쉽거나 못 깬다
+const MONSTERS = [
+  { id: 'jeoseung', nameKo: '저승사자', track: 'M', style: 'steady', tier: 0, constant: true, detectCm: 10000, sprintS: 1, recoverS: 2, dvPm: 1000, dtPm: 1000, gPm: 1000,
+    tag: '지속주', desc: '명부에 네 이름이 적혔다. 네 페이스 그대로 쉬지 않고 따라온다. 늦추는 순간 붙잡힌다.', meta: '내 페이스 ×1.0 · 지치지 않음' },
+  { id: 'dokkaebi', nameKo: '도깨비', track: 'M', style: 'interval', tier: 0, constant: false, detectCm: 8000, sprintS: 30, recoverS: 120, dvPm: 1000, dtPm: 1000, gPm: 1000,
+    tag: '인터벌', desc: '방망이를 든 도깨비. 멀찍이 따라오다 30초씩 미친 듯이 돌진한다. "네 이노옴!"이 들리면 밟아라.', meta: '돌진 30초 · 내 페이스 ×1.6 · 쉬는 시간 약 2분' },
+];
+const PACE0 = 2.2;   // 페이스를 재기 전 기본값(m/s, 약 8km/h)
+/** 괴물 속도를 러너 페이스 P(m/s)에 맞춘다. 상태 머신·판정은 동물과 같은 코어를 쓰고 속도 값만 바뀐다 */
+function applyPace(m, P) {
+  const c = Math.round(P * 100);
+  if (m.style === 'steady') { m.cruiseCms = c; m.sprintCms = c; }
+  else { m.cruiseCms = Math.round(c * 0.9); m.sprintCms = Math.round(c * 1.6); }
+  m.sprintKmh = Math.round(m.sprintCms * 0.036); m.pace = P;
+}
+MONSTERS.forEach(m => { applyPace(m, PACE0); EMOJI[m.id] = m.id === 'dokkaebi' ? '👹' : '👤'; CLASS[m.id] = 'monster'; });
+const THEME = {
+  animal: { title: '사바나 추격', hook: '사바나의 동물 한 마리가 네 뒤를 밟는다.<br>속도도 지구력도 실측 그대로. 도감 속 동물에게서 도망쳐라.', start: '탐험 출발', list: '도감 · A 정규(순차) / B 못 깨는 것들(상시)', sum: '설정 · GPS 확인 · 다른 동물',
+    sub: '이어폰을 끼면 소리만으로 어느 쪽에서 얼마나 가까이 오는지 안다.<br>차도와 횡단보도에서는 게임보다 신호를 먼저 본다.', def: 'chicken',
+    radar: { bg: '#e8dab4', ring: 'rgba(122,94,48,0.35)', threat: 'rgba(179,38,30,0.8)', detect: 'rgba(122,94,48,0.55)', sweep: '184,90,24', trail: 'rgba(184,90,24,0.75)', me: '#2e5d1f', text: '#2b2415', dim: '#6f5f3e', tiles: 'sepia(0.55) saturate(0.75) brightness(1.03) contrast(0.95)', dark: false } },
+  monster: { title: '괴물 추격', hook: '해가 지면 그것들이 나온다.<br>괴물은 네 페이스를 읽고 딱 버거운 만큼 쫓아온다.', start: '도망쳐', list: '괴물 · 지속주 / 인터벌', sum: '설정 · GPS 확인 · 다른 괴물',
+    sub: '이어폰을 끼면 괴물이 어느 쪽에서 다가오는지 들린다. 공포 연출이 있다.<br>차도와 횡단보도에서는 게임보다 신호를 먼저 본다.', def: 'dokkaebi',
+    radar: { bg: '#0a0610', ring: 'rgba(123,63,228,0.28)', threat: 'rgba(255,59,78,0.8)', detect: 'rgba(123,63,228,0.5)', sweep: '255,59,78', trail: 'rgba(214,190,255,0.6)', me: '#e8d6ff', text: '#f0e4f3', dim: '#8e7a9a', tiles: null, dark: true } },
+};
+function RT() { return THEME[st.theme].radar; }
 const list = $('#animals');
 const sorted = [...ANIMALS].sort((a, b) => (a.track === b.track ? (a.track === 'A' ? a.tier - b.tier : (a.hits ? a.hits[1] : 0) - (b.hits ? b.hits[1] : 0)) : (a.track === 'A' ? -1 : 1)));
-for (const a of sorted) {
-  const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
-  const sp = a.constant ? `${a.sprintKmh} km/h 등속` : `스프린트 ${a.sprintKmh} km/h × ${a.sprintS}s`;
-  d.innerHTML = `<div class="ico">${EMOJI[a.id] || '🐾'}<small class="${a.track === 'B' ? 'b' : ''}">${a.track === 'A' ? 'A' + a.tier : 'B'}</small></div><div><div class="name">${a.nameKo}</div><div class="meta">${sp}</div></div><div class="hits">${a.track === 'B' ? '못 깸' : '난이도 ' + a.tier}</div>`;
-  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); if (HAS_SFX && !EMBEDDED) setTimeout(() => sfxLoad(a.id), 0); });
-  list.appendChild(d);
+function renderList() {
+  list.innerHTML = '';
+  const items = st.theme === 'monster' ? MONSTERS : sorted;
+  for (const a of items) {
+    const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
+    let badge, meta, right, desc;
+    if (a.track === 'M') { badge = a.tag; meta = a.meta; right = '적응형'; desc = a.desc; }
+    else { badge = a.track === 'A' ? 'A' + a.tier : 'B'; meta = a.constant ? `${a.sprintKmh} km/h 등속` : `최고 ${a.sprintKmh} km/h × ${a.sprintS}초 · 회복 ${a.recoverS}초`; right = a.track === 'B' ? '못 깸' : '난이도 ' + a.tier; desc = GUIDE[a.id] || ''; }
+    d.innerHTML = `<div class="ico">${icoHTML(a.id)}<small class="${a.track === 'B' ? 'b' : ''}">${badge}</small></div><div><div class="name">${a.nameKo}</div><div class="meta">${meta}</div><div class="desc">${desc}</div></div><div class="hits">${right}</div>`;
+    d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); if (HAS_SFX && !EMBEDDED) setTimeout(() => sfxLoad(a.id), 0); });
+    list.appendChild(d);
+  }
+}
+function setTheme(m, keepPick) {
+  st.theme = m; document.body.dataset.mode = m;
+  try { localStorage.setItem('mode', m); } catch (e) { }
+  const T = THEME[m];
+  [...$('#modeTabs').children].forEach(x => x.classList.toggle('on', x.dataset.m === m));
+  $('#art').innerHTML = ART[m]; $('#title').textContent = T.title; $('#hook').innerHTML = T.hook; $('#start').textContent = T.start;
+  $('#listLbl').textContent = T.list; $('#setSum').textContent = T.sum; $('#startSub').innerHTML = T.sub;
+  const mt = document.querySelector('meta[name="theme-color"]'); if (mt) mt.content = m === 'monster' ? '#0c0710' : '#efe4c8';
+  renderList();
+  const want = keepPick && st.animal && [...list.children].find(x => x.dataset.id === st.animal.id);
+  (want || [...list.children].find(x => x.dataset.id === T.def) || list.children[0]).click();
+  setTimeout(() => bgmScene('home'), 0);                 // 배경음악 코드는 아래에서 선언된다
 }
 function refreshPick() {
   const a = st.animal; if (!a) return;
-  $('#pickIco').textContent = EMOJI[a.id] || '🐾';
+  $('#pickIco').innerHTML = icoHTML(a.id);
   $('#pickName').textContent = a.nameKo;
-  $('#pickSub').textContent = `${st.courseM / 1000} km · ${st.nPack}마리` + (st.mode === 'replay' ? ' · 실내 데모' : '');
+  $('#pickSub').textContent = (a.track === 'M' ? a.tag + ' · ' : '') + `${st.courseM / 1000} km · ${st.nPack}마리` + (st.mode === 'replay' ? ' · 실내 데모' : '');
 }
+$('#modeTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b && b.dataset.m !== st.theme) setTheme(b.dataset.m); });
 $('#openSet').addEventListener('click', () => { $('#setBox').open = true; $('#setBox').scrollIntoView({ behavior: 'smooth' }); });
-list.children[3].click();
+{ let m0 = 'animal'; try { m0 = localStorage.getItem('mode') === 'monster' ? 'monster' : 'animal'; } catch (e) { } setTheme(m0); }
 refreshPick();
 $('#gpsTest').addEventListener('click', () => {
   const c = $('#gpsCard'); c.className = 'card'; c.textContent = '요청 중… 권한 창이 뜨면 허용.';
@@ -324,6 +423,7 @@ function dirWord(rel) {
   if (d < Math.PI * 5 / 8) return side;
   return side + ' 뒤';
 }
+const LINE_EVENTS = ['spot', 'sprint', 'near', 'hit', 'escape', 'taunt'];
 /** 녹음 재생. 같은 종류 녹음이 여러 개면 직전 것과 다른 것을 고른다(같은 소리 반복이 제일 먼저 질린다) */
 function playSample(key, near, rel, intensity, force) {
   const list = SFX.buf[key]; if (!list || !list.length) return false;
@@ -345,6 +445,7 @@ function sfxLoad(aid) {
   SFX.aid = aid; SFX.bytes = {}; SFX.buf = {}; SFX.last = {};
   const cls = CLASS[aid] || 'small', keys = [];
   for (const k of ['roam', 'sprint', 'tired']) { const key = SOUND_INDEX[aid + '_' + k] ? aid + '_' + k : SOUND_INDEX[cls + '_' + k] ? cls + '_' + k : null; if (key) keys.push(key); }
+  for (const ev of LINE_EVENTS) if (SOUND_INDEX[aid + '_line_' + ev]) keys.push(aid + '_line_' + ev);
   SFX.loading = Promise.all(keys.flatMap(key => SOUND_INDEX[key].map(f => fetch('sounds/' + f + '?v=' + SOUND_VER)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(b => { if (SFX.aid === aid) (SFX.bytes[key] = SFX.bytes[key] || []).push(b); })
@@ -373,7 +474,7 @@ function cry(kind, cls, near, intensity = 1, rel, force) {
   if (!A.ctx || near <= 0) return; const a = st.animal;
   if (playSample(`${a.id}_${kind}`, near, rel, intensity, force) || playSample(`${cls}_${kind}`, near, rel, intensity, force)) return;
   const t = A.ctx.currentTime, o = out(near, rel);
-  if (cls === 'canine' || cls === 'hoof' || cls === 'feline') onset(o, t, near, intensity);
+  if (cls === 'canine' || cls === 'hoof' || cls === 'feline' || cls === 'monster') onset(o, t, near, intensity);
   if (cls === 'bird') {            // 꼬꼬댁: FM 버스트 3~5회
     const n = kind === 'sprint' ? 5 : 3;
     for (let i = 0; i < n; i++) { const osc = A.ctx.createOscillator(), g = A.ctx.createGain(); osc.type = 'square'; const t0 = t + i * 0.13;
@@ -397,10 +498,54 @@ function cry(kind, cls, near, intensity = 1, rel, force) {
     const n = kind === 'sprint' ? 6 : 3;
     for (let i = 0; i < n; i++) { const t0 = t + i * (kind === 'sprint' ? 0.16 : 0.3) + (i % 3 === 2 ? 0.05 : 0); const osc = A.ctx.createOscillator(), g = A.ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(90, t0); osc.frequency.exponentialRampToValueAtTime(40, t0 + 0.1); env(g, t0, 0.005, 0.6 * intensity, 0.13); osc.connect(g); g.connect(o.node); osc.start(t0); osc.stop(t0 + 0.14); }
     if (kind !== 'roam') { const s = A.ctx.createBufferSource(); s.buffer = A.noise; const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 1; const g = A.ctx.createGain(); env(g, t + 0.05, 0.03, 0.35 * intensity, 0.35); s.connect(bp); bp.connect(g); g.connect(o.node); s.start(t); s.stop(t + 0.5); }
+  } else if (cls === 'monster') {  // 괴물(녹음이 없을 때): 낮은 톱니 포효 + 왜곡 + 거친 숨. 동물보다 한 옥타브 아래
+    const n = kind === 'sprint' ? 2 : 1;
+    for (let i = 0; i < n; i++) {
+      const t0 = t + i * 0.55, osc = A.ctx.createOscillator(), g = A.ctx.createGain(), ws = A.ctx.createWaveShaper(), curve = new Float32Array(256);
+      for (let j = 0; j < 256; j++) { const x = j / 128 - 1; curve[j] = Math.tanh(5 * x); } ws.curve = curve;
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(kind === 'tired' ? 48 : 62, t0); osc.frequency.exponentialRampToValueAtTime(34, t0 + 1.0);
+      const tr = A.ctx.createOscillator(), tg = A.ctx.createGain(); tr.frequency.value = 17; tg.gain.value = 0.5; tr.connect(tg); tg.connect(g.gain);
+      env(g, t0, 0.06, (kind === 'sprint' ? 0.8 : 0.4) * intensity, 1.1); osc.connect(ws); ws.connect(g); g.connect(o.node); osc.start(t0); tr.start(t0); osc.stop(t0 + 1.2); tr.stop(t0 + 1.2);
+    }
+    const sn = A.ctx.createBufferSource(); sn.buffer = A.noise; const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 180; bp.Q.value = 0.7; const ng = A.ctx.createGain(); env(ng, t, 0.08, 0.6 * intensity, 1.0); sn.connect(bp); bp.connect(ng); ng.connect(o.node); sn.start(t); sn.stop(t + 1.1);
   } else {                          // 소형: 바스락 + 찍찍
     const s = A.ctx.createBufferSource(); s.buffer = A.noise; s.playbackRate.value = 3; const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1800; const g = A.ctx.createGain(); env(g, t, 0.02, 0.3 * intensity, 0.35); s.connect(hp); hp.connect(g); g.connect(o.node); s.start(t); s.stop(t + 0.4);
     if (kind === 'sprint') { const osc = A.ctx.createOscillator(), og = A.ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(2800, t); osc.frequency.exponentialRampToValueAtTime(1800, t + 0.12); env(og, t, 0.01, 0.2 * intensity, 0.14); osc.connect(og); og.connect(o.node); osc.start(t); osc.stop(t + 0.15); }
   }
+}
+// ---------- 배경음악 ----------
+// web/music/<모드>_<장면>.mp3 (home, run). 달릴 땐 동물 소리를 가리지 않게 작게. 없으면 조용히 넘어간다
+const BGM = { on: true, key: null, want: null, src: null, gain: null, cache: {} };
+try { BGM.on = localStorage.getItem('bgm') !== 'off'; } catch (e) { }
+const HAS_MUSIC = typeof MUSIC_INDEX !== 'undefined' && Object.keys(MUSIC_INDEX).length > 0;
+function bgmScene(scene) {
+  const key = st.theme + '_' + scene; BGM.want = key;
+  if (!A.ctx || location.protocol === 'file:') return;  // 첫 터치 전엔 소리를 못 낸다(브라우저 정책)
+  if (!BGM.on || !HAS_MUSIC || !MUSIC_INDEX[key]) { bgmStop(); return; }
+  if (BGM.key === key && BGM.src) return;
+  bgmStop(); BGM.key = key;
+  const p = BGM.cache[key] || (BGM.cache[key] = fetch('music/' + MUSIC_INDEX[key] + '?v=' + MUSIC_VER)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).then(b => A.ctx.decodeAudioData(b)).catch(() => null));
+  p.then(buf => {
+    if (!buf || BGM.key !== key || !BGM.on || BGM.src) return;
+    const s = A.ctx.createBufferSource(), g = A.ctx.createGain(), t = A.ctx.currentTime, v = scene === 'run' ? 0.12 : 0.32;
+    s.buffer = buf; s.loop = true; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 1.5);
+    s.connect(g); g.connect(A.master); s.start(); BGM.src = s; BGM.gain = g;
+  });
+}
+function bgmStop() {
+  if (BGM.src && A.ctx) { const s = BGM.src, g = BGM.gain, t = A.ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + 0.8); try { s.stop(t + 0.9); } catch (e) { } }
+  BGM.src = null; BGM.key = null;
+}
+// 홈 화면 음악은 첫 터치 때 켠다. 음악 파일이 없거나 꺼 두면 오디오를 깨우지 않는다(아이폰에서 듣던 음악을 멈추지 않게)
+document.addEventListener('pointerdown', () => { if (BGM.on && HAS_MUSIC && !A.ctx && $('#home').classList.contains('on')) { audioInit(); bgmScene('home'); } }, { passive: true });
+/** 괴물 대사. 녹음(web/sounds/<id>_line_<사건>_n.mp3)이 있을 때만. 괴물이 있는 방향에서 들리되 알아듣게 너무 멀게는 안 한다 */
+const ML = { at: {} };
+function mLine(ev, near, rel, cd) {
+  const a = st.animal; if (!a || a.track !== 'M' || !A.ctx) return false;
+  const now = Date.now(); if (cd && now - (ML.at[ev] || -1e9) < cd * 1000 / vrate()) return false;
+  if (!playSample(`${a.id}_line_${ev}`, Math.max(near, 0.55), rel, 1, true)) return false;
+  ML.at[ev] = now; log('괴물: ' + ev); return true;
 }
 function breath(near, level) {
   if (!A.ctx) return; const t = A.ctx.currentTime, o = out(near);
@@ -661,6 +806,15 @@ if (TILE.key) TILE.src = 'vworld';
 const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.22) brightness(0.78) contrast(1.08)';   // 채도가 높으면 반전된 도로가 분홍으로 뜬다
 // 사파리는 캔버스 filter를 지원하지 않는다. 그대로 두면 아이폰에서 지도가 하얗게 뜬다
 const CANVAS_FILTER = (() => { try { return 'filter' in document.createElement('canvas').getContext('2d'); } catch (e) { return false; } })();
+/** 타일에 모드 색을 받을 때 한 번만 입힌다. 매 프레임 캔버스 filter를 거는 것보다 훨씬 싸다(헤드리스 실측: 필터를 매 프레임 걸면 시뮬레이션이 3배 느려졌다) */
+function themedTile(img) {
+  const R = RT();
+  if (CANVAS_FILTER) {
+    const c = document.createElement('canvas'); c.width = img.naturalWidth || 256; c.height = img.naturalHeight || 256;
+    const g = c.getContext('2d'); g.filter = R.dark ? DARK_FILTER : (R.tiles || 'none'); g.drawImage(img, 0, 0); return c;
+  }
+  return R.dark ? darkTile(img) : null;                 // 사파리 브라우저: 괴물 모드만 픽셀로 어둡게, 사파리 테마는 원본 그대로
+}
 /** 타일을 받을 때 한 번, DARK_FILTER와 같은 계산을 픽셀에 직접 한다. 256×256이라 몇 ms면 끝난다 */
 function darkTile(img) {
   const c = document.createElement('canvas'); c.width = img.naturalWidth || 256; c.height = img.naturalHeight || 256;
@@ -679,12 +833,12 @@ function darkTile(img) {
 }
 function tileUrl(x, y) { return TILE_SRC[TILE.src].url(x, y, TILE.z); }
 function getTile(x, y) {
-  const k = TILE.src + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
-  const rec = { img: null, ok: false }, dark = !CANVAS_FILTER && TILE_SRC[TILE.src].invert;
+  const k = TILE.src + ':' + st.theme + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
+  const rec = { img: null, ok: false }, tint = TILE_SRC[TILE.src].invert;   // OSM 원본(밝은 지도)만 모드 색을 입힌다
   const load = (useCors) => {
     const img = new Image(); rec.img = img; img.decoding = 'async';
     if (useCors) img.crossOrigin = 'anonymous';
-    img.onload = () => { if (dark) { const c = darkTile(img); if (c) rec.img = c; } rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
+    img.onload = () => { if (tint) { const c = themedTile(img); if (c) rec.img = c; } rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
     img.onerror = () => { if (useCors) { load(false); return; }   // CORS 헤더 없는 공급자 대비
       TILE.fails++;
       if (TILE.src === 'vworld' && TILE.loads === 0 && TILE.fails >= 4) {   // 키가 틀렸거나 도메인 미등록
@@ -707,24 +861,26 @@ const SHARE_URL = '<!--SITE-->';
 function drawShareCard() {
   const c = $('#shareCard'), g = c.getContext('2d'), W = 1080, s = st.lastResult, a = st.animal;
   if (!s || !a) return;
-  g.fillStyle = '#0a0f0d'; g.fillRect(0, 0, W, W);
-  g.strokeStyle = '#1f2b27'; g.lineWidth = 2;
+  const C = st.theme === 'monster' ? { bg: '#0c0710', line: '#35213f', acc: '#ff3b4e', ok: '#e8d6ff', text: '#f0e4f3', dim: '#a08aab', font: '"Black Han Sans", sans-serif' }
+    : { bg: '#efe4c8', line: '#d8c69c', acc: '#b85a18', ok: '#2e5d1f', text: '#2b2415', dim: '#7a6a48', font: '800 1em "Nanum Myeongjo", serif' };
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, W);
+  g.strokeStyle = C.line; g.lineWidth = 2;
   for (let r = 120; r < 900; r += 120) { g.beginPath(); g.arc(W / 2, 470, r, 0, Math.PI * 2); g.stroke(); }
   g.textAlign = 'center';
-  g.font = '300px sans-serif'; g.fillText(EMOJI[a.id] || '🐾', W / 2, 420);
+  g.save(); g.translate(W / 2, 300); drawFace(g, a.id, 300); g.restore(); g.textAlign = 'center'; g.textBaseline = 'alphabetic';
   const win = !s.failed;
-  g.fillStyle = win ? '#3ff2a5' : '#ff4a3d';
+  g.fillStyle = win ? C.ok : C.acc;
   g.font = '700 92px "Black Han Sans", sans-serif';
   g.fillText(win ? '탈출 성공' : '탈출 실패', W / 2, 560);
-  g.fillStyle = '#dfe9e4'; g.font = '600 62px "IBM Plex Sans KR", sans-serif';
+  g.fillStyle = C.text; g.font = '600 62px "IBM Plex Sans KR", sans-serif';
   g.fillText(`${a.nameKo} ${st.nPack}마리한테서 ${(s.dist / 100000).toFixed(2)}km`, W / 2, 660);
-  g.fillStyle = '#7d8f88'; g.font = '40px "IBM Plex Mono", monospace';
+  g.fillStyle = C.dim; g.font = '40px "IBM Plex Mono", monospace';
   g.fillText(`${a.sprintKmh} km/h · 피격 ${s.hits}회 · 스프린트 ${s.sprints}회 버팀`, W / 2, 725);
-  g.fillStyle = '#dfe9e4'; g.font = '500 150px "IBM Plex Mono", monospace';
+  g.fillStyle = C.text; g.font = '500 150px "IBM Plex Mono", monospace';
   g.fillText(fmt(s.finalTimeS), W / 2, 880);
-  g.fillStyle = '#3ff2a5'; g.font = '700 52px "Black Han Sans", sans-serif';
-  g.fillText('러너웨이', W / 2, 965);
-  g.fillStyle = '#7d8f88'; g.font = '32px "IBM Plex Mono", monospace';
+  g.fillStyle = C.acc; g.font = '700 52px "Black Han Sans", sans-serif';
+  g.fillText(st.theme === 'monster' ? '러너웨이 · 괴물 추격' : '러너웨이 · 사바나 추격', W / 2, 965);
+  g.fillStyle = C.dim; g.font = '32px "IBM Plex Mono", monospace';
   g.fillText(SHARE_URL, W / 2, 1015);
 }
 async function shareCard() {
@@ -936,6 +1092,15 @@ function step() {
   if (st.manualPause) row.speedCms = 0;
   const [px, py] = playerXY();
   const snap = s.tick(row, px, py, playerHeading());
+  // 괴물: 내 페이스를 재서 속도를 맞춘다. 워밍업(없으면 첫 60초) 동안 달린 속도의 중앙값. 걷거나 멈춘 초는 뺀다
+  if (a.track === 'M' && !st.paceSet) {
+    if (row.speedCms >= 80 && !snap.paused) st.paceBuf.push(row.speedCms);
+    if (s.elapsed >= Math.max(RW.S.WARMUP_S, 60) && st.paceBuf.length >= 20) {
+      const b = [...st.paceBuf].sort((x, y) => x - y), P = Math.max(1.4, Math.min(5, b[b.length >> 1] / 100));
+      applyPace(a, P); st.paceSet = true;
+      log(`페이스 ${(P * 3.6).toFixed(1)} km/h → ${a.nameKo} ${a.style === 'steady' ? '등속 ' + (a.cruiseCms * 0.036).toFixed(1) : '돌진 ' + a.sprintKmh} km/h`);
+    }
+  }
   const near = nearOf(snap.gapCm / 100);
   const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const nrel = nearEn ? relBearing(nearEn) : undefined;
@@ -943,11 +1108,12 @@ function step() {
   if (s.elapsed === 1) {
     const head = ['intro_head', 'name_' + a.id, 'cnt' + Math.min(5, st.nPack)];
     if (st.warmupS === 0) speakIntro([...head, 'intro_now']);
-    else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);
+    else speakIntro([...head, 'intro_hide', ...(a.constant || a.track === 'M' ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);   // 괴물 속도는 아직 모른다(페이스를 재는 중)
+    if (st.warmupS === 0) mLine('spot', near, nrel);
   }
   if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', ['warn60'], { pri: PRI.HIGH }); }
   if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel, true); } }
+  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel, true); setTimeout(() => mLine('spot', near, nrel), 700); } }
   for (const ev of snap.events) {
     const eNear = nearOf(ev.en.e.gap / 100);
     const erel = relBearing(ev.en), dk = dirKey(erel), em = Math.round(ev.en.e.gap / 100);
@@ -955,6 +1121,7 @@ function step() {
     const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
     if (ev.type === 'sprint') {
       cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel, true); buzz([80, 60, 200]); flash();
+      setTimeout(() => mLine('sprint', eNear, erel), 350);   // 도깨비: "네 이노옴!" 괴성 뒤에 바로
       const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
       // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
       if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT });
@@ -964,7 +1131,9 @@ function step() {
     }
     else if (ev.type === 'hit') {
       cry('sprint', cls, 1, 1.0, erel, true); buzz(500); flash();
-      speak('hit', ['caught' + Math.min(3, snap.hits)], { pri: PRI.CRIT, always: true });   // 잡힌 건 반드시 알아야 한다. 관제 음성을 꺼도 말한다
+      // 잡힌 건 반드시 알아야 한다. 관제 음성을 꺼도 말한다. 괴물은 제 대사를 먼저 하고 관제가 이어서
+      const hn = Math.min(3, snap.hits), said = mLine('hit', 1, erel);
+      setTimeout(() => speak('hit', ['caught' + hn], { pri: PRI.CRIT, always: true }), said ? 1800 : 0);
     }
     else if (ev.type === 'reengage' || ev.type === 'ambush') {
       // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
@@ -974,6 +1143,7 @@ function step() {
   }
   if (snap.state === 'tired' && prevState === 'sprint') {
     cry('tired', cls, Math.max(near, 0.5), 1, nrel, true);
+    setTimeout(() => mLine('escape', near, nrel, 30), 900);
     const tn = (VOICE.seen.tired = (VOICE.seen.tired || 0) + 1);
     // 지침은 유일하게 행동을 바꾸는 정보다. 계속 알리되 갈수록 짧게
     if (tn === 1) speak('tired', ['tired1'], { pri: PRI.HIGH });
@@ -987,6 +1157,11 @@ function step() {
   if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', ['cool'], { pri: PRI.HIGH }); }
   // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
   const gapM = snap.gapCm / 100, frozen = snap.paused || snap.cooldown || st.manualPause;
+  if (a.track === 'M' && !snap.warmup && !frozen) {       // 괴물 대사: 코앞, 멀어짐, 도발
+    if (gapM < 40) mLine('near', near, nrel, 20);
+    else if (a.style === 'steady' && gapM > 150) mLine('escape', near, nrel, 60);
+    else if (gapM <= 160 && Math.random() < 0.03 * vrate()) mLine('taunt', near, nrel, 45);
+  }
   const phase = snap.warmup ? 'warm' : frozen ? 'recover' : snap.state;
   // 판정이 멈춘 동안 소리가 계속 조여오면 학습한 규칙이 거짓이 된다. 멀리 물러난 것처럼 들려야 한다
   const per = frozen ? 14 : cryPeriodS(gapM, phase);
@@ -1036,13 +1211,13 @@ function render(snap, fix) {
   { const e0 = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0]; $('#nGapL').textContent = (e0 ? dirWord(relBearing(e0)) : '거리') + ' m'; }
   $('#nPace').textContent = (snap.playerCms * 0.036).toFixed(1);
   $('#nTime').textContent = fmt(s.elapsed); $('#nDist').textContent = (snap.distCm / 100000).toFixed(2);
-  const box = $('#enemyBox'); box.className = 'enemy ' + snap.state; $('#eIco').textContent = EMOJI[a.id] || '🐾';
+  const box = $('#enemyBox'); box.className = 'enemy ' + snap.state; $('#eIco').innerHTML = icoHTML(a.id);
   const ekmh = snap.enemyCms * 0.036;
   $('#eName').textContent = `${a.nameKo} · ${ekmh < 10 ? ekmh.toFixed(1) : ekmh.toFixed(0)} km/h`;
   const nEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
   const dw = nEn ? dirWord(relBearing(nEn)) : '';
   const nSpr = snap.enemies.filter(e => e.state === 'sprint').length;
-  $('#eState').textContent = `${dw} ${Math.round(snap.gapCm / 100)}m · ${KO[snap.state] || snap.state}` + (nSpr ? ' · 달려온다' : '') + ` · 무리 ${snap.enemies.length}`;
+  $('#eState').textContent = `${dw} ${Math.round(snap.gapCm / 100)}m · ${a.track === 'M' && snap.state === 'roam' ? '추적' : KO[snap.state] || snap.state}` + (nSpr ? ' · 달려온다' : '') + ` · 무리 ${snap.enemies.length}`;
   const b = $('#banner'); b.className = 'banner';
   if (st.mode === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr + ' · 홈에서 GPS 확인'; }
   else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
@@ -1077,7 +1252,8 @@ function drawRadar(snap) {
   if (MAPV.e || MAPV.n || MAPV.zoom !== 1) { if (Date.now() - MAPV.at > MAPV.IDLE_MS) mapReset(); }   // 달리는 중이다. 손을 떼고 잠시 지나면 내 위치로 돌아온다
   const baseM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), viewM = Math.round(baseM / MAPV.zoom), k = (W / 2 - 10) / viewM;
   MAPV.k = k;
-  g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
+  const R = RT();
+  g.fillStyle = R.bg; g.fillRect(0, 0, W, W);
   const [pdE, pdN] = predictOffset();
   const P = st.trail, raw = P.length ? P[P.length - 1] : [0, 0], me = [raw[0] + pdE, raw[1] + pdN];
   const ctr = [me[0] + MAPV.e, me[1] + MAPV.n];                   // 화면 중심. 끌면 내 위치에서 벗어난다
@@ -1093,7 +1269,7 @@ function drawRadar(snap) {
     const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
     g.save(); g.globalAlpha = 0.9;
     const SRC = TILE_SRC[TILE.src];
-    if (SRC.invert && CANVAS_FILTER) g.filter = DARK_FILTER;
+    // 괴물 모드는 어두운 지도, 사파리는 빛바랜 탐험 지도. 색은 타일을 받을 때 이미 입혔다(themedTile)
     for (let dx = -span; dx <= span; dx++) for (let dy = -span; dy <= span; dy++) {
       const tx = Math.floor(fx) + dx, ty = Math.floor(fy) + dy; const rec = getTile(tx, ty); if (!rec.ok) continue;
       const px = (tx - fx) * tilePx, py = (ty - fy) * tilePx; g.drawImage(rec.img, px, py, tilePx + 0.5, tilePx + 0.5);
@@ -1102,24 +1278,24 @@ function drawRadar(snap) {
   }
   const toS = ([e, n]) => [(e - ctr[0]) * k, -(n - ctr[1]) * k];
   const [mx, my] = toS(me);                                      // 반경 원과 레이더 스윕은 화면 중심이 아니라 나를 따라간다
-  g.strokeStyle = '#173129'; g.lineWidth = 1;
+  g.strokeStyle = R.ring; g.lineWidth = 1;
   for (const r of [30, 50, 100, 150, 200, 250]) { if (r > baseM) break; g.beginPath(); g.arc(mx, my, r * k, 0, Math.PI * 2); g.stroke(); }
-  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(mx, my, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(mx, my, Math.min(baseM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = R.threat; g.setLineDash([6, 6]); g.beginPath(); g.arc(mx, my, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = R.detect; g.setLineDash([4, 8]); g.beginPath(); g.arc(mx, my, Math.min(baseM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
   const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, mx, my) : null;
-  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.16)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(mx, my, baseM * k, 0, Math.PI * 2); g.fill(); }
-  g.strokeStyle = 'rgba(63,242,165,0.55)'; g.lineWidth = 3; g.beginPath();
+  if (grd) { grd.addColorStop(0, `rgba(${R.sweep},0.16)`); grd.addColorStop(0.15, `rgba(${R.sweep},0)`); grd.addColorStop(1, `rgba(${R.sweep},0)`); g.fillStyle = grd; g.beginPath(); g.arc(mx, my, baseM * k, 0, Math.PI * 2); g.fill(); }
+  g.strokeStyle = R.trail; g.lineWidth = 3; g.beginPath();
   for (let i = Math.max(0, P.length - 400); i < P.length; i++) { const [x, y] = toS(P[i]); if (i === Math.max(0, P.length - 400)) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
   for (const en of snap.enemies) {
     // 처음부터 끝까지 어디 있는지 보인다. 레이더 밖이면 가장자리에 붙여 그리고 바깥쪽 화살표를 단다
-    let [x, y] = toS([en.x, en.y]); const edge = W / 2 - 80, dd = Math.hypot(x, y), off = dd > edge;
+    let [x, y] = toS([en.x, en.y]); const edge = W / 2 - 80, dd = Math.hypot(x, y), off = dd > W / 2 - 24;   // 실제로 화면을 벗어날 때만
     if (off) { x *= edge / dd; y *= edge / dd; g.save(); g.translate(x, y); g.rotate(Math.atan2(y, x)); g.fillStyle = 'rgba(255,217,61,0.9)'; g.beginPath(); g.moveTo(66, 0); g.lineTo(46, -14); g.lineTo(46, 14); g.closePath(); g.fill(); g.restore(); }
     const col = en.state === 'sprint' ? '255,74,61' : en.state === 'tired' ? '255,154,60' : en.state === 'recover' ? '120,140,135' : '150,150,150';
     const pulse = en.state === 'sprint' ? 1 + 0.25 * Math.sin(Date.now() / 90) : 1; const rad = (en.state === 'sprint' ? 34 : 22) * pulse;
     const rg = g.createRadialGradient(x, y, 0, x, y, rad * 2); rg.addColorStop(0, `rgba(${col},0.7)`); rg.addColorStop(1, `rgba(${col},0)`); g.fillStyle = rg; g.beginPath(); g.arc(x, y, rad * 2, 0, Math.PI * 2); g.fill();
     if (en.state === 'sprint') { g.strokeStyle = `rgba(${col},0.6)`; g.lineWidth = 2; g.beginPath(); g.arc(x, y, 30 * k, 0, Math.PI * 2); g.stroke(); }
-    g.save(); g.translate(x, y); g.rotate(bearing); g.font = `${Math.round(rad * 1.6)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = en.state === 'recover' || en.state === 'lost' ? 0.55 : 1; g.fillText(EMOJI[a.id] || '🐾', 0, 0); g.globalAlpha = 1;
-    g.fillStyle = '#dfe9e4'; g.font = '20px "IBM Plex Mono", monospace'; g.fillText(`${Math.round(en.gap / 100)}m`, 0, -rad - 12); g.restore();
+    g.save(); g.translate(x, y); g.rotate(bearing); g.font = `${Math.round(rad * 1.6)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = en.state === 'recover' || en.state === 'lost' ? 0.55 : 1; drawFace(g, a.id, rad * 1.8); g.globalAlpha = 1;
+    g.fillStyle = R.text; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '20px "IBM Plex Mono", monospace'; g.fillText(`${Math.round(en.gap / 100)}m`, 0, -rad - 12); g.restore();
   }
   g.restore();
   // 북쪽 표시. 지도가 도는 게 맞는지 눈으로 확인된다. 이게 없으면 회전이 버그처럼 보인다
@@ -1127,24 +1303,28 @@ function drawRadar(snap) {
     const r = W / 2 - 26, nx = cx + Math.sin(-bearing) * r, ny = cy - Math.cos(-bearing) * r;
     g.save(); g.translate(nx, ny);
     g.fillStyle = 'rgba(255,74,61,0.9)'; g.beginPath(); g.moveTo(0, -13); g.lineTo(-8, 8); g.lineTo(8, 8); g.closePath(); g.fill();
-    g.fillStyle = '#dfe9e4'; g.font = 'bold 18px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = R.text; g.font = 'bold 18px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText('N', 0, 26); g.restore();
   }
   { // 내 위치. 지도를 끌었으면 화면 중심이 아니라 실제 위치에 그린다
     const c0 = Math.cos(-bearing), s0 = Math.sin(-bearing), ax = cx + mx * c0 - my * s0, ay = cy + mx * s0 + my * c0;
-    g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(ax, ay - 14); g.lineTo(ax - 9, ay + 9); g.lineTo(ax + 9, ay + 9); g.closePath(); g.fill();
+    g.fillStyle = R.me; g.beginPath(); g.moveTo(ax, ay - 14); g.lineTo(ax - 9, ay + 9); g.lineTo(ax + 9, ay + 9); g.closePath(); g.fill();
   }
-  g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
+  g.fillStyle = R.dim; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
   if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(TILE_SRC[TILE.src].credit, W - 8, W - 8); }
 }
 function start() {
   if (!st.animal) return;
   if (st.mode === 'gps') askCompass();                  // 아이폰: 버튼 누름 안에서 불러야 권한 창이 뜬다
-  audioInit(); sfxLoad(st.animal.id); sfxDecode();
+  audioInit(); sfxLoad(st.animal.id); sfxDecode(); bgmScene('run');
   vpLoad(); if (VOICE.level !== 'off' && 'speechSynthesis' in window) speechSynthesis.getVoices();
   RW.S.WARMUP_S = st.warmupS;
   st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
   st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
+  if (st.animal.track === 'M') applyPace(st.animal, PACE0);
+  st.paceBuf = []; st.paceSet = false; ML.at = {};
+  // 이전 주행 숫자가 남아 보이지 않게
+  $('#nTime').textContent = '0:00'; $('#nDist').textContent = '0.00'; $('#nGap').textContent = '-'; $('#nPace').textContent = '-'; $('#gauge').style.width = '0%'; $('#hitsDots').textContent = '○○○';
   mapReset(); hush(); VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
   prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
   if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
@@ -1157,6 +1337,7 @@ function start() {
 }
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
+  bgmScene('home');
   const s = st.session, a = st.animal; if (!s) return;
   { const m = Math.floor(s.finalTimeS / 60), sec = s.finalTimeS % 60;
     speak('end', s.failed ? ['end_fail'] : s.done ? ['end_arrive', 'end_hits' + Math.min(2, s.hits), 'end_final', ...(m ? [...numSeq(m), 'unit_min'] : []), ...(sec || !m ? [...numSeq(sec), 'unit_sec'] : [])] : ['end_stop'], { pri: s.failed ? PRI.HIGH : PRI.CRIT, ttl: 30 }); }   // 실패는 '세 번째다'를 끊지 않고 뒤에 붙인다
@@ -1166,7 +1347,7 @@ function finish() {
   const avg = s.moving ? s.dist / s.moving * 0.036 : 0, eavg = s.enemyActive ? s.enemyMoved / s.enemyActive * 0.036 : 0;
   $('#rStats').innerHTML = [[`${s.hits}`, '피격'], [(s.dist / 100000).toFixed(2), 'KM'], [avg.toFixed(1), '평균 KM/H']].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
   const sp = s.sprints; const survived = Math.max(0, sp - s.hits);
-  $('#rStory').textContent = sp === 0 ? `${a.nameKo}들은 끝내 널 따라잡지 못했다.` : `${a.nameKo} 무리의 스프린트 ${sp}회 중 ${survived}회를 버텼다. ${s.hits ? `잡힌 ${s.hits}번은 페널티 ${s.penaltyS}초.` : '한 번도 안 잡혔다.'} 녀석의 평균은 ${eavg.toFixed(1)} km/h, 너는 ${avg.toFixed(1)} km/h.`;
+  $('#rStory').textContent = sp === 0 ? `${a.nameKo}${st.nPack > 1 ? ' 무리는' : '는'} 끝내 널 따라잡지 못했다.` : `${a.nameKo}${st.nPack > 1 ? ' 무리' : ''}의 스프린트 ${sp}회 중 ${survived}회를 버텼다. ${s.hits ? `잡힌 ${s.hits}번은 페널티 ${s.penaltyS}초.` : '한 번도 안 잡혔다.'} 녀석의 평균은 ${eavg.toFixed(1)} km/h, 너는 ${avg.toFixed(1)} km/h.`;
   const rows = [['이동 시간', fmt(s.moving)], ['일시정지', fmt(s.paused)], ['페널티', s.penaltyS + 's'], ['적 스프린트', sp], ['최소 거리', (s.minGap === null ? '-' : Math.round(s.minGap / 100) + ' m')], ['적 평균(활성)', eavg.toFixed(1) + ' km/h'], ['GPS 동결', s.lost + ' s'], ['재접근', s.reengages]];
   $('#rTable').innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
   $('#rLog').textContent = st.log.join('\n');
@@ -1235,6 +1416,8 @@ $('#pocket').addEventListener('click', () => {
 $('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
 // 관제 음성 설정은 기억한다. 켜 둔 사람이 매번 다시 켜지 않게
 try { const v0 = localStorage.getItem('voiceLevel'); if (v0) { VOICE.level = v0; [...$('#voice').children].forEach(x => x.classList.toggle('on', x.dataset.v === v0)); } } catch (e) { }
+[...$('#bgm').children].forEach(x => x.classList.toggle('on', (x.dataset.v === 'on') === BGM.on));
+seg('#bgm', v => { BGM.on = v === 'on'; try { localStorage.setItem('bgm', v); } catch (e) { } if (BGM.on) { audioInit(); bgmScene($('#run').classList.contains('on') ? 'run' : 'home'); } else bgmStop(); });
 seg('#voice', v => { VOICE.level = v; try { localStorage.setItem('voiceLevel', v); } catch (e) { } if (v !== 'off') vpLoad(); });
 if (IOS) {
   $('#iosAudioBox').style.display = 'block';
@@ -1258,7 +1441,7 @@ $('#audioTest').addEventListener('click', async () => {
   [0.12, 0.35, 0.65, 0.95].forEach((near, i) => setTimeout(() => cry('sprint', cls, near, 1, Math.PI, true), 4200 + i * 1100));
   if (VOICE.level !== 'off') { vpLoad(); setTimeout(() => speak('test', ['name_' + st.animal.id, 'test_tail'], { pri: PRI.CRIT }), 9000); }
 });
-$('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
+$('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); bgmScene('home'); });
 $('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });
 })();
 </script>
