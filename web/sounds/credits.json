@@ -1,5 +1,41 @@
 [
   {
+    "file": "camel_roam_1.mp3",
+    "animal": "camel",
+    "kind": "roam",
+    "title": "S035_Camels_Mono.wav",
+    "source_url": "https://freesound.org/people/Pól/sounds/385912/",
+    "author": "Pól",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "S035_Camels_Mono.wav",
+    "edits": "0.10~2.05초 자름, 60Hz 하이패스, 8000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 시장(바자르)에서 녹음한 낙타 신음 첫 부분, 이 구간에는 다른 소리가 없음(녹음 뒷부분에는 새소리가 있어 쓰지 않음)"
+  },
+  {
+    "file": "camel_sprint_1.mp3",
+    "animal": "camel",
+    "kind": "sprint",
+    "title": "camel.flac",
+    "source_url": "https://freesound.org/people/Erdie/sounds/57181/",
+    "author": "Erdie",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "camel.flac",
+    "edits": "0.57~1.74초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.0dBFS), Freesound HQ 미리듣기 mp3에서 작업, 동물원 낙타 한 마리의 큰 울음(초지향성 마이크) 앞부분"
+  },
+  {
+    "file": "camel_sprint_2.mp3",
+    "animal": "camel",
+    "kind": "sprint",
+    "title": "camel.flac",
+    "source_url": "https://freesound.org/people/Erdie/sounds/57181/",
+    "author": "Erdie",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "camel.flac",
+    "edits": "2.35~3.54초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.5dBFS), Freesound HQ 미리듣기 mp3에서 작업, 동물원 낙타 한 마리의 큰 울음(초지향성 마이크) 뒷부분"
+  },
+  {
     "file": "cat_roam_1.mp3",
     "animal": "cat",
     "kind": "roam",
@@ -81,7 +117,7 @@
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0/",
     "original_file": "Acoustic-Structure-and-Contextual-Use-of-Calls-by-Captive-Male-and-Female-Cheetahs-(Acinonyx-pone.0158546.s001.oga",
-    "edits": "12.16~13.75초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, chirr 구간, 원본 11kHz 녹음"
+    "edits": "12.16~13.75초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, chirr 구간, 원본 11kHz 녹음"
   },
   {
     "file": "cheetah_sprint_1.mp3",
@@ -177,7 +213,7 @@
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0/",
     "original_file": "clucking_chicken.wav",
-    "edits": "2.34~3.16초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+    "edits": "2.34~3.16초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
   },
   {
     "file": "chihuahua_roam_1.mp3",
@@ -201,7 +237,7 @@
     "license": "CC0 1.0",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
     "original_file": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
-    "edits": "4.08~4.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 8dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+    "edits": "4.08~4.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 9dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
   },
   {
     "file": "chihuahua_sprint_1.mp3",
@@ -393,7 +429,67 @@
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0/",
     "original_file": "20070824.dog.panting.wav",
-    "edits": "5.90~7.90초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+    "edits": "5.90~7.90초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "hare_roam_1.mp3",
+    "animal": "hare",
+    "kind": "roam",
+    "title": "Bunny hutch",
+    "source_url": "https://bigsoundbank.com/bunny-hutch-s1376.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1376.flac",
+    "edits": "1.45~3.35초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 7dB 압축, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 토끼장 짚 위 바스락과 발 구름, 집토끼(Oryctolagus cuniculus) 녹음으로 유럽산토끼 대체"
+  },
+  {
+    "file": "hare_roam_2.mp3",
+    "animal": "hare",
+    "kind": "roam",
+    "title": "Bunny hutch",
+    "source_url": "https://bigsoundbank.com/bunny-hutch-s1376.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1376.flac",
+    "edits": "38.63~40.15초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 9dB 압축, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 토끼장 짚 위 발 구름과 바스락, 집토끼(Oryctolagus cuniculus) 녹음으로 유럽산토끼 대체"
+  },
+  {
+    "file": "hare_sprint_1.mp3",
+    "animal": "hare",
+    "kind": "sprint",
+    "title": "Bunny hutch",
+    "source_url": "https://bigsoundbank.com/bunny-hutch-s1376.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1376.flac",
+    "edits": "63.62~64.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 5dB 압축, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 토끼장 안에서 급히 움직이는 발소리, 집토끼(Oryctolagus cuniculus) 녹음으로 유럽산토끼 대체"
+  },
+  {
+    "file": "hare_sprint_2.mp3",
+    "animal": "hare",
+    "kind": "sprint",
+    "title": "Bunny hutch",
+    "source_url": "https://bigsoundbank.com/bunny-hutch-s1376.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1376.flac",
+    "edits": "19.18~20.15초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 토끼장 안에서 급히 움직이는 발소리(짚 바스락 포함), 집토끼(Oryctolagus cuniculus) 녹음으로 유럽산토끼 대체, 원본 최대 피크 몇 곳이 0dBFS에 닿아 있음(0.3 ms 이하)"
+  },
+  {
+    "file": "hare_tired_1.mp3",
+    "animal": "hare",
+    "kind": "tired",
+    "title": "Rabbit 1.wav",
+    "source_url": "https://freesound.org/people/quetzalcontla/sounds/348513/",
+    "author": "quetzalcontla",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "Rabbit 1.wav",
+    "edits": "2.73~3.62초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 암컷 집토끼의 짧은 숨, 집토끼(Oryctolagus cuniculus) 녹음으로 유럽산토끼 대체"
   },
   {
     "file": "hippo_roam_1.mp3",
@@ -456,6 +552,126 @@
     "edits": "27.50~29.15초 자름, 5000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
   },
   {
+    "file": "horse_roam_1.mp3",
+    "animal": "horse",
+    "kind": "roam",
+    "title": "Breath Horse #4",
+    "source_url": "https://bigsoundbank.com/breath-horse-4-s1543.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1543.flac",
+    "edits": "0.05~0.72초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 말 콧김 한 번, 원본 최대 피크 몇 곳이 0dBFS에 닿아 있음(0.4 ms 이하)"
+  },
+  {
+    "file": "horse_sprint_1.mp3",
+    "animal": "horse",
+    "kind": "sprint",
+    "title": "Horse neighing #4",
+    "source_url": "https://bigsoundbank.com/horse-neighing-4-s1541.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "1541.flac",
+    "edits": "0.14~1.10초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 말 울음(히이잉) 한 번, 야외, 원본 최대 피크 몇 곳이 0dBFS에 닿아 있음(0.4 ms 이하)"
+  },
+  {
+    "file": "horse_sprint_2.mp3",
+    "animal": "horse",
+    "kind": "sprint",
+    "title": "Horse_Neigh 02.wav",
+    "source_url": "https://freesound.org/people/n_audioman/sounds/321957/",
+    "author": "n_audioman",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "original_file": "Horse_Neigh 02.wav",
+    "edits": "0.06~1.25초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 가까이서 녹음한 말 울음(히이잉) 앞부분"
+  },
+  {
+    "file": "horse_tired_1.mp3",
+    "animal": "horse",
+    "kind": "tired",
+    "title": "Horse Breathing.wav",
+    "source_url": "https://freesound.org/people/metaepitome/sounds/275388/",
+    "author": "metaepitome",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Horse Breathing.wav",
+    "edits": "0.19~1.62초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 말의 거친 숨 두 번"
+  },
+  {
+    "file": "horse_tired_2.mp3",
+    "animal": "horse",
+    "kind": "tired",
+    "title": "Horse Breathing.wav",
+    "source_url": "https://freesound.org/people/metaepitome/sounds/275388/",
+    "author": "metaepitome",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Horse Breathing.wav",
+    "edits": "2.40~3.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 말의 거친 숨 두 번"
+  },
+  {
+    "file": "jindo_roam_1.mp3",
+    "animal": "jindo",
+    "kind": "roam",
+    "title": "Dog Growling Snarling Grumbling",
+    "source_url": "https://freesound.org/people/qubodup/sounds/122183/",
+    "author": "qubodup",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Dog Growling Snarling Grumbling",
+    "edits": "23.80~25.78초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 낮은 으르렁 세 번, 중형 이하 혼종견 녹음으로 진돗개 대체"
+  },
+  {
+    "file": "jindo_roam_2.mp3",
+    "animal": "jindo",
+    "kind": "roam",
+    "title": "Dog Growling Snarling Grumbling",
+    "source_url": "https://freesound.org/people/qubodup/sounds/122183/",
+    "author": "qubodup",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Dog Growling Snarling Grumbling",
+    "edits": "26.76~28.56초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 낮은 으르렁, 중형 이하 혼종견 녹음으로 진돗개 대체"
+  },
+  {
+    "file": "jindo_sprint_1.mp3",
+    "animal": "jindo",
+    "kind": "sprint",
+    "title": "Malinois Dog Barking Growling in Play",
+    "source_url": "https://freesound.org/people/qubodup/sounds/823544/",
+    "author": "qubodup",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Malinois Dog Barking Growling in Play",
+    "edits": "11.10~11.53초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 짖음 한 번, 말리노이즈(중대형견) 녹음으로 진돗개 대체, 실내 카펫·마루에서 터그 놀이 중"
+  },
+  {
+    "file": "jindo_sprint_2.mp3",
+    "animal": "jindo",
+    "kind": "sprint",
+    "title": "Malinois Dog Barking Growling in Play",
+    "source_url": "https://freesound.org/people/qubodup/sounds/823544/",
+    "author": "qubodup",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Malinois Dog Barking Growling in Play",
+    "edits": "10.23~10.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 으르렁 섞인 짖음 두 번, 말리노이즈(중대형견) 녹음으로 진돗개 대체, 실내 카펫·마루에서 터그 놀이 중"
+  },
+  {
+    "file": "jindo_tired_1.mp3",
+    "animal": "jindo",
+    "kind": "tired",
+    "title": "Old hound dog panting - then shakes off",
+    "source_url": "https://freesound.org/people/lukiacostello/sounds/479419/",
+    "author": "lukiacostello",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Old hound dog panting - then shakes off",
+    "edits": "8.00~9.90초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 10dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 몸 털기 뒤 헐떡임 구간, 늙은 하운드 녹음으로 진돗개 대체"
+  },
+  {
     "file": "koala_roam_1.mp3",
     "animal": "koala",
     "kind": "roam",
@@ -477,7 +693,7 @@
     "license": "CC BY 2.5",
     "license_url": "https://creativecommons.org/licenses/by/2.5/",
     "original_file": "Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv",
-    "edits": "23.00~24.35초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, 논문 보충 영상(ogv)의 오디오 트랙만 추출"
+    "edits": "23.00~24.35초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, 논문 보충 영상(ogv)의 오디오 트랙만 추출"
   },
   {
     "file": "koala_sprint_1.mp3",
@@ -528,6 +744,18 @@
     "edits": "32.05~33.35초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, 논문 보충 영상(ogv)의 오디오 트랙만 추출"
   },
   {
+    "file": "ostrich_sprint_1.mp3",
+    "animal": "ostrich",
+    "kind": "sprint",
+    "title": "Ratites - Ostrich; Snort, Close Perspective",
+    "source_url": "https://freesound.org/people/TheKingOfGeeks360/sounds/867550/",
+    "author": "TheKingOfGeeks360",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Ratites - Ostrich; Snort, Close Perspective",
+    "edits": "0.01~0.44초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 수컷 타조가 가까이서 내는 쉭 콧소리, 휴대폰(LG Stylus) 녹음"
+  },
+  {
     "file": "pig_roam_1.mp3",
     "animal": "pig",
     "kind": "roam",
@@ -549,7 +777,7 @@
     "license": "CC0 1.0",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
     "original_file": "Pig - Grunt 1 - 96kHz.wav",
-    "edits": "0.00~0.68초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+    "edits": "0.00~0.68초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
   },
   {
     "file": "pig_sprint_1.mp3",
@@ -600,6 +828,54 @@
     "edits": "25.22~26.45초 자름, 3000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
   },
   {
+    "file": "sleddog_roam_1.mp3",
+    "animal": "sleddog",
+    "kind": "roam",
+    "title": "Barking dog #3",
+    "source_url": "https://bigsoundbank.com/barking-dog-3-s2955.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "2955.flac",
+    "edits": "0.03~1.62초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 7dB 압축, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 썰매개 짧은 짖음 뒤 웅얼거리는 울음"
+  },
+  {
+    "file": "sleddog_roam_2.mp3",
+    "animal": "sleddog",
+    "kind": "roam",
+    "title": "dog howling.wav",
+    "source_url": "https://freesound.org/people/simcotter/sounds/115357/",
+    "author": "simcotter",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "dog howling.wav",
+    "edits": "12.63~14.60초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.2dBFS), Freesound HQ 미리듣기 mp3에서 작업, 허스키 하울링 한 번(48 kHz 24 bit 녹음)"
+  },
+  {
+    "file": "sleddog_sprint_1.mp3",
+    "animal": "sleddog",
+    "kind": "sprint",
+    "title": "Barking Dog #2",
+    "source_url": "https://bigsoundbank.com/barking-dog-2-s2954.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "2954.flac",
+    "edits": "0.06~0.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 썰매개 짖음 두 번"
+  },
+  {
+    "file": "sleddog_sprint_2.mp3",
+    "animal": "sleddog",
+    "kind": "sprint",
+    "title": "Barking Dog #2",
+    "source_url": "https://bigsoundbank.com/barking-dog-2-s2954.html",
+    "author": "Joseph SARDIN (BigSoundBank)",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "2954.flac",
+    "edits": "8.03~8.90초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 썰매개 짖음 두 번"
+  },
+  {
     "file": "squirrel_roam_1.mp3",
     "animal": "squirrel",
     "kind": "roam",
@@ -609,7 +885,7 @@
     "license": "CC0 1.0",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
     "original_file": "Red_Squirrel_chatter.wav",
-    "edits": "1.62~3.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 아메리카붉은다람쥐(American red squirrel) 재잘거림"
+    "edits": "1.62~3.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.9dBFS), Freesound HQ 미리듣기 mp3에서 작업, 아메리카붉은다람쥐(American red squirrel) 재잘거림"
   },
   {
     "file": "squirrel_roam_2.mp3",
@@ -646,5 +922,29 @@
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
     "original_file": "Squirrel, Grey alarm calls",
     "edits": "4.18~5.24초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 동부회색다람쥐 경계음"
+  },
+  {
+    "file": "wolf_roam_1.mp3",
+    "animal": "wolf",
+    "kind": "roam",
+    "title": "Cooper Creek 20160313_014852 solitary wolf howl very clear.wav",
+    "source_url": "https://freesound.org/people/betchkal/sounds/500646/",
+    "author": "betchkal",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Cooper Creek 20160313_014852 solitary wolf howl very clear.wav",
+    "edits": "1.80~3.78초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -4.5dBFS), Freesound HQ 미리듣기 mp3에서 작업, 알래스카 랭겔-세인트일라이어스 국립공원 야생 단독 늑대 하울링 앞부분, 계곡 반사음 약간 포함"
+  },
+  {
+    "file": "wolf_roam_2.mp3",
+    "animal": "wolf",
+    "kind": "roam",
+    "title": "Cooper Creek 20160313_014852 solitary wolf howl very clear.wav",
+    "source_url": "https://freesound.org/people/betchkal/sounds/500646/",
+    "author": "betchkal",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Cooper Creek 20160313_014852 solitary wolf howl very clear.wav",
+    "edits": "40.56~42.52초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.8dBFS), Freesound HQ 미리듣기 mp3에서 작업, 알래스카 랭겔-세인트일라이어스 국립공원 야생 단독 늑대 하울링 앞부분, 계곡 반사음 약간 포함"
   }
 ]
