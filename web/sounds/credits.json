@@ -72,6 +72,102 @@
     "edits": "2.34~3.16초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
   },
   {
+    "file": "chihuahua_roam_1.mp3",
+    "animal": "chihuahua",
+    "kind": "roam",
+    "title": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
+    "source_url": "https://freesound.org/people/kijjaz/sounds/393573/",
+    "author": "kijjaz",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
+    "edits": "1.73~3.45초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chihuahua_roam_2.mp3",
+    "animal": "chihuahua",
+    "kind": "roam",
+    "title": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
+    "source_url": "https://freesound.org/people/kijjaz/sounds/393573/",
+    "author": "kijjaz",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
+    "edits": "4.08~4.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 8dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chihuahua_sprint_1.mp3",
+    "animal": "chihuahua",
+    "kind": "sprint",
+    "title": "Small Dog Bark",
+    "source_url": "https://freesound.org/people/SecureSubset/sounds/800278/",
+    "author": "SecureSubset",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Small Dog Bark",
+    "edits": "0.00~0.34초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chihuahua_sprint_2.mp3",
+    "animal": "chihuahua",
+    "kind": "sprint",
+    "title": "LBS_FX DOG Small Alert Bark001.wav",
+    "source_url": "https://freesound.org/people/LittleBigSounds/sounds/163459/",
+    "author": "LittleBigSounds",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "LBS_FX DOG Small Alert Bark001.wav",
+    "edits": "0.30~1.15초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 소형견(견종 미상) 짖음으로 대체"
+  },
+  {
+    "file": "chihuahua_tired_1.mp3",
+    "animal": "chihuahua",
+    "kind": "tired",
+    "title": "20170520 Chihuahua Dog Breathing Heavily",
+    "source_url": "https://freesound.org/people/kijjaz/sounds/393570/",
+    "author": "kijjaz",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "20170520 Chihuahua Dog Breathing Heavily",
+    "edits": "1.35~3.55초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 7dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "chihuahua_tired_2.mp3",
+    "animal": "chihuahua",
+    "kind": "tired",
+    "title": "20170520 Chihuahua Dog Breathing and Licking 2",
+    "source_url": "https://freesound.org/people/kijjaz/sounds/393568/",
+    "author": "kijjaz",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "20170520 Chihuahua Dog Breathing and Licking 2",
+    "edits": "12.53~14.22초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "crocodile_roam_1.mp3",
+    "animal": "crocodile",
+    "kind": "roam",
+    "title": "Alligator bellowing (from http://www.fws.gov/video/sound.htm)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:27alligator2bellow.ogg",
+    "author": "U.S. Fish and Wildlife Service (Wikimedia Commons)",
+    "license": "Public domain (PD-USGov-FWS, 미국 어류야생동물국 저작물)",
+    "license_url": "https://commons.wikimedia.org/wiki/Template:PD-USGov-FWS",
+    "original_file": "27alligator2bellow.ogg",
+    "edits": "0.88~2.45초 자름, 3000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.6dBFS), Commons 원본 ogg에서 작업, 5.3kHz 곤충 소리 대역 제거용 로우패스, 미시시피악어(Alligator mississippiensis) 녹음으로 나일악어 대체"
+  },
+  {
+    "file": "crocodile_roam_2.mp3",
+    "animal": "crocodile",
+    "kind": "roam",
+    "title": "1F+1M-GatorsBellowingCalusaNatureCenter.mp3",
+    "source_url": "https://freesound.org/people/Astronomica/sounds/272408/",
+    "author": "Astronomica (Credit: Calusa Nature Center Planetarium)",
+    "license": "CC BY 3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "original_file": "1F+1M-GatorsBellowingCalusaNatureCenter.mp3",
+    "edits": "15.54~17.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 수컷 벨로우(등의 물 튀김 포함), 미시시피악어(Alligator mississippiensis) 녹음으로 나일악어 대체"
+  },
+  {
     "file": "elephant_roam_1.mp3",
     "animal": "elephant",
     "kind": "roam",
@@ -130,5 +226,53 @@
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
     "original_file": "Elephant sound",
     "edits": "6.11~7.62초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업"
+  },
+  {
+    "file": "squirrel_roam_1.mp3",
+    "animal": "squirrel",
+    "kind": "roam",
+    "title": "Red_Squirrel_chatter.wav",
+    "source_url": "https://freesound.org/people/philberts/sounds/111393/",
+    "author": "philberts",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Red_Squirrel_chatter.wav",
+    "edits": "1.62~3.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 아메리카붉은다람쥐(American red squirrel) 재잘거림"
+  },
+  {
+    "file": "squirrel_roam_2.mp3",
+    "animal": "squirrel",
+    "kind": "roam",
+    "title": "Rodents - Eastern Gray Squirrel; Chatter, Close Perspective",
+    "source_url": "https://freesound.org/people/TheKingOfGeeks360/sounds/852386/",
+    "author": "TheKingOfGeeks360",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Rodents - Eastern Gray Squirrel; Chatter, Close Perspective",
+    "edits": "1.87~3.22초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 동부회색다람쥐"
+  },
+  {
+    "file": "squirrel_sprint_1.mp3",
+    "animal": "squirrel",
+    "kind": "sprint",
+    "title": "Squirrel, Grey alarm calls",
+    "source_url": "https://freesound.org/people/genghisattenborough/sounds/744596/",
+    "author": "genghisattenborough",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Squirrel, Grey alarm calls",
+    "edits": "0.37~1.38초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 동부회색다람쥐 경계음"
+  },
+  {
+    "file": "squirrel_sprint_2.mp3",
+    "animal": "squirrel",
+    "kind": "sprint",
+    "title": "Squirrel, Grey alarm calls",
+    "source_url": "https://freesound.org/people/genghisattenborough/sounds/744596/",
+    "author": "genghisattenborough",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Squirrel, Grey alarm calls",
+    "edits": "4.18~5.24초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 동부회색다람쥐 경계음"
   }
 ]
