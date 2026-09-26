@@ -1,0 +1,1119 @@
+{
+ "note": "AI 판정. sound-audit-judge 워크플로(무리별 판정 7 + 검토 1). 분류기 점수, 스펙트로그램, 출처 기록을 본다",
+ "items": {
+  "canine_roam_1.mp3": {
+   "file": "canine_roam_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "밥그릇 녹음 저음 웅웅뿐. 개 점수 0.04 미만, 구간마다 차·엔진으로 잡힘",
+   "listen_ko": "개 으르렁이 아니라 엔진 공회전처럼 웅웅거리는지",
+   "replace_hint": "Search: 'dog growl close', 'dog growling snarling', 'large dog low growl' (freesound CC0/CC-BY). Easiest: another segment of qubodup 'Dog Growling Snarling Grumbling' (freesound 122183, CC0), not overlapping 23.80-25.78 / 26.76-28.56 (used by jindo_roam_1/2). Ideal: 1.0-2.0 s continuous 'grrr' of a medium/large dog with audible rasp in 100-1000 Hz, starts at once, no lowpass. Pitfall: bowl/contact-mic or 'beast/creature' processed growls (like current coldvet 404920) read as engine rumble. Accept only if audit.py --as canine_roam gives Dog or Growling >= 0.3 and no Vehicle/Engine in top 5. Low priority: every canine animal has its own roam file now, so this fallback is not played."
+  },
+  "canine_sprint_1.mp3": {
+   "file": "canine_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "high",
+   "reason_ko": "지금 그레이하운드·늑대 돌진으로 대신 나는 파일. 굵은 큰 개 짖음인지 한 번 확인 (검토 반영)",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "canine_tired_1.mp3": {
+   "file": "canine_tired_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "작은 개 헐떡임. 구간별로 닭 꼬꼬(0.81)·엔진으로 잡힘. 늑대·허스키 지침에 쓰임",
+   "listen_ko": "빠른 헐떡임이 닭 꼬꼬나 모터 소리처럼 들리는지",
+   "replace_hint": "Search: 'large dog panting', 'big dog panting heavy', 'husky panting', 'german shepherd panting'. This file is the fallback tired sound for wolf and sleddog, so it must be a big dog. Option: another 2 s of dobroide '20070824.dog.panting.wav' (freesound 39980, CC BY 4.0) outside 5.90-7.90 (used by greyhound_tired_1). Ideal: 1.5-2.5 s steady rhythmic panting, 3-5 breaths/s, low voiced 'hah' with energy mostly under 2 kHz, dry, no licking, collar jingle or hum. Pitfall: small-dog fast panting (current blouhond 164101) reads as chicken clucking. Accept only if 0.5 s windowed tagging shows Pant/Breathing or Dog and no Chicken/Cluck/Engine in any window."
+  },
+  "chihuahua_roam_1.mp3": {
+   "file": "chihuahua_roam_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "실제 치와와 으르렁 녹음이나 분류기는 방귀 0.78·고양이 가르랑으로 봄",
+   "listen_ko": "작은 개 '그르르'로 들리는지, 방귀·고양이 가르랑·모터로 들리는지",
+   "replace_hint": ""
+  },
+  "chihuahua_roam_2.mp3": {
+   "file": "chihuahua_roam_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "으르렁 시작부의 드문드문 딱딱 소리뿐. 개 0.02, 방귀 0.84",
+   "listen_ko": "딱딱 끊기는 소리만 있고 으르렁은 안 들리는지",
+   "replace_hint": "Search: 'chihuahua growl', 'small dog growl', 'little dog growling'. Or a different, continuous part of kijjaz '20170520 Kijjaz - Chihuahua Dog Growling.wav' (freesound 393573, CC0), not 1.73-3.45 (roam_1) and not 4.08-4.82 (current). Ideal: 0.8-1.5 s continuous buzzy 'grrr' with a bit of snarl, energy 200-2000 Hz, sound from the first 20 ms. Pitfall: sparse vocal-fry clicks at growl onset/offset plus heavy limiting (current: 9 dB) read as fart/creak. Accept only if audit.py --as chihuahua_roam gives Dog or Growling >= 0.2 and above Fart."
+  },
+  "chihuahua_sprint_1.mp3": {
+   "file": "chihuahua_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "소형견 깽 짖음 1번(0.34초). 짧지만 높은 음색이 치와와 용도에 맞음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chihuahua_sprint_2.mp3": {
+   "file": "chihuahua_sprint_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "소형견 경계 짖음 2번, Bark 0.62. 높고 날카로워 치와와에 맞음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chihuahua_tired_1.mp3": {
+   "file": "chihuahua_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "치와와 거친 숨 5번, Snort·Breathing·Gasp로 잡힘",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chihuahua_tired_2.mp3": {
+   "file": "chihuahua_tired_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "치와와 숨소리 5~6번, Dog 0.57·Breathing 0.39. 핥는 소리 안 보임",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "greyhound_roam_1.mp3": {
+   "file": "greyhound_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "짧은 개 으르렁 0.69초, Roar 0.60. 40Hz 아래 저역 잡음 조금",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "greyhound_roam_2.mp3": {
+   "file": "greyhound_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "으르렁 뒤 끝에 짖음. 전체는 디저리두·음악, 1초 부근은 돼지 꿀꿀로 잡힘",
+   "listen_ko": "1초 부근 소리가 개 으르렁·짖음인지 돼지 꿀꿀처럼 들리는지",
+   "replace_hint": ""
+  },
+  "greyhound_sprint_1.mp3": {
+   "file": "greyhound_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "소형견 깽 짖음(Jazz Barks). 사용자 확인: 치와와 소리. 0.34초로 짧음",
+   "listen_ko": "",
+   "replace_hint": "Search: 'big dog bark', 'large dog barking deep', 'greyhound bark', 'german shepherd bark', 'doberman bark', 'labrador bark single'. Drop the 'Jazz Barks' source (aruncbose1 398724) entirely: its barks are small-dog yaps. CC0 sources already credited with big-dog barks: Daphne_in_Wonderland 'Dog barks exterior (mono)' (freesound 383483, other barks than 0.44-1.40 used by canine_sprint_1), qubodup 'Malinois Dog Barking Growling in Play' (freesound 823544, other than 10.23-11.53), BigSoundBank 'Barking dog' series (Joseph SARDIN). Ideal: 0.5-1.0 s, 1-2 deep 'woof' barks of a large dog, F0 about 300-500 Hz, energy concentrated 300-1500 Hz: energy above 1.5 kHz under ~10% of energy below (current file ~21%, same as chihuahua files; accepted big-dog files 0-6%). Dry close mic, no yips, whines or other dogs. Minimum 0.5 s. Accept only if audit.py --as greyhound_sprint gives Dog/Bark/Bow-wow >= 0.4 and no Fowl/Honk/Caw."
+  },
+  "greyhound_sprint_2.mp3": {
+   "file": "greyhound_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "sprint_1과 같은 원본의 소형견 깽 짖음. 사용자 확인: 치와와 소리",
+   "listen_ko": "",
+   "replace_hint": "Same as greyhound_sprint_1: search 'big dog bark', 'large dog barking deep', 'greyhound bark', 'german shepherd bark', 'doberman bark'; do not use 'Jazz Barks' (aruncbose1 398724). Take a different bark than the new sprint_1 (not the same audio; cross-correlation < 0.8) so alternation adds variety. Ideal: 0.5-1.0 s, 1-2 deep barks, F0 about 300-500 Hz, energy above 1.5 kHz under ~10% of energy below (current ~27%), dry, no yips/whines/other dogs. Minimum 0.5 s. Accept only if audit.py --as greyhound_sprint gives Dog/Bark/Bow-wow >= 0.4 and no Fowl/Honk."
+  },
+  "greyhound_tired_1.mp3": {
+   "file": "greyhound_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "규칙적인 개 헐떡임, Dog 0.89·Pant 0.79",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jindo_roam_1.mp3": {
+   "file": "jindo_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "개 으르렁 3번, Dog 0.70·Growling 0.56",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jindo_roam_2.mp3": {
+   "file": "jindo_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "개 으르렁, Dog 0.90·Growling 0.49",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jindo_sprint_1.mp3": {
+   "file": "jindo_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "말리노이즈 짖음 1번 0.42초. 음색 어두워 큰 개 쪽(고역 3%). 짧은 편",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jindo_sprint_2.mp3": {
+   "file": "jindo_sprint_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "중대형견 짖음 2번, Bow-wow 0.58·Bark 0.52",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jindo_tired_1.mp3": {
+   "file": "jindo_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "하운드 헐떡임 규칙적, Dog·Breathing 잡힘. 끝 0.4초 약한 긁힘",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "sleddog_roam_1.mp3": {
+   "file": "sleddog_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "썰매개 짖음 뒤 길게 우는 소리, Dog 0.74·Howl 0.66",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "sleddog_roam_2.mp3": {
+   "file": "sleddog_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "깨끗한 하울링 모양이나 Howl 0.04. 사이렌·사람 말(0.32)로 잡힘",
+   "listen_ko": "개 하울링인지, 사람이 '우우' 흉내 내거나 사이렌처럼 들리는지",
+   "replace_hint": ""
+  },
+  "sleddog_sprint_1.mp3": {
+   "file": "sleddog_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "큰 개 짖음 2번, Dog 0.65·Bark 0.57. 음색 낮음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "sleddog_sprint_2.mp3": {
+   "file": "sleddog_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "sleddog_sprint_1과 같은 소리(상관 0.996). 번갈아 쓰는 의미 없음",
+   "listen_ko": "",
+   "replace_hint": "Search: 'husky bark', 'siberian husky barking', 'alaskan malamute bark', 'sled dog barking'. Or another bark take from BigSoundBank 'Barking dog' series (Joseph SARDIN, CC0), e.g. a different spot of 2955.flac (roam_1 uses 0.03-1.62); 2954.flac repeats the identical bark at 0 s and 8 s, so do not cut it again. Ideal: 0.5-1.0 s, 1-2 big-dog barks, F0 about 300-500 Hz, energy above 1.5 kHz under ~10% of energy below, dry. Pitfall: must not be the same audio as sleddog_sprint_1 (cross-correlation < 0.8). Accept only if audit.py --as sleddog_sprint gives Dog/Bark >= 0.4."
+  },
+  "wolf_roam_1.mp3": {
+   "file": "wolf_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "야생 늑대 하울링, Howl 0.91. 음악 태그는 하울링의 흔한 오탐",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "wolf_roam_2.mp3": {
+   "file": "wolf_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "같은 늑대의 다른 하울링, Howl 0.76. 음악·사이렌 태그는 흔한 오탐",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "cat_roam_1.mp3": {
+   "file": "cat_roam_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "음높이가 거의 일정한 '이잉' 소리. 분류기는 개 하울 0.44 > 야옹 0.33",
+   "listen_ko": "야옹처럼 올랐다 내려가는 억양이 있는지. '이이잉' 한 음으로 끌어 강아지 낑낑이나 하울처럼 들리면 교체",
+   "replace_hint": ""
+  },
+  "cat_roam_2.mp3": {
+   "file": "cat_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "또렷한 야옹(Meow 0.96), 억양 자연스럽고 잡음 적음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "cat_sprint_1.mp3": {
+   "file": "cat_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "하악이 천천히 부풀고 낮은 '웅'(약 300Hz) 섞임. 사람 숨(Gasp)으로 분류",
+   "listen_ko": "고양이가 '캭/하악' 하고 내뱉는 위협으로 들리는지. 사람이 '하아' 숨 내쉬거나 스프레이 '치익'처럼 들리면 교체. feline_sprint_1과 같은 파일이라 한 번만 들으면 됨",
+   "replace_hint": ""
+  },
+  "cat_sprint_2.mp3": {
+   "file": "cat_sprint_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "고양이 싸움 울음(yowl), Meow 0.99. 돌진 소리로 맞음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "cat_tired_1.mp3": {
+   "file": "cat_tired_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "헐떡임이 아닌 약 200Hz 목소리 '헉헉'. 2kHz 위 숨소리 없음. 사람 웃음·말로 분류",
+   "listen_ko": "사람이 '허 허' 웃거나 목소리를 내며 헉헉대는 것처럼 들리면 교체 확정",
+   "replace_hint": "Search: 'cat panting', 'cat breathing fast', 'cat open mouth breathing', 'cat heavy breathing' (freesound CC0/CC-BY, Pixabay). Ideal: real domestic cat, unvoiced fast airy breaths (3-6 per second) whose breath noise reaches 3-8 kHz, no pitched voice, close mic, dry room, 0.8-2.5 s continuous. Pitfalls: human imitating a cat (voiced 'huh huh' at 150-250 Hz with nothing above 2 kHz, which is the current problem), dog panting (tongue slap, bigger and lower), purring (steady 25 Hz rumble is not panting), room reverb. If no clean real cat panting exists, delete the file and let the fallback/synth play (README allows leaving it empty)."
+  },
+  "cheetah_roam_1.mp3": {
+   "file": "cheetah_roam_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "low",
+   "reason_ko": "0초 짹 울음 뒤 0.5초 무음, 0.75초에 다른 소리와 배경 잡음",
+   "listen_ko": "첫 소리(0초)가 새 짹 같은지 강아지 낑 같은지. 0.75초 둘째 소리가 닭 꼬꼬처럼 들리는지, 중간에 '쉬' 배경 잡음이 올라오는지",
+   "replace_hint": ""
+  },
+  "cheetah_roam_2.mp3": {
+   "file": "cheetah_roam_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "짹이 아닌 떨리는 chirr. 칠면조·닭·개구리로 분류, 배경 잡음 큼",
+   "listen_ko": "칠면조 '꾸르르', 개구리, 엔진 공회전처럼 들리면 교체 확정",
+   "replace_hint": "Search: 'cheetah chirp', 'cheetah chirping', 'cheetah call' (Wikimedia Commons 'Acinonyx jubatus', freesound CC0/CC-BY, BigSoundBank), or a different chirp segment of the same PLOS ONE S1 file (cheetah_roam_1 already uses 16.77-17.70 s). Ideal: 1-3 short, high, bird-like 'chirp/yelp' calls with clear harmonics and a rise-fall pitch (F0 roughly 0.5-1.5 kHz), 0.4-1.5 s total, gaps under 0.2 s, background noise at least 30 dB below the call. Pitfalls: chirr/stutter pulse trains (sound like turkey or frog, the current problem), 11 kHz band-limited recordings, zoo crowd voices, real birds in the background. Fallback if no usable cheetah: 'cougar chirp' / 'puma chirp' (closest living relative, also chirps)."
+  },
+  "cheetah_sprint_1.mp3": {
+   "file": "cheetah_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "쉭 소리인데 에너지 85%가 150~500Hz. 바람·차 '훅'으로 분류",
+   "listen_ko": "위협하는 '쉭'이 아니라 바람이나 차 지나가는 '훅'으로 들리면 교체 확정",
+   "replace_hint": "Search: 'cheetah hiss', 'cheetah spit', 'cheetah snarl', 'cheetah threat'; fallback 'cougar hiss', 'puma hiss snarl', 'leopard hiss'. Ideal: explosive hiss or spit with a sharp onset (under 20 ms), broadband air noise mostly 2-8 kHz, optionally a short voiced snarl, 0.4-1.0 s, full-band 44.1/48 kHz source, close mic, no crowd. Pitfalls: band-limited 11 kHz recordings (the hiss loses its sizzle and becomes a dull whoosh, the current problem), slow-swelling breath-like onset, lion/tiger roar (wrong size and animal), reusing the domestic cat hiss already in feline_sprint_1. If nothing good: delete; feline_sprint (cat hiss) plays instead."
+  },
+  "cheetah_sprint_2.mp3": {
+   "file": "cheetah_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "에너지 99%가 500Hz 아래 럼블. 오토바이·배 엔진으로 분류, 가장 클 때 끊김",
+   "listen_ko": "동물 으르렁이 아니라 오토바이나 배 엔진 소리로 들리면 교체 확정",
+   "replace_hint": "Search: 'cheetah growl', 'cheetah snarl', 'cheetah growling'; fallback 'cougar growl', 'puma snarl', 'leopard growl'. Ideal: threatening growl-snarl with an audible raspy voice (pitch 100-400 Hz plus harmonics above 1 kHz so it reads as an animal), clear start, whole event inside 0.5-1.2 s with a natural end, full-band source, close mic, no crowd or engine noise. Pitfalls: steady low rumble with nothing above 500 Hz (sounds like a motorcycle idling, the current problem), a segment cut at its loudest point, lion roar or leopard sawing call (wrong animal), 11 kHz band-limited sources. If nothing good: delete; feline_sprint plays instead."
+  },
+  "feline_roam_1.mp3": {
+   "file": "feline_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "가까이서 녹음한 야옹(Meow 0.59~0.76), 다른 동물 기미 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "feline_sprint_1.mp3": {
+   "file": "feline_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "cat_sprint_1과 같은 파일. 사람 숨(Gasp)처럼 분류된 하악",
+   "listen_ko": "cat_sprint_1과 같은 판정. 고양이 '캭/하악' 위협인지, 사람 '하아' 숨이나 스프레이 소리인지",
+   "replace_hint": ""
+  },
+  "feline_tired_1.mp3": {
+   "file": "feline_tired_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "cat_tired_1과 같은 녹음. 약 200Hz 목소리 '헉헉', 사람 말·웃음 기미",
+   "listen_ko": "사람이 목소리로 '허 허' 하는 것처럼 들리면 교체 확정",
+   "replace_hint": "Same target as cat_tired_1, but this is also the fallback for cheetah tired (no cheetah_tired file), so 'cheetah panting', 'big cat panting', 'leopard panting' also work. Ideal: fast rough unvoiced breaths, airy noise up to 3-8 kHz, no pitched voice, 1.0-2.5 s, close mic, dry. Pitfalls: human voice 'huh huh' (current problem), lion/tiger chuff (prusten), dog panting, purring. Use a different recording or a non-overlapping segment from the one chosen for cat_tired_1."
+  },
+  "bird_roam_1.mp3": {
+   "file": "bird_roam_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "깨끗한 비둘기 구구 소리. 실제로는 타조 평상 소리로 재생됨",
+   "listen_ko": "타조를 골랐을 때 비둘기 소리로 들리는지",
+   "replace_hint": "Fix by ADDING ostrich_roam_1.mp3 rather than editing this file: bird_roam_1 is only ever heard as the ostrich's roam (chicken has its own roam files). Do not just delete it: the bird-class synth fallback is a chicken-like FM cackle, worse for an ostrich. Search: 'ostrich boom', 'ostrich booming call', 'male ostrich boom', 'ostrich mating call'; fallback 'emu boom', 'emu drumming', 'cassowary boom'. Ideal: deep hollow 'buu-buu-buuum' boom, F0 under ~200 Hz, 0.8-2.0 s, close and dry. Pitfalls: not a dove/pigeon coo (500-800 Hz tone), no zoo crowd or speech, no wind rumble. Note audit.py --as ostrich_roam accepts any 'Bird' tag, so also reject candidates tagged Pigeon/Coo/Theremin/Siren."
+  },
+  "bird_sprint_1.mp3": {
+   "file": "bird_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "비둘기 날갯짓뿐. 기관총·타자기로 분류됨. 지금 재생되는 곳 없음",
+   "listen_ko": "급하지 않음. 날갯짓인지, 딱딱 두드리는 소리인지",
+   "replace_hint": "Low priority: no animal plays this now (chicken and ostrich both have their own sprint files). Simplest fix: delete it. If a bird-class sprint fallback is wanted: search 'chicken squawk flapping', 'startled hen wings squawk', 'chicken alarm flap'. Ideal 0.5-1.0 s: a clear vocal squawk (harmonic, F0 ~500-1000 Hz) with wing flaps under it, dry. Pitfalls: flaps alone read as typewriter/machine gun/door (current file: Machine gun 0.56 when looped); avoid pigeon take-off clips. Verify with audit.py --as bird_sprint: Chicken or Bird >= 0.5."
+  },
+  "bird_tired_1.mp3": {
+   "file": "bird_tired_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "원숭이올빼미 쉭 울음. 2kHz 휘파람·개구리처럼 들림. 타조 지침으로 재생",
+   "listen_ko": "타조 숨소리로 들리는지, 삐익 휘파람이나 개구리 같은지",
+   "replace_hint": "Fix by ADDING ostrich_tired_1.mp3 (bird_tired_1 is only heard as the ostrich's tired sound). Search: 'ostrich breathing', 'ostrich hiss', 'ostrich snort', 'emu breathing', 'large bird heavy breathing'; also check other CC0 clips by TheKingOfGeeks360 on freesound ('Ratites - Ostrich ...', source of ostrich_sprint_1). Ideal 0.8-2.5 s: 2-4 audible breaths or a low breathy hiss, broadband (not a single narrow tone), dry. Pitfalls: not this barn-owl screech (narrow ~1.8-2 kHz whistle-like band, tagged Frog/Whistle), not a goose hiss, no human or dog panting. Fallback if nothing found: 2-3 short ostrich snorts from the same source in a row, 0.8-1.5 s."
+  },
+  "chicken_roam_1.mp3": {
+   "file": "chicken_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "닭 꼬꼬와 낮은 그르르 울음. 전체 닭 점수 0.86",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chicken_roam_2.mp3": {
+   "file": "chicken_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "작은 꼬꼬 4번 뒤 큰 닭 울음. 닭 점수 0.90",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chicken_sprint_1.mp3": {
+   "file": "chicken_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "닭 경계 울음 한 번. 닭 점수 0.93, 잡음 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chicken_sprint_2.mp3": {
+   "file": "chicken_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "놀란 닭 0.5초 조각. 닭으로 전혀 안 잡히고 뿅·개구리·사이렌으로 분류",
+   "listen_ko": "닭 꽥 소리로 들리는지, 뿅·개구리·사이렌 같은지",
+   "replace_hint": "Search: 'hen squawk', 'chicken alarm call', 'scared chicken squawk', 'chicken distress cackle'. First try other seconds of the same BigSoundBank 'Hen scared' (s1040, CC0; current cut 4.12-4.62 s) and Rudmer_Rotteveel's CC0 chicken alarm clips (source of chicken_sprint_1). Ideal 0.5-1.0 s: one loud full 'bwaaak!' squawk with clear harmonics (F0 ~600-1200 Hz), starting on the squawk, optional wing flap. Pitfalls: current clip is soft clucks + only ~0.25 s of a noisy squawk, so do not cut mid-call; avoid rooster crow and duck quack. Verify: audit.py --as chicken_sprint gives Chicken, rooster >= 0.5 (chicken_sprint_1 scores 0.91). Needed so chicken sprint has 2 variants."
+  },
+  "chicken_tired_1.mp3": {
+   "file": "chicken_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "빠른 꾸꾸 4번, 규격대로. 닭 점수 0.42로 조금 낮음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "chicken_tired_2.mp3": {
+   "file": "chicken_tired_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "꼬꼬 3~4번. 닭 점수 0.82. 길이 0.81초로 하한 근처",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "ostrich_sprint_1.mp3": {
+   "file": "ostrich_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "타조 쉭 콧김 0.42초. 고음 숨소리뿐이라 동물로 안 들릴 수 있음",
+   "listen_ko": "짧은 동물 쉭 콧김인지, 스프레이·잡음·사람 한숨 같은지",
+   "replace_hint": ""
+  },
+  "elephant_roam_1.mp3": {
+   "file": "elephant_roam_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "코끼리 럼블(25Hz 맥동)로 보이나 구간별로 엔진 공회전 판정(0.6)",
+   "listen_ko": "폰 스피커로 들어서 동물의 낮은 그르렁인지, 자동차 공회전이나 모터 소리처럼 들리는지",
+   "replace_hint": ""
+  },
+  "elephant_roam_2.mp3": {
+   "file": "elephant_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "맥동이 기계처럼 일정(27.8Hz). 모터보트 기미. 개 소리 난 원본과 같음",
+   "listen_ko": "모터보트나 엔진 소리로 들리면 틀리다. 코끼리의 낮은 그르렁이면 맞다",
+   "replace_hint": ""
+  },
+  "elephant_sprint_1.mp3": {
+   "file": "elephant_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "나팔 소리처럼 보이나 기대음이 약함. 구간별로 사람 말, 닭 기미",
+   "listen_ko": "빠앙 하는 코끼리 나팔인지. 사람 목소리나 닭 울음처럼 들리지 않는지. 돌진 파일은 이제 이것 하나뿐",
+   "replace_hint": ""
+  },
+  "elephant_sprint_2.mp3": {
+   "file": "elephant_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "사용자 확인: 개 소리. 750Hz 맑은 단음이라 개 하울링으로 판정",
+   "listen_ko": "사용자가 이미 확인했고 앱에서도 뺐다. 다시 들을 필요 없음",
+   "replace_hint": "Search: 'elephant trumpet', 'elephant trumpeting close', 'african elephant trumpet call', 'asian elephant trumpet' (freesound CC0/CC-BY, Wikimedia Commons, Pixabay). Ideal segment: one loud, brassy, raspy trumpet blast ('praaah') with rich noisy harmonics reaching 5 kHz and above and an abrupt onset, 0.6-1.2 s (minimum 0.5 s). Pitfalls: not a clean single-tone whine or howl (a pure harmonic tone around 750 Hz is heard as a dog); no zoo crowd voices, music or hall reverb. Do not reuse ikbenraar freesound 819668 (the source of this dog-like clip), and use a different original than sprint_1 (Wikimedia Elephant_voice_-_trumpeting.ogg). Audit gate: Dog/Howl/Bark must not appear."
+  },
+  "elephant_tired_1.mp3": {
+   "file": "elephant_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "넓은 대역 잡음 덩어리. 숨보다 포효에 가깝고 잔향과 사람 말 기미가 있음",
+   "listen_ko": "코로 내쉬는 거친 숨(푸우)인지, 아니면 바람이나 치익 잡음, 울림 큰 포효인지. 뒤쪽에 사람 소리가 섞였는지",
+   "replace_hint": ""
+  },
+  "hippo_roam_1.mp3": {
+   "file": "hippo_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "하마의 낮은 그르렁 맞음(Grunt 0.39). 0.56초로 짧지만 규격 안",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "hippo_roam_2.mp3": {
+   "file": "hippo_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "통째로는 비둘기 구구 판정(0.52), 짧게 자르면 그르렁 판정. 애매함",
+   "listen_ko": "비둘기 구구 소리처럼 들리는지, 하마의 낮은 그르렁인지. 끝 0.45초의 첨벙 소리는 괜찮음",
+   "replace_hint": ""
+  },
+  "hippo_sprint_1.mp3": {
+   "file": "hippo_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "118Hz의 낮고 거친 그르렁. 하마 울음으로 타당하고 다른 동물 기미 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "hippo_sprint_2.mp3": {
+   "file": "hippo_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "200Hz로 고정된 맑은 음. 소 울음 판정(0.88). 포효가 아님",
+   "listen_ko": "소 음매처럼 들리면 교체 확정. 하마의 거친 포효로 들리면 맞다로 표시",
+   "replace_hint": "Search: 'hippo roar', 'hippopotamus bellow', 'hippo wheeze honk', 'hippo aggressive grunt close', 'hippopotamus call'. Ideal segment: a loud, deep, rough pulsed honk or roar ('huh-huh-HAWW'), growly pulses with f0 under ~200 Hz, 0.6-1.2 s (minimum 0.5 s). Pitfalls: a steady pure tone reads as a cow moo (Cattle/Moo tags); river ambience often carries doves, other birds, insects and boat engines; avoid long water splashes. Prefer an original other than YleArkisto 253082 (all 5 hippo files come from it). Audit gate: Cattle/Moo/Bird must not dominate."
+  },
+  "hippo_tired_1.mp3": {
+   "file": "hippo_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "숨 기미가 없음. 앞은 엔진 같은 잡음, 끝 0.4초에 파리 윙윙 판정(0.66)",
+   "listen_ko": "1.2초 이후에 벌레 윙윙 소리가 들리는지. 앞부분이 물 뿜는 숨(푸우)인지, 엔진 같은 웅웅인지",
+   "replace_hint": ""
+  },
+  "pig_roam_1.mp3": {
+   "file": "pig_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "돼지 꿀꿀 맞음(Oink 0.50). 다른 동물 기미 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "pig_roam_2.mp3": {
+   "file": "pig_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "돼지 꿀꿀 맞음(Grunt 0.46, Oink 0.17). 깨끗함",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "pig_sprint_1.mp3": {
+   "file": "pig_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "개구리 판정(0.72). 맑은 삑 음이라 비명이 아님. 닭 소리 난 2번 바로 앞 구간",
+   "listen_ko": "꾸이익 비명이 아니라 삑, 끼익 하는 맑은 음이면 교체 확정",
+   "replace_hint": "Search: 'pig squeal', 'pig scream loud', 'hog squeal', 'sow squealing', 'pig squeal farm' (freesound CC0). Ideal segment: a harsh, noisy, loud 'kkwee-eek' scream with energy spread across 1-4 kHz and a rough, raspy texture, 0.5-1.2 s. Pitfalls: a clean whistle-like tonal glide around 500 Hz (heard as chicken or frog); chickens or people in a farm background; slaughter or abuse-sounding screams (README forbids them). Do not reuse mrmunk freesound 344972 (both sprint cuts from it failed). Audit gate: Pig/Oink/Squeal/Screaming above Frog/Chicken/Speech."
+  },
+  "pig_sprint_2.mp3": {
+   "file": "pig_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "사용자 확인: 닭 소리. 분류기도 돼지 아님(사람 말 0.89), 0.49초로 짧음",
+   "listen_ko": "사용자가 이미 확인했고 앱에서도 뺐다. 다시 들을 필요 없음",
+   "replace_hint": "Search: 'pig squeal', 'pig squealing close', 'hog scream', 'pig squeal short' (freesound CC0, Pixabay). Ideal segment: one harsh, raspy, loud squeal burst with broadband 1-4 kHz noise, not a clean tone, 0.5-1.2 s (0.3-0.5 s fragments are unrecognisable). Pitfalls: tonal gliding 'bawk'-like notes around 400-500 Hz (heard as chicken); farm chickens or voices behind it; slaughter or abuse-sounding screams. Use a different original than mrmunk 344972 and than the pig_sprint_1 replacement, so the slot has 2 or more sources."
+  },
+  "pig_tired_1.mp3": {
+   "file": "pig_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "거친 꿀꿀과 콧김 맞음(Oink 0.52, Snort). 사자 기미는 그르렁 때문",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "pig_tired_2.mp3": {
+   "file": "pig_tired_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "거친 꿀꿀 맞음(Oink 0.91). 다른 동물 기미 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "camel_roam_1.mp3": {
+   "file": "camel_roam_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "low",
+   "reason_ko": "2초 내내 고른 그르렁. 분류기는 모든 구간을 엔진·오토바이로 판정",
+   "listen_ko": "오토바이나 엔진 공회전처럼 들리면 틀리다. 트림 같은 낙타 그르렁이면 맞다",
+   "replace_hint": ""
+  },
+  "camel_sprint_1.mp3": {
+   "file": "camel_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "72Hz로 낮고 고르게 웅웅거림. 분류기는 부저·경적 판정. 낙타일 수도 있음",
+   "listen_ko": "자동차 경적이나 부저 같은 기계음이면 틀리다. 목에서 나는 굵은 울음이면 맞다",
+   "replace_hint": ""
+  },
+  "camel_sprint_2.mp3": {
+   "file": "camel_sprint_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "앞은 sprint_1과 같은 웅 소리, 뒤 절반은 맑은 한 음(음악·뿔피리 판정)",
+   "listen_ko": "뒤 절반이 피리나 뿔나팔 같은 맑은 음으로 들리면 틀리다. 짐승의 울부짖음이면 맞다",
+   "replace_hint": ""
+  },
+  "hoof_roam_1.mp3": {
+   "file": "hoof_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "말 콧김 한 번(BigSoundBank). 짧아도 콧김으로 알아들을 만함",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "hoof_sprint_1.mp3": {
+   "file": "hoof_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "말이 입술 떠는 푸르르 0.41초. 평상시 소리라 돌진 느낌이 없고 짧음",
+   "listen_ko": "",
+   "replace_hint": "Search: 'horse gallop close', 'galloping hooves dirt', 'hoofbeats gallop close mic'. Ideal segment: 3-5 heavy hoof thuds in gallop rhythm (ta-ta-dum), dry close perspective on dirt/turf, 0.6-1.2 s (min 0.5 s), no neigh or voice. This file is the fallback sprint for pronghorn and kangaroo (they have no files; kangaroo spec = thumping footsteps), so plain hoofbeats fit better than a horse vocal. Pitfalls: coconut-shell foley clip-clop (cartoonish), slow walking clip-clop on asphalt, cart/carriage wheels, rider voices, tack jingle, long reverb. Do not reuse originals already used: BigSoundBank 0286/0287/1541/1543, freesound 321957 (n_audioman), 275388 (metaepitome), 832102."
+  },
+  "hoof_tired_1.mp3": {
+   "file": "hoof_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "노새 코 숨 한 번 1.3초. 고른 쉬익 잡음이라 분류기는 엔진·증기 판정",
+   "listen_ko": "바람, 증기, 타이어 바람 빠지는 소리처럼 들리면 틀리다. 동물이 코로 내쉬는 숨이면 맞다",
+   "replace_hint": ""
+  },
+  "horse_roam_1.mp3": {
+   "file": "horse_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "말 콧김 한 번(BigSoundBank 원본 FLAC). roam 규격 그대로",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "horse_sprint_1.mp3": {
+   "file": "horse_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "뚜렷한 히이잉(Neigh 0.89). 음높이 오르내림도 말 울음 모양",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "horse_sprint_2.mp3": {
+   "file": "horse_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "high",
+   "reason_ko": "높은 끽 소리 앞부분만 잘림. 닭·오리로 판정(Fowl 0.67), 히이잉 떨림 없음",
+   "listen_ko": "",
+   "replace_hint": "Search: 'horse neigh close', 'horse whinny', 'mare whinny', 'stallion neigh'. Ideal segment: one complete whinny from onset through the descending vibrato ('hi-hi-hi-hin'), 0.7-1.2 s, dry close-mic; the cut must contain the tremolo/descending part, not just the high squeal. Classifier gate: 'Neigh, whinny' clearly above any Fowl/Duck/Chicken label. Pitfalls: cutting only the high squeal onset (sounds like a chicken/duck, the current problem), stallion fight squeals, a click/thump at the start (current file has one), people or rider voices, farmyard background with chickens. Must be a different original from horse_sprint_1 (BigSoundBank 1541) and from the hoof_* sources."
+  },
+  "horse_tired_1.mp3": {
+   "file": "horse_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "말 거친 숨 세 번. 콧김·헐떡임·말 판정, 다른 동물이나 잡음 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "horse_tired_2.mp3": {
+   "file": "horse_tired_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "말 거친 숨 두 번(Snort 0.31). 끝의 푸르르 떨림도 말 소리",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "crocodile_roam_1.mp3": {
+   "file": "crocodile_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "미시시피악어 벨로우. 낮은 울음이 또렷하고 잡음 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "crocodile_roam_2.mp3": {
+   "file": "crocodile_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "악어 벨로우지만 분류기는 내내 엔진 공회전(0.5)으로 봄",
+   "listen_ko": "배 엔진 공회전처럼만 들리면 틀리다. 동물이 낮게 우는 느낌이면 맞다",
+   "replace_hint": ""
+  },
+  "hare_roam_1.mp3": {
+   "file": "hare_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "짚 바스락과 발 구름. 새 판정은 오탐(음정 있는 소리 없음)",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "hare_roam_2.mp3": {
+   "file": "hare_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "토끼 뒷발 구름(쿵)과 바스락. 규격 맞음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "hare_sprint_1.mp3": {
+   "file": "hare_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "0.58초에 톡 두세 번뿐. 빠른 발소리로 안 들릴 수 있음",
+   "listen_ko": "토끼가 급히 뛰는 발소리면 맞다. 문 딸깍, 물건 떨어지는 소리 같으면 틀리다",
+   "replace_hint": ""
+  },
+  "hare_sprint_2.mp3": {
+   "file": "hare_sprint_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "앞 0.35초 약하고 톡 두 번. 분류기는 문·타자기로 봄",
+   "listen_ko": "빠르게 뛰는 발소리면 맞다. 문 닫힘, 타자기 딸깍 같으면 틀리다",
+   "replace_hint": ""
+  },
+  "hare_tired_1.mp3": {
+   "file": "hare_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "토끼 짧은 콧김 세 번. 분류기는 오리 꽥(0.27)으로 봄",
+   "listen_ko": "짧은 숨, 콧김이면 맞다. 오리 꽥꽥처럼 들리면 틀리다",
+   "replace_hint": ""
+  },
+  "koala_roam_1.mp3": {
+   "file": "koala_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "코알라 벨로우(코골이 들숨+트림 날숨). 고양이 판정은 오탐",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "koala_roam_2.mp3": {
+   "file": "koala_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "코알라 벨로우 한 번. 트림·그르렁 판정은 코알라 특징",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "koala_sprint_1.mp3": {
+   "file": "koala_sprint_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "벨로우 중간 토막. 전체는 음악 0.71, 구간별로는 트림",
+   "listen_ko": "앞 0.2초 조각 뒤 끊김이 어색한지. 신시사이저 같은 웅 소리면 틀리다",
+   "replace_hint": ""
+  },
+  "koala_sprint_2.mp3": {
+   "file": "koala_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "가운데가 약하고 끝 0.1초에 다음 울음 머리가 잘려 붙음",
+   "listen_ko": "끝에서 뚝 하고 잘리는 소리가 나는지",
+   "replace_hint": "Re-cut from the same PLOS ONE koala video (Commons ogv, non-overlapping with other koala files) or search 'koala bellow', 'male koala bellowing' (Wikimedia Commons, freesound CC0/CC-BY). Ideal: the loudest belching exhale phase of one bellow, 0.6-1.0 s, start on the attack, end before the next inhale. Pitfalls: current cut 16.95-18.10 s ends on the truncated onset of the next call (~1.07 s); snore-only inhale parts are too quiet for sprint."
+  },
+  "koala_tired_1.mp3": {
+   "file": "koala_tired_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "벨로우 들숨의 코골이 같은 거친 숨. 지친 숨으로 쓸 만함",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "koala_tired_2.mp3": {
+   "file": "koala_tired_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "코골이 같은 들숨 뒤 날숨. 거친 숨으로 들림",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "reptile_roam_1.mp3": {
+   "file": "reptile_roam_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "실제 쉭은 0.2초뿐, 휴대폰 녹음. 너무 짧아 알아듣기 어려움",
+   "listen_ko": "칙 한 번으로 끝나 뱀인지 모르겠는지",
+   "replace_hint": "Shared fallback for gila/komodo roam. Search 'snake hiss close', 'monitor lizard hiss', 'tegu hiss', 'gila monster hiss', 'bearded dragon hiss' (freesound CC0/CC-BY, BigSoundBank). Ideal: one clear breathy hiss 0.6-1.5 s, energy 3-10 kHz, natural fade, dry close mic. Pitfalls: phone handling noise, room hum, spray can/steam/air hose; prefer a different recording than reptile_sprint_1 (JesterWhoo 706981). Check loudness at 44.1 kHz: audit rms at 16 kHz under-reads hiss by about 9 dB."
+  },
+  "reptile_sprint_1.mp3": {
+   "file": "reptile_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "뱀의 강한 쉭. 분류기 약한 건 8kHz 이상 대역을 못 보는 탓",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "reptile_tired_1.mp3": {
+   "file": "reptile_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "2초 내내 고른 쉭. 숨 리듬이 없어 잡음처럼 들릴 수 있음",
+   "listen_ko": "느린 쉭, 숨으로 들리면 맞다. 라디오 잡음, 스프레이처럼 들리면 틀리다",
+   "replace_hint": ""
+  },
+  "small_roam_1.mp3": {
+   "file": "small_roam_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "기니피그 그르릉이 개구리(0.72)·닭처럼 들림. 공용 바스락 아님",
+   "listen_ko": "개구리 개굴, 닭 꼬꼬처럼 들리는지",
+   "replace_hint": "Shared fallback for sloth/loris/armadillo roam (rustle, short squeak, sniffing). Search 'armadillo foraging', 'hedgehog sniffing leaves', 'small animal rustling leaves', 'rodent rustling dry leaves'. Ideal: 0.8-1.5 s of rustling in leaf litter with 1-3 small sniffs, close and dry. Pitfalls: guinea pig 'chut' purrs tag as Frog/Chicken; avoid bird wing flaps, human footsteps, wind."
+  },
+  "small_sprint_1.mp3": {
+   "file": "small_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "기니피그 삑 음높이 약 600Hz. 돼지·사람 목소리처럼 들림",
+   "listen_ko": "돼지 꿀꿀이나 사람 '위이' 소리처럼 들리는지",
+   "replace_hint": "Shared fallback for sloth/loris/armadillo sprint. Search 'mouse squeak', 'rat squeak alarm', 'chipmunk alarm chip', 'small rodent squeaking'. Ideal: rapid series of 3-6 short high squeaks, F0 above ~2 kHz, 0.5-1.0 s, dry. Pitfalls: guinea pig wheek at F0 ~600 Hz sounds like a pig or a human voice (Pig/Oink/Speech tags); no bird chirps; use a different source than the new squirrel_sprint files."
+  },
+  "small_tired_1.mp3": {
+   "file": "small_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "토끼 짧은 콧김 여러 번. 분류기는 스크래치·발굽으로 봄",
+   "listen_ko": "작은 동물의 빠른 킁킁 숨이면 맞다. 긁는 소리, 말발굽 같으면 틀리다",
+   "replace_hint": ""
+  },
+  "squirrel_roam_1.mp3": {
+   "file": "squirrel_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "붉은다람쥐 떨리는 재잘거림. 고음이라 분류기 점수만 낮음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "squirrel_roam_2.mp3": {
+   "file": "squirrel_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "짧은 찍 두 번 사이 0.75초 무음. 벌레·재채기 판정",
+   "listen_ko": "다람쥐 찍찍이면 맞다. 벌레, 재채기, 숨소리 같으면 틀리다",
+   "replace_hint": ""
+  },
+  "squirrel_sprint_1.mp3": {
+   "file": "squirrel_sprint_1.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "회색다람쥐 긴 경계음이 까마귀(Crow 0.98)처럼 들림",
+   "listen_ko": "까마귀 까악으로 들리면 교체 확정",
+   "replace_hint": "Search 'red squirrel alarm call', 'squirrel chatter alarm', 'chipmunk chip alarm', 'Douglas squirrel alarm'. Ideal: fast chatter or repeated short 'chip/chuk' alarm notes, 4-10 per second, 2-8 kHz, 0.6-1.0 s, dry close mic. Pitfalls: grey squirrel long 'quaa' calls tag Crow/Caw 0.9 and sound like a crow; reject a candidate whose top label is Crow/Caw/Bird; no birds in background; do not overlap philberts 111393 (squirrel_roam_1)."
+  },
+  "squirrel_sprint_2.mp3": {
+   "file": "squirrel_sprint_2.mp3",
+   "verdict": "REPLACE",
+   "confidence": "medium",
+   "reason_ko": "같은 녹음. 까마귀(Crow 0.91)로 들림. 빠른 찍찍 아님",
+   "listen_ko": "까마귀 까악으로 들리면 교체 확정",
+   "replace_hint": "Same as squirrel_sprint_1, from a second, different recording: 'red squirrel alarm chatter', 'squirrel scolding', 'chipmunk chipping'. Ideal: rapid high chips/chatter 0.6-1.0 s, starts on the first note, clean fade. Pitfalls: grey squirrel 'quaa'/'moan' calls read as crow or duck; avoid long single calls; Crow/Caw/Bird must not be the top label."
+  },
+  "dokkaebi_line_escape_1.mp3": {
+   "file": "dokkaebi_line_escape_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "ASR가 '날쌘 놈이로구나'를 알아들음. 낮고 거친 목소리",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_escape_2.mp3": {
+   "file": "dokkaebi_line_escape_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "'어이구 숨이야'로 인식됨. 말이 또렷함",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_hit_1.mp3": {
+   "file": "dokkaebi_line_hit_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "말은 또렷함. 음높이 약 380Hz로 거대 도깨비치고 높음",
+   "listen_ko": "'으하하하 잡았다'가 굵은 거대 도깨비가 아니라 목청 높은 아저씨 고함처럼 들리는지. 그렇게 들리면 도깨비 대사 전체를 더 내림(묶음 메모)",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_hit_2.mp3": {
+   "file": "dokkaebi_line_hit_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "'혼쭈이 내버라'로 인식. 끝 음절까지 들림",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_near_1.mp3": {
+   "file": "dokkaebi_line_near_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "ASR가 대사를 한 글자도 틀리지 않음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_near_2.mp3": {
+   "file": "dokkaebi_line_near_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "ASR 3번 모두 '코앞이다'를 '코어빌다'류로 잘못 들음",
+   "listen_ko": "'코앞이다, 이놈!'에서 '코앞이다'가 또렷한지. '코어 빌다'처럼 뭉개지면 8번 다시 생성해 고름",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_spot_1.mp3": {
+   "file": "dokkaebi_line_spot_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'사람 냄새가 나는구나' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_spot_2.mp3": {
+   "file": "dokkaebi_line_spot_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'게 누구냐' 인식(게/개 같은 소리)",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_sprint_1.mp3": {
+   "file": "dokkaebi_line_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'네 이놈' 인식. 길게 끄는 고함",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_sprint_2.mp3": {
+   "file": "dokkaebi_line_sprint_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "'개 썩거라'로 인식. 발음이 거의 같아 문제 적음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_sprint_3.mp3": {
+   "file": "dokkaebi_line_sprint_3.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "대사 정확히 인식. 음높이 약 350Hz로 높음(묶음 메모)",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_taunt_1.mp3": {
+   "file": "dokkaebi_line_taunt_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'어딜 도망가느냐' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_taunt_2.mp3": {
+   "file": "dokkaebi_line_taunt_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'손바닥 안이다'까지 인식. 낮고 굵은 목소리",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_line_taunt_3.mp3": {
+   "file": "dokkaebi_line_taunt_3.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "긴 대사 전부 인식됨. 길이 2.9초로 한도 안",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_roam_1.mp3": {
+   "file": "dokkaebi_roam_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "콧김이 안 잡히고 100Hz 일정한 웅웅. 음악·엔진 태그",
+   "listen_ko": "큰 짐승의 그르렁인지, 디저리두나 엔진 공회전 같은 일정한 웅웅인지. 앞부분에 콧김(훅)이 들리는지",
+   "replace_hint": ""
+  },
+  "dokkaebi_roam_2.mp3": {
+   "file": "dokkaebi_roam_2.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "첫 0.35초가 차량 소리(0.80)로 잡힘. 그르렁 태그 약함",
+   "listen_ko": "시작 부분이 모터보트나 트럭 엔진처럼 들리는지, 큰 짐승의 콧김과 낮은 그르렁으로 들리는지",
+   "replace_hint": ""
+  },
+  "dokkaebi_sprint_1.mp3": {
+   "file": "dokkaebi_sprint_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "포효 0.65. 곰·사자 겹친 낮은 포효, 길이 규격 안",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_sprint_2.mp3": {
+   "file": "dokkaebi_sprint_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "포효 0.91로 뚜렷. 발소리 쿵 섞임은 규격 허용",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_step_1.mp3": {
+   "file": "dokkaebi_step_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "0.32초 한 걸음, 저역 쿵. 4개 이어 틀면 발소리로 잡힘",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_step_2.mp3": {
+   "file": "dokkaebi_step_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "0.32초 쿵. 반복하면 약간 '쾅' 느낌이나 허용 범위",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_step_3.mp3": {
+   "file": "dokkaebi_step_3.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "0.30초 저역 쿵. 잡음 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_step_4.mp3": {
+   "file": "dokkaebi_step_4.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "0.34초 저역 쿵. 잡음 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "dokkaebi_tired_1.mp3": {
+   "file": "dokkaebi_tired_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "숨 태그 약하고 긁는 소리(Scratch 0.86)로 잡힘",
+   "listen_ko": "네 번의 숨이 큰 짐승의 거친 헐떡임으로 들리는지, 솔로 긁거나 천이 스치는 쉭쉭 소리로 들리는지",
+   "replace_hint": ""
+  },
+  "jeoseung_line_escape_1.mp3": {
+   "file": "jeoseung_line_escape_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'도망쳐도 소용없다' 정확히 인식. 낮은 속삭임",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_escape_2.mp3": {
+   "file": "jeoseung_line_escape_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'언젠가는 따라잡는다' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_hit_1.mp3": {
+   "file": "jeoseung_line_hit_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'가자 저승으로' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_hit_2.mp3": {
+   "file": "jeoseung_line_hit_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "'내 차례다' 인식(네/내 같은 소리). 음악 태그는 메아리 탓",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_near_1.mp3": {
+   "file": "jeoseung_line_near_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'멈추면 데려간다' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_near_2.mp3": {
+   "file": "jeoseung_line_near_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'숨소리가 들린다' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_spot_1.mp3": {
+   "file": "jeoseung_line_spot_1.mp3",
+   "verdict": "CHECK",
+   "confidence": "medium",
+   "reason_ko": "ASR 4번 모두 '찾았다'를 못 들음(젖었다 등). 0.86초",
+   "listen_ko": "'…찾았다'로 들리는지. '젖었다'로 들리거나 첫 글자가 웅웅거림에 묻히면 다시 생성",
+   "replace_hint": ""
+  },
+  "jeoseung_line_spot_2.mp3": {
+   "file": "jeoseung_line_spot_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'명부에 네 이름이 있구나' 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_taunt_1.mp3": {
+   "file": "jeoseung_line_taunt_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'발이 느려졌구나' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_line_taunt_2.mp3": {
+   "file": "jeoseung_line_taunt_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "'거기 서거라' 정확히 인식",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_roam_1.mp3": {
+   "file": "jeoseung_roam_1.mp3",
+   "verdict": "KEEP",
+   "confidence": "medium",
+   "reason_ko": "자갈 위 발 끌기. 긁힘·쓸림 태그로 끄는 발소리에 맞음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_roam_2.mp3": {
+   "file": "jeoseung_roam_2.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "종소리 0.79. 손종 한 번 흔듦, 잡음 없음",
+   "listen_ko": "",
+   "replace_hint": ""
+  },
+  "jeoseung_roam_3.mp3": {
+   "file": "jeoseung_roam_3.mp3",
+   "verdict": "KEEP",
+   "confidence": "high",
+   "reason_ko": "깊은 숨을 내린 쉭 하는 바람 같은 숨. 규격 맞음",
+   "listen_ko": "",
+   "replace_hint": ""
+  }
+ },
+ "cross_issues": [
+  "판정 대상 133개 중 4개(elephant_sprint_2, greyhound_sprint_1·2, pig_sprint_2)는 HEAD(beb61c4)에서 이미 삭제됨. web/sounds의 129개는 빠짐없이 판정됨. credits.json도 129개로 맞음. report.json은 삭제 전 133개 기준이라 교체 뒤 audit.py를 다시 돌릴 것",
+  "돼지 돌진: 남은 파일은 pig_sprint_1 하나. 사용자가 닭 소리라고 한 pig_sprint_2 바로 앞 구간(mrmunk 344972, 4.51~5.60초). 0.5초 창마다 Frog·Meow·Siren·Speech로 잡히고 돼지 라벨은 한 번도 없음. 사용자는 지금도 같은 문제를 듣는다. 빼면 hoof_sprint_1(말 입술 푸르르)이 나므로 후보부터 채울 것",
+  "코끼리(우선순위 1위): 남은 4개(roam_1·2, sprint_1, tired_1)가 전부 CHECK라 확정된 소리가 없음. 돌진은 sprint_1 하나뿐이고 가까우면 초당 3번 반복됨. roam_2·tired_1은 개 소리가 난 ikbenraar 819668(0.00~0.86초가 elephant_sprint_2)과 같은 원본. 하나라도 틀리면 이 원본은 통째로 버릴 것",
+  "그레이하운드 돌진: 지금은 canine_sprint_1(Bow-wow 0.65 > Yip 0.36, 1.5kHz 위/아래 에너지비 0.03, f0 약 565Hz)이 대신 남. 같은 파일이 늑대 돌진에도 나므로 이것 하나만 들어 보면 두 동물을 확인할 수 있음",
+  "교체 힌트 일부가 README 규칙 '다른 동물에 쓴 원본은 쓰지 않는다'와 충돌함. greyhound_sprint 힌트의 Daphne 383483(=canine_sprint_1, 늑대 돌진)·qubodup 823544(=jindo_sprint_1·2), canine_tired_1 힌트의 dobroide 39980(=greyhound_tired_1), canine_roam_1 힌트의 qubodup 122183(=jindo_roam_1·2)은 후보에서 뺄 것. BigSoundBank 짖는 개 2954·2955는 썰매개가 이미 씀",
+  "같은 파일·같은 녹음을 여러 곳에서 씀: cat_sprint_1과 feline_sprint_1은 md5가 같은 파일. 치타 돌진 2개를 빼면 치타가 집고양이와 똑같은 하악 소리를 냄. cat_tired_1·feline_tired_1(Augdog 210198), hare_tired_1·small_tired_1(quetzalcontla 348513)도 같은 녹음이라 한쪽이 틀리면 둘 다 바꿀 것",
+  "공용 파일이 틀려 여러 동물이 영향을 받음: canine_tired_1(작은 개 헐떡임, 닭 꼬꼬 판정)은 늑대·허스키 지침, small_roam_1·small_sprint_1(기니피그, 개구리·돼지 판정)은 나무늘보·늘보로리스·아르마딜로(우선순위 3·4·13위), bird_roam_1(비둘기)·bird_tired_1(올빼미)은 타조, hoof_sprint_1(말 푸르르 0.41초)은 프롱혼·캥거루 돌진, feline_tired_1은 치타 지침, reptile_roam_1(0.2초 쉭)은 힐라·코모도 평상 소리로 남",
+  "새 파일 없이 빼기만 하면 합성음으로 넘어가는 슬롯: 돼지 돌진, 다람쥐 돌진(small_sprint_1도 뺄 때), 타조 평상·지침, 늑대·허스키·고양이·치타 지침, 힐라·코모도 평상, 나무늘보·로리스·아르마딜로 평상·돌진, 프롱혼·캥거루 돌진",
+  "지금 바로 빼도 나아지는 파일(합성음이 규격에 더 가까움): small_roam_1(합성 바스락), small_sprint_1(합성 2.8kHz 찍찍), squirrel_sprint_1·2(small_sprint_1과 함께 뺄 것), canine_tired_1·cat_tired_1·feline_tired_1(합성 숨), hoof_sprint_1(합성 발굽 6번, 프롱혼·캥거루 규격과 맞음), reptile_roam_1(합성 쉭), bird_sprint_1·canine_roam_1(아무 동물도 안 씀)",
+  "새 파일 전에 빼면 안 되는 파일: pig_sprint_1(말 푸르르로 바뀜), bird_roam_1·bird_tired_1(타조가 닭 꼬꼬댁 합성음을 냄). 타조는 bird_*를 고치지 말고 ostrich_roam_1·ostrich_tired_1을 새로 넣을 것",
+  "교체 뒤 파일이 1개만 남는 돌진 슬롯: 닭, 허스키, 하마, 말, 코알라(남은 1개도 CHECK), 코끼리(CHECK). 돌진은 가까우면 초당 3번 울려서 같은 소리 반복이 가장 먼저 질림. 교체본으로 둘째 변형을 채울 것",
+  "치타: 파일 4개가 모두 11kHz 논문 녹음 하나에서 나옴. 교체 뒤 치타 전용 파일은 cheetah_roam_1(CHECK) 하나만 남음. 모든 상태를 44.1kHz 원본으로 새로 찾는 편이 나음(치타 녹음이 없으면 퓨마)",
+  "캥거루·프롱혼은 전용 파일이 없어 모든 상태가 말·노새 소리(hoof_*)로 남. 캥거루 평상 규격(끙끙, 기침 같은 소리)과 말 콧김은 다름. 낙타는 4개가 전부 CHECK이고, 지침 소리도 hoof_tired_1(CHECK)",
+  "분류기 관문 보강: 다람쥐는 기대 소리에 bird가 들어 있어 까마귀 소리(Crow 0.76~0.91)가 OK로 통과했고, 타조 평상은 비둘기 소리가 통과함. 기대 라벨보다 다른 종 라벨(Crow/Caw, Pigeon/Coo, Fowl, Moo, Frog)이 크면 BAD로 볼 것",
+  "큰 개 짖음 기준: README의 f0 600Hz 이하 규칙은 짖음에서 불안정함(jindo_sprint_1은 유성 프레임 2개뿐). 1.5kHz 위/아래 에너지비 0.10 이하를 같이 볼 것. 큰 개는 0.00~0.07, 치와와와 뺀 그레이하운드 파일은 0.19~0.33",
+  "audit의 rms는 16kHz로 계산해서 8kHz 위를 못 봄. 쉭 소리 음량이 실제보다 약 9dB 낮게 나오므로 파충류 음량 SUSPECT는 오탐",
+  "dokkaebi_roam_1의 층3은 pig_tired_1·2와 같은 원본(felix.blume 158746)을 5반음 내려 -8dB로 섞은 것. 들어서 알아채기는 어려워 영향은 작지만 원본 중복으로 기록해 둘 것",
+  "원본이 한 개뿐인 동물: 하마 5개(Yle 253082), 코알라 6개(영상 1개), 토끼 4개(BigSoundBank 1376). 교체 후보는 다른 원본에서 고를 것"
+ ],
+ "priority": [
+  "pig_sprint_1.mp3",
+  "elephant_sprint_2.mp3",
+  "greyhound_sprint_1.mp3",
+  "pig_sprint_2.mp3",
+  "horse_sprint_2.mp3",
+  "squirrel_sprint_1.mp3",
+  "squirrel_sprint_2.mp3",
+  "small_sprint_1.mp3",
+  "small_roam_1.mp3",
+  "chicken_sprint_2.mp3",
+  "hippo_sprint_2.mp3",
+  "canine_tired_1.mp3",
+  "cheetah_sprint_2.mp3",
+  "cheetah_sprint_1.mp3",
+  "greyhound_sprint_2.mp3",
+  "bird_roam_1.mp3",
+  "bird_tired_1.mp3",
+  "cat_tired_1.mp3",
+  "feline_tired_1.mp3",
+  "cheetah_roam_2.mp3",
+  "hoof_sprint_1.mp3",
+  "koala_sprint_2.mp3",
+  "chihuahua_roam_2.mp3",
+  "reptile_roam_1.mp3",
+  "sleddog_sprint_2.mp3",
+  "bird_sprint_1.mp3",
+  "canine_roam_1.mp3"
+ ],
+ "group_notes": "[dogs] - 25개 판정: KEEP 16, CHECK 3, REPLACE 6\n- REPLACE: greyhound_sprint_1, greyhound_sprint_2(사용자 확인), sleddog_sprint_2(중복), canine_tired_1, chihuahua_roam_2, canine_roam_1\n- CHECK: chihuahua_roam_1, greyhound_roam_2, sleddog_roam_2\n- 큰 개/작은 개 짖음 구분 지표: 1.5kHz 위 에너지 / 아래 에너지\n  - 큰 개(canine_sprint_1, sleddog_sprint, jindo_sprint) 0.00~0.06\n  - 소형견(chihuahua_sprint) 0.18~0.33, greyhound_sprint_1/2 0.21/0.27 → 사용자 청취(치와와)와 일치\n  - audit.py f0는 짖음에서 불안정(jindo_sprint_1 727Hz로 나오나 음색은 큰 개). 교체 후보 거를 때 이 비율을 같이 볼 것\n- 앱은 상태별로 동물군 파일로 대체(app.html 470행)\n  - 늑대 sprint·tired, 허스키 tired는 canine_* 사용 → canine_tired_1(소형견 헐떡임)이 늑대·허스키에서 나옴. 큰 개 헐떡임으로 교체 필요\n  - canine_roam_1은 현재 모든 개과에 roam 파일이 있어 실제로 안 나옴. 교체 우선순위 낮음\n- sleddog_sprint_1/2: 같은 원본(BigSoundBank 2954)의 0초·8초 구간인데 같은 짖음이 반복된 녹음이라 파형 상관 0.996\n- 배치 안 다른 중복 쌍 없음(상관 0.5 초과 없음)\n- greyhound_roam_1: 40Hz 아래 저역이 에너지의 13%. 들리진 않지만 교체·재가공 때 80Hz 하이패스 권장\n- freesound 원본 페이지는 프록시 403으로 못 열어 원본 전후 문맥은 확인 못 함\n- 분석 스크립트: /tmp/claude-0/-home-user-RUNA-WAY/32aff3c1-a02b-56f2-93c5-33be43794e7c/scratchpad/canine/win.py(0.5초 창 분류), feat.py(대역 에너지·음높이)\n[cats] - 확실히 괜찮음(KEEP): cat_roam_2, cat_sprint_2, feline_roam_1\n- 들어볼 것(CHECK), 3번만 들으면 됨: cat_roam_1, cat_sprint_1(=feline_sprint_1, md5 같은 파일), cheetah_roam_1\n- cat_tired_1과 feline_tired_1은 같은 녹음(Augdog 'Cat Pant.wav')의 다른 구간. 둘 다 에너지 80% 이상이 150~500Hz, 2kHz 위 숨소리가 없는 약 200Hz 목소리. 한쪽이 사람처럼 들리면 둘 다 교체\n- 치타 파일 4개는 모두 같은 원본(PLOS ONE 2016 S1, 11kHz 녹음). 5.5kHz 위가 비어 먹먹하고 배경 잡음이 큼. 앱이 거리감으로 더 먹먹하게 만들면 알아듣기 더 어려움. 새 파일은 44.1/48kHz 원본으로\n- 치타 tired 파일이 없어 feline_tired가 치타에도 쓰임. 새 헐떡임은 고양이와 치타 모두 어울리는 것으로\n- cheetah_sprint 둘 다 빼면 feline_sprint(고양이 하악)로 대체됨. 좋은 녹음이 없으면 억지로 채우지 말 것(README 규칙)\n- 치타 녹음이 없으면 가장 가까운 친척인 퓨마(cougar) 녹음이 대안. 퓨마도 짹 울음, 쉭 소리를 냄\n- freesound 설명 페이지는 네트워크 차단으로 확인 못 함. 판정은 분류기, 분광도, 대역 에너지, 음높이 추적 기준\n[birds] - 앱은 동물 파일이 없으면 상태별로 bird_* 를 쓴다(app.html cry/sfxLoad). 닭은 3상태 다 있어 bird_* 미사용\n- 타조는 sprint만 있음. 그래서 타조 roam = bird_roam_1(비둘기 구구), tired = bird_tired_1(올빼미 쉭)이 나온다. 사용자가 타조를 고르면 '다른 동물 소리' 문제 그대로\n- 해결은 bird_* 수정보다 ostrich_roam_1(낮은 붐 울음), ostrich_tired_1(숨) 추가. bird_* 를 그냥 지우면 bird 합성음(닭 꼬꼬댁 FM)이 나와 타조엔 더 틀림\n- bird_sprint_1은 지금 어느 동물도 안 씀. 삭제해도 무방\n- 닭: chicken_sprint_2만 교체. 빼기만 하면 sprint가 1개라 반복되니 교체본 필요. 나머지 닭 5개는 닭 점수 0.42~0.93으로 확실\n- audit.py의 ostrich roam 기대치가 'bird'라 비둘기 소리도 통과함. 타조 붐 후보는 Pigeon/Coo 태그를 따로 볼 것\n- 형식(모노 44.1kHz 96kbps)은 전부 규격 안. RMS가 bird_roam_1 -13.6, chicken_sprint_2 -13.5 dB로 상한(-14)을 살짝 넘음(경미)\n- 이 환경은 freesound, bigsoundbank 접속이 막혀 원본은 확인 못 함. 교체본 찾기는 로컬에서 할 것\n[big] - 16개 판정: 문제없음 6, 들어볼 것 6, 교체 4\n  - 교체: elephant_sprint_2, pig_sprint_2 (사용자 확인), hippo_sprint_2 (소 울음), pig_sprint_1 (개구리 판정, 닭 소리 난 구간 바로 앞)\n  - 들어볼 것: elephant_roam_1, elephant_roam_2, elephant_sprint_1, elephant_tired_1, hippo_roam_2, hippo_tired_1\n- elephant_sprint_2, pig_sprint_2는 HEAD 커밋(beb61c4)에서 이미 web/sounds에서 빠졌다. report.json과 스펙트로그램에만 남아 있다\n- 돼지 돌진: 1번도 교체하면 슬롯이 빈다(hoof 공용이나 합성음이 대신 난다). 후보를 먼저 채울 것. mrmunk 344972 원본은 다시 쓰지 않는다\n- 코끼리 돌진: 2번이 빠져 1번만 남았다. 1번까지 틀리면 슬롯이 빈다\n- 코끼리 원본 ikbenraar 819668: 개 소리가 난 구간의 원본이다. 같은 원본에서 자른 roam_2, tired_1도 꼭 들어볼 것\n- 하마 5개는 전부 Yle 253082 한 원본(1976 잠비아 강가 녹음)에서 잘랐다. 새, 벌레 소리가 섞일 위험이 있다. 교체 후보는 다른 원본에서 고를 것\n- 코끼리와 하마는 AudioSet에 클래스가 없다. OK나 SUSPECT는 약한 증거다. 코끼리 럼블(25~28Hz 맥동)은 분류기가 엔진이나 모터보트로 잡는 일이 흔하다. 폰 스피커에서도 그렇게 들리는지가 관건이다\n- hippo_tired_1은 끝 1.2초 이후의 파리 윙윙만 문제라면 교체 대신 끝을 잘라 살릴 수 있다\n- freesound 페이지는 이 환경에서 접속이 막혀(403) 원본 설명은 확인하지 못했다. 로컬 증거(분류기, 구간 분류, 음높이, 스펙트로그램)로만 판정했다\n[hoofed] - 대상 11개(말 5, 낙타 3, 발굽 공용 3). 프롱혼·캥거루 파일은 없음 -> 두 동물의 모든 상태와 낙타 tired는 hoof_* 공용 파일로 대신 난다\n- 교체 2: horse_sprint_2(닭·오리처럼 들림. 사용자가 지적한 돼지->닭과 같은 유형, 높은 끽 부분만 잘림), hoof_sprint_1(푸르르 0.41초, 돌진 소리 아님)\n- hoof_sprint 교체 후보는 울음 없는 질주 발굽 소리가 맞다. 프롱혼(질주 발굽), 캥거루(쿵쿵 발소리) 규격을 같이 채운다\n- 들어볼 것 4: 낙타 3개 전부 + hoof_tired_1. AudioSet에 낙타가 없어 분류기로 판정 불가(엔진, 부저, 음악으로 나옴)\n- camel_sprint_1과 _2는 같은 원본(Erdie camel.flac). 하나가 틀리면 둘 다 틀릴 가능성 높음. 둘 다 빠지면 낙타 돌진은 hoof_sprint가 대신 난다\n- 소리 분석상 낙타 sprint는 72Hz의 낮고 고른 울음이라 실제 낙타일 가능성은 있음. 사람 귀로 기계음처럼 들리는지만 보면 된다\n- 말 소리(roam, sprint_1, tired 2개)는 원본이 확실하고 분류기도 말로 잡음. 문제 없음\n- 근거 파일: 창 단위 분류 /tmp/claude-0/-home-user-RUNA-WAY/32aff3c1-a02b-56f2-93c5-33be43794e7c/scratchpad/hoofbatch/win.py, 확대 스펙트로그램 같은 폴더 z_*.png\n[small] - 분류기와 audit의 rms는 16kHz로 돌려 8kHz 이상을 못 본다. 쉭(파충류)과 붉은다람쥐 떨림은 점수가 낮고 음량도 실제보다 작게 나온다(reptile_roam_1: report -27.4dB, 전대역 실측 -18.1dB). 이 묶음의 음량 SUSPECT는 오탐\n- 코알라 6개는 모두 같은 영상, 같은 수컷 한 마리의 벨로우다. Burping, Purr, Oink, Engine 판정은 코알라 벨로우 고유의 특징(코골이 들숨 + 트림 날숨). roam_1(고양이), sprint_1(음악) BAD는 오탐일 가능성이 크다\n- 다람쥐 sprint 2개는 audit이 OK였지만 Crow 0.9 이상이다. 기대 무리에 bird가 들어 있어 통과했다. 돼지가 닭으로 들린 경우와 같은 유형이라 교체를 추천한다\n- 악어 roam_2의 Engine 판정은 악어 벨로우 자체의 특성(배 엔진 같은 저음 떨림)이다. 사람 귀로 확인이 필요하다\n- sloth, loris, armadillo, gila, komodo는 파일이 없다. small_*, reptile_* 공용 파일이 대신 나고, 악어 sprint/tired도 reptile로 대체된다. 공용 파일을 바꾸면 이 동물들이 바로 영향을 받는다\n- 공용 small 교체 방향: roam은 낙엽 바스락 + 킁킁(아르마딜로, 고슴도치), sprint는 f0 2kHz 이상의 작은 설치류 빠른 찍찍. 원본은 다람쥐 sprint와 달라야 한다\n- small_tired_1과 hare_tired_1은 같은 원본(Rabbit 1.wav)의 다른 구간이고, hare 4개는 같은 BigSoundBank 원본이다. 규칙 위반은 아니지만 다양성은 낮다\n- 윈도 태깅 스크립트: /tmp/claude-0/-home-user-RUNA-WAY/32aff3c1-a02b-56f2-93c5-33be43794e7c/scratchpad/bw/win.py (0.5초 창), 대역 에너지: bw/bands.py, 선형 스펙트로그램: bw/lin.py\n[monsters] 괴물 36개(도깨비 23, 저승사자 13) 판정: KEEP 30, CHECK 6, REPLACE 0\n\n검사 방법\n- 분류기(report.json), 0.35~1초 창 태깅, 스펙트로그램, 음높이(YIN), 끝부분 음량\n- 대사 24개는 한국어 ASR 2종으로 받아쓰기: sherpa Zipformer-ko, Whisper turbo(한글이 잘리는 토큰 문제를 고쳐서 돌림). 모델은 scratchpad/asr에만 둠\n- 기준: Whisper가 대사를 거의 그대로 받아쓰면 '알아들을 수 있음'\n\n들어볼 파일 6개(각 1~3초)\n- dokkaebi_roam_1, dokkaebi_roam_2, dokkaebi_tired_1: 짐승 소리인지, 엔진·긁는 소리인지\n- dokkaebi_line_near_2, jeoseung_line_spot_1: 핵심 낱말이 들리는지\n- dokkaebi_line_hit_1: 목소리 높이. 도깨비 대사 전체를 대표해서 듣는 파일\n\n묶음 문제\n- 도깨비 대사 음높이: 중앙값 230~380Hz. 설계문의 'deep booming'보다 높다. escape_1(86Hz), taunt_2(128Hz)만 낮아서 파일마다 목소리가 다른 사람처럼 들릴 수 있음\n  - hit_1이 높게 들리면: 원본 TTS부터 rubberband=pitch=0.75(5반음):formant=shifted로 다시 처리. 원본이 없으면 지금 mp3를 0.89(2반음 더)로 한 번 더 내림. escape_1과 taunt_2는 그대로 둠\n- 저승사자 대사의 Music 태그(창 단위 0.5~0.8): 아주 낮은 목소리(60~78Hz)에 메아리(70/140ms)가 겹쳐서 생김. Whisper가 10개 중 9개를 거의 그대로 받아씀. 교체할 필요 없음. 웅웅거림이 거슬리면 aecho를 0.8:0.5:60:0.2 한 번으로 약하게\n\nCHECK에서 떨어진 파일 다시 만들 때 참고\n- dokkaebi_roam(콧김·그르렁): 5반음 넘게 내리면 엔진처럼 들림. 3~4반음만 내림. 앞 0.2~0.3초에 콧김(훅)을 또렷이 두고 뒤에 저음 그르렁. 들소 울음층은 빼거나 -10dB. 검색어: bear huff snort close, horse snort, wild boar grunt, lion growl low close(CC0). 길이 0.8~1.5초\n- dokkaebi_tired(헐떡임): 검색어 lion panting, bear panting, horse heavy breathing. 2~3반음만 내리고 4kHz 저역 통과로 긁는 고역을 줄임. 짐승 목소리(그르렁)가 조금 들리게 섞음. 길이 1~2초\n- 대사 두 개: 같은 설계문으로 8번 생성. Whisper 받아쓰기가 원문과 맞는 것을 고름\n\n기타\n- 발소리 4개: 분류기는 발소리 한 번만으로는 잘 못 알아봄. 4개를 0.35초 간격으로 이어 틀면 'Walk, footsteps'가 1위 일반 라벨로 잡혀서 KEEP\n- 도깨비 대사 여러 개가 RMS -12.8~-13.9dBFS로 규격 상한(-14)을 조금 넘음. 판정에는 영향 없음"
+}

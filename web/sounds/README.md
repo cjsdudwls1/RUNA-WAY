@@ -143,7 +143,8 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
 | audit/report.json | 전체 검사 결과 |
 | audit/judge.json | AI 판정(교체 추천 / 들어볼 것 / 문제없음)과 이유, 교체 힌트 |
 | audit/marks.json | 사람 검수 결과(맞다 / 틀리다, 메모) |
-| audit/todo.json | 교체할 슬롯. 사람이 틀리다 + 사람이 안 본 것 중 AI 교체 추천 |
+| audit/todo.json | replace: 교체할 슬롯(사람이 틀리다 + 사람이 안 본 것 중 AI 교체 추천). add: 전용 파일이 없어 공용 파일(다른 동물)이 나는 슬롯, priority high부터 |
+| audit/classes.json | 동물 → 동물군(app.html CLASS와 같다) |
 | review.py | 검수 페이지 review/index.html을 만든다. 더블클릭으로 연다 |
 | candidates/ | 교체 후보. 앱에 안 들어간다(빌드는 web/sounds 맨 위 파일만 읽는다) |
 
@@ -156,7 +157,9 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
 - 분류기 관문: `python3 web/sounds/audit.py web/sounds/candidates --json web/sounds/candidates/audit.json`
   - BAD는 후보에 올리지 않는다
   - SUSPECT는 note에 이유를 적을 때만(예: AudioSet에 코끼리가 없어 기대 소리가 약하게 나온다)
-  - 큰 개(그레이하운드, 진돗개, 늑대, 허스키) 짖음: Bark·Bow-wow가 Yip보다 커야 하고 음높이 600Hz 이하
+  - 큰 개(그레이하운드, 진돗개, 늑대, 허스키) 짖음: Bark·Bow-wow가 Yip보다 크고, 1.5kHz 위/아래 에너지 비가 0.10 이하(큰 개 0.00~0.07, 치와와·뺀 그레이하운드 0.19~0.33). 음높이는 짖음에서 불안정해 참고만
+  - 다른 종 라벨(까마귀, 비둘기, 닭, 소, 개구리 등)이 기대 소리보다 크면 BAD
+  - 원본을 이미 다른 동물이 쓰면 BAD(credits.json과 candidates.json의 source_url 비교)
 - 이미 다른 동물에 쓴 원본은 쓰지 않는다. 같은 녹음이 두 동물 소리가 되면 안 된다
 - 후보를 넣었으면 `python3 web/sounds/review.py` → review/index.html 맨 위 "후보 고르기"에 나온다
 

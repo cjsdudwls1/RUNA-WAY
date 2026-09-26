@@ -50,10 +50,14 @@ G = {
     'steps': ['Walk, footsteps', 'Run', 'Thump, thud', 'Patter', 'Clip-clop'],
     'rustle': ['Rustle', 'Rustling leaves', 'Scratch', 'Crunch', 'Scrape'],
     'squeak': ['Squeak', 'Squeal', 'Chirp, tweet', 'Whistle'],
+    'chirp': ['Chirp, tweet', 'Bird vocalization, bird call, bird song'],   # 새 무리 전체가 아니라 짹 소리만. 치타·다람쥐·나무늘보 울음
     'scream': ['Screaming', 'Squeal', 'Yell', 'Shout'],
     'trumpet': ['Trumpet', 'Brass instrument'],
     'wild': ['Animal', 'Wild animals', 'Domestic animals, pets', 'Livestock, farm animals, working animals'],
 }
+# 특정 종 라벨. 기대 소리보다 크면 다른 동물이다(2026-09-26 검토: 까마귀가 다람쥐로, 비둘기가 타조로 통과했다)
+SPECIES = ['Crow', 'Caw', 'Pigeon, dove', 'Coo', 'Chicken, rooster', 'Cluck', 'Fowl', 'Turkey', 'Gobble', 'Duck', 'Quack', 'Goose', 'Honk', 'Owl', 'Hoot',
+           'Cattle, bovinae', 'Moo', 'Frog', 'Croak', 'Pig', 'Oink', 'Horse', 'Neigh, whinny', 'Goat', 'Bleat', 'Sheep', 'Cat', 'Meow', 'Dog', 'Bark', 'Yip', 'Mouse', 'Cricket']
 ANIMAL_GROUPS = ['dog', 'cat', 'horse', 'cattle', 'pig', 'goat', 'chicken', 'duck', 'bird', 'rodent', 'insect', 'frog', 'whale', 'speech', 'baby', 'music']
 
 # ---------- 동물·상태별 기대 무리 ----------
@@ -63,13 +67,13 @@ DOGS = {'roam': ['dog', 'growl'], 'sprint': ['dog'], 'tired': ['breath', 'dog']}
 EXPECT = {
     'elephant': ('weak', {'roam': ['growl', 'wild', 'trumpet'], 'sprint': ['trumpet', 'growl', 'wild', 'scream'], 'tired': ['breath', 'wild']}),
     'chicken': ('strong', {'roam': ['chicken'], 'sprint': ['chicken', 'bird'], 'tired': ['chicken']}),
-    'sloth': ('weak', {'roam': ['rustle'], 'sprint': ['squeak', 'bird'], 'tired': ['breath']}),
-    'loris': ('weak', {'roam': ['squeak', 'bird', 'rodent'], 'sprint': ['hiss', 'squeak'], 'tired': ['breath']}),
+    'sloth': ('weak', {'roam': ['rustle'], 'sprint': ['squeak', 'chirp'], 'tired': ['breath']}),
+    'loris': ('weak', {'roam': ['squeak', 'chirp', 'rodent'], 'sprint': ['hiss', 'squeak'], 'tired': ['breath']}),
     'gila': ('weak', {'roam': ['hiss'], 'sprint': ['hiss'], 'tired': ['hiss', 'breath']}),
     'chihuahua': ('strong', DOGS),
     'crocodile': ('weak', {'roam': ['growl', 'wild', 'frog'], 'sprint': ['hiss', 'growl'], 'tired': ['breath', 'hiss']}),
     'komodo': ('weak', {'roam': ['hiss'], 'sprint': ['hiss', 'rustle'], 'tired': ['breath', 'hiss']}),
-    'squirrel': ('weak', {'roam': ['squeak', 'bird', 'rodent'], 'sprint': ['squeak', 'bird', 'rodent'], 'tired': ['breath']}),
+    'squirrel': ('weak', {'roam': ['squeak', 'chirp', 'rodent'], 'sprint': ['squeak', 'chirp', 'rodent'], 'tired': ['breath']}),
     'koala': ('weak', {'roam': ['growl', 'pig', 'breath'], 'sprint': ['growl', 'pig'], 'tired': ['breath']}),
     'cat': ('strong', {'roam': ['cat'], 'sprint': ['cat', 'hiss'], 'tired': ['breath', 'cat']}),
     'pig': ('strong', {'roam': ['pig'], 'sprint': ['pig', 'scream'], 'tired': ['pig', 'breath']}),
@@ -77,14 +81,14 @@ EXPECT = {
     'hippo': ('weak', {'roam': ['growl', 'wild'], 'sprint': ['growl', 'wild'], 'tired': ['breath']}),
     'greyhound': ('strong', DOGS),
     'kangaroo': ('weak', {'roam': ['growl', 'breath'], 'sprint': ['steps'], 'tired': ['breath']}),
-    'cheetah': ('strong', {'roam': ['bird', 'cat', 'squeak'], 'sprint': ['hiss', 'growl', 'cat'], 'tired': ['breath', 'cat']}),
+    'cheetah': ('strong', {'roam': ['chirp', 'cat', 'squeak'], 'sprint': ['hiss', 'growl', 'cat'], 'tired': ['breath', 'cat']}),
     'hare': ('weak', {'roam': ['rustle', 'steps'], 'sprint': ['steps', 'rustle'], 'tired': ['breath']}),
     'wolf': ('strong', DOGS),
     'jindo': ('strong', DOGS),
     'horse': ('strong', {'roam': ['horse', 'breath'], 'sprint': ['horse', 'steps'], 'tired': ['breath', 'horse']}),
     'camel': ('weak', {'roam': ['growl', 'wild', 'cattle'], 'sprint': ['growl', 'wild', 'cattle', 'scream'], 'tired': ['breath']}),
     'sleddog': ('strong', DOGS),
-    'ostrich': ('weak', {'roam': ['bird', 'growl'], 'sprint': ['hiss', 'steps'], 'tired': ['breath']}),
+    'ostrich': ('weak', {'roam': ['growl', 'wild'], 'sprint': ['hiss', 'steps'], 'tired': ['breath']}),   # 타조 붐 울음은 낮은 '웅'. 비둘기 구구가 통과하면 안 된다
     'pronghorn': ('weak', {'roam': ['breath'], 'sprint': ['breath', 'steps'], 'tired': ['breath']}),
     # 동물군 공용
     'bird': ('strong', {'roam': ['bird', 'chicken'], 'sprint': ['bird', 'chicken'], 'tired': ['bird', 'chicken', 'breath']}),
@@ -166,7 +170,7 @@ def parse(name):
     return (m.group(1), m.group(2)) if m else (None, None)
 
 
-def judge(animal, kind, probs, dur, rms_db, peak_db, hz):
+def judge(animal, kind, probs, dur, rms_db, peak_db, hz, hf=None):
     m = {}
     for k in probs:
         for lab, p in probs[k].items(): m[lab] = max(m.get(lab, 0), p)
@@ -181,14 +185,19 @@ def judge(animal, kind, probs, dur, rms_db, peak_db, hz):
     wrong = others[0] if others else (0, '', '')
     notes = []
     verdict = 'OK'
+    wanted = {l for g in want for l in G[g]}
+    species = max(((m.get(l, 0), l) for l in SPECIES if l not in wanted), default=(0, ''))
     if wrong[0] >= 0.3 and wrong[0] > exp[0]: verdict = 'BAD'; notes.append(f'{wrong[1]}로 들림({wrong[2]} {wrong[0]:.2f})')
+    elif species[0] >= 0.25 and species[0] > exp[0]: verdict = 'BAD'; notes.append(f'다른 종으로 들림({species[1]} {species[0]:.2f})')
     elif wrong[0] >= 0.15: verdict = 'SUSPECT'; notes.append(f'{wrong[1]} 기미({wrong[2]} {wrong[0]:.2f})')
     if strength == 'strong' and exp[0] < 0.1:
         verdict = 'BAD' if verdict == 'BAD' or exp[0] < 0.03 else 'SUSPECT'; notes.append(f'기대 소리 약함({exp[1] or "-"} {exp[0]:.2f})')
     if animal in BIG_DOGS and kind == 'sprint':
         yip, big = m.get('Yip', 0), max(m.get('Bark', 0), m.get('Bow-wow', 0))
         if yip > big: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'작은 개 깽깽(Yip {yip:.2f} > Bark {big:.2f})')
-        if hz and hz > 700: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'음높이 {hz:.0f}Hz. 큰 개치고 높다')
+        # 짖음은 유성 구간이 짧아 음높이가 불안정하다. 1.5kHz 위/아래 에너지 비가 더 믿을 만하다. 큰 개 0.00~0.07, 치와와·뺀 그레이하운드 0.19~0.33
+        if hf is not None and hf > 0.12: verdict = 'BAD' if hf > 0.18 else ('SUSPECT' if verdict == 'OK' else verdict); notes.append(f'고역 비 {hf:.2f}. 작은 개 짖음(큰 개는 0.10 이하)')
+        elif hz and hz > 700: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'음높이 {hz:.0f}Hz. 큰 개치고 높다')
     lo, hi = DUR.get(kind, (0, 99))
     if dur < lo or dur > hi: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'길이 {dur:.2f}초(규격 {lo}~{hi})')
     if rms_db < -24 or rms_db > -12: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'평균 음량 {rms_db:.1f}dBFS')
@@ -201,12 +210,16 @@ def audit(path, as_slot=None):
     animal, kind = parse(as_slot or path)
     if not animal: return None
     x = load(path)
-    dur = len(x) / 16000
-    act = x[np.abs(x) > 0.01]
+    X = load(path, 44100)   # 음량과 고역은 원래 대역으로
+    dur = len(X) / 44100
+    act = X[np.abs(X) > 0.01]
     rms_db = 20 * np.log10(max(1e-6, np.sqrt((act ** 2).mean()) if len(act) else 1e-6))
-    peak_db = 20 * np.log10(max(1e-6, np.abs(x).max()))
+    peak_db = 20 * np.log10(max(1e-6, np.abs(X).max()))
+    sp = np.abs(np.fft.rfft(X)) ** 2; fr = np.fft.rfftfreq(len(X), 1 / 44100)
+    lo_e = sp[(fr >= 80) & (fr < 1500)].sum(); hf = float(sp[fr >= 1500].sum() / lo_e) if lo_e > 0 else None
     hz = f0(x)
-    r = judge(animal, kind, tag(x), dur, rms_db, peak_db, hz)
+    r = judge(animal, kind, tag(x), dur, rms_db, peak_db, hz, hf)
+    r['hf_ratio'] = round(hf, 3) if hf is not None else None
     r.update({'file': os.path.relpath(path, HERE), 'animal': animal, 'kind': kind, 'dur': round(float(dur), 2), 'rms_db': round(float(rms_db), 1), 'peak_db': round(float(peak_db), 1), 'f0': int(round(hz)) if hz else None})
     return r
 
@@ -228,10 +241,23 @@ def main():
                         files.append((os.path.join(root, f), slot))
         else: files.append((p, a.slot))
     out = []
+    used = {}   # 원본 주소 → 쓰는 동물들 (credits.json)
+    try:
+        for c in json.load(open(os.path.join(HERE, 'credits.json'), encoding='utf-8')):
+            used.setdefault(c.get('source_url', ''), set()).add(c.get('animal', ''))
+    except FileNotFoundError: pass
+    cinfo = {}
+    try:
+        for c in json.load(open(os.path.join(HERE, 'candidates', 'candidates.json'), encoding='utf-8')): cinfo[os.path.basename(c.get('file', ''))] = c; cinfo[c.get('file', '')] = c
+    except FileNotFoundError: pass
     for f, slot in files:
         r = audit(f, slot)
         if r is None: continue
-        if slot: r['slot'] = slot
+        if slot:
+            r['slot'] = slot
+            c = cinfo.get(r['file'].replace(os.sep, '/')) or {}
+            others = used.get(c.get('source_url', ''), set()) - {r['animal']} - {''}
+            if others: r['verdict'] = 'BAD'; r['notes'].append('원본을 이미 다른 동물이 쓴다: ' + ', '.join(sorted(others)))
         out.append(r)
         print(f"{r['verdict']:8} {r['file']:42} {r['dur']:5.2f}s  기대 {r['expect'][0] or '-'} {r['expect'][1]:.2f}  " + ('; '.join(r['notes']) or '') + f"  | {', '.join(l for l, _ in r['top'][:3])}", flush=True)
     dst = a.json or (os.path.join(HERE, 'audit', 'report.json') if a.paths == [HERE] else None)

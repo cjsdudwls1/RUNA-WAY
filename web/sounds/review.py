@@ -139,7 +139,21 @@ def build(base='../', out=None, artifact=False):
         t['keep'] = [f['file'] for f in files if f"{f['animal']}_{f['kind']}" == t['slot'] and f['file'] not in t['replace']]
     prio = judge.get('priority', [])
     rows = sorted(todo.values(), key=lambda t: min([prio.index(x) for x in t['replace'] if x in prio] or [999]))
-    json.dump(rows, open(os.path.join(HERE, 'audit', 'todo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    # 추가: 전용 파일이 없어 동물군 공용 파일(다른 동물 소리)이 나는 슬롯. 타조 평상 = 비둘기, 캥거루 = 말 콧김 식
+    cls_of = load(os.path.join(HERE, 'audit', 'classes.json'), {})
+    add = []
+    for a in names:
+        for k in ('roam', 'sprint', 'tired'):
+            if any(f['animal'] == a and f['kind'] == k for f in files) or f'{a}_{k}' in todo: continue
+            c = cls_of.get(a, '')
+            fb = [f['file'] for f in files if f['animal'] == c and f['kind'] == k]
+            # 먼저 할 것: 공용 파일이 교체 대상이거나, 공용 파일이 뚜렷이 다른 동물(타조 ← 비둘기·올빼미, 캥거루 ← 말)
+            high = any(f['ai'] == 'REPLACE' for f in files if f['file'] in fb) or f'{a}_{k}' in ('ostrich_roam', 'ostrich_tired', 'kangaroo_roam', 'kangaroo_sprint')
+            add.append({'slot': f'{a}_{k}', 'animal': a, 'name': names[a], 'kind': k, 'expect': expect.get(a, {}).get(k, ''),
+                        'fallback_now': fb or ['합성음'], 'class': c, 'priority': 'high' if high else 'low'})
+    add.sort(key=lambda x: x['priority'] != 'high')
+    json.dump({'note': 'replace: 틀린 파일 교체(먼저). add: 전용 파일이 없어 다른 동물 소리(공용 파일)나 합성음이 나는 슬롯(여유 있을 때, 공용 파일이 전혀 다른 동물이면 먼저)',
+               'replace': rows, 'add': add}, open(os.path.join(HERE, 'audit', 'todo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     n = {v: sum(f['ai'] == v for f in files) for v in ('REPLACE', 'CHECK', 'KEEP')}
     print(f"{out}: {len(files)}개 (교체 추천 {n['REPLACE']}, 들어볼 것 {n['CHECK']}, 문제없음 {n['KEEP']}), 후보 슬롯 {len(cands)}, 할 일 슬롯 {len(rows)}")
 
