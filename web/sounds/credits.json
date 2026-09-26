@@ -1224,6 +1224,54 @@
     "edits": "층1 소 숨(freesound 233137) 2.77~3.12초, 4반음 내림, 피크 -1dBFS로 맞춤, 층2 소 숨(freesound 233143) 1.50~1.76초, 4반음 내림, 피크 -1dBFS로 맞춤, -2dB, 0.46초에 겹침, 층3 소 숨(freesound 233143) 2.20~2.56초, 4반음 내림, 피크 -1dBFS로 맞춤, 0.86초에 겹침, 층4 소 숨(freesound 233137) 2.10~2.30초, 4반음 내림, 피크 -1dBFS로 맞춤, -3dB, 1.36초에 겹침, 층5 돼지 숨(freesound 233115) 0.06~0.22초, 4반음 내림, 피크 -1dBFS로 맞춤, -6dB, 0.02초에 겹침, 층6 돼지 숨(freesound 233115) 0.06~0.22초, 4반음 내림, 피크 -1dBFS로 맞춤, -6dB, 0.88초에 겹침, 층7 곰 그르렁(freesound 519599) 10.50~10.85초, 5반음 내림, 피크 -1dBFS로 맞춤, -22dB, 층8 곰 그르렁(freesound 519599) 11.30~11.65초, 5반음 내림, 피크 -1dBFS로 맞춤, -22dB, 0.86초에 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.1초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/JarredGibb/sounds/233137/ https://freesound.org/people/JarredGibb/sounds/233143/ https://freesound.org/people/JarredGibb/sounds/233115/ https://freesound.org/people/Nivatius/sounds/519599/"
   },
   {
+    "file": "dokkaebi_step_1.mp3",
+    "animal": "dokkaebi",
+    "kind": "step",
+    "title": "도깨비 발소리: 무거운 흙 발소리, 거인 발소리 저역 쿵을 겹쳐 2~4반음 내림",
+    "source_url": "https://freesound.org/people/GammaGool/sounds/854190/",
+    "author": "GammaGool, aroth4",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Heavy Footsteps | Crunchy Thuds (854190); Giant footsteps running (133891)",
+    "edits": "층1 무거운 흙 발소리(freesound 854190) 0.12~0.39초, 4반음 내림, 피크 -1dBFS로 맞춤, 층2 거인 발소리 저역 쿵(freesound 133891) 0.59~0.74초, 300Hz 저역 통과, 2반음 내림, 피크 -1dBFS로 맞춤, -10dB, 두 층 모두 걸음 시작이 피치 내린 뒤 12ms에 오도록 잘라 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), EQ(150Hz 아래 -3dB, 1.2kHz +3dB, 7kHz 위 -4dB), 끝 0.08초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 6.5dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/GammaGool/sounds/854190/ https://freesound.org/people/aroth4/sounds/133891/"
+  },
+  {
+    "file": "dokkaebi_step_2.mp3",
+    "animal": "dokkaebi",
+    "kind": "step",
+    "title": "도깨비 발소리: 무거운 흙 발소리, 거인 발소리 저역 쿵을 겹쳐 2~3반음 내림",
+    "source_url": "https://freesound.org/people/GammaGool/sounds/854190/",
+    "author": "GammaGool, aroth4",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Heavy Footsteps | Crunchy Thuds (854190); Giant footsteps running (133891)",
+    "edits": "층1 무거운 흙 발소리(freesound 854190) 0.68~0.96초, 3반음 내림, 피크 -1dBFS로 맞춤, 층2 거인 발소리 저역 쿵(freesound 133891) 1.00~1.15초, 300Hz 저역 통과, 2반음 내림, 피크 -1dBFS로 맞춤, -10dB, 두 층 모두 걸음 시작이 피치 내린 뒤 12ms에 오도록 잘라 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), EQ(150Hz 아래 -3dB, 1.2kHz +3dB, 7kHz 위 -4dB), 끝 0.08초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/GammaGool/sounds/854190/ https://freesound.org/people/aroth4/sounds/133891/"
+  },
+  {
+    "file": "dokkaebi_step_3.mp3",
+    "animal": "dokkaebi",
+    "kind": "step",
+    "title": "도깨비 발소리: 무거운 흙 발소리, 거인 발소리 저역 쿵을 겹쳐 3~4반음 내림",
+    "source_url": "https://freesound.org/people/GammaGool/sounds/854190/",
+    "author": "GammaGool, aroth4",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Heavy Footsteps | Crunchy Thuds (854190); Giant footsteps running (133891)",
+    "edits": "층1 무거운 흙 발소리(freesound 854190) 1.84~2.09초, 60Hz 고역 통과, 4반음 내림, 피크 -1dBFS로 맞춤, 층2 거인 발소리 저역 쿵(freesound 133891) 1.82~1.97초, 300Hz 저역 통과, 3반음 내림, 피크 -1dBFS로 맞춤, -10dB, 두 층 모두 걸음 시작이 피치 내린 뒤 12ms에 오도록 잘라 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), EQ(150Hz 아래 -3dB, 1.2kHz +3dB, 7kHz 위 -4dB), 끝 0.08초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2.5dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/GammaGool/sounds/854190/ https://freesound.org/people/aroth4/sounds/133891/"
+  },
+  {
+    "file": "dokkaebi_step_4.mp3",
+    "animal": "dokkaebi",
+    "kind": "step",
+    "title": "도깨비 발소리: 무거운 흙 발소리, 거인 발소리 저역 쿵을 겹쳐 2~5반음 내림",
+    "source_url": "https://freesound.org/people/GammaGool/sounds/854190/",
+    "author": "GammaGool, aroth4",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file": "Heavy Footsteps | Crunchy Thuds (854190); Giant footsteps running (133891)",
+    "edits": "층1 무거운 흙 발소리(freesound 854190) 2.38~2.64초, 5반음 내림, 피크 -1dBFS로 맞춤, 층2 거인 발소리 저역 쿵(freesound 133891) 0.18~0.33초, 300Hz 저역 통과, 2반음 내림, 피크 -1dBFS로 맞춤, -10dB, 두 층 모두 걸음 시작이 피치 내린 뒤 12ms에 오도록 잘라 겹침, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), EQ(150Hz 아래 -3dB, 1.2kHz +3dB, 7kHz 위 -4dB), 끝 0.08초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/GammaGool/sounds/854190/ https://freesound.org/people/aroth4/sounds/133891/"
+  },
+  {
     "file": "dokkaebi_line_spot_1.mp3",
     "animal": "dokkaebi",
     "kind": "line_spot",
