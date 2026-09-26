@@ -7,9 +7,9 @@
    0.923
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.009
+   "speech",
+   "Speech",
+   0.003
   ],
   "top": [
    [
@@ -34,6 +34,7 @@
    ]
   ],
   "hf_ratio": 0.0,
+  "h": "6cf751dbda",
   "file": "bird_roam_1.mp3",
   "animal": "bird",
   "kind": "roam",
@@ -79,6 +80,7 @@
    ]
   ],
   "hf_ratio": 1.404,
+  "h": "c8e8c8f4d9",
   "file": "bird_sprint_1.mp3",
   "animal": "bird",
   "kind": "sprint",
@@ -124,6 +126,7 @@
    ]
   ],
   "hf_ratio": 490.004,
+  "h": "1a14d63470",
   "file": "bird_tired_1.mp3",
   "animal": "bird",
   "kind": "tired",
@@ -133,16 +136,18 @@
   "f0": 2000
  },
  {
-  "verdict": "OK",
-  "notes": [],
+  "verdict": "SUSPECT",
+  "notes": [
+   "동물 소리 기미 없음(Vehicle 0.48)"
+  ],
   "expect": [
    "Livestock, farm animals, working animals",
    0.019
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.013
+   "bird",
+   "Bird",
+   0.007
   ],
   "top": [
    [
@@ -167,6 +172,7 @@
    ]
   ],
   "hf_ratio": 0.227,
+  "h": "1f8c55f4f4",
   "file": "camel_roam_1.mp3",
   "animal": "camel",
   "kind": "roam",
@@ -178,16 +184,16 @@
  {
   "verdict": "SUSPECT",
   "notes": [
-   "music 기미(Music 0.25)"
+   "speech 기미(Speech 0.19)"
   ],
   "expect": [
    "Yell",
    0.036
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.248
+   "speech",
+   "Speech",
+   0.19
   ],
   "top": [
    [
@@ -212,6 +218,7 @@
    ]
   ],
   "hf_ratio": 0.041,
+  "h": "93c7baea1b",
   "file": "camel_sprint_1.mp3",
   "animal": "camel",
   "kind": "sprint",
@@ -223,16 +230,16 @@
  {
   "verdict": "SUSPECT",
   "notes": [
-   "music 기미(Music 0.27)"
+   "bird 기미(Bird 0.24)"
   ],
   "expect": [
    "Animal",
    0.452
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.274
+   "bird",
+   "Bird",
+   0.242
   ],
   "top": [
    [
@@ -257,6 +264,7 @@
    ]
   ],
   "hf_ratio": 0.027,
+  "h": "fe7f5ff874",
   "file": "camel_sprint_2.mp3",
   "animal": "camel",
   "kind": "sprint",
@@ -302,6 +310,7 @@
    ]
   ],
   "hf_ratio": 0.0,
+  "h": "a1b81993ad",
   "file": "canine_roam_1.mp3",
   "animal": "canine",
   "kind": "roam",
@@ -345,6 +354,7 @@
    ]
   ],
   "hf_ratio": 0.035,
+  "h": "d139aa034c",
   "file": "canine_sprint_1.mp3",
   "animal": "canine",
   "kind": "sprint",
@@ -390,6 +400,7 @@
    ]
   ],
   "hf_ratio": 0.775,
+  "h": "3128dce44f",
   "file": "canine_tired_1.mp3",
   "animal": "canine",
   "kind": "tired",
@@ -435,6 +446,7 @@
    ]
   ],
   "hf_ratio": 0.655,
+  "h": "cb75c8c237",
   "file": "cat_roam_1.mp3",
   "animal": "cat",
   "kind": "roam",
@@ -451,9 +463,9 @@
    0.962
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.017
+   "speech",
+   "Speech",
+   0.008
   ],
   "top": [
    [
@@ -478,6 +490,7 @@
    ]
   ],
   "hf_ratio": 2.55,
+  "h": "bb6179a289",
   "file": "cat_roam_2.mp3",
   "animal": "cat",
   "kind": "roam",
@@ -521,6 +534,7 @@
    ]
   ],
   "hf_ratio": 0.874,
+  "h": "04bbd98971",
   "file": "cat_sprint_1.mp3",
   "animal": "cat",
   "kind": "sprint",
@@ -537,9 +551,9 @@
    0.988
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.062
+   "speech",
+   "Speech",
+   0.009
   ],
   "top": [
    [
@@ -564,6 +578,7 @@
    ]
   ],
   "hf_ratio": 3.514,
+  "h": "3d498c9af5",
   "file": "cat_sprint_2.mp3",
   "animal": "cat",
   "kind": "sprint",
@@ -610,6 +625,7 @@
    ]
   ],
   "hf_ratio": 0.001,
+  "h": "4bc71cc304",
   "file": "cat_tired_1.mp3",
   "animal": "cat",
   "kind": "tired",
@@ -656,6 +672,7 @@
    ]
   ],
   "hf_ratio": 1.049,
+  "h": "f721a74d5e",
   "file": "cheetah_roam_1.mp3",
   "animal": "cheetah",
   "kind": "roam",
@@ -702,6 +719,7 @@
    ]
   ],
   "hf_ratio": 0.32,
+  "h": "74fdc37ed4",
   "file": "cheetah_roam_2.mp3",
   "animal": "cheetah",
   "kind": "roam",
@@ -720,9 +738,9 @@
    0.017
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.024
+   "insect",
+   "Buzz",
+   0.001
   ],
   "top": [
    [
@@ -747,6 +765,7 @@
    ]
   ],
   "hf_ratio": 0.051,
+  "h": "b97ce6f8c6",
   "file": "cheetah_sprint_1.mp3",
   "animal": "cheetah",
   "kind": "sprint",
@@ -765,9 +784,9 @@
    0.027
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.149
+   "speech",
+   "Speech",
+   0.063
   ],
   "top": [
    [
@@ -792,6 +811,7 @@
    ]
   ],
   "hf_ratio": 0.002,
+  "h": "159fcaf77d",
   "file": "cheetah_sprint_2.mp3",
   "animal": "cheetah",
   "kind": "sprint",
@@ -837,6 +857,7 @@
    ]
   ],
   "hf_ratio": 0.022,
+  "h": "c700f12b35",
   "file": "chicken_roam_1.mp3",
   "animal": "chicken",
   "kind": "roam",
@@ -880,6 +901,7 @@
    ]
   ],
   "hf_ratio": 0.134,
+  "h": "1c71df368c",
   "file": "chicken_roam_2.mp3",
   "animal": "chicken",
   "kind": "roam",
@@ -923,6 +945,7 @@
    ]
   ],
   "hf_ratio": 0.354,
+  "h": "db83d160cf",
   "file": "chicken_sprint_1.mp3",
   "animal": "chicken",
   "kind": "sprint",
@@ -968,6 +991,7 @@
    ]
   ],
   "hf_ratio": 0.04,
+  "h": "6c80023368",
   "file": "chicken_sprint_2.mp3",
   "animal": "chicken",
   "kind": "sprint",
@@ -1011,6 +1035,7 @@
    ]
   ],
   "hf_ratio": 0.072,
+  "h": "0ac5ab44f8",
   "file": "chicken_tired_1.mp3",
   "animal": "chicken",
   "kind": "tired",
@@ -1056,6 +1081,7 @@
    ]
   ],
   "hf_ratio": 0.045,
+  "h": "5a5866bbec",
   "file": "chicken_tired_2.mp3",
   "animal": "chicken",
   "kind": "tired",
@@ -1102,6 +1128,7 @@
    ]
   ],
   "hf_ratio": 0.032,
+  "h": "3a62e3c36f",
   "file": "chihuahua_roam_1.mp3",
   "animal": "chihuahua",
   "kind": "roam",
@@ -1147,6 +1174,7 @@
    ]
   ],
   "hf_ratio": 0.033,
+  "h": "a2ea4d01c7",
   "file": "chihuahua_roam_2.mp3",
   "animal": "chihuahua",
   "kind": "roam",
@@ -1193,6 +1221,7 @@
    ]
   ],
   "hf_ratio": 0.183,
+  "h": "03dd029584",
   "file": "chihuahua_sprint_1.mp3",
   "animal": "chihuahua",
   "kind": "sprint",
@@ -1236,6 +1265,7 @@
    ]
   ],
   "hf_ratio": 0.332,
+  "h": "0cd1c6fc14",
   "file": "chihuahua_sprint_2.mp3",
   "animal": "chihuahua",
   "kind": "sprint",
@@ -1279,6 +1309,7 @@
    ]
   ],
   "hf_ratio": 1.346,
+  "h": "827f87b027",
   "file": "chihuahua_tired_1.mp3",
   "animal": "chihuahua",
   "kind": "tired",
@@ -1295,8 +1326,8 @@
    0.567
   ],
   "wrong": [
-   "music",
-   "Music",
+   "speech",
+   "Speech",
    0.019
   ],
   "top": [
@@ -1322,6 +1353,7 @@
    ]
   ],
   "hf_ratio": 6.94,
+  "h": "fa0b3b3957",
   "file": "chihuahua_tired_2.mp3",
   "animal": "chihuahua",
   "kind": "tired",
@@ -1338,9 +1370,9 @@
    0.47
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.108
+   "insect",
+   "Buzz",
+   0.024
   ],
   "top": [
    [
@@ -1365,6 +1397,7 @@
    ]
   ],
   "hf_ratio": 0.0,
+  "h": "57d91b1a21",
   "file": "crocodile_roam_1.mp3",
   "animal": "crocodile",
   "kind": "roam",
@@ -1374,8 +1407,10 @@
   "f0": 2000
  },
  {
-  "verdict": "OK",
-  "notes": [],
+  "verdict": "SUSPECT",
+  "notes": [
+   "동물 소리 기미 없음(Vehicle 0.82)"
+  ],
   "expect": [
    "Roar",
    0.084
@@ -1408,6 +1443,7 @@
    ]
   ],
   "hf_ratio": 0.163,
+  "h": "1f808a427d",
   "file": "crocodile_roam_2.mp3",
   "animal": "crocodile",
   "kind": "roam",
@@ -1424,8 +1460,8 @@
    0.988
   ],
   "wrong": [
-   "music",
-   "Music",
+   "pig",
+   "Oink",
    0.002
   ],
   "top": [
@@ -1451,6 +1487,7 @@
    ]
   ],
   "hf_ratio": 0.034,
+  "h": "f01dab9635",
   "file": "dokkaebi_line_escape_1.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1467,9 +1504,9 @@
    0.992
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.008
+   "duck",
+   "Quack",
+   0.001
   ],
   "top": [
    [
@@ -1494,6 +1531,7 @@
    ]
   ],
   "hf_ratio": 0.163,
+  "h": "219fadfd2e",
   "file": "dokkaebi_line_escape_2.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1510,9 +1548,9 @@
    0.99
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.006
+   "baby",
+   "Baby cry, infant cry",
+   0.001
   ],
   "top": [
    [
@@ -1537,6 +1575,7 @@
    ]
   ],
   "hf_ratio": 0.055,
+  "h": "99310dc8f8",
   "file": "dokkaebi_line_hit_1.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1553,9 +1592,9 @@
    0.991
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.012
+   "horse",
+   "Clip-clop",
+   0.0
   ],
   "top": [
    [
@@ -1580,6 +1619,7 @@
    ]
   ],
   "hf_ratio": 0.154,
+  "h": "66c6fffa60",
   "file": "dokkaebi_line_hit_2.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1596,9 +1636,9 @@
    0.999
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.007
+   "cat",
+   "Meow",
+   0.0
   ],
   "top": [
    [
@@ -1623,6 +1663,7 @@
    ]
   ],
   "hf_ratio": 0.084,
+  "h": "785fd99e26",
   "file": "dokkaebi_line_near_1.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1639,9 +1680,9 @@
    0.999
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.013
+   "bird",
+   "Owl",
+   0.0
   ],
   "top": [
    [
@@ -1666,6 +1707,7 @@
    ]
   ],
   "hf_ratio": 0.087,
+  "h": "9c7eab8980",
   "file": "dokkaebi_line_near_2.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1682,9 +1724,9 @@
    0.996
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.004
+   "baby",
+   "Baby cry, infant cry",
+   0.0
   ],
   "top": [
    [
@@ -1709,6 +1751,7 @@
    ]
   ],
   "hf_ratio": 0.143,
+  "h": "79e7590609",
   "file": "dokkaebi_line_spot_1.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1752,6 +1795,7 @@
    ]
   ],
   "hf_ratio": 0.932,
+  "h": "2bce8c9941",
   "file": "dokkaebi_line_spot_2.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1768,9 +1812,9 @@
    0.979
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.033
+   "insect",
+   "Buzz",
+   0.003
   ],
   "top": [
    [
@@ -1795,6 +1839,7 @@
    ]
   ],
   "hf_ratio": 0.11,
+  "h": "acaa343a94",
   "file": "dokkaebi_line_sprint_1.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1811,9 +1856,9 @@
    0.996
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.01
+   "insect",
+   "Buzz",
+   0.0
   ],
   "top": [
    [
@@ -1838,6 +1883,7 @@
    ]
   ],
   "hf_ratio": 0.196,
+  "h": "7c6655d088",
   "file": "dokkaebi_line_sprint_2.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1854,9 +1900,9 @@
    0.998
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.007
+   "pig",
+   "Oink",
+   0.0
   ],
   "top": [
    [
@@ -1881,6 +1927,7 @@
    ]
   ],
   "hf_ratio": 0.191,
+  "h": "2401193270",
   "file": "dokkaebi_line_sprint_3.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1897,9 +1944,9 @@
    0.999
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.022
+   "pig",
+   "Oink",
+   0.001
   ],
   "top": [
    [
@@ -1924,6 +1971,7 @@
    ]
   ],
   "hf_ratio": 1.06,
+  "h": "d11cb9da31",
   "file": "dokkaebi_line_taunt_1.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1940,9 +1988,9 @@
    0.989
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.031
+   "pig",
+   "Oink",
+   0.0
   ],
   "top": [
    [
@@ -1967,6 +2015,7 @@
    ]
   ],
   "hf_ratio": 0.127,
+  "h": "f9e928eb5c",
   "file": "dokkaebi_line_taunt_2.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -1983,9 +2032,9 @@
    0.998
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.006
+   "baby",
+   "Baby cry, infant cry",
+   0.002
   ],
   "top": [
    [
@@ -2010,6 +2059,7 @@
    ]
   ],
   "hf_ratio": 0.212,
+  "h": "4910f372c7",
   "file": "dokkaebi_line_taunt_3.mp3",
   "animal": "dokkaebi",
   "kind": "line",
@@ -2019,18 +2069,18 @@
   "f0": 274
  },
  {
-  "verdict": "BAD",
+  "verdict": "SUSPECT",
   "notes": [
-   "music로 들림(Music 0.39)"
+   "음악처럼 들림(Music 0.39)"
   ],
   "expect": [
    "Roar",
    0.379
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.386
+   "pig",
+   "Oink",
+   0.027
   ],
   "top": [
    [
@@ -2055,6 +2105,7 @@
    ]
   ],
   "hf_ratio": 0.003,
+  "h": "b1615b3be5",
   "file": "dokkaebi_roam_1.mp3",
   "animal": "dokkaebi",
   "kind": "roam",
@@ -2064,18 +2115,16 @@
   "f0": 2000
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.22)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Roar",
    0.112
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.217
+   "speech",
+   "Speech",
+   0.038
   ],
   "top": [
    [
@@ -2100,6 +2149,7 @@
    ]
   ],
   "hf_ratio": 0.039,
+  "h": "e689273479",
   "file": "dokkaebi_roam_2.mp3",
   "animal": "dokkaebi",
   "kind": "roam",
@@ -2116,9 +2166,9 @@
    0.649
   ],
   "wrong": [
-   "cat",
-   "Roaring cats (lions, tigers)",
-   0.067
+   "whale",
+   "Whale vocalization",
+   0.021
   ],
   "top": [
    [
@@ -2143,6 +2193,7 @@
    ]
   ],
   "hf_ratio": 0.018,
+  "h": "c75a193611",
   "file": "dokkaebi_sprint_1.mp3",
   "animal": "dokkaebi",
   "kind": "sprint",
@@ -2159,9 +2210,9 @@
    0.913
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.106
+   "whale",
+   "Whale vocalization",
+   0.031
   ],
   "top": [
    [
@@ -2186,6 +2237,7 @@
    ]
   ],
   "hf_ratio": 0.013,
+  "h": "aee25f7559",
   "file": "dokkaebi_sprint_2.mp3",
   "animal": "dokkaebi",
   "kind": "sprint",
@@ -2202,9 +2254,9 @@
    0.026
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.007
+   "horse",
+   "Horse",
+   0.003
   ],
   "top": [
    [
@@ -2229,6 +2281,7 @@
    ]
   ],
   "hf_ratio": 0.079,
+  "h": "b85aed8ded",
   "file": "dokkaebi_step_1.mp3",
   "animal": "dokkaebi",
   "kind": "step",
@@ -2245,9 +2298,9 @@
    0.025
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.011
+   "speech",
+   "Speech",
+   0.002
   ],
   "top": [
    [
@@ -2272,6 +2325,7 @@
    ]
   ],
   "hf_ratio": 0.097,
+  "h": "2d00e8fe0b",
   "file": "dokkaebi_step_2.mp3",
   "animal": "dokkaebi",
   "kind": "step",
@@ -2288,8 +2342,8 @@
    0.019
   ],
   "wrong": [
-   "music",
-   "Music",
+   "speech",
+   "Speech",
    0.004
   ],
   "top": [
@@ -2315,6 +2369,7 @@
    ]
   ],
   "hf_ratio": 0.361,
+  "h": "e640d0fcfa",
   "file": "dokkaebi_step_3.mp3",
   "animal": "dokkaebi",
   "kind": "step",
@@ -2331,9 +2386,9 @@
    0.036
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.004
+   "horse",
+   "Horse",
+   0.002
   ],
   "top": [
    [
@@ -2358,6 +2413,7 @@
    ]
   ],
   "hf_ratio": 0.337,
+  "h": "0e5f150125",
   "file": "dokkaebi_step_4.mp3",
   "animal": "dokkaebi",
   "kind": "step",
@@ -2374,9 +2430,9 @@
    0.066
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.044
+   "speech",
+   "Speech",
+   0.004
   ],
   "top": [
    [
@@ -2401,6 +2457,7 @@
    ]
   ],
   "hf_ratio": 0.226,
+  "h": "6e8906f6a3",
   "file": "dokkaebi_tired_1.mp3",
   "animal": "dokkaebi",
   "kind": "tired",
@@ -2410,18 +2467,16 @@
   "f0": null
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "cat 기미(Roaring cats (lions, tigers) 0.16)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Animal",
    0.546
   ],
   "wrong": [
-   "cat",
-   "Roaring cats (lions, tigers)",
-   0.157
+   "pig",
+   "Oink",
+   0.048
   ],
   "top": [
    [
@@ -2446,6 +2501,7 @@
    ]
   ],
   "hf_ratio": 0.004,
+  "h": "7b8d9abdbb",
   "file": "elephant_roam_1.mp3",
   "animal": "elephant",
   "kind": "roam",
@@ -2455,18 +2511,16 @@
   "f0": 286
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "cat 기미(Roaring cats (lions, tigers) 0.23)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Animal",
    0.452
   ],
   "wrong": [
-   "cat",
-   "Roaring cats (lions, tigers)",
-   0.227
+   "speech",
+   "Speech",
+   0.015
   ],
   "top": [
    [
@@ -2491,6 +2545,7 @@
    ]
   ],
   "hf_ratio": 0.003,
+  "h": "3c19f25722",
   "file": "elephant_roam_2.mp3",
   "animal": "elephant",
   "kind": "roam",
@@ -2534,6 +2589,7 @@
    ]
   ],
   "hf_ratio": 1.215,
+  "h": "45d34e20f1",
   "file": "elephant_sprint_1.mp3",
   "animal": "elephant",
   "kind": "sprint",
@@ -2543,18 +2599,16 @@
   "f0": 593
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.30)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Animal",
    0.172
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.297
+   "cat",
+   "Roaring cats (lions, tigers)",
+   0.065
   ],
   "top": [
    [
@@ -2579,6 +2633,7 @@
    ]
   ],
   "hf_ratio": 0.421,
+  "h": "58f27b02da",
   "file": "elephant_tired_1.mp3",
   "animal": "elephant",
   "kind": "tired",
@@ -2622,6 +2677,7 @@
    ]
   ],
   "hf_ratio": 0.611,
+  "h": "ec5204622e",
   "file": "feline_roam_1.mp3",
   "animal": "feline",
   "kind": "roam",
@@ -2665,6 +2721,7 @@
    ]
   ],
   "hf_ratio": 0.874,
+  "h": "04bbd98971",
   "file": "feline_sprint_1.mp3",
   "animal": "feline",
   "kind": "sprint",
@@ -2710,6 +2767,7 @@
    ]
   ],
   "hf_ratio": 0.0,
+  "h": "28bbfd680f",
   "file": "feline_tired_1.mp3",
   "animal": "feline",
   "kind": "tired",
@@ -2753,6 +2811,7 @@
    ]
   ],
   "hf_ratio": 0.102,
+  "h": "8bed6690b7",
   "file": "greyhound_roam_1.mp3",
   "animal": "greyhound",
   "kind": "roam",
@@ -2762,18 +2821,18 @@
   "f0": 667
  },
  {
-  "verdict": "BAD",
+  "verdict": "SUSPECT",
   "notes": [
-   "music로 들림(Music 0.38)"
+   "음악처럼 들림(Music 0.38)"
   ],
   "expect": [
    "Dog",
    0.292
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.376
+   "pig",
+   "Oink",
+   0.031
   ],
   "top": [
    [
@@ -2798,6 +2857,7 @@
    ]
   ],
   "hf_ratio": 0.018,
+  "h": "667264711b",
   "file": "greyhound_roam_2.mp3",
   "animal": "greyhound",
   "kind": "roam",
@@ -2814,8 +2874,8 @@
    0.893
   ],
   "wrong": [
-   "music",
-   "Music",
+   "speech",
+   "Speech",
    0.023
   ],
   "top": [
@@ -2841,6 +2901,7 @@
    ]
   ],
   "hf_ratio": 0.255,
+  "h": "6ba67c4878",
   "file": "greyhound_tired_1.mp3",
   "animal": "greyhound",
   "kind": "tired",
@@ -2886,6 +2947,7 @@
    ]
   ],
   "hf_ratio": 0.316,
+  "h": "66c24f7471",
   "file": "hare_roam_1.mp3",
   "animal": "hare",
   "kind": "roam",
@@ -2902,9 +2964,9 @@
    0.333
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.079
+   "horse",
+   "Horse",
+   0.013
   ],
   "top": [
    [
@@ -2929,6 +2991,7 @@
    ]
   ],
   "hf_ratio": 0.236,
+  "h": "631c0eac7a",
   "file": "hare_roam_2.mp3",
   "animal": "hare",
   "kind": "roam",
@@ -2945,9 +3008,9 @@
    0.014
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.036
+   "bird",
+   "Bird",
+   0.005
   ],
   "top": [
    [
@@ -2972,6 +3035,7 @@
    ]
   ],
   "hf_ratio": 0.598,
+  "h": "ec61d0910c",
   "file": "hare_sprint_1.mp3",
   "animal": "hare",
   "kind": "sprint",
@@ -2981,18 +3045,16 @@
   "f0": 2000
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.21)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Rustle",
    0.009
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.207
+   "speech",
+   "Speech",
+   0.014
   ],
   "top": [
    [
@@ -3017,6 +3079,7 @@
    ]
   ],
   "hf_ratio": 0.549,
+  "h": "14c5dc67aa",
   "file": "hare_sprint_2.mp3",
   "animal": "hare",
   "kind": "sprint",
@@ -3062,6 +3125,7 @@
    ]
   ],
   "hf_ratio": 0.074,
+  "h": "c196de0c99",
   "file": "hare_tired_1.mp3",
   "animal": "hare",
   "kind": "tired",
@@ -3105,6 +3169,7 @@
    ]
   ],
   "hf_ratio": 0.049,
+  "h": "6312c6f86e",
   "file": "hippo_roam_1.mp3",
   "animal": "hippo",
   "kind": "roam",
@@ -3150,6 +3215,7 @@
    ]
   ],
   "hf_ratio": 0.002,
+  "h": "07ace6ad5d",
   "file": "hippo_roam_2.mp3",
   "animal": "hippo",
   "kind": "roam",
@@ -3166,9 +3232,9 @@
    0.226
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.047
+   "dog",
+   "Dog",
+   0.034
   ],
   "top": [
    [
@@ -3193,6 +3259,7 @@
    ]
   ],
   "hf_ratio": 0.065,
+  "h": "c253910c1d",
   "file": "hippo_sprint_1.mp3",
   "animal": "hippo",
   "kind": "sprint",
@@ -3238,6 +3305,7 @@
    ]
   ],
   "hf_ratio": 0.017,
+  "h": "1628155f87",
   "file": "hippo_sprint_2.mp3",
   "animal": "hippo",
   "kind": "sprint",
@@ -3283,6 +3351,7 @@
    ]
   ],
   "hf_ratio": 0.075,
+  "h": "7513921e49",
   "file": "hippo_tired_1.mp3",
   "animal": "hippo",
   "kind": "tired",
@@ -3300,8 +3369,8 @@
   ],
   "wrong": [
    "cat",
-   "Roaring cats (lions, tigers)",
-   0.005
+   "Cat",
+   0.002
   ],
   "top": [
    [
@@ -3326,6 +3395,7 @@
    ]
   ],
   "hf_ratio": 0.082,
+  "h": "94f6f799c6",
   "file": "hoof_roam_1.mp3",
   "animal": "hoof",
   "kind": "roam",
@@ -3371,6 +3441,7 @@
    ]
   ],
   "hf_ratio": 0.284,
+  "h": "1b0827bbf0",
   "file": "hoof_sprint_1.mp3",
   "animal": "hoof",
   "kind": "sprint",
@@ -3414,6 +3485,7 @@
    ]
   ],
   "hf_ratio": 4.634,
+  "h": "ffaada80ef",
   "file": "hoof_tired_1.mp3",
   "animal": "hoof",
   "kind": "tired",
@@ -3459,6 +3531,7 @@
    ]
   ],
   "hf_ratio": 0.06,
+  "h": "3e84d4b71f",
   "file": "horse_roam_1.mp3",
   "animal": "horse",
   "kind": "roam",
@@ -3475,9 +3548,9 @@
    0.89
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.058
+   "goat",
+   "Goat",
+   0.01
   ],
   "top": [
    [
@@ -3502,6 +3575,7 @@
    ]
   ],
   "hf_ratio": 0.53,
+  "h": "199766eca0",
   "file": "horse_sprint_1.mp3",
   "animal": "horse",
   "kind": "sprint",
@@ -3548,6 +3622,7 @@
    ]
   ],
   "hf_ratio": 7.365,
+  "h": "d875b4c8f9",
   "file": "horse_sprint_2.mp3",
   "animal": "horse",
   "kind": "sprint",
@@ -3591,6 +3666,7 @@
    ]
   ],
   "hf_ratio": 0.437,
+  "h": "6e21d78457",
   "file": "horse_tired_1.mp3",
   "animal": "horse",
   "kind": "tired",
@@ -3634,6 +3710,7 @@
    ]
   ],
   "hf_ratio": 0.324,
+  "h": "a19d9d34c6",
   "file": "horse_tired_2.mp3",
   "animal": "horse",
   "kind": "tired",
@@ -3650,9 +3727,9 @@
    0.969
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.018
+   "dog",
+   "Bark",
+   0.0
   ],
   "top": [
    [
@@ -3677,6 +3754,7 @@
    ]
   ],
   "hf_ratio": 0.102,
+  "h": "7427406270",
   "file": "jeoseung_line_escape_1.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3693,9 +3771,9 @@
    0.992
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.013
+   "dog",
+   "Growling",
+   0.0
   ],
   "top": [
    [
@@ -3720,6 +3798,7 @@
    ]
   ],
   "hf_ratio": 0.058,
+  "h": "ae131c89e3",
   "file": "jeoseung_line_escape_2.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3736,9 +3815,9 @@
    0.989
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.006
+   "duck",
+   "Quack",
+   0.0
   ],
   "top": [
    [
@@ -3763,6 +3842,7 @@
    ]
   ],
   "hf_ratio": 0.16,
+  "h": "a0dfa61042",
   "file": "jeoseung_line_hit_1.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3772,18 +3852,16 @@
   "f0": 2000
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.38)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Speech",
    0.998
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.375
+   "insect",
+   "Buzz",
+   0.0
   ],
   "top": [
    [
@@ -3808,6 +3886,7 @@
    ]
   ],
   "hf_ratio": 0.075,
+  "h": "50cf1ccf56",
   "file": "jeoseung_line_hit_2.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3824,9 +3903,9 @@
    0.994
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.12
+   "pig",
+   "Oink",
+   0.001
   ],
   "top": [
    [
@@ -3851,6 +3930,7 @@
    ]
   ],
   "hf_ratio": 0.111,
+  "h": "120db9dadc",
   "file": "jeoseung_line_near_1.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3867,9 +3947,9 @@
    0.974
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.038
+   "chicken",
+   "Fowl",
+   0.0
   ],
   "top": [
    [
@@ -3894,6 +3974,7 @@
    ]
   ],
   "hf_ratio": 0.615,
+  "h": "2613635cf0",
   "file": "jeoseung_line_near_2.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3903,18 +3984,16 @@
   "f0": 2000
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.53)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Speech",
    0.981
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.527
+   "pig",
+   "Oink",
+   0.003
   ],
   "top": [
    [
@@ -3939,6 +4018,7 @@
    ]
   ],
   "hf_ratio": 0.088,
+  "h": "b509ad3bda",
   "file": "jeoseung_line_spot_1.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3955,9 +4035,9 @@
    0.979
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.01
+   "duck",
+   "Quack",
+   0.0
   ],
   "top": [
    [
@@ -3982,6 +4062,7 @@
    ]
   ],
   "hf_ratio": 0.012,
+  "h": "4787726ee2",
   "file": "jeoseung_line_spot_2.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -3998,9 +4079,9 @@
    0.976
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.011
+   "duck",
+   "Quack",
+   0.001
   ],
   "top": [
    [
@@ -4025,6 +4106,7 @@
    ]
   ],
   "hf_ratio": 0.106,
+  "h": "e997bf4cfe",
   "file": "jeoseung_line_taunt_1.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -4041,9 +4123,9 @@
    0.981
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.006
+   "duck",
+   "Quack",
+   0.0
   ],
   "top": [
    [
@@ -4068,6 +4150,7 @@
    ]
   ],
   "hf_ratio": 0.088,
+  "h": "35fe4c61da",
   "file": "jeoseung_line_taunt_2.mp3",
   "animal": "jeoseung",
   "kind": "line",
@@ -4111,6 +4194,7 @@
    ]
   ],
   "hf_ratio": 0.359,
+  "h": "311f59ef05",
   "file": "jeoseung_roam_1.mp3",
   "animal": "jeoseung",
   "kind": "roam",
@@ -4127,9 +4211,9 @@
    0.0
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.043
+   "speech",
+   "Speech",
+   0.002
   ],
   "top": [
    [
@@ -4154,6 +4238,7 @@
    ]
   ],
   "hf_ratio": 267.115,
+  "h": "0f6afe0530",
   "file": "jeoseung_roam_2.mp3",
   "animal": "jeoseung",
   "kind": "roam",
@@ -4170,9 +4255,9 @@
    0.165
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.021
+   "speech",
+   "Speech",
+   0.002
   ],
   "top": [
    [
@@ -4197,6 +4282,7 @@
    ]
   ],
   "hf_ratio": 0.005,
+  "h": "8cb875f203",
   "file": "jeoseung_roam_3.mp3",
   "animal": "jeoseung",
   "kind": "roam",
@@ -4240,6 +4326,7 @@
    ]
   ],
   "hf_ratio": 0.008,
+  "h": "af7761b286",
   "file": "jindo_roam_1.mp3",
   "animal": "jindo",
   "kind": "roam",
@@ -4283,6 +4370,7 @@
    ]
   ],
   "hf_ratio": 0.063,
+  "h": "2b8d944873",
   "file": "jindo_roam_2.mp3",
   "animal": "jindo",
   "kind": "roam",
@@ -4302,9 +4390,9 @@
    0.37
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.013
+   "speech",
+   "Speech",
+   0.009
   ],
   "top": [
    [
@@ -4329,6 +4417,7 @@
    ]
   ],
   "hf_ratio": 0.029,
+  "h": "418c056657",
   "file": "jindo_sprint_1.mp3",
   "animal": "jindo",
   "kind": "sprint",
@@ -4345,9 +4434,9 @@
    0.582
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.011
+   "speech",
+   "Speech",
+   0.008
   ],
   "top": [
    [
@@ -4372,6 +4461,7 @@
    ]
   ],
   "hf_ratio": 0.065,
+  "h": "331522726f",
   "file": "jindo_sprint_2.mp3",
   "animal": "jindo",
   "kind": "sprint",
@@ -4415,6 +4505,7 @@
    ]
   ],
   "hf_ratio": 6.14,
+  "h": "857e1325cd",
   "file": "jindo_tired_1.mp3",
   "animal": "jindo",
   "kind": "tired",
@@ -4460,6 +4551,7 @@
    ]
   ],
   "hf_ratio": 0.222,
+  "h": "d6cdac8cdf",
   "file": "koala_roam_1.mp3",
   "animal": "koala",
   "kind": "roam",
@@ -4476,9 +4568,9 @@
    0.242
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.122
+   "cat",
+   "Purr",
+   0.068
   ],
   "top": [
    [
@@ -4503,6 +4595,7 @@
    ]
   ],
   "hf_ratio": 0.135,
+  "h": "537faa09e6",
   "file": "koala_roam_2.mp3",
   "animal": "koala",
   "kind": "roam",
@@ -4512,18 +4605,19 @@
   "f0": 209
  },
  {
-  "verdict": "BAD",
+  "verdict": "SUSPECT",
   "notes": [
-   "music로 들림(Music 0.71)"
+   "음악처럼 들림(Music 0.71)",
+   "동물 소리 기미 없음(Music 0.71)"
   ],
   "expect": [
    "Grunt",
    0.046
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.709
+   "speech",
+   "Speech",
+   0.008
   ],
   "top": [
    [
@@ -4548,6 +4642,7 @@
    ]
   ],
   "hf_ratio": 0.251,
+  "h": "71ac8a22b2",
   "file": "koala_sprint_1.mp3",
   "animal": "koala",
   "kind": "sprint",
@@ -4557,18 +4652,16 @@
   "f0": 390
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.18)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Grunt",
    0.043
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.179
+   "dog",
+   "Dog",
+   0.149
   ],
   "top": [
    [
@@ -4593,6 +4686,7 @@
    ]
   ],
   "hf_ratio": 0.206,
+  "h": "bc5235eed2",
   "file": "koala_sprint_2.mp3",
   "animal": "koala",
   "kind": "sprint",
@@ -4638,6 +4732,7 @@
    ]
   ],
   "hf_ratio": 0.036,
+  "h": "9c427c5d6c",
   "file": "koala_tired_1.mp3",
   "animal": "koala",
   "kind": "tired",
@@ -4681,6 +4776,7 @@
    ]
   ],
   "hf_ratio": 0.026,
+  "h": "d404b74443",
   "file": "koala_tired_2.mp3",
   "animal": "koala",
   "kind": "tired",
@@ -4699,9 +4795,9 @@
    0.027
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.022
+   "bird",
+   "Crow",
+   0.019
   ],
   "top": [
    [
@@ -4726,6 +4822,7 @@
    ]
   ],
   "hf_ratio": 11.134,
+  "h": "e30a001b71",
   "file": "ostrich_sprint_1.mp3",
   "animal": "ostrich",
   "kind": "sprint",
@@ -4769,6 +4866,7 @@
    ]
   ],
   "hf_ratio": 0.854,
+  "h": "300fa4f250",
   "file": "pig_roam_1.mp3",
   "animal": "pig",
   "kind": "roam",
@@ -4785,9 +4883,9 @@
    0.174
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.131
+   "speech",
+   "Speech",
+   0.087
   ],
   "top": [
    [
@@ -4812,6 +4910,7 @@
    ]
   ],
   "hf_ratio": 1.139,
+  "h": "86ae2a8689",
   "file": "pig_roam_2.mp3",
   "animal": "pig",
   "kind": "roam",
@@ -4857,6 +4956,7 @@
    ]
   ],
   "hf_ratio": 12.406,
+  "h": "45c3f36ed0",
   "file": "pig_sprint_1.mp3",
   "animal": "pig",
   "kind": "sprint",
@@ -4902,6 +5002,7 @@
    ]
   ],
   "hf_ratio": 0.019,
+  "h": "b3f6c46ba1",
   "file": "pig_tired_1.mp3",
   "animal": "pig",
   "kind": "tired",
@@ -4945,6 +5046,7 @@
    ]
   ],
   "hf_ratio": 0.013,
+  "h": "dbe33e5986",
   "file": "pig_tired_2.mp3",
   "animal": "pig",
   "kind": "tired",
@@ -4961,9 +5063,9 @@
    0.004
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.097
+   "insect",
+   "Insect",
+   0.082
   ],
   "top": [
    [
@@ -4988,6 +5090,7 @@
    ]
   ],
   "hf_ratio": 785.803,
+  "h": "6bb164d1cb",
   "file": "reptile_roam_1.mp3",
   "animal": "reptile",
   "kind": "roam",
@@ -5031,6 +5134,7 @@
    ]
   ],
   "hf_ratio": 131.004,
+  "h": "6d95e42327",
   "file": "reptile_sprint_1.mp3",
   "animal": "reptile",
   "kind": "sprint",
@@ -5074,6 +5178,7 @@
    ]
   ],
   "hf_ratio": 83.248,
+  "h": "a47d42b096",
   "file": "reptile_tired_1.mp3",
   "animal": "reptile",
   "kind": "tired",
@@ -5090,9 +5195,9 @@
    0.737
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.036
+   "bird",
+   "Bird",
+   0.004
   ],
   "top": [
    [
@@ -5117,6 +5222,7 @@
    ]
   ],
   "hf_ratio": 0.0,
+  "h": "e774864944",
   "file": "sleddog_roam_1.mp3",
   "animal": "sleddog",
   "kind": "roam",
@@ -5135,9 +5241,9 @@
    0.04
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.093
+   "baby",
+   "Baby cry, infant cry",
+   0.043
   ],
   "top": [
    [
@@ -5162,6 +5268,7 @@
    ]
   ],
   "hf_ratio": 0.003,
+  "h": "ddccfa3ba8",
   "file": "sleddog_roam_2.mp3",
   "animal": "sleddog",
   "kind": "roam",
@@ -5178,9 +5285,9 @@
    0.646
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.007
+   "speech",
+   "Speech",
+   0.004
   ],
   "top": [
    [
@@ -5205,6 +5312,7 @@
    ]
   ],
   "hf_ratio": 0.001,
+  "h": "6e0e02a7bc",
   "file": "sleddog_sprint_1.mp3",
   "animal": "sleddog",
   "kind": "sprint",
@@ -5221,9 +5329,9 @@
    0.643
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.005
+   "speech",
+   "Speech",
+   0.004
   ],
   "top": [
    [
@@ -5248,6 +5356,7 @@
    ]
   ],
   "hf_ratio": 0.001,
+  "h": "f2b6c307bd",
   "file": "sleddog_sprint_2.mp3",
   "animal": "sleddog",
   "kind": "sprint",
@@ -5293,6 +5402,7 @@
    ]
   ],
   "hf_ratio": 0.011,
+  "h": "bd7967faa4",
   "file": "small_roam_1.mp3",
   "animal": "small",
   "kind": "roam",
@@ -5338,6 +5448,7 @@
    ]
   ],
   "hf_ratio": 0.142,
+  "h": "920185a4ad",
   "file": "small_sprint_1.mp3",
   "animal": "small",
   "kind": "sprint",
@@ -5347,18 +5458,19 @@
   "f0": 696
  },
  {
-  "verdict": "BAD",
+  "verdict": "SUSPECT",
   "notes": [
-   "music로 들림(Music 0.67)"
+   "horse 기미(Clip-clop 0.16)",
+   "음악처럼 들림(Music 0.67)"
   ],
   "expect": [
    "Snort",
    0.005
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.665
+   "horse",
+   "Clip-clop",
+   0.156
   ],
   "top": [
    [
@@ -5383,6 +5495,7 @@
    ]
   ],
   "hf_ratio": 0.052,
+  "h": "cb975bc1b2",
   "file": "small_tired_1.mp3",
   "animal": "small",
   "kind": "tired",
@@ -5426,6 +5539,7 @@
    ]
   ],
   "hf_ratio": 122.204,
+  "h": "935b03f037",
   "file": "squirrel_roam_1.mp3",
   "animal": "squirrel",
   "kind": "roam",
@@ -5471,6 +5585,7 @@
    ]
   ],
   "hf_ratio": 531.729,
+  "h": "3342074522",
   "file": "squirrel_roam_2.mp3",
   "animal": "squirrel",
   "kind": "roam",
@@ -5516,6 +5631,7 @@
    ]
   ],
   "hf_ratio": 101.163,
+  "h": "fd1d9030f8",
   "file": "squirrel_sprint_1.mp3",
   "animal": "squirrel",
   "kind": "sprint",
@@ -5561,6 +5677,7 @@
    ]
   ],
   "hf_ratio": 102.631,
+  "h": "c55b1438b7",
   "file": "squirrel_sprint_2.mp3",
   "animal": "squirrel",
   "kind": "sprint",
@@ -5570,18 +5687,16 @@
   "f0": 1778
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.21)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Howl",
    0.911
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.215
+   "whale",
+   "Whale vocalization",
+   0.038
   ],
   "top": [
    [
@@ -5606,6 +5721,7 @@
    ]
   ],
   "hf_ratio": 0.001,
+  "h": "46a4ecef94",
   "file": "wolf_roam_1.mp3",
   "animal": "wolf",
   "kind": "roam",
@@ -5615,18 +5731,16 @@
   "f0": 348
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "music 기미(Music 0.47)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
    "Howl",
    0.755
   ],
   "wrong": [
-   "music",
-   "Music",
-   0.468
+   "speech",
+   "Speech",
+   0.002
   ],
   "top": [
    [
@@ -5651,6 +5765,7 @@
    ]
   ],
   "hf_ratio": 0.001,
+  "h": "32613e992c",
   "file": "wolf_roam_2.mp3",
   "animal": "wolf",
   "kind": "roam",

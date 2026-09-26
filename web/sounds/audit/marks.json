@@ -1,9 +1,25 @@
 {
  "note": "사람 검수 결과. review.py가 검수 페이지에 미리 채우고 todo.json을 만든다. v: ok(맞다) | ng(틀리다)",
  "marks": {
-  "elephant_sprint_2.mp3": {"v": "ng", "note": "무슨 개 소리 남 (사용자 2026-09-26)"},
-  "greyhound_sprint_1.mp3": {"v": "ng", "note": "굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26)"},
-  "greyhound_sprint_2.mp3": {"v": "ng", "note": "굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26)"},
-  "pig_sprint_2.mp3": {"v": "ng", "note": "돼지 꾸이익이 아니라 닭 소리 같음 (사용자 2026-09-26)"}
+  "elephant_sprint_2.mp3": {
+   "v": "ng",
+   "note": "무슨 개 소리 남 (사용자 2026-09-26)",
+   "gone": true
+  },
+  "greyhound_sprint_1.mp3": {
+   "v": "ng",
+   "note": "굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26)",
+   "gone": true
+  },
+  "greyhound_sprint_2.mp3": {
+   "v": "ng",
+   "note": "굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26)",
+   "gone": true
+  },
+  "pig_sprint_2.mp3": {
+   "v": "ng",
+   "note": "돼지 꾸이익이 아니라 닭 소리 같음 (사용자 2026-09-26)",
+   "gone": true
+  }
  }
 }

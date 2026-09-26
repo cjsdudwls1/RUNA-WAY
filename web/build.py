@@ -91,7 +91,10 @@ if midx:
         shutil.copy2(os.path.join(md, f), os.path.join(mp, f))
 cj = os.path.join(sd, 'credits.json')
 if os.path.exists(cj):
-    rows = [r for r in json.load(open(cj, encoding='utf-8')) if r.get('file') in set(sfiles)]   # 빼낸 파일(교체 대기 등)의 출처는 싣지 않는다
+    allrows = json.load(open(cj, encoding='utf-8'))
+    miss = sorted(set(sfiles) - {r.get('file') for r in allrows})
+    if miss: raise SystemExit('출처 기록이 없는 소리 파일(web/sounds/credits.json에 줄을 넣어라): ' + ', '.join(miss))   # CC-BY 출처 표시 의무
+    rows = [r for r in allrows if r.get('file') in set(sfiles)]   # 빼낸 파일(교체 대기 등)의 출처는 싣지 않는다
     mc = os.path.join(md, 'credits.json')
     if os.path.exists(mc):
         rows += json.load(open(mc, encoding='utf-8'))

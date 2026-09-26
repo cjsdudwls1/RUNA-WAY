@@ -19,7 +19,7 @@
   SUSPECT  기대 소리가 거의 안 잡히거나, 다른 동물 기미가 있거나, 길이·음량이 규격 밖
   OK       기대 소리가 잡히고 다른 동물 기미가 없다
 """
-import os, sys, json, re, subprocess, argparse
+import os, sys, json, re, subprocess, argparse, hashlib
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -58,7 +58,9 @@ G = {
 # 특정 종 라벨. 기대 소리보다 크면 다른 동물이다(2026-09-26 검토: 까마귀가 다람쥐로, 비둘기가 타조로 통과했다)
 SPECIES = ['Crow', 'Caw', 'Pigeon, dove', 'Coo', 'Chicken, rooster', 'Cluck', 'Fowl', 'Turkey', 'Gobble', 'Duck', 'Quack', 'Goose', 'Honk', 'Owl', 'Hoot',
            'Cattle, bovinae', 'Moo', 'Frog', 'Croak', 'Pig', 'Oink', 'Horse', 'Neigh, whinny', 'Goat', 'Bleat', 'Sheep', 'Cat', 'Meow', 'Dog', 'Bark', 'Yip', 'Mouse', 'Cricket']
-ANIMAL_GROUPS = ['dog', 'cat', 'horse', 'cattle', 'pig', 'goat', 'chicken', 'duck', 'bird', 'rodent', 'insect', 'frog', 'whale', 'speech', 'baby', 'music']
+ANIMAL_GROUPS = ['dog', 'cat', 'horse', 'cattle', 'pig', 'goat', 'chicken', 'duck', 'bird', 'rodent', 'insect', 'frog', 'whale', 'speech', 'baby']
+# 동물 소리가 있긴 한가(약한 슬롯용). 이 무리 점수가 다 낮고 맨 위가 기계·바람·효과음이면 동물이 아니다
+PRESENCE = ['dog', 'cat', 'horse', 'cattle', 'pig', 'goat', 'chicken', 'duck', 'bird', 'rodent', 'frog', 'hiss', 'breath', 'growl', 'scream', 'squeak', 'chirp', 'trumpet', 'wild', 'steps', 'rustle']
 
 # ---------- 동물·상태별 기대 무리 ----------
 # 'strong': AudioSet에 그 동물 라벨이 있다. 기대 점수가 낮으면 의심
@@ -101,7 +103,8 @@ EXPECT = {
     'monster': ('weak', {'roam': ['growl', 'scream', 'breath'], 'sprint': ['growl', 'scream'], 'tired': ['breath', 'growl'], 'step': ['steps'], 'line': ['speech', 'scream']}),
 }
 MONSTERS = {'dokkaebi', 'jeoseung'}
-BIG_DOGS = {'greyhound', 'wolf', 'jindo', 'sleddog'}
+RANK = {'OK': 0, 'SUSPECT': 1, 'BAD': 2}
+BIG_DOGS = {'greyhound', 'wolf', 'jindo', 'sleddog', 'canine'}   # canine: 개 무리 공용. 그레이하운드·늑대 돌진으로 난다
 # 규격 길이(초). README 음향 규격. sprint 하한은 0.5초로 올려 본다: 0.34초 조각은 사람도 무슨 동물인지 못 가린다(2026-09-26 그레이하운드)
 DUR = {'roam': (0.4, 2.0), 'sprint': (0.5, 1.2), 'tired': (0.8, 2.5), 'step': (0.2, 0.5), 'line': (0.3, 6.0)}
 
@@ -174,33 +177,39 @@ def judge(animal, kind, probs, dur, rms_db, peak_db, hz, hf=None):
     m = {}
     for k in probs:
         for lab, p in probs[k].items(): m[lab] = max(m.get(lab, 0), p)
-    grp = lambda g: max(((m.get(l, 0), l) for l in G[g]), default=(0, ''))
     cls = 'monster' if animal in MONSTERS else animal
     strength, table = EXPECT.get(cls, ('weak', {}))
     want = table.get(kind, [])
-    exp = max([grp(g) for g in want], default=(0, ''))
-    # 기대 무리에 든 동물 무리는 '남'이 아니다. 말(speech)은 대사에서만 남이 아니다
-    others = [(grp(g)[0], g, grp(g)[1]) for g in ANIMAL_GROUPS if g not in want]
-    others.sort(reverse=True)
-    wrong = others[0] if others else (0, '', '')
-    notes = []
-    verdict = 'OK'
     wanted = {l for g in want for l in G[g]}
+    if 'chirp' in want: wanted.add('Bird')   # 짹 울음은 분류기가 '새'로 부른다. 진짜 새는 까마귀·비둘기 같은 종 라벨로 잡는다
+    grp = lambda g: max(((m.get(l, 0), l) for l in G[g]), default=(0, ''))
+    gx = lambda g: max(((m.get(l, 0), l) for l in G[g] if l not in wanted), default=(0, ''))   # 기대 라벨은 '남'에서 뺀다
+    exp = max([grp(g) for g in want], default=(0, ''))
+    others = sorted(((gx(g)[0], g, gx(g)[1]) for g in ANIMAL_GROUPS if g not in want), reverse=True)
+    wrong = others[0] if others else (0, '', '')
     species = max(((m.get(l, 0), l) for l in SPECIES if l not in wanted), default=(0, ''))
+    notes, verdict = [], 'OK'
+    up = lambda v: v if RANK[v] > RANK[verdict] else verdict   # 판정은 올리기만 한다
     if wrong[0] >= 0.3 and wrong[0] > exp[0]: verdict = 'BAD'; notes.append(f'{wrong[1]}로 들림({wrong[2]} {wrong[0]:.2f})')
     elif species[0] >= 0.25 and species[0] > exp[0]: verdict = 'BAD'; notes.append(f'다른 종으로 들림({species[1]} {species[0]:.2f})')
     elif wrong[0] >= 0.15: verdict = 'SUSPECT'; notes.append(f'{wrong[1]} 기미({wrong[2]} {wrong[0]:.2f})')
+    mus = grp('music')
+    if 'music' not in want and mus[0] >= 0.3 and mus[0] > exp[0]: verdict = up('SUSPECT'); notes.append(f'음악처럼 들림({mus[1]} {mus[0]:.2f})')
     if strength == 'strong' and exp[0] < 0.1:
-        verdict = 'BAD' if verdict == 'BAD' or exp[0] < 0.03 else 'SUSPECT'; notes.append(f'기대 소리 약함({exp[1] or "-"} {exp[0]:.2f})')
+        verdict = up('BAD' if exp[0] < 0.03 else 'SUSPECT'); notes.append(f'기대 소리 약함({exp[1] or "-"} {exp[0]:.2f})')
+    if strength == 'weak' and animal not in MONSTERS:   # 괴물은 만든 소리(발소리, 방울)라 동물 기미를 보지 않는다
+        pres = max(grp(g)[0] for g in PRESENCE)
+        top = max(m.items(), key=lambda kv: kv[1]) if m else ('', 0)
+        if pres < 0.1 and top[1] >= 0.3: verdict = up('SUSPECT'); notes.append(f'동물 소리 기미 없음({top[0]} {top[1]:.2f})')
     if animal in BIG_DOGS and kind == 'sprint':
         yip, big = m.get('Yip', 0), max(m.get('Bark', 0), m.get('Bow-wow', 0))
-        if yip > big: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'작은 개 깽깽(Yip {yip:.2f} > Bark {big:.2f})')
+        if yip > big: verdict = up('SUSPECT'); notes.append(f'작은 개 깽깽(Yip {yip:.2f} > Bark {big:.2f})')
         # 짖음은 유성 구간이 짧아 음높이가 불안정하다. 1.5kHz 위/아래 에너지 비가 더 믿을 만하다. 큰 개 0.00~0.07, 치와와·뺀 그레이하운드 0.19~0.33
-        if hf is not None and hf > 0.12: verdict = 'BAD' if hf > 0.18 else ('SUSPECT' if verdict == 'OK' else verdict); notes.append(f'고역 비 {hf:.2f}. 작은 개 짖음(큰 개는 0.10 이하)')
-        elif hz and hz > 700: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'음높이 {hz:.0f}Hz. 큰 개치고 높다')
+        if hf is not None and hf > 0.10: verdict = up('BAD' if hf > 0.18 else 'SUSPECT'); notes.append(f'고역 비 {hf:.2f}. 작은 개 짖음(큰 개는 0.10 이하)')
+        elif hz and hz > 700: verdict = up('SUSPECT'); notes.append(f'음높이 {hz:.0f}Hz. 큰 개치고 높다')
     lo, hi = DUR.get(kind, (0, 99))
-    if dur < lo or dur > hi: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'길이 {dur:.2f}초(규격 {lo}~{hi})')
-    if rms_db < -24 or rms_db > -12: verdict = 'SUSPECT' if verdict == 'OK' else verdict; notes.append(f'평균 음량 {rms_db:.1f}dBFS')
+    if dur < lo or dur > hi: verdict = up('SUSPECT'); notes.append(f'길이 {dur:.2f}초(규격 {lo}~{hi})')
+    if rms_db < -24 or rms_db > -12: verdict = up('SUSPECT'); notes.append(f'평균 음량 {rms_db:.1f}dBFS')
     top = sorted(m.items(), key=lambda kv: -kv[1])[:5]
     return {'verdict': verdict, 'notes': notes, 'expect': [exp[1], round(exp[0], 3)], 'wrong': [wrong[1], wrong[2], round(wrong[0], 3)],
             'top': [[l, round(p, 3)] for l, p in top]}
@@ -220,6 +229,7 @@ def audit(path, as_slot=None):
     hz = f0(x)
     r = judge(animal, kind, tag(x), dur, rms_db, peak_db, hz, hf)
     r['hf_ratio'] = round(hf, 3) if hf is not None else None
+    r['h'] = hashlib.sha1(open(path, 'rb').read()).hexdigest()[:10]   # 내용 해시. 판정·검수 표시를 이 내용에 묶는다
     r.update({'file': os.path.relpath(path, HERE), 'animal': animal, 'kind': kind, 'dur': round(float(dur), 2), 'rms_db': round(float(rms_db), 1), 'peak_db': round(float(peak_db), 1), 'f0': int(round(hz)) if hz else None})
     return r
 
@@ -233,33 +243,44 @@ def main():
     files = []
     for p in a.paths:
         if os.path.isdir(p):
-            for root, _, fs in os.walk(p):
-                if '.models' in root or os.sep + 'review' in root: continue
+            for root, dirs, fs in os.walk(p):
+                dirs[:] = sorted(d for d in dirs if d not in ('.models', 'review', 'audit', '__pycache__'))
                 for f in sorted(fs):
                     if f.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')):
                         slot = os.path.basename(root) if parse(os.path.basename(root))[0] else None   # candidates/<슬롯>/n.mp3
                         files.append((os.path.join(root, f), slot))
         else: files.append((p, a.slot))
     out = []
-    used = {}   # 원본 주소 → 쓰는 동물들 (credits.json)
+    def key(u):
+        m = re.search(r'freesound\.org/(?:s|people/[^/]+/sounds)/(\d+)', u or '')
+        return 'freesound:' + m.group(1) if m else (u or '').split('#')[0].split('?')[0].rstrip('/').lower()
+    gen = lambda c: str(c.get('license', '')).startswith('생성') or 'huggingface.co/' in (c.get('source_url') or '')   # 생성 모델 출력은 '같은 녹음'이 아니다
+    used = {}   # 원본 → 쓰는 동물들 (credits.json + 후보)
     try:
         for c in json.load(open(os.path.join(HERE, 'credits.json'), encoding='utf-8')):
-            used.setdefault(c.get('source_url', ''), set()).add(c.get('animal', ''))
+            if not gen(c) and c.get('source_url'): used.setdefault(key(c['source_url']), set()).add(c.get('animal', ''))
     except FileNotFoundError: pass
     cinfo = {}
     try:
-        for c in json.load(open(os.path.join(HERE, 'candidates', 'candidates.json'), encoding='utf-8')): cinfo[os.path.basename(c.get('file', ''))] = c; cinfo[c.get('file', '')] = c
+        for c in json.load(open(os.path.join(HERE, 'candidates', 'candidates.json'), encoding='utf-8')):
+            cinfo[c.get('file', '').replace(os.sep, '/')] = c
+            if not gen(c) and c.get('source_url'): used.setdefault(key(c['source_url']), set()).add(parse(c.get('slot', ''))[0] or '')
     except FileNotFoundError: pass
     for f, slot in files:
         r = audit(f, slot)
         if r is None: continue
         if slot:
             r['slot'] = slot
-            c = cinfo.get(r['file'].replace(os.sep, '/')) or {}
-            others = used.get(c.get('source_url', ''), set()) - {r['animal']} - {''}
-            if others: r['verdict'] = 'BAD'; r['notes'].append('원본을 이미 다른 동물이 쓴다: ' + ', '.join(sorted(others)))
+            rel = r['file'].replace(os.sep, '/')
+            c = cinfo.get(rel)
+            if c is None and rel.startswith('candidates/'): r['notes'].append('candidates.json에 줄이 없다(출처 모름)'); r['verdict'] = 'BAD'
+            elif c is None: pass   # 후보 폴더 밖 파일을 --as로 따로 검사할 때
+            elif not gen(c):
+                others = used.get(key(c.get('source_url', '')), set()) - {r['animal'], ''}
+                if others: r['verdict'] = 'BAD'; r['notes'].append('원본을 이미 다른 동물이 쓴다: ' + ', '.join(sorted(others)))
         out.append(r)
         print(f"{r['verdict']:8} {r['file']:42} {r['dur']:5.2f}s  기대 {r['expect'][0] or '-'} {r['expect'][1]:.2f}  " + ('; '.join(r['notes']) or '') + f"  | {', '.join(l for l, _ in r['top'][:3])}", flush=True)
+    if not out: sys.exit('검사한 파일이 0개다. 경로를 확인(report.json은 그대로 둔다)')
     dst = a.json or (os.path.join(HERE, 'audit', 'report.json') if a.paths == [HERE] else None)
     if dst:
         os.makedirs(os.path.dirname(dst), exist_ok=True)

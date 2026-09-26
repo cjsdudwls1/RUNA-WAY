@@ -25,6 +25,7 @@
   --bad: #ff8a7a; --bad-bg: #3a1c19; --warn: #f0c060; --warn-bg: #33280f; --ok: #82d494; --ok-bg: #16301d; --focus: #6fb4f0;
 }
 * { box-sizing: border-box; }
+html { scroll-padding-top: 120px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans); }
 .wrap { max-width: 980px; margin: 0 auto; padding-inline: 16px; padding-block: 0 80px; }
 header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
@@ -59,7 +60,8 @@ section.grp > h2 small { font: 400 12px var(--mono); color: var(--muted); }
 .play { width: 52px; height: 52px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
 .play svg { width: 22px; height: 22px; }
 .play.on { background: var(--ink); color: var(--bg); }
-.main { min-width: 0; display: grid; gap: 4px; }
+.main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.main > *, .meta > span, .slot h3 { min-width: 0; overflow-wrap: anywhere; }
 .name { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .fn { font: 500 14px var(--mono); word-break: break-all; }
 .tag { font-size: 12px; border-radius: 4px; padding: 1px 6px; background: var(--soft); border: 1px solid var(--line); color: var(--muted); }
@@ -74,6 +76,7 @@ section.grp > h2 small { font: 400 12px var(--mono); color: var(--muted); }
 .meta { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
 .meta a { color: var(--muted); }
 .meta code { font: 11px var(--mono); }
+.meta .flag { color: var(--bad); }
 .dec { display: grid; gap: 6px; justify-items: stretch; min-width: 132px; }
 .dec .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .dec button { border: 1px solid var(--line); background: var(--soft); border-radius: 8px; padding: 9px 8px; font-weight: 700; font-size: 14px; }
@@ -140,29 +143,61 @@ details.cross ul { margin: 8px 0 0; padding-left: 18px; }
 
 <script>
 const DATA = /*DATA*/null;
-const KEY = 'rw-sound-review-v1';
+const KEY = 'rw-sound-review-v2';
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const AI_KO = { REPLACE: '교체 추천', CHECK: '들어볼 것', KEEP: '문제없음' };
 const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
 const STOP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 7h10v10H7z"/></svg>';
+const files = DATA.files;
+const byFile = Object.fromEntries(files.map((f) => [f.file, f]));
+const CANDS = DATA.cands || {};
+const clone = (o) => JSON.parse(JSON.stringify(o ?? null));
 
-// 상태: 파일별 {v:'ok'|'ng', note}, 슬롯별 후보 선택 {sel:[파일], none:bool, note}
-let S = { marks: {}, picks: {} };
-try { const j = JSON.parse(localStorage.getItem(KEY) || 'null'); if (j) S = { marks: j.marks || {}, picks: j.picks || {} }; } catch (e) { }
-for (const [f, m] of Object.entries(DATA.seed || {})) if (!S.marks[f]) S.marks[f] = { ...m, seed: true };
+// 상태
+//  marks[파일] = {v: 'ok'|'ng'|null, note, h, seed?}  h = 파일 내용 해시. 파일이 바뀌면(교체) 옛 표시는 버린다
+//  picks[슬롯] = {sel: [후보 파일], none, note, set}  set = 후보 묶음 해시. 묶음이 바뀌면 옛 선택은 버린다
+//  seed = marks.json에서 온 표시. 사람이 건드리기 전까지는 매번 marks.json을 따른다
+function sanitize(raw) {
+  const out = { marks: {}, picks: {} };
+  for (const [f, m] of Object.entries((raw && raw.marks) || {})) {
+    const cur = byFile[f];
+    if (!m || m.seed || !cur || m.h !== cur.h) continue;
+    out.marks[f] = { v: m.v === 'ok' || m.v === 'ng' ? m.v : null, note: String(m.note || ''), h: m.h };
+  }
+  for (const [s, p] of Object.entries((raw && raw.picks) || {})) {
+    const c = CANDS[s];
+    if (!p || !c || p.set !== c.set) continue;
+    out.picks[s] = { sel: (p.sel || []).filter((f) => c.items.some((it) => it.file === f)), none: !!p.none, note: String(p.note || ''), set: c.set };
+  }
+  return out;
+}
+function withSeeds(st) {
+  for (const [f, m] of Object.entries(DATA.seed || {})) if (byFile[f] && !st.marks[f]) st.marks[f] = { v: m.v, note: m.note || '', h: byFile[f].h, seed: true };
+  return st;
+}
+let S = { marks: {}, picks: {} }, localPending = false;
+try { const j = JSON.parse(localStorage.getItem(KEY) || 'null'); S = sanitize(j); localPending = !!(j && j.pending); } catch (e) { }
+withSeeds(S);
+const seen = (f) => !!(S.marks[f] && S.marks[f].v);
 
-let db = null, dirty = false, saveT = 0;
+let db = null, saveT = 0, saving = false;
+function saveLocal(pending) { try { localStorage.setItem(KEY, JSON.stringify({ ...S, pending })); } catch (e) { } }
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { }
+  localPending = true; saveLocal(true);   // 서버 확인 전까지는 '못 올린 변경'. 서버가 늦게 붙어도 이 표시가 살아남는다
   if (!db) { $('#save').textContent = '이 브라우저에 저장됨'; return; }
-  dirty = true; $('#save').textContent = '저장 중…';
+  $('#save').textContent = '저장 중…';
   clearTimeout(saveT);
-  saveT = setTimeout(async () => {
-    dirty = false;
-    try { await db.doc('review/state').set({ marks: S.marks, picks: S.picks, updatedAt: new Date().toISOString() }); $('#save').textContent = dirty ? '저장 중…' : '저장됨'; }
-    catch (e) { $('#save').textContent = '저장 실패. 결과 복사로 옮겨라'; }
-  }, 700);
+  saveT = setTimeout(flush, 700);
+}
+async function flush() {
+  if (!db) return;
+  if (saving) { saveT = setTimeout(flush, 400); return; }   // 한 문서에 쓰기는 한 번에 하나
+  saving = true;
+  const body = clone({ marks: S.marks, picks: S.picks });
+  try { await db.doc('review/state').set({ ...body, updatedAt: new Date().toISOString() }); localPending = false; saveLocal(false); $('#save').textContent = '저장됨'; }
+  catch (e) { $('#save').textContent = '저장 실패. 결과 복사로 옮겨라'; }
+  saving = false;
 }
 
 let filter = 'need';
@@ -172,22 +207,21 @@ const FILTERS = [
   ['CHECK', '들어볼 것', (f) => f.ai === 'CHECK'],
   ['KEEP', '문제없음', (f) => f.ai === 'KEEP'],
   ['ng', '내가 틀리다', (f) => S.marks[f.file]?.v === 'ng'],
-  ['todo', '아직 안 본 것', (f) => !S.marks[f.file]],
+  ['todo', '아직 안 본 것', (f) => !seen(f.file)],
   ['all', '전체', () => true],
 ];
-const files = DATA.files;
-const byFile = Object.fromEntries(files.map((f) => [f.file, f]));
 let visible = [], cur = -1;
 
 function renderFilters() {
   $('#filters').innerHTML = FILTERS.map(([k, label, fn]) => `<button type="button" class="chip" data-k="${k}" aria-pressed="${filter === k}">${label}<b>${files.filter(fn).length}</b></button>`).join('');
 }
-function src(f) { return DATA.base + f; }
+const src = (f) => DATA.base + f;
 function metaHTML(f) {
   const s = f.src || {};
   const top = (f.top || []).map(([l, p]) => `${esc(l)} ${Number(p).toFixed(2)}`).join(', ');
   return `<div class="meta">
-    ${f.dur != null ? `<span>${Number(f.dur).toFixed(2)}초</span>` : ''}${f.f0 ? `<span>음높이 ${f.f0}Hz</span>` : ''}
+    ${f.dur != null ? `<span>${Number(f.dur).toFixed(2)}초</span>` : ''}${f.f0 ? `<span>음높이 ${f.f0}Hz</span>` : ''}${f.hf != null ? `<span>고역 비 ${Number(f.hf).toFixed(2)}</span>` : ''}
+    ${(f.notes || []).length ? `<span class="flag">${esc(f.notes.join('; '))}</span>` : ''}
     ${top ? `<span>분류기: <code>${top}</code></span>` : ''}
     ${s.url ? `<span>출처: <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title || s.url)}</a>${s.author ? ' · ' + esc(s.author) : ''}${s.license ? ' · ' + esc(s.license) : ''}</span>` : ''}
     ${s.edits ? `<span>${esc(s.edits)}</span>` : ''}</div>`;
@@ -197,11 +231,11 @@ function itemHTML(f, i) {
   return `<article class="item ${f.ai}${m.v ? ' done' : ''}" data-i="${i}" id="it-${i}">
     <button type="button" class="play" data-play="${esc(f.file)}" aria-label="${esc(f.file)} 재생">${PLAY}</button>
     <div class="main">
-      <div class="name"><span class="fn">${esc(f.file)}</span><span class="tag">${esc(f.kindKo)}</span><span class="ai ${f.ai}">AI ${AI_KO[f.ai]}</span></div>
+      <div class="name"><span class="fn">${esc(f.file)}</span><span class="tag">${esc(f.kindKo)}</span><span class="ai ${f.ai}">AI ${AI_KO[f.ai]}</span>${m.seed ? '<span class="tag">이전 검수</span>' : ''}</div>
       <div class="exp"><em>들려야 할 소리</em>${esc(f.expect || '-')}</div>
-      ${f.ai !== 'KEEP' || f.reason ? `<div class="why">${esc(f.reason)}</div>` : ''}
+      ${f.reason ? `<div class="why">${esc(f.reason)}</div>` : ''}
       ${f.listen ? `<div class="listen">들어볼 점: ${esc(f.listen)}</div>` : ''}
-      ${metaHTML(f)}
+      ${metaHTML({ ...f, notes: [] })}
     </div>
     <div class="dec">
       <div class="two"><button type="button" class="ok" data-mark="ok" aria-pressed="${m.v === 'ok'}">맞다</button><button type="button" class="ng" data-mark="ng" aria-pressed="${m.v === 'ng'}">틀리다</button></div>
@@ -211,40 +245,48 @@ function itemHTML(f, i) {
 }
 function renderList() {
   const fn = FILTERS.find((x) => x[0] === filter)[2];
-  visible = files.filter(fn);
-  const html = [];
+  const shown = files.filter(fn);
+  visible = DATA.groups.flatMap(([a]) => shown.filter((f) => f.animal === a));   // 화면 순서 그대로. 다음·이전이 화면을 따라간다
+  const html = []; let i = 0;
   for (const [a, name] of DATA.groups) {
     const g = visible.filter((f) => f.animal === a);
     if (!g.length) continue;
-    html.push(`<section class="grp"><h2>${esc(name)} <small>${esc(a)} · ${g.length}개</small></h2>${g.map((f) => itemHTML(f, visible.indexOf(f))).join('')}</section>`);
+    html.push(`<section class="grp"><h2>${esc(name)} <small>${esc(a)} · ${g.length}개</small></h2>${g.map((f) => itemHTML(f, i++)).join('')}</section>`);
   }
   $('#list').innerHTML = html.join('') || '<p class="empty">이 보기에 해당하는 파일이 없다.</p>';
   if (cur >= visible.length) cur = visible.length - 1;
   mark(cur, false);
 }
 function renderCands() {
-  const slots = Object.entries(DATA.cands || {});
+  const slots = Object.entries(CANDS);
   if (!slots.length) { $('#candsWrap').innerHTML = ''; return; }
-  $('#candsWrap').innerHTML = `<h2 style="font-size:17px;margin:18px 0 0">후보 고르기 <small class="save">${slots.length}슬롯 · 쓸 것을 1~3개 고른다. 마음에 드는 게 없으면 "다 별로"</small></h2><div class="cands">` +
+  $('#candsWrap').innerHTML = `<h2 style="font-size:17px;margin:18px 0 0">후보 고르기 <small class="save">${slots.length}슬롯 · 쓸 것을 고른다. 마음에 드는 게 없으면 "다 별로"</small></h2><div class="cands">` +
     slots.map(([slot, c]) => {
       const p = S.picks[slot] || { sel: [] };
-      const cur = c.current.map((f) => `<div class="opt curfile"><button type="button" class="play" data-play="${esc(f)}" aria-label="지금 파일 ${esc(f)} 재생">${PLAY}</button><div class="main"><div class="name"><span class="fn">${esc(f)}</span><span class="tag">지금 쓰는 파일</span></div></div><span></span></div>`).join('');
+      const cur = c.current.map((x) => `<div class="opt curfile"><button type="button" class="play" data-play="${esc(x.file)}" aria-label="지금 파일 ${esc(x.file)} 재생">${PLAY}</button><div class="main"><div class="name"><span class="fn">${esc(x.file)}</span><span class="tag">지금 파일 · ${x.replace ? '바꾼다' : '둔다'}</span></div></div><span></span></div>`).join('');
       const items = c.items.map((it) => `<div class="opt"><button type="button" class="play" data-play="${esc(it.file)}" aria-label="후보 ${esc(it.label)} 재생">${PLAY}</button>
         <div class="main"><div class="name"><span class="fn">후보 ${esc(it.label)}</span>${it.auto ? `<span class="ai ${it.auto === 'OK' ? 'KEEP' : it.auto === 'BAD' ? 'REPLACE' : 'CHECK'}">분류기 ${it.auto}</span>` : ''}</div>
-        ${it.note ? `<div class="why">${esc(it.note)}</div>` : ''}${metaHTML({ dur: it.dur, top: it.top, src: { url: it.url, title: it.title, author: it.author, license: it.license, edits: it.edits } })}</div>
+        ${it.note ? `<div class="why">${esc(it.note)}</div>` : ''}${metaHTML({ dur: it.dur, top: it.top, hf: it.hf, notes: it.notes, src: { url: it.url, title: it.title, author: it.author, license: it.license, edits: it.edits } })}</div>
         <button type="button" class="pick" data-slot="${esc(slot)}" data-pick="${esc(it.file)}" aria-pressed="${p.sel.includes(it.file)}">쓴다</button></div>`).join('');
-      return `<div class="slot"><h3>${esc(slot)} <small>${esc(c.expect || '')}</small></h3>${cur}${items}
+      return `<div class="slot"><h3>${esc(slot)} <small>${esc(c.expect || '')} · 최대 ${c.max}개 고른다</small></h3>${cur}${items}
         <div class="slotfoot"><button type="button" class="pick" data-slot="${esc(slot)}" data-none="1" aria-pressed="${!!p.none}">다 별로</button><input type="text" data-slotnote="${esc(slot)}" placeholder="메모 (예: 더 굵은 소리로)" value="${esc(p.note || '')}" aria-label="${esc(slot)} 메모"></div></div>`;
     }).join('') + '</div>';
 }
 function renderProg() {
   const need = files.filter((f) => f.ai !== 'KEEP');
-  const seen = files.filter((f) => S.marks[f.file]).length, needSeen = need.filter((f) => S.marks[f.file]).length;
   const ng = files.filter((f) => S.marks[f.file]?.v === 'ng').length;
-  const picked = Object.keys(DATA.cands || {}).filter((k) => S.picks[k]?.sel?.length || S.picks[k]?.none).length;
-  const nc = Object.keys(DATA.cands || {}).length;
-  $('#prog').textContent = `확인할 것 ${needSeen}/${need.length} · 전체 ${seen}/${files.length} · 틀리다 ${ng}` + (nc ? ` · 후보 ${picked}/${nc}` : '');
+  const nc = Object.keys(CANDS).length, picked = Object.keys(CANDS).filter((k) => S.picks[k]?.sel?.length || S.picks[k]?.none).length;
+  const needSeen = need.filter((f) => seen(f.file)).length;
+  $('#prog').textContent = `확인할 것 ${needSeen}/${need.length} · 전체 ${files.filter((f) => seen(f.file)).length}/${files.length} · 틀리다 ${ng}` + (nc ? ` · 후보 ${picked}/${nc}` : '');
   $('#barFill').style.width = (need.length ? needSeen / need.length * 100 : 100) + '%';
+}
+function syncItem(i) {
+  const el = document.getElementById('it-' + i), f = visible[i]; if (!el || !f) return;
+  const m = S.marks[f.file] || {};
+  el.classList.toggle('done', !!m.v);
+  el.querySelector('[data-mark="ok"]').setAttribute('aria-pressed', m.v === 'ok');
+  el.querySelector('[data-mark="ng"]').setAttribute('aria-pressed', m.v === 'ng');
+  const inp = document.getElementById('note-' + i); if (inp && document.activeElement !== inp) inp.value = m.note || '';
 }
 function renderAll() { renderFilters(); renderCands(); renderList(); renderProg(); }
 
@@ -258,13 +300,23 @@ function setPlaying(f) {
 function play(f) {
   if (playing === f) { audio.pause(); setPlaying(null); return; }
   audio.src = src(f); audio.currentTime = 0;
-  audio.play().then(() => setPlaying(f)).catch(() => toast('재생이 안 된다. 파일 경로를 확인'));
+  const want = audio.src;
+  audio.play().then(() => { if (audio.src === want) setPlaying(f); })
+    .catch((e) => { if (e && e.name === 'AbortError' || audio.src !== want) return; toast('재생이 안 된다. 파일 경로를 확인'); });   // 다음 파일로 넘어가 끊긴 건 오류가 아니다
 }
+const hdr = document.querySelector('header.top');
+function setPad() { document.documentElement.style.scrollPaddingTop = (hdr.offsetHeight + 8) + 'px'; }
+setPad(); if (window.ResizeObserver) new ResizeObserver(setPad).observe(hdr);
 function mark(i, scroll = true) {
   document.querySelectorAll('.item.cur').forEach((e) => e.classList.remove('cur'));
   cur = i;
   const el = document.getElementById('it-' + i);
-  if (el) { el.classList.add('cur'); if (scroll) el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+  if (!el) return;
+  el.classList.add('cur');
+  if (scroll) {
+    const room = innerHeight - hdr.offsetHeight - 8;
+    el.scrollIntoView({ block: el.offsetHeight > room ? 'start' : 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
 }
 function go(d) {
   if (!visible.length) return;
@@ -272,64 +324,84 @@ function go(d) {
   mark(i);
   if ($('#autoplay').checked) play(visible[i].file);
 }
+// 맞다/틀리다. 같은 것을 다시 누르면 판정만 지운다(메모는 둔다). 이전 검수(시드)는 같은 것을 누르면 확인
 function setMark(i, v) {
-  const f = visible[i]; if (!f) return;
-  const m = S.marks[f.file] || {};
-  if (m.v === v && !m.seed) delete S.marks[f.file]; else S.marks[f.file] = { v, note: m.note || '' };
-  persist(); renderFilters(); renderProg();
-  const el = document.getElementById('it-' + i);
-  if (el) {
-    const mv = S.marks[f.file]?.v;
-    el.classList.toggle('done', !!mv);
-    el.querySelector('[data-mark="ok"]').setAttribute('aria-pressed', mv === 'ok');
-    el.querySelector('[data-mark="ng"]').setAttribute('aria-pressed', mv === 'ng');
-  }
+  const f = visible[i]; if (!f) return false;
+  const m = S.marks[f.file] || { note: '' };
+  let nv;
+  if (m.seed && m.v === v) nv = v;
+  else nv = m.v === v ? null : v;
+  S.marks[f.file] = { v: nv, note: m.note || '', h: f.h };
+  persist(); renderFilters(); renderProg(); syncItem(i);
+  return !!nv;
 }
 
 document.addEventListener('click', (e) => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.dataset.play) { const it = t.closest('.item'); if (it) mark(+it.dataset.i, false); play(t.dataset.play); }
   else if (t.dataset.mark) {
-    const i = +t.closest('.item').dataset.i; mark(i, false); setMark(i, t.dataset.mark);
-    if (t.dataset.mark === 'ng') document.getElementById('note-' + i)?.focus();
-    else if (S.marks[visible[i].file]) setTimeout(() => go(1), 120);
+    const i = +t.closest('.item').dataset.i; mark(i, false);
+    const set = setMark(i, t.dataset.mark);
+    if (set && t.dataset.mark === 'ng') document.getElementById('note-' + i)?.focus();
+    else if (set) setTimeout(() => go(1), 120);
   }
   else if (t.dataset.k) { filter = t.dataset.k; cur = -1; renderFilters(); renderList(); }
   else if (t.dataset.slot) {
-    const s = t.dataset.slot, p = S.picks[s] || { sel: [] };
+    const s = t.dataset.slot, c = CANDS[s], old = S.picks[s] || { sel: [] };
+    const p = { sel: [...(old.sel || [])], none: !!old.none, note: old.note || '', set: c.set };
     if (t.dataset.none) { p.none = !p.none; if (p.none) p.sel = []; }
-    else { const f = t.dataset.pick; p.sel = p.sel.includes(f) ? p.sel.filter((x) => x !== f) : [...p.sel, f]; if (p.sel.length) p.none = false; }
+    else {
+      const f = t.dataset.pick;
+      if (p.sel.includes(f)) p.sel = p.sel.filter((x) => x !== f);
+      else if (p.sel.length >= c.max) { toast(`이 슬롯은 ${c.max}개까지. 먼저 하나를 빼라`); return; }
+      else p.sel.push(f);
+      if (p.sel.length) p.none = false;
+    }
     S.picks[s] = p; persist(); renderCands(); renderProg();
   }
 });
 document.addEventListener('input', (e) => {
   const t = e.target;
-  if (t.dataset.note !== undefined) { const f = visible[+t.closest('.item').dataset.i]; const m = S.marks[f.file] || { v: 'ng' }; m.note = t.value; delete m.seed; S.marks[f.file] = m; persist(); renderProg(); }
-  else if (t.dataset.slotnote) { const s = t.dataset.slotnote; S.picks[s] = { ...(S.picks[s] || { sel: [] }), note: t.value }; persist(); }
+  if (t.dataset.note !== undefined) {   // 메모만으로는 판정이 생기지 않는다
+    const i = +t.closest('.item').dataset.i, f = visible[i], m = S.marks[f.file] || {};
+    S.marks[f.file] = { v: m.v || null, note: t.value, h: f.h };
+    persist();
+  } else if (t.dataset.slotnote) {
+    const s = t.dataset.slotnote, old = S.picks[s] || { sel: [] };
+    S.picks[s] = { sel: [...(old.sel || [])], none: !!old.none, note: t.value, set: CANDS[s].set }; persist();
+  }
 });
+document.addEventListener('focusin', (e) => { const it = e.target.closest && e.target.closest('.item'); if (it && e.target.dataset.note !== undefined) mark(+it.dataset.i, false); });
 document.addEventListener('keydown', (e) => {
-  if (e.target.matches('input, textarea')) { if (e.key === 'Enter' || e.key === 'Escape') { e.target.blur(); if (e.key === 'Enter') go(1); } return; }
+  if (e.target.matches('input, textarea')) {
+    if (e.key === 'Enter' || e.key === 'Escape') { const it = e.target.closest('.item'); e.target.blur(); if (e.key === 'Enter' && it) { mark(+it.dataset.i, false); go(1); } }
+    return;
+  }
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === ' ') { e.preventDefault(); if (cur < 0) go(1); else play(visible[cur].file); }
   else if (e.key === 'j' || e.key === 'ArrowDown') { e.preventDefault(); go(1); }
   else if (e.key === 'k' || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
-  else if (e.key === '1' && cur >= 0) { setMark(cur, 'ok'); if (S.marks[visible[cur].file]) setTimeout(() => go(1), 120); }
-  else if (e.key === '2' && cur >= 0) { setMark(cur, 'ng'); document.getElementById('note-' + cur)?.focus(); }
+  else if (e.key === '1' && cur >= 0) { e.preventDefault(); if (setMark(cur, 'ok')) setTimeout(() => go(1), 120); }
+  else if (e.key === '2' && cur >= 0) { e.preventDefault(); if (setMark(cur, 'ng')) document.getElementById('note-' + cur)?.focus(); }
 });
 
 function resultText() {
-  const L = [`러너웨이 소리 검수 결과 (${new Date().toISOString().slice(0, 10)}, 페이지 ${DATA.generated})`];
+  const L = [`러너웨이 소리 검수 결과 (${new Date().toISOString().slice(0, 10)}, 페이지 ${DATA.generated}, 회차 ${DATA.round})`];
   const ng = files.filter((f) => S.marks[f.file]?.v === 'ng'), ok = files.filter((f) => S.marks[f.file]?.v === 'ok');
-  L.push('', `[틀리다 ${ng.length}]`, ...ng.map((f) => `- ${f.file}${S.marks[f.file].note ? ': ' + S.marks[f.file].note : ''}`));
-  L.push('', `[맞다 ${ok.length}]`, ...ok.map((f) => `- ${f.file}${S.marks[f.file].note ? ': ' + S.marks[f.file].note : ''}`));
-  const un = files.filter((f) => !S.marks[f.file] && f.ai !== 'KEEP');
-  if (un.length) L.push('', `[안 들어 본 확인할 것 ${un.length}] AI 판정대로 처리`, ...un.map((f) => `- ${f.file}: AI ${AI_KO[f.ai]}`));
-  const slots = Object.keys(DATA.cands || {});
+  const memo = files.filter((f) => !S.marks[f.file]?.v && S.marks[f.file]?.note);
+  const line = (f) => `- ${f.file}${S.marks[f.file].note ? ': ' + S.marks[f.file].note : ''}${S.marks[f.file].seed ? ' (이전 검수)' : ''}`;
+  L.push('', `[틀리다 ${ng.length}] 교체 대상`, ...ng.map(line));
+  L.push('', `[맞다 ${ok.length}] 둔다`, ...ok.map(line));
+  if (memo.length) L.push('', `[메모만 ${memo.length}] 판정 없음. 참고만`, ...memo.map(line));
+  const unR = files.filter((f) => !seen(f.file) && f.ai === 'REPLACE'), unC = files.filter((f) => !seen(f.file) && f.ai === 'CHECK');
+  if (unR.length) L.push('', `[안 들어 본 교체 추천 ${unR.length}] 틀리다와 같이 교체 대상(후보가 없으면 뺀다)`, ...unR.map((f) => `- ${f.file}`));
+  if (unC.length) L.push('', `[안 들어 본 들어볼 것 ${unC.length}] 둔다`, ...unC.map((f) => `- ${f.file}`));
+  const slots = Object.keys(CANDS);
   if (slots.length) {
     L.push('', '[후보 선택]');
     for (const s of slots) { const p = S.picks[s] || {}; L.push(`- ${s}: ${p.none ? '다 별로' : p.sel?.length ? p.sel.join(', ') : '안 고름'}${p.note ? ' / ' + p.note : ''}`); }
   }
-  L.push('', '<json>' + JSON.stringify({ marks: S.marks, picks: S.picks }) + '</json>');
+  L.push('', '<json>' + JSON.stringify({ round: DATA.round, marks: S.marks, picks: S.picks }) + '</json>');
   return L.join('\n');
 }
 $('#copy').addEventListener('click', async () => {
@@ -345,21 +417,25 @@ if ((DATA.cross || []).length) { $('#crossBox').hidden = false; $('#cross').inne
 renderAll();
 $('#save').textContent = '이 브라우저에 저장됨';
 
-// claude.ai에 올린 페이지면 검수 결과를 서버에 둔다(다른 기기에서 이어 보기, AI가 바로 읽기). 파일로 열었으면 없다
+// claude.ai에 올린 페이지면 서버가 기준이다(다른 기기에서 이어 보기, AI가 바로 읽기). 파일로 열었으면 없다
 (async () => {
-  const use = window.claude && window.claude.use;
-  if (!use) return;
+  if (!(window.claude && window.claude.use)) return;
   try {
-    db = await window.claude.use('db');
-    if (!db) return;
-    const snap = await db.doc('review/state').get();
+    const d = await window.claude.use('db');
+    if (!d) return;
+    const snap = await d.doc('review/state').get();
+    const local = clone(S);
     if (snap.exists) {
-      const d = snap.data() || {};
-      S = { marks: { ...S.marks, ...(d.marks || {}) }, picks: { ...S.picks, ...(d.picks || {}) } };
-      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { }
-      renderAll();
+      S = withSeeds(sanitize(clone(snap.data())));
+      if (localPending) {   // 서버에 못 올린 이 브라우저의 표시만 얹는다
+        for (const [f, m] of Object.entries(local.marks)) if (!m.seed) S.marks[f] = m;
+        for (const [k, p] of Object.entries(local.picks)) S.picks[k] = p;
+      }
     }
-    $('#save').textContent = '저장됨';
+    db = d;
+    const hasReal = Object.values(S.marks).some((m) => !m.seed) || Object.keys(S.picks).length;
+    if ((snap.exists && localPending) || (!snap.exists && hasReal)) persist(); else { localPending = false; saveLocal(false); $('#save').textContent = '저장됨'; }
+    renderAll();
   } catch (e) { db = null; $('#save').textContent = '이 브라우저에 저장됨'; }
 })();
 </script>

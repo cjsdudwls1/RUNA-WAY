@@ -145,6 +145,7 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
 | audit/marks.json | 사람 검수 결과(맞다 / 틀리다, 메모) |
 | audit/todo.json | replace: 교체할 슬롯(사람이 틀리다 + 사람이 안 본 것 중 AI 교체 추천). add: 전용 파일이 없어 공용 파일(다른 동물)이 나는 슬롯, priority high부터 |
 | audit/classes.json | 동물 → 동물군(app.html CLASS와 같다) |
+| audit/tried.json | 지난 회차 후보 기록(고른 것, 안 고른 것, 사람 메모) |
 | review.py | 검수 페이지 review/index.html을 만든다. 더블클릭으로 연다 |
 | candidates/ | 교체 후보. 앱에 안 들어간다(빌드는 web/sounds 맨 위 파일만 읽는다) |
 
@@ -152,14 +153,19 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
 
 - 폴더: `candidates/<슬롯>/<번호>.mp3`. 슬롯은 `<동물>_<상태>` (예: `pig_sprint`)
 - 슬롯마다 후보 3~5개. 서로 다른 원본 녹음에서 2개 이상
+- todo.json의 avoid_sources(지난 회차에 사람이 안 고른 것)와 human_notes(사람 메모)를 먼저 읽는다
 - 음향 규격(위 표) 그대로. 단 sprint는 0.5초 이상(0.3초 조각은 못 알아듣는다)
 - 기록: `candidates/candidates.json`에 후보마다 credits.json과 같은 칸 + `slot`, `file`(candidates/...), `note`(왜 골랐나 한 줄), `dur`
 - 분류기 관문: `python3 web/sounds/audit.py web/sounds/candidates --json web/sounds/candidates/audit.json`
   - BAD는 후보에 올리지 않는다
   - SUSPECT는 note에 이유를 적을 때만(예: AudioSet에 코끼리가 없어 기대 소리가 약하게 나온다)
-  - 큰 개(그레이하운드, 진돗개, 늑대, 허스키) 짖음: Bark·Bow-wow가 Yip보다 크고, 1.5kHz 위/아래 에너지 비가 0.10 이하(큰 개 0.00~0.07, 치와와·뺀 그레이하운드 0.19~0.33). 음높이는 짖음에서 불안정해 참고만
+  - 큰 개 돌진(그레이하운드, 진돗개, 늑대, 허스키, 개 무리 공용 canine): 1.5kHz 위/아래 에너지 비 0.10 이하가 조건. 0.10~0.18은 SUSPECT, 0.18 넘으면 BAD. Yip이 Bark·Bow-wow보다 크면 SUSPECT. 이 두 가지는 note로 봐주지 않는다(큰 개는 0.00~0.07, 치와와·뺀 그레이하운드 0.19~0.33)
   - 다른 종 라벨(까마귀, 비둘기, 닭, 소, 개구리 등)이 기대 소리보다 크면 BAD
-  - 원본을 이미 다른 동물이 쓰면 BAD(credits.json과 candidates.json의 source_url 비교)
+  - 약한 슬롯(AudioSet에 그 동물이 없는 것): 동물 기미가 전혀 없고 맨 위가 차·바람·효과음이면 SUSPECT
+  - 음악 라벨은 SUSPECT까지만(하울링, 트럼펫, 괴물 목소리가 음악으로 잘 잡힌다)
+  - 원본을 이미 다른 동물이 쓰면 BAD. credits.json과 candidates.json을 함께 본다(다른 슬롯 후보끼리도). freesound 주소는 번호로 맞춘다. 생성 모델 출력(라이선스 "생성: …")은 빼고 본다
+  - candidates.json에 줄이 없는 후보는 BAD(출처 모름)
+  - 판정은 파일 내용 해시(h)에 묶인다. 후보 파일을 고치면 audit.py를 다시 돌린다
 - 이미 다른 동물에 쓴 원본은 쓰지 않는다. 같은 녹음이 두 동물 소리가 되면 안 된다
 - 후보를 넣었으면 `python3 web/sounds/review.py` → review/index.html 맨 위 "후보 고르기"에 나온다
 
@@ -172,11 +178,28 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
 
 ### 마무리 (AI가 한다)
 
-- 고른 후보 → `web/sounds/<슬롯>_<번호>.mp3`. 틀리다로 표시된 파일 자리부터 채운다. 슬롯당 최대 3개
-- credits.json: 뺀 파일의 줄은 지우고 새 파일의 줄을 넣는다
-- "다 별로"이고 쓸 만한 파일이 하나도 안 남는 슬롯은 파일을 빼 둔다(동물군 파일이나 합성음이 대신 난다). todo.json에 남긴다
-- marks.json에 이번 검수 결과를 합친다. 새로 넣은 파일은 사람이 "쓴다"로 고른 것이니 맞다로 적는다
-- candidates/ 폴더를 지운다 → `python3 web/sounds/audit.py` → `python3 web/sounds/review.py` → 커밋
+사람이 "결과 복사"를 붙여 넣으면 한다. 결과 끝의 `<json>` 블록이 기준이다(round가 audit/todo.json의 round와 다르면 옛 페이지 결과다. 사람에게 알린다).
+
+1. 교체 대상을 정한다
+   - 사람이 틀리다(이번 결과 + audit/marks.json에서 gone이 아닌 것) + 사람이 안 들은 AI 교체 추천(결과의 "안 들어 본 교체 추천")
+   - 사람이 맞다고 한 파일은 AI가 뭐라 해도 둔다. "메모만"은 판정이 아니다. 참고만
+2. 슬롯마다 채운다
+   - 고른 후보를 교체 대상 자리에 넣는다. 사람 틀리다 자리부터, 그다음 AI 교체 추천 자리, 그다음 빈 번호
+   - 이름은 `<슬롯>_<번호>.mp3`. 번호는 1부터 빈 것. 남기는 파일 + 새 파일이 3개를 넘지 않는다(페이지가 "최대 n개"로 막는다)
+   - 후보를 못 고른 교체 대상("다 별로", "안 고름", 후보 슬롯 없음)은 web/sounds에서 뺀다. 동물군 파일이나 합성음이 대신 난다
+3. credits.json
+   - 뺀 파일의 줄은 지운다
+   - 새 파일의 줄 = candidates.json의 그 후보 줄에서 `file`을 최종 이름으로 바꾸고 `slot`, `note`, `dur`, `audit`를 뺀 것. `animal`, `kind`는 슬롯대로
+   - 빌드가 검사한다: web/sounds의 소리 파일에 credits.json 줄이 없으면 빌드가 멈춘다
+4. audit/marks.json
+   - 교체하거나 뺀 파일의 옛 줄은 지운다(같은 이름의 새 파일에 옛 판정이 붙지 않게. 내용 해시로도 막지만 파일을 정리해 둔다)
+   - 뺀 파일은 `{"v": "removed", "note": "이유"}`로 적는다. 다음 회차 todo.json의 교체 목록에 남는다
+   - 새로 넣은 파일은 `{"v": "ok", "note": "후보 n번 선택"}`. 이번 결과의 맞다·틀리다(파일이 그대로인 것)도 합친다
+5. audit/tried.json에 이번 회차를 덧붙인다. 다음 검색이 같은 구간을 또 가져오지 않게
+   - `{"slot", "date", "none": 다 별로 여부, "note": 사람 메모, "used": [고른 후보의 source_url], "rejected": [{"source_url", "title", "edits", "note"}]}`
+   - review.py가 todo.json 슬롯마다 human_notes, avoid_sources로 붙인다
+6. candidates/ 폴더를 지운다 → `python3 web/sounds/audit.py` → `python3 web/sounds/review.py` → 커밋
+   - judge.json은 고치지 않는다. 내용 해시가 달라진 파일에는 옛 AI 판정이 붙지 않고 새 분류기 결과가 쓰인다
 
 ## 괴물 (2026-09-25 추가)
 

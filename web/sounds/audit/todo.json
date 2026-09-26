@@ -1,5 +1,6 @@
 {
- "note": "replace: 틀린 파일 교체(먼저). add: 전용 파일이 없어 다른 동물 소리(공용 파일)나 합성음이 나는 슬롯(여유 있을 때, 공용 파일이 전혀 다른 동물이면 먼저)",
+ "note": "replace: 틀린 파일 교체(먼저). add: 전용 파일이 없어 다른 동물 소리(공용 파일)나 합성음이 나는 슬롯(priority high부터). avoid_sources: 지난 회차에 사람이 안 고른 후보(다시 가져오지 않는다)",
+ "round": "ae10d28310",
  "replace": [
   {
    "slot": "pig_sprint",
@@ -14,12 +15,14 @@
    "keep": [],
    "why": [
     "pig_sprint_1.mp3: 개구리 판정(0.72). 맑은 삑 음이라 비명이 아님. 닭 소리 난 2번 바로 앞 구간 (AI 추천)",
-    "pig_sprint_2.mp3: 돼지 꾸이익이 아니라 닭 소리 같음 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)"
+    "pig_sprint_2.mp3: 돼지 꾸이익이 아니라 닭 소리 같음 (사용자 2026-09-26) (앱에서 뺐다)"
    ],
    "hints": [
     "Search: 'pig squeal', 'pig scream loud', 'hog squeal', 'sow squealing', 'pig squeal farm' (freesound CC0). Ideal segment: a harsh, noisy, loud 'kkwee-eek' scream with energy spread across 1-4 kHz and a rough, raspy texture, 0.5-1.2 s. Pitfalls: a clean whistle-like tonal glide around 500 Hz (heard as chicken or frog); chickens or people in a farm background; slaughter or abuse-sounding screams (README forbids them). Do not reuse mrmunk freesound 344972 (both sprint cuts from it failed). Audit gate: Pig/Oink/Squeal/Screaming above Frog/Chicken/Speech.",
     "Search: 'pig squeal', 'pig squealing close', 'hog scream', 'pig squeal short' (freesound CC0, Pixabay). Ideal segment: one harsh, raspy, loud squeal burst with broadband 1-4 kHz noise, not a clean tone, 0.5-1.2 s (0.3-0.5 s fragments are unrecognisable). Pitfalls: tonal gliding 'bawk'-like notes around 400-500 Hz (heard as chicken); farm chickens or voices behind it; slaughter or abuse-sounding screams. Use a different original than mrmunk 344972 and than the pig_sprint_1 replacement, so the slot has 2 or more sources."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "elephant_sprint",
@@ -34,11 +37,13 @@
     "elephant_sprint_1.mp3"
    ],
    "why": [
-    "elephant_sprint_2.mp3: 무슨 개 소리 남 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)"
+    "elephant_sprint_2.mp3: 무슨 개 소리 남 (사용자 2026-09-26) (앱에서 뺐다)"
    ],
    "hints": [
     "Search: 'elephant trumpet', 'elephant trumpeting close', 'african elephant trumpet call', 'asian elephant trumpet' (freesound CC0/CC-BY, Wikimedia Commons, Pixabay). Ideal segment: one loud, brassy, raspy trumpet blast ('praaah') with rich noisy harmonics reaching 5 kHz and above and an abrupt onset, 0.6-1.2 s (minimum 0.5 s). Pitfalls: not a clean single-tone whine or howl (a pure harmonic tone around 750 Hz is heard as a dog); no zoo crowd voices, music or hall reverb. Do not reuse ikbenraar freesound 819668 (the source of this dog-like clip), and use a different original than sprint_1 (Wikimedia Elephant_voice_-_trumpeting.ogg). Audit gate: Dog/Howl/Bark must not appear."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "greyhound_sprint",
@@ -52,13 +57,15 @@
    ],
    "keep": [],
    "why": [
-    "greyhound_sprint_1.mp3: 굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)",
-    "greyhound_sprint_2.mp3: 굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)"
+    "greyhound_sprint_1.mp3: 굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26) (앱에서 뺐다)",
+    "greyhound_sprint_2.mp3: 굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26) (앱에서 뺐다)"
    ],
    "hints": [
     "Search: 'big dog bark', 'large dog barking deep', 'greyhound bark', 'german shepherd bark', 'doberman bark', 'labrador bark single'. Drop the 'Jazz Barks' source (aruncbose1 398724) entirely: its barks are small-dog yaps. CC0 sources already credited with big-dog barks: Daphne_in_Wonderland 'Dog barks exterior (mono)' (freesound 383483, other barks than 0.44-1.40 used by canine_sprint_1), qubodup 'Malinois Dog Barking Growling in Play' (freesound 823544, other than 10.23-11.53), BigSoundBank 'Barking dog' series (Joseph SARDIN). Ideal: 0.5-1.0 s, 1-2 deep 'woof' barks of a large dog, F0 about 300-500 Hz, energy concentrated 300-1500 Hz: energy above 1.5 kHz under ~10% of energy below (current file ~21%, same as chihuahua files; accepted big-dog files 0-6%). Dry close mic, no yips, whines or other dogs. Minimum 0.5 s. Accept only if audit.py --as greyhound_sprint gives Dog/Bark/Bow-wow >= 0.4 and no Fowl/Honk/Caw.",
     "Same as greyhound_sprint_1: search 'big dog bark', 'large dog barking deep', 'greyhound bark', 'german shepherd bark', 'doberman bark'; do not use 'Jazz Barks' (aruncbose1 398724). Take a different bark than the new sprint_1 (not the same audio; cross-correlation < 0.8) so alternation adds variety. Ideal: 0.5-1.0 s, 1-2 deep barks, F0 about 300-500 Hz, energy above 1.5 kHz under ~10% of energy below (current ~27%), dry, no yips/whines/other dogs. Minimum 0.5 s. Accept only if audit.py --as greyhound_sprint gives Dog/Bark/Bow-wow >= 0.4 and no Fowl/Honk."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "horse_sprint",
@@ -77,7 +84,9 @@
    ],
    "hints": [
     "Search: 'horse neigh close', 'horse whinny', 'mare whinny', 'stallion neigh'. Ideal segment: one complete whinny from onset through the descending vibrato ('hi-hi-hi-hin'), 0.7-1.2 s, dry close-mic; the cut must contain the tremolo/descending part, not just the high squeal. Classifier gate: 'Neigh, whinny' clearly above any Fowl/Duck/Chicken label. Pitfalls: cutting only the high squeal onset (sounds like a chicken/duck, the current problem), stallion fight squeals, a click/thump at the start (current file has one), people or rider voices, farmyard background with chickens. Must be a different original from horse_sprint_1 (BigSoundBank 1541) and from the hoof_* sources."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "squirrel_sprint",
@@ -97,14 +106,16 @@
    "hints": [
     "Search 'red squirrel alarm call', 'squirrel chatter alarm', 'chipmunk chip alarm', 'Douglas squirrel alarm'. Ideal: fast chatter or repeated short 'chip/chuk' alarm notes, 4-10 per second, 2-8 kHz, 0.6-1.0 s, dry close mic. Pitfalls: grey squirrel long 'quaa' calls tag Crow/Caw 0.9 and sound like a crow; reject a candidate whose top label is Crow/Caw/Bird; no birds in background; do not overlap philberts 111393 (squirrel_roam_1).",
     "Same as squirrel_sprint_1, from a second, different recording: 'red squirrel alarm chatter', 'squirrel scolding', 'chipmunk chipping'. Ideal: rapid high chips/chatter 0.6-1.0 s, starts on the first note, clean fade. Pitfalls: grey squirrel 'quaa'/'moan' calls read as crow or duck; avoid long single calls; Crow/Caw/Bird must not be the top label."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "small_sprint",
    "animal": "small",
    "name": "작은 동물 공용",
    "kind": "sprint",
-   "expect": "작은 동물 공용",
+   "expect": "",
    "replace": [
     "small_sprint_1.mp3"
    ],
@@ -114,14 +125,16 @@
    ],
    "hints": [
     "Shared fallback for sloth/loris/armadillo sprint. Search 'mouse squeak', 'rat squeak alarm', 'chipmunk alarm chip', 'small rodent squeaking'. Ideal: rapid series of 3-6 short high squeaks, F0 above ~2 kHz, 0.5-1.0 s, dry. Pitfalls: guinea pig wheek at F0 ~600 Hz sounds like a pig or a human voice (Pig/Oink/Speech tags); no bird chirps; use a different source than the new squirrel_sprint files."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "small_roam",
    "animal": "small",
    "name": "작은 동물 공용",
    "kind": "roam",
-   "expect": "작은 동물 공용",
+   "expect": "",
    "replace": [
     "small_roam_1.mp3"
    ],
@@ -131,7 +144,9 @@
    ],
    "hints": [
     "Shared fallback for sloth/loris/armadillo roam (rustle, short squeak, sniffing). Search 'armadillo foraging', 'hedgehog sniffing leaves', 'small animal rustling leaves', 'rodent rustling dry leaves'. Ideal: 0.8-1.5 s of rustling in leaf litter with 1-3 small sniffs, close and dry. Pitfalls: guinea pig 'chut' purrs tag as Frog/Chicken; avoid bird wing flaps, human footsteps, wind."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "chicken_sprint",
@@ -150,7 +165,9 @@
    ],
    "hints": [
     "Search: 'hen squawk', 'chicken alarm call', 'scared chicken squawk', 'chicken distress cackle'. First try other seconds of the same BigSoundBank 'Hen scared' (s1040, CC0; current cut 4.12-4.62 s) and Rudmer_Rotteveel's CC0 chicken alarm clips (source of chicken_sprint_1). Ideal 0.5-1.0 s: one loud full 'bwaaak!' squawk with clear harmonics (F0 ~600-1200 Hz), starting on the squawk, optional wing flap. Pitfalls: current clip is soft clucks + only ~0.25 s of a noisy squawk, so do not cut mid-call; avoid rooster crow and duck quack. Verify: audit.py --as chicken_sprint gives Chicken, rooster >= 0.5 (chicken_sprint_1 scores 0.91). Needed so chicken sprint has 2 variants."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "hippo_sprint",
@@ -169,14 +186,16 @@
    ],
    "hints": [
     "Search: 'hippo roar', 'hippopotamus bellow', 'hippo wheeze honk', 'hippo aggressive grunt close', 'hippopotamus call'. Ideal segment: a loud, deep, rough pulsed honk or roar ('huh-huh-HAWW'), growly pulses with f0 under ~200 Hz, 0.6-1.2 s (minimum 0.5 s). Pitfalls: a steady pure tone reads as a cow moo (Cattle/Moo tags); river ambience often carries doves, other birds, insects and boat engines; avoid long water splashes. Prefer an original other than YleArkisto 253082 (all 5 hippo files come from it). Audit gate: Cattle/Moo/Bird must not dominate."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "canine_tired",
    "animal": "canine",
    "name": "개 무리 공용",
    "kind": "tired",
-   "expect": "개 무리 공용",
+   "expect": "",
    "replace": [
     "canine_tired_1.mp3"
    ],
@@ -186,7 +205,9 @@
    ],
    "hints": [
     "Search: 'large dog panting', 'big dog panting heavy', 'husky panting', 'german shepherd panting'. This file is the fallback tired sound for wolf and sleddog, so it must be a big dog. Option: another 2 s of dobroide '20070824.dog.panting.wav' (freesound 39980, CC BY 4.0) outside 5.90-7.90 (used by greyhound_tired_1). Ideal: 1.5-2.5 s steady rhythmic panting, 3-5 breaths/s, low voiced 'hah' with energy mostly under 2 kHz, dry, no licking, collar jingle or hum. Pitfall: small-dog fast panting (current blouhond 164101) reads as chicken clucking. Accept only if 0.5 s windowed tagging shows Pant/Breathing or Dog and no Chicken/Cluck/Engine in any window."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "cheetah_sprint",
@@ -206,14 +227,16 @@
    "hints": [
     "Search: 'cheetah hiss', 'cheetah spit', 'cheetah snarl', 'cheetah threat'; fallback 'cougar hiss', 'puma hiss snarl', 'leopard hiss'. Ideal: explosive hiss or spit with a sharp onset (under 20 ms), broadband air noise mostly 2-8 kHz, optionally a short voiced snarl, 0.4-1.0 s, full-band 44.1/48 kHz source, close mic, no crowd. Pitfalls: band-limited 11 kHz recordings (the hiss loses its sizzle and becomes a dull whoosh, the current problem), slow-swelling breath-like onset, lion/tiger roar (wrong size and animal), reusing the domestic cat hiss already in feline_sprint_1. If nothing good: delete; feline_sprint (cat hiss) plays instead.",
     "Search: 'cheetah growl', 'cheetah snarl', 'cheetah growling'; fallback 'cougar growl', 'puma snarl', 'leopard growl'. Ideal: threatening growl-snarl with an audible raspy voice (pitch 100-400 Hz plus harmonics above 1 kHz so it reads as an animal), clear start, whole event inside 0.5-1.2 s with a natural end, full-band source, close mic, no crowd or engine noise. Pitfalls: steady low rumble with nothing above 500 Hz (sounds like a motorcycle idling, the current problem), a segment cut at its loudest point, lion roar or leopard sawing call (wrong animal), 11 kHz band-limited sources. If nothing good: delete; feline_sprint plays instead."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "bird_roam",
    "animal": "bird",
    "name": "새 무리 공용",
    "kind": "roam",
-   "expect": "새 무리 공용",
+   "expect": "",
    "replace": [
     "bird_roam_1.mp3"
    ],
@@ -223,14 +246,16 @@
    ],
    "hints": [
     "Fix by ADDING ostrich_roam_1.mp3 rather than editing this file: bird_roam_1 is only ever heard as the ostrich's roam (chicken has its own roam files). Do not just delete it: the bird-class synth fallback is a chicken-like FM cackle, worse for an ostrich. Search: 'ostrich boom', 'ostrich booming call', 'male ostrich boom', 'ostrich mating call'; fallback 'emu boom', 'emu drumming', 'cassowary boom'. Ideal: deep hollow 'buu-buu-buuum' boom, F0 under ~200 Hz, 0.8-2.0 s, close and dry. Pitfalls: not a dove/pigeon coo (500-800 Hz tone), no zoo crowd or speech, no wind rumble. Note audit.py --as ostrich_roam accepts any 'Bird' tag, so also reject candidates tagged Pigeon/Coo/Theremin/Siren."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "bird_tired",
    "animal": "bird",
    "name": "새 무리 공용",
    "kind": "tired",
-   "expect": "새 무리 공용",
+   "expect": "",
    "replace": [
     "bird_tired_1.mp3"
    ],
@@ -240,7 +265,9 @@
    ],
    "hints": [
     "Fix by ADDING ostrich_tired_1.mp3 (bird_tired_1 is only heard as the ostrich's tired sound). Search: 'ostrich breathing', 'ostrich hiss', 'ostrich snort', 'emu breathing', 'large bird heavy breathing'; also check other CC0 clips by TheKingOfGeeks360 on freesound ('Ratites - Ostrich ...', source of ostrich_sprint_1). Ideal 0.8-2.5 s: 2-4 audible breaths or a low breathy hiss, broadband (not a single narrow tone), dry. Pitfalls: not this barn-owl screech (narrow ~1.8-2 kHz whistle-like band, tagged Frog/Whistle), not a goose hiss, no human or dog panting. Fallback if nothing found: 2-3 short ostrich snorts from the same source in a row, 0.8-1.5 s."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "cat_tired",
@@ -257,14 +284,16 @@
    ],
    "hints": [
     "Search: 'cat panting', 'cat breathing fast', 'cat open mouth breathing', 'cat heavy breathing' (freesound CC0/CC-BY, Pixabay). Ideal: real domestic cat, unvoiced fast airy breaths (3-6 per second) whose breath noise reaches 3-8 kHz, no pitched voice, close mic, dry room, 0.8-2.5 s continuous. Pitfalls: human imitating a cat (voiced 'huh huh' at 150-250 Hz with nothing above 2 kHz, which is the current problem), dog panting (tongue slap, bigger and lower), purring (steady 25 Hz rumble is not panting), room reverb. If no clean real cat panting exists, delete the file and let the fallback/synth play (README allows leaving it empty)."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "feline_tired",
    "animal": "feline",
    "name": "고양이 무리 공용",
    "kind": "tired",
-   "expect": "고양이 무리 공용",
+   "expect": "",
    "replace": [
     "feline_tired_1.mp3"
    ],
@@ -274,7 +303,9 @@
    ],
    "hints": [
     "Same target as cat_tired_1, but this is also the fallback for cheetah tired (no cheetah_tired file), so 'cheetah panting', 'big cat panting', 'leopard panting' also work. Ideal: fast rough unvoiced breaths, airy noise up to 3-8 kHz, no pitched voice, 1.0-2.5 s, close mic, dry. Pitfalls: human voice 'huh huh' (current problem), lion/tiger chuff (prusten), dog panting, purring. Use a different recording or a non-overlapping segment from the one chosen for cat_tired_1."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "cheetah_roam",
@@ -293,14 +324,16 @@
    ],
    "hints": [
     "Search: 'cheetah chirp', 'cheetah chirping', 'cheetah call' (Wikimedia Commons 'Acinonyx jubatus', freesound CC0/CC-BY, BigSoundBank), or a different chirp segment of the same PLOS ONE S1 file (cheetah_roam_1 already uses 16.77-17.70 s). Ideal: 1-3 short, high, bird-like 'chirp/yelp' calls with clear harmonics and a rise-fall pitch (F0 roughly 0.5-1.5 kHz), 0.4-1.5 s total, gaps under 0.2 s, background noise at least 30 dB below the call. Pitfalls: chirr/stutter pulse trains (sound like turkey or frog, the current problem), 11 kHz band-limited recordings, zoo crowd voices, real birds in the background. Fallback if no usable cheetah: 'cougar chirp' / 'puma chirp' (closest living relative, also chirps)."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "hoof_sprint",
    "animal": "hoof",
    "name": "발굽 동물 공용",
    "kind": "sprint",
-   "expect": "발굽 동물 공용",
+   "expect": "",
    "replace": [
     "hoof_sprint_1.mp3"
    ],
@@ -310,7 +343,9 @@
    ],
    "hints": [
     "Search: 'horse gallop close', 'galloping hooves dirt', 'hoofbeats gallop close mic'. Ideal segment: 3-5 heavy hoof thuds in gallop rhythm (ta-ta-dum), dry close perspective on dirt/turf, 0.6-1.2 s (min 0.5 s), no neigh or voice. This file is the fallback sprint for pronghorn and kangaroo (they have no files; kangaroo spec = thumping footsteps), so plain hoofbeats fit better than a horse vocal. Pitfalls: coconut-shell foley clip-clop (cartoonish), slow walking clip-clop on asphalt, cart/carriage wheels, rider voices, tack jingle, long reverb. Do not reuse originals already used: BigSoundBank 0286/0287/1541/1543, freesound 321957 (n_audioman), 275388 (metaepitome), 832102."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "koala_sprint",
@@ -329,7 +364,9 @@
    ],
    "hints": [
     "Re-cut from the same PLOS ONE koala video (Commons ogv, non-overlapping with other koala files) or search 'koala bellow', 'male koala bellowing' (Wikimedia Commons, freesound CC0/CC-BY). Ideal: the loudest belching exhale phase of one bellow, 0.6-1.0 s, start on the attack, end before the next inhale. Pitfalls: current cut 16.95-18.10 s ends on the truncated onset of the next call (~1.07 s); snore-only inhale parts are too quiet for sprint."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "chihuahua_roam",
@@ -348,14 +385,16 @@
    ],
    "hints": [
     "Search: 'chihuahua growl', 'small dog growl', 'little dog growling'. Or a different, continuous part of kijjaz '20170520 Kijjaz - Chihuahua Dog Growling.wav' (freesound 393573, CC0), not 1.73-3.45 (roam_1) and not 4.08-4.82 (current). Ideal: 0.8-1.5 s continuous buzzy 'grrr' with a bit of snarl, energy 200-2000 Hz, sound from the first 20 ms. Pitfall: sparse vocal-fry clicks at growl onset/offset plus heavy limiting (current: 9 dB) read as fart/creak. Accept only if audit.py --as chihuahua_roam gives Dog or Growling >= 0.2 and above Fart."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "reptile_roam",
    "animal": "reptile",
    "name": "파충류 공용",
    "kind": "roam",
-   "expect": "파충류 공용",
+   "expect": "",
    "replace": [
     "reptile_roam_1.mp3"
    ],
@@ -365,7 +404,9 @@
    ],
    "hints": [
     "Shared fallback for gila/komodo roam. Search 'snake hiss close', 'monitor lizard hiss', 'tegu hiss', 'gila monster hiss', 'bearded dragon hiss' (freesound CC0/CC-BY, BigSoundBank). Ideal: one clear breathy hiss 0.6-1.5 s, energy 3-10 kHz, natural fade, dry close mic. Pitfalls: phone handling noise, room hum, spray can/steam/air hose; prefer a different recording than reptile_sprint_1 (JesterWhoo 706981). Check loudness at 44.1 kHz: audit rms at 16 kHz under-reads hiss by about 9 dB."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "sleddog_sprint",
@@ -384,14 +425,16 @@
    ],
    "hints": [
     "Search: 'husky bark', 'siberian husky barking', 'alaskan malamute bark', 'sled dog barking'. Or another bark take from BigSoundBank 'Barking dog' series (Joseph SARDIN, CC0), e.g. a different spot of 2955.flac (roam_1 uses 0.03-1.62); 2954.flac repeats the identical bark at 0 s and 8 s, so do not cut it again. Ideal: 0.5-1.0 s, 1-2 big-dog barks, F0 about 300-500 Hz, energy above 1.5 kHz under ~10% of energy below, dry. Pitfall: must not be the same audio as sleddog_sprint_1 (cross-correlation < 0.8). Accept only if audit.py --as sleddog_sprint gives Dog/Bark >= 0.4."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "bird_sprint",
    "animal": "bird",
    "name": "새 무리 공용",
    "kind": "sprint",
-   "expect": "새 무리 공용",
+   "expect": "",
    "replace": [
     "bird_sprint_1.mp3"
    ],
@@ -401,14 +444,16 @@
    ],
    "hints": [
     "Low priority: no animal plays this now (chicken and ostrich both have their own sprint files). Simplest fix: delete it. If a bird-class sprint fallback is wanted: search 'chicken squawk flapping', 'startled hen wings squawk', 'chicken alarm flap'. Ideal 0.5-1.0 s: a clear vocal squawk (harmonic, F0 ~500-1000 Hz) with wing flaps under it, dry. Pitfalls: flaps alone read as typewriter/machine gun/door (current file: Machine gun 0.56 when looped); avoid pigeon take-off clips. Verify with audit.py --as bird_sprint: Chicken or Bird >= 0.5."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "canine_roam",
    "animal": "canine",
    "name": "개 무리 공용",
    "kind": "roam",
-   "expect": "개 무리 공용",
+   "expect": "",
    "replace": [
     "canine_roam_1.mp3"
    ],
@@ -418,7 +463,9 @@
    ],
    "hints": [
     "Search: 'dog growl close', 'dog growling snarling', 'large dog low growl' (freesound CC0/CC-BY). Easiest: another segment of qubodup 'Dog Growling Snarling Grumbling' (freesound 122183, CC0), not overlapping 23.80-25.78 / 26.76-28.56 (used by jindo_roam_1/2). Ideal: 1.0-2.0 s continuous 'grrr' of a medium/large dog with audible rasp in 100-1000 Hz, starts at once, no lowpass. Pitfall: bowl/contact-mic or 'beast/creature' processed growls (like current coldvet 404920) read as engine rumble. Accept only if audit.py --as canine_roam gives Dog or Growling >= 0.3 and no Vehicle/Engine in top 5. Low priority: every canine animal has its own roam file now, so this fallback is not played."
-   ]
+   ],
+   "human_notes": [],
+   "avoid_sources": []
   }
  ],
  "add": [
@@ -432,7 +479,9 @@
     "small_roam_1.mp3"
    ],
    "class": "small",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "sloth_sprint",
@@ -444,7 +493,9 @@
     "small_sprint_1.mp3"
    ],
    "class": "small",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "loris_roam",
@@ -456,7 +507,9 @@
     "small_roam_1.mp3"
    ],
    "class": "small",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "loris_sprint",
@@ -468,7 +521,9 @@
     "small_sprint_1.mp3"
    ],
    "class": "small",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "gila_roam",
@@ -480,7 +535,9 @@
     "reptile_roam_1.mp3"
    ],
    "class": "reptile",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "komodo_roam",
@@ -492,7 +549,9 @@
     "reptile_roam_1.mp3"
    ],
    "class": "reptile",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "armadillo_roam",
@@ -504,7 +563,9 @@
     "small_roam_1.mp3"
    ],
    "class": "small",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "armadillo_sprint",
@@ -516,7 +577,9 @@
     "small_sprint_1.mp3"
    ],
    "class": "small",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "kangaroo_roam",
@@ -528,7 +591,9 @@
     "hoof_roam_1.mp3"
    ],
    "class": "hoof",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "kangaroo_sprint",
@@ -540,7 +605,9 @@
     "hoof_sprint_1.mp3"
    ],
    "class": "hoof",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "cheetah_tired",
@@ -552,7 +619,9 @@
     "feline_tired_1.mp3"
    ],
    "class": "feline",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "wolf_tired",
@@ -564,7 +633,9 @@
     "canine_tired_1.mp3"
    ],
    "class": "canine",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "sleddog_tired",
@@ -576,7 +647,9 @@
     "canine_tired_1.mp3"
    ],
    "class": "canine",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "ostrich_roam",
@@ -588,7 +661,9 @@
     "bird_roam_1.mp3"
    ],
    "class": "bird",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "ostrich_tired",
@@ -600,7 +675,9 @@
     "bird_tired_1.mp3"
    ],
    "class": "bird",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "pronghorn_sprint",
@@ -612,7 +689,9 @@
     "hoof_sprint_1.mp3"
    ],
    "class": "hoof",
-   "priority": "high"
+   "priority": "high",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "sloth_tired",
@@ -624,7 +703,9 @@
     "small_tired_1.mp3"
    ],
    "class": "small",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "loris_tired",
@@ -636,7 +717,9 @@
     "small_tired_1.mp3"
    ],
    "class": "small",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "gila_sprint",
@@ -648,7 +731,9 @@
     "reptile_sprint_1.mp3"
    ],
    "class": "reptile",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "gila_tired",
@@ -660,7 +745,9 @@
     "reptile_tired_1.mp3"
    ],
    "class": "reptile",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "crocodile_sprint",
@@ -672,7 +759,9 @@
     "reptile_sprint_1.mp3"
    ],
    "class": "reptile",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "crocodile_tired",
@@ -684,7 +773,9 @@
     "reptile_tired_1.mp3"
    ],
    "class": "reptile",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "komodo_sprint",
@@ -696,7 +787,9 @@
     "reptile_sprint_1.mp3"
    ],
    "class": "reptile",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "komodo_tired",
@@ -708,7 +801,9 @@
     "reptile_tired_1.mp3"
    ],
    "class": "reptile",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "squirrel_tired",
@@ -720,7 +815,9 @@
     "small_tired_1.mp3"
    ],
    "class": "small",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "armadillo_tired",
@@ -732,7 +829,9 @@
     "small_tired_1.mp3"
    ],
    "class": "small",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "kangaroo_tired",
@@ -744,7 +843,9 @@
     "hoof_tired_1.mp3"
    ],
    "class": "hoof",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "wolf_sprint",
@@ -756,7 +857,9 @@
     "canine_sprint_1.mp3"
    ],
    "class": "canine",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "camel_tired",
@@ -768,7 +871,9 @@
     "hoof_tired_1.mp3"
    ],
    "class": "hoof",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "pronghorn_roam",
@@ -780,7 +885,9 @@
     "hoof_roam_1.mp3"
    ],
    "class": "hoof",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   },
   {
    "slot": "pronghorn_tired",
@@ -792,7 +899,9 @@
     "hoof_tired_1.mp3"
    ],
    "class": "hoof",
-   "priority": "low"
+   "priority": "low",
+   "human_notes": [],
+   "avoid_sources": []
   }
  ]
 }

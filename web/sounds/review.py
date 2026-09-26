@@ -12,7 +12,7 @@
   python3 web/sounds/review.py
   python3 web/sounds/review.py --base sounds/ --out 경로/index.html   # 오디오 경로를 바꿔 다른 곳에 올릴 때
 """
-import os, re, json, argparse, glob, datetime
+import os, re, json, argparse, glob, datetime, hashlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 KIND_KO = {'roam': '배회', 'sprint': '돌진', 'tired': '지침', 'step': '발소리', 'line': '대사'}
@@ -47,20 +47,39 @@ def parse(stem):
     return (m.group(1), m.group(2), int(m.group(3) or 1)) if m else (None, None, None)
 
 
+def fhash(path):
+    return hashlib.sha1(open(path, 'rb').read()).hexdigest()[:10]
+
+
 def build(base='../', out=None, artifact=False):
     names, expect, byfile = readme()
     report = {os.path.basename(r['file']): r for r in load(os.path.join(HERE, 'audit', 'report.json'), [])}
     judge = load(os.path.join(HERE, 'audit', 'judge.json'), {})
     jitems = judge.get('items', {})
-    marks = load(os.path.join(HERE, 'audit', 'marks.json'), {}).get('marks', {})
+    mpath = os.path.join(HERE, 'audit', 'marks.json')
+    mdoc = load(mpath, {'marks': {}})
+    marks = mdoc.setdefault('marks', {})
+    tried = load(os.path.join(HERE, 'audit', 'tried.json'), [])
     credits = {r['file']: r for r in load(os.path.join(HERE, 'credits.json'), [])}
-    files = []
+    present = {}
     for f in sorted(os.listdir(HERE)):
         stem, ext = os.path.splitext(f)
-        if ext.lower() not in ('.mp3', '.ogg', '.m4a', '.wav'): continue
+        if ext.lower() in ('.mp3', '.ogg', '.m4a', '.wav') and parse(stem)[0]: present[f] = fhash(os.path.join(HERE, f))
+    # 사람 표시는 그 파일 내용(h)에 묶는다. 처음 보는 표시에 h를 찍고, 없어진 파일은 gone. 같은 이름으로 새 파일이 들어오면 옛 표시는 무효
+    changed = False
+    for f, m in marks.items():
+        if f in present and 'h' not in m and not m.get('gone'): m['h'] = present[f]; changed = True
+        elif f not in present and not m.get('gone'): m['gone'] = True; changed = True
+    if changed: json.dump(mdoc, open(mpath, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    live = lambda f: f in marks and f in present and marks[f].get('h') == present[f] and not marks[f].get('gone')   # 지금 파일에 대한 표시인가
+    # AI 판정도 그 파일 내용에 묶는다. 교체로 내용이 바뀌면 옛 판정 대신 새 분류기 결과를 쓴다
+    jvalid = lambda f: jitems.get(f) if f in jitems and (jitems[f].get('h') in (None, present.get(f))) else None
+    files = []
+    for f, h in present.items():
+        stem = os.path.splitext(f)[0]
         animal, kind, n = parse(stem)
-        if not animal: continue
-        r = report.get(f, {}); j = jitems.get(f)
+        r = report.get(f, {}) if report.get(f, {}).get('h') in (None, h) else {}
+        j = jvalid(f)
         ai = j['verdict'] if j else {'BAD': 'REPLACE', 'SUSPECT': 'CHECK', 'OK': 'KEEP'}.get(r.get('verdict'), 'CHECK')
         k0 = kind.split('_')[0]
         if stem in byfile: exp = byfile[stem]
@@ -69,41 +88,75 @@ def build(base='../', out=None, artifact=False):
         else: exp = CLASS_KO.get(animal, '')
         c = credits.get(f, {})
         files.append({
-            'file': f, 'animal': animal, 'kind': kind, 'n': n,
+            'file': f, 'h': h, 'animal': animal, 'kind': kind, 'n': n,
             'kindKo': KIND_KO.get(k0, k0) + (' · ' + LINE_KO.get(kind[5:], kind[5:]) if kind.startswith('line_') else ''),
             'expect': exp, 'ai': ai, 'conf': (j or {}).get('confidence', ''),
             'reason': (j or {}).get('reason_ko') or '; '.join(r.get('notes', [])) or '분류기 이상 없음',
             'listen': (j or {}).get('listen_ko', ''), 'hint': (j or {}).get('replace_hint', ''),
-            'auto': r.get('verdict', ''), 'top': r.get('top', [])[:4], 'dur': r.get('dur'), 'f0': r.get('f0'),
+            'auto': r.get('verdict', ''), 'top': r.get('top', [])[:4], 'dur': r.get('dur'), 'f0': r.get('f0'), 'hf': r.get('hf_ratio'),
             'src': {'title': c.get('title', ''), 'url': c.get('source_url', ''), 'author': c.get('author', ''), 'license': c.get('license', ''), 'edits': c.get('edits', '')},
         })
+    # 할 일
+    #  replace: 사람이 틀리다(지금 파일) + 사람이 안 본 것 중 AI 교체 추천 + 이미 앱에서 뺀 파일(사람 틀리다 또는 AI 교체 추천)
+    #  사람이 맞다고 한 파일은 AI가 뭐라 해도 둔다
+    todo = {}
+    def need(fn, why, hint):
+        animal, kind, n = parse(os.path.splitext(fn)[0])
+        slot = f'{animal}_{kind}'
+        t = todo.setdefault(slot, {'slot': slot, 'animal': animal, 'name': names.get(animal) or CLASS_KO.get(animal) or MONSTER_KO.get(animal) or animal, 'kind': kind,
+                                   'expect': expect.get(animal, {}).get(kind.split('_')[0], ''), 'replace': [], 'keep': [], 'why': [], 'hints': []})
+        if fn not in t['replace']: t['replace'].append(fn); t['why'].append(f'{fn}: {why}')
+        if hint and hint not in t['hints']: t['hints'].append(hint)
+    for f in files:
+        mk = marks[f['file']].get('v') if live(f['file']) else None
+        if mk == 'ng': need(f['file'], (marks[f['file']].get('note') or f['reason']) + ' (사람 확인)', f['hint'])
+        elif mk is None and f['ai'] == 'REPLACE': need(f['file'], f['reason'] + ' (AI 추천)', f['hint'])
+    for fn, m in marks.items():   # 앱에서 뺀 파일(사람 틀리다·AI가 뺌)
+        if fn in present or m.get('v') not in ('ng', 'removed') or not parse(os.path.splitext(fn)[0])[0]: continue
+        need(fn, (m.get('note') or '') + ' (앱에서 뺐다)', (jitems.get(fn) or {}).get('replace_hint', ''))
+    for fn, j in jitems.items():   # 사람 표시 없이 앱에서 뺀 AI 교체 추천
+        if fn in present or j.get('verdict') != 'REPLACE' or fn in marks or not parse(os.path.splitext(fn)[0])[0]: continue
+        need(fn, j.get('reason_ko', '') + ' (AI 추천, 앱에서 뺐다)', j.get('replace_hint', ''))
+    for t in todo.values():
+        t['keep'] = [f['file'] for f in files if f"{f['animal']}_{f['kind']}" == t['slot'] and f['file'] not in t['replace']]
+        hist = [x for x in tried if x.get('slot') == t['slot']]   # 지난 회차에 사람이 고르지 않은 후보. 같은 구간을 또 가져오지 않게
+        t['human_notes'] = [x.get('note') for x in hist if x.get('note')]
+        t['avoid_sources'] = [r for x in hist for r in x.get('rejected', [])]
     # 후보
     cands = {}
     cj = load(os.path.join(HERE, 'candidates', 'candidates.json'), [])
-    cinfo = {(x.get('slot'), x.get('file')): x for x in cj}
+    cinfo = {x.get('file', '').replace(os.sep, '/'): x for x in cj}
     caud = {r['file'].replace(os.sep, '/'): r for r in load(os.path.join(HERE, 'candidates', 'audit.json'), [])}   # audit.py --json 결과
     for d in sorted(glob.glob(os.path.join(HERE, 'candidates', '*'))):
         if not os.path.isdir(d): continue
         slot = os.path.basename(d)
+        if not parse(slot)[0]: continue
         items = []
         for f in sorted(os.listdir(d), key=lambda s: (len(s), s)):
             if not f.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')): continue
             rel = f'candidates/{slot}/{f}'
-            x = cinfo.get((slot, rel)) or cinfo.get((slot, f)) or {}
-            au = x.get('audit') or caud.get(rel) or {}
-            items.append({'file': rel, 'label': os.path.splitext(f)[0], 'title': x.get('title', ''), 'url': x.get('source_url', ''), 'author': x.get('author', ''),
+            h = fhash(os.path.join(d, f))
+            x = cinfo.get(rel) or {}
+            au = caud.get(rel) or {}
+            if au.get('h') not in (None, h): au = {}   # 검사 뒤에 파일이 바뀌었다
+            items.append({'file': rel, 'h': h, 'label': os.path.splitext(f)[0], 'title': x.get('title', ''), 'url': x.get('source_url', ''), 'author': x.get('author', ''),
                           'license': x.get('license', ''), 'edits': x.get('edits', ''), 'note': x.get('note', ''), 'dur': x.get('dur') or au.get('dur'),
-                          'auto': au.get('verdict', ''), 'top': au.get('top', [])[:4]})
+                          'auto': au.get('verdict', '') or ('검사 안 함' if not au else ''), 'top': au.get('top', [])[:4], 'notes': au.get('notes', []), 'hf': au.get('hf_ratio')})
         if items:
-            animal = slot.split('_')[0]
-            cur = [f['file'] for f in files if f"{f['animal']}_{f['kind']}" == slot]
-            cands[slot] = {'items': items, 'current': cur, 'expect': expect.get(animal, {}).get(slot.split('_', 1)[1], '')}
+            animal, kind, _ = parse(slot)
+            rep = todo.get(slot, {}).get('replace', [])
+            cur = [{'file': f['file'], 'replace': f['file'] in rep} for f in files if f"{f['animal']}_{f['kind']}" == slot]
+            keep = sum(1 for c in cur if not c['replace'])
+            cands[slot] = {'items': items, 'current': cur, 'expect': expect.get(animal, {}).get(kind.split('_')[0], ''),
+                           'max': max(1, 3 - keep), 'set': hashlib.sha1(''.join(i['h'] for i in items).encode()).hexdigest()[:10]}
     # 동물 순서: README 표 순서, 동물군, 괴물
     order = list(names) + ORDER_CLASS + ['dokkaebi', 'jeoseung']
     groups = [a for a in order if any(f['animal'] == a for f in files)] + sorted({f['animal'] for f in files} - set(order))
     gname = {a: names.get(a) or CLASS_KO.get(a) or MONSTER_KO.get(a) or a for a in groups}
-    data = {'generated': datetime.date.today().isoformat(), 'base': base, 'groups': [[a, gname[a]] for a in groups], 'files': files,
-            'cands': cands, 'seed': marks, 'cross': judge.get('cross_issues', [])}
+    seed = {f: {'v': m.get('v'), 'note': m.get('note', '')} for f, m in marks.items() if live(f) and m.get('v') in ('ok', 'ng')}
+    rnd = hashlib.sha1(json.dumps([present, {k: v['set'] for k, v in cands.items()}, seed], sort_keys=True).encode()).hexdigest()[:10]
+    data = {'generated': datetime.date.today().isoformat(), 'round': rnd, 'base': base, 'groups': [[a, gname[a]] for a in groups], 'files': files,
+            'cands': cands, 'seed': seed, 'cross': judge.get('cross_issues', [])}
     tpl = open(os.path.join(HERE, 'review_template.html'), encoding='utf-8').read()
     html = tpl.replace('/*DATA*/null', json.dumps(data, ensure_ascii=False).replace('</', '<\\/'))
     if not artifact:   # 파일로 여는 판은 완전한 문서로. claude.ai 게시판은 본문만(게시할 때 머리를 붙인다)
@@ -112,31 +165,6 @@ def build(base='../', out=None, artifact=False):
     out = out or os.path.join(HERE, 'review', 'index.html')
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, 'w', encoding='utf-8').write(html)
-    # 할 일: 사람이 틀리다 → 교체. 사람이 안 본 것 중 AI가 교체 추천 → 교체. 사람이 맞다 → 둔다
-    todo = {}
-    for f in files:
-        mk = marks.get(f['file'], {}).get('v')
-        if mk == 'ng' or (mk is None and f['ai'] == 'REPLACE'):
-            slot = f"{f['animal']}_{f['kind']}"
-            t = todo.setdefault(slot, {'slot': slot, 'animal': f['animal'], 'name': gname.get(f['animal'], f['animal']), 'kind': f['kind'], 'expect': f['expect'],
-                                       'replace': [], 'keep': [], 'why': [], 'hints': []})
-            t['replace'].append(f['file']); t['why'].append(f"{f['file']}: " + (marks.get(f['file'], {}).get('note') or f['reason']) + (' (사람 확인)' if mk == 'ng' else ' (AI 추천)'))
-            if f['hint']: t['hints'].append(f['hint'])
-    # 이미 뺀 파일(사람이 틀리다 → 앱에서 뺌)도 자리는 채워야 한다
-    present = {f['file'] for f in files}
-    for fn, mk in marks.items():
-        if mk.get('v') != 'ng' or fn in present: continue
-        animal, kind, n = parse(os.path.splitext(fn)[0])
-        if not animal: continue
-        slot = f'{animal}_{kind}'
-        k0 = kind.split('_')[0]
-        t = todo.setdefault(slot, {'slot': slot, 'animal': animal, 'name': names.get(animal) or CLASS_KO.get(animal) or MONSTER_KO.get(animal) or animal, 'kind': kind,
-                                   'expect': expect.get(animal, {}).get(k0, ''), 'replace': [], 'keep': [], 'why': [], 'hints': []})
-        t['replace'].append(fn); t['why'].append(f'{fn}: ' + (mk.get('note') or '') + ' (사람 확인, 앱에서 뺐다)')
-        h = (jitems.get(fn) or {}).get('replace_hint')
-        if h: t['hints'].append(h)
-    for t in todo.values():
-        t['keep'] = [f['file'] for f in files if f"{f['animal']}_{f['kind']}" == t['slot'] and f['file'] not in t['replace']]
     prio = judge.get('priority', [])
     rows = sorted(todo.values(), key=lambda t: min([prio.index(x) for x in t['replace'] if x in prio] or [999]))
     # 추가: 전용 파일이 없어 동물군 공용 파일(다른 동물 소리)이 나는 슬롯. 타조 평상 = 비둘기, 캥거루 = 말 콧김 식
@@ -148,14 +176,16 @@ def build(base='../', out=None, artifact=False):
             c = cls_of.get(a, '')
             fb = [f['file'] for f in files if f['animal'] == c and f['kind'] == k]
             # 먼저 할 것: 공용 파일이 교체 대상이거나, 공용 파일이 뚜렷이 다른 동물(타조 ← 비둘기·올빼미, 캥거루 ← 말)
-            high = any(f['ai'] == 'REPLACE' for f in files if f['file'] in fb) or f'{a}_{k}' in ('ostrich_roam', 'ostrich_tired', 'kangaroo_roam', 'kangaroo_sprint')
+            high = any(x in todo.get(f'{c}_{k}', {}).get('replace', []) for x in fb) or f'{a}_{k}' in ('ostrich_roam', 'ostrich_tired', 'kangaroo_roam', 'kangaroo_sprint')
+            hist = [x for x in tried if x.get('slot') == f'{a}_{k}']
             add.append({'slot': f'{a}_{k}', 'animal': a, 'name': names[a], 'kind': k, 'expect': expect.get(a, {}).get(k, ''),
-                        'fallback_now': fb or ['합성음'], 'class': c, 'priority': 'high' if high else 'low'})
+                        'fallback_now': fb or ['합성음'], 'class': c, 'priority': 'high' if high else 'low',
+                        'human_notes': [x.get('note') for x in hist if x.get('note')], 'avoid_sources': [r for x in hist for r in x.get('rejected', [])]})
     add.sort(key=lambda x: x['priority'] != 'high')
-    json.dump({'note': 'replace: 틀린 파일 교체(먼저). add: 전용 파일이 없어 다른 동물 소리(공용 파일)나 합성음이 나는 슬롯(여유 있을 때, 공용 파일이 전혀 다른 동물이면 먼저)',
-               'replace': rows, 'add': add}, open(os.path.join(HERE, 'audit', 'todo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump({'note': 'replace: 틀린 파일 교체(먼저). add: 전용 파일이 없어 다른 동물 소리(공용 파일)나 합성음이 나는 슬롯(priority high부터). avoid_sources: 지난 회차에 사람이 안 고른 후보(다시 가져오지 않는다)',
+               'round': rnd, 'replace': rows, 'add': add}, open(os.path.join(HERE, 'audit', 'todo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     n = {v: sum(f['ai'] == v for f in files) for v in ('REPLACE', 'CHECK', 'KEEP')}
-    print(f"{out}: {len(files)}개 (교체 추천 {n['REPLACE']}, 들어볼 것 {n['CHECK']}, 문제없음 {n['KEEP']}), 후보 슬롯 {len(cands)}, 할 일 슬롯 {len(rows)}")
+    print(f"{out}: {len(files)}개 (교체 추천 {n['REPLACE']}, 들어볼 것 {n['CHECK']}, 문제없음 {n['KEEP']}), 후보 슬롯 {len(cands)}, 교체 슬롯 {len(rows)}, 추가 슬롯 {len(add)}, 회차 {rnd}")
 
 
 if __name__ == '__main__':
