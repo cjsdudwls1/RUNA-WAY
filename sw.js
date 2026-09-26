@@ -2,7 +2,7 @@
 // 페이지: 네트워크 우선(새 버전이 바로 반영), 끊기면 캐시
 // 음성 팩·아이콘: 캐시 우선(주소에 버전이 붙어 있어 낡을 일이 없다)
 // 지도 타일·폰트 같은 외부 요청은 건드리지 않는다
-const CACHE = 'rw-9705e8164c';
+const CACHE = 'rw-e7b72b6925';
 self.addEventListener('install', e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'manifest.webmanifest', 'icon-512.png'])).catch(() => { }));
