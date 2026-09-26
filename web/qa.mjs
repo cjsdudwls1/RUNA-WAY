@@ -560,6 +560,17 @@ function wav(sec, freq) {
   await page.reload(); await page.click('#openSet');
   const c2 = await page.evaluate(() => ({ on: document.querySelector('#course .on').dataset.v, v: document.querySelector('#courseKm').value, sub: document.querySelector('#pickSub').textContent }));
   check(c2.on === 'custom' && c2.v === '7.5' && /7\.5 km/.test(c2.sub), `다시 열어도 직접 7.5km 유지 (${c2.on}, ${c2.v})`);
+  // 지우고 다시 치기: 빈 칸이 되돌아 채워지면 '7.5'를 지우고 10을 쳐도 7.510이 된다(검토에서 잡힘)
+  await page.click('#courseKm'); await page.keyboard.press('End');
+  for (let i = 0; i < 3; i++) await page.keyboard.press('Backspace');
+  const e1 = await page.evaluate(() => document.querySelector('#courseKm').value);
+  await page.keyboard.type('10');
+  const e2 = await page.evaluate(() => ({ v: document.querySelector('#courseKm').value, ls: localStorage.getItem('course') }));
+  await page.fill('#courseKm', '150');
+  const e3 = await page.evaluate(() => ({ ls: localStorage.getItem('course'), hint: document.querySelector('#courseHint').textContent }));
+  await page.locator('#courseKm').blur();
+  const e4 = await page.evaluate(() => document.querySelector('#courseKm').value);
+  check(e1 === '' && e2.v === '10' && e2.ls === 'c10000' && e3.ls === 'c10000' && /0\.2~100/.test(e3.hint) && e4 === '10', `거리 직접: 지우고 다시 치기 ('${e1}' → ${e2.v} → 150 거부 → ${e4})`);
   await page.click('#course button[data-v="0"]');
   const c3 = await page.evaluate(() => ({ sub: document.querySelector('#pickSub').textContent, ls: localStorage.getItem('course'), box: getComputedStyle(document.querySelector('#courseCustom')).display, hint: document.querySelector('#courseHint').textContent }));
   check(/자유달리기/.test(c3.sub) && c3.ls === '0' && c3.box === 'none' && /쿨다운 없음/.test(c3.hint), `자유달리기 선택 (${c3.sub})`);
@@ -591,7 +602,8 @@ function wav(sec, freq) {
   const lines = log.match(/괴물: \w+/g) || [];
   const other = lines.filter(l => !/escape/.test(l));
   check(after.length >= 10 && Math.max(...after) <= 120, `저승사자 워밍업 뒤 거리 ${after.length ? Math.min(...after) + '~' + Math.max(...after) + 'm' : '측정 없음'} (150m 밖에 머물지 않는다)`);
-  check(other.some(l => /taunt|near/.test(l)), `저승사자 대사 escape만이 아니다: ${lines.join(', ') || '없음'}`);
+  const hitsJ = (log.match(/괴물: hit/g) || []).length;   // 잡히면 200m 뒤로 물러나 멀어짐 대사가 맞다. 안 잡혔으면 멀어짐 대사가 나오면 안 된다
+  check(other.some(l => /taunt|near/.test(l)) && (hitsJ > 0 || !lines.includes('괴물: escape')), `저승사자 대사: 도발·코앞이 나오고, 안 잡혔는데 멀어짐은 없다 (${lines.join(', ') || '없음'})`);
   check(errors.length === 0 && !/오류/.test(r.log + log), `거리·저승사자 오류 ${errors.join(' | ') || '없음'}`);
   await ctx.close();
 }

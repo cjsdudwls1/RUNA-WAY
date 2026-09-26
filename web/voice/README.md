@@ -54,11 +54,15 @@
 ## 팩 만들기
 
 ```
-pip install sherpa-onnx soundfile scipy imageio-ffmpeg   # 한국어 ASR 모델은 bake.py 맨 위 준비 절
+pip install sherpa-onnx soundfile scipy imageio-ffmpeg
+# 한국어 ASR 모델만 받는다(Supertonic 모델은 필요 없다). 받는 주소는 bake.py 맨 위 준비 절
+#   web/voice/models/sherpa-onnx-zipformer-korean-2024-06-24/
 VOICE_SRC=web/voice/src VOICE_ENGINE="Qwen3-TTS (Qwen, Apache-2.0)" python3 web/voice/bake.py
 ```
 
 - 키가 하나라도 없으면 멈춘다. 팩은 안 바뀐다
+- ASR 모델이 없으면 멈춘다. 검사 없이 첫 후보로 만들려면 VOICE_NO_ASR=1 (권하지 않는다)
+- 빈 파일, 0.1초 미만, 무음, 못 읽는 wav는 그 후보만 버린다. 한 키의 후보가 전부 망가졌으면 키 이름과 이유를 대고 멈춘다
 - 후보 선택: 최종 mp3를 ASR로 되읽은 점수. 숫자 구절은 숫자가 들리는지가 먼저
 - 길이 검사: 글자당 0.35초 + 1.2초를 넘으면 벌점(말 되풀이, 끝 웅얼거림)
 - 템포: 기본은 안 입힌다. 감정 연기가 속도를 낸다. 입히려면 VOICE_SRC_TEMPO=1

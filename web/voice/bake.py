@@ -204,12 +204,12 @@ def max_dur(text):
 
 
 def from_src(key, text, tempo=1.0):
-    """외부에서 구운 wav 후보 → 후처리 → 선택. 없으면 None"""
+    """외부에서 구운 wav 후보 → 후처리 → 선택. 없으면 None. 망가진 후보(빈 파일, 무음, 못 읽음)는 버리고 나머지에서 고른다"""
     files = sorted(set(glob.glob(os.path.join(SRC, key + '.wav')) + glob.glob(os.path.join(SRC, key + '__*.wav'))))
     if not files: return None
     use_asr = os.path.isdir(ASR_DIR)
     t = tempo if SRC_TEMPO else 1.0
-    best = None
+    best, bad = None, []
     for f in files:
         raw = open(f, 'rb').read()
         h = 'src-' + hashlib.sha1(raw + json.dumps([key, text, t, use_asr]).encode()).hexdigest()[:16]
@@ -217,19 +217,26 @@ def from_src(key, text, tempo=1.0):
         if os.path.exists(cp) and os.path.exists(mp):
             c = json.load(open(cp)); data = open(mp, 'rb').read()
         else:
-            x, sr = sf.read(f, dtype='float32', always_2d=True)
-            data, dur = post(x.mean(axis=1), sr, t)
-            y = decode(data)
-            silent = len(y) == 0 or np.abs(y).max() < 0.1
-            hyp = transcribe(y, SR_OUT) if use_asr and not silent else ''
-            e = 9.0 if silent else (score(key, text, hyp) if use_asr else 0.0)
+            try:
+                x, sr = sf.read(f, dtype='float32', always_2d=True)
+                x = x.mean(axis=1)
+                if len(x) < sr * 0.1: raise ValueError(f'{len(x)}샘플. 0.1초 미만')
+                data, dur = post(x, sr, t)
+                y = decode(data)
+                if len(y) == 0 or np.abs(y).max() < 0.1: raise ValueError('무음')
+            except Exception as ex:
+                bad.append(f'{os.path.basename(f)}({ex})'); continue
+            hyp = transcribe(y, SR_OUT) if use_asr else ''
+            e = score(key, text, hyp) if use_asr else 0.0
             if dur > max_dur(text): e += 1   # 길이 벌점. ASR은 끝에 붙은 웅얼거림을 못 잡는다
-            c = {'score': round(e, 3), 'asr': hyp, 'dur': round(dur, 3), 'file': os.path.basename(f)}
+            c = {'score': round(e, 3), 'asr': hyp, 'dur': round(dur, 3)}
             os.makedirs(CACHE, exist_ok=True)
             json.dump(c, open(cp, 'w'), ensure_ascii=False); open(mp, 'wb').write(data)
+        c = dict(c, file=os.path.basename(f))   # 캐시는 내용으로 찾는다. 파일 이름은 매번 지금 것으로
         if best is None or c['score'] < best[0]['score']: best = (c, data)
+    if bad: print(f'  {key}: 버린 후보 ' + ', '.join(bad), flush=True)
+    if best is None: raise RuntimeError(f'{key}: 쓸 수 있는 후보가 없다. ' + ', '.join(bad))
     c, data = best
-    if c['score'] >= 9: raise RuntimeError(f'{key}: 후보가 전부 무음 {files}')
     meta = {'key': key, 'text': text, 'cer': round(cer(text, c['asr']), 3) if use_asr else -1, 'score': c['score'],
             'asr': c['asr'], 'dur': c['dur'], 'file': c['file'], 'n': len(files)}
     return meta, data
@@ -256,6 +263,8 @@ def main():
             if j % n == i: bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
         return
     if SRC and not os.path.isdir(SRC): sys.exit(f'VOICE_SRC 폴더가 없다: {SRC}')
+    if SRC and not os.path.isdir(ASR_DIR) and os.environ.get('VOICE_NO_ASR') != '1':   # ASR 없이는 후보를 못 고르고 불량도 못 잡는다
+        sys.exit(f'한국어 ASR 모델이 없다: {ASR_DIR}\n  이 파일 맨 위 준비 절의 zipformer-korean만 받으면 된다(Supertonic 모델은 필요 없다). 검사 없이 첫 후보로 팩을 만들려면 VOICE_NO_ASR=1')
     if SRC:   # 하나라도 빠지면 쓰지 않는다. 팩은 한 목소리여야 한다
         miss = [k for k, _, _ in L.OP + L.HIT if not glob.glob(os.path.join(SRC, k + '.wav')) + glob.glob(os.path.join(SRC, k + '__*.wav'))]
         if miss: sys.exit(f'{len(miss)}개 키의 wav가 없다. 팩을 쓰지 않았다: ' + ' '.join(miss[:40]) + (' …' if len(miss) > 40 else ''))
@@ -274,7 +283,8 @@ def main():
     man = {'op': idx, 'text': text, 'engine': ENGINE}
     b, man['hit'] = pack([(k, got[k]) for k, _, _ in L.HIT])
     open(os.path.join(OUT, 'hit.bin'), 'wb').write(b)
-    ver = hashlib.sha1(json.dumps(man, sort_keys=True).encode()).hexdigest()[:10]
+    # 조각 소리까지 해시한다. mp3 길이는 프레임 단위라 한 조각을 다시 뽑아도 위치·길이가 같을 수 있다. 버전이 같으면 폰은 캐시의 옛 팩을 쓴다
+    ver = hashlib.sha1(json.dumps(man, sort_keys=True).encode() + b''.join(got[k] for k, _, _ in L.OP + L.HIT)).hexdigest()[:10]
     man['ver'] = ver
     open(os.path.join(HERE, '..', 'voice_manifest.js'), 'w', encoding='utf-8').write(
         '// 자동 생성. web/voice/bake.py\nconst VOICE_PACK = ' + json.dumps(man, ensure_ascii=False, separators=(',', ':')) + ';\n'
@@ -283,10 +293,11 @@ def main():
         f.write(f'# engine: {ENGINE}\n')
         f.write('voice\tkey\tmood\tcer\tdur\ttext\tasr\tfile\n')   # cer·asr는 최종 mp3를 다시 풀어 ASR로 읽은 값. file은 외부 굽기에서 고른 후보
         for v, k, m in qa: f.write(f'{v}\t{k}\t{L.mood_of(k)}\t{m["cer"]}\t{m["dur"]}\t{m["text"]}\t{m["asr"]}\t{m.get("file", "")}\n')
-    op = [m['cer'] for v, k, m in qa if v == 'op']
+    op = [m['cer'] for v, k, m in qa if v == 'op' and m['cer'] >= 0]
     size = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT))
     long = [k for v, k, m in qa if m['dur'] > max_dur(m['text'])]
-    print(f'ver {ver} · {ENGINE} · 관제 {len(op)}조각 평균 CER {np.mean(op):.3f} · CER>0.3 {sum(e > 0.3 for e in op)}개 · 너무 긴 조각 {len(long)} {" ".join(long[:20])} · 총 {size // 1024} KB')
+    cer_s = f'평균 CER {np.mean(op):.3f} · CER>0.3 {sum(e > 0.3 for e in op)}개' if op else 'ASR 검사 없음(VOICE_NO_ASR)'
+    print(f'ver {ver} · {ENGINE} · 관제 {len(op)}조각 {cer_s} · 너무 긴 조각 {len(long)} {" ".join(long[:20])} · 총 {size // 1024} KB')
 
 
 if __name__ == '__main__':

@@ -111,8 +111,9 @@ HIT = [
 ]
 
 # 감정. 키 → 연기 지시. 외부 TTS(Qwen3-TTS)의 instruct로 넘긴다. ko는 사람용 설명
-# 조각은 런타임에 이어 붙는다. 한 문장 안에서 감정이 튀지 않게 이웃 조각끼리 같은 계열로 묶었다
-#   돌진: dc_(urgent) + kmh(tense) + hold(urgent) / 소개: intro_head + name + cnt + intro_hide + intro_max + kmh + intro_tail
+# 조각은 런타임에 이어 붙는다. 한 문장 안에서 감정이 튀지 않게 이웃 조각끼리 가까운 계열로 묶었다
+#   돌진: dc_(urgent) + kmh(tense) + hold(urgent) / 소개: intro_head + name + cnt + intro_hide + intro_max + kmh + intro_tail (calm)
+#   kmh는 돌진과 소개 양쪽에 들어간다. 조각이 하나뿐이라 둘 사이인 tense로 절충했다. 소개에서 튀면 kmh만 calm 쪽으로 낮춘다
 #   끝: end_arrive + end_hits + end_final + n + unit_min + n + unit_sec
 MOOD = {
     'calm': {'ko': '차분하고 낮게. 상황 브리핑. 밑에 긴장이 깔려 있다',
