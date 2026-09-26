@@ -16,7 +16,7 @@ if os.path.isdir(sd):
         k, ext = os.path.splitext(f)
         if ext.lower() not in ('.mp3', '.ogg', '.m4a', '.wav'):
             continue
-        m = re.match(r'^([a-z]+)_(roam|sprint|tired|line_(?:spot|sprint|near|hit|escape|taunt))(?:_\d+)?$', k)
+        m = re.match(r'^([a-z]+)_(roam|sprint|tired|step|line_(?:spot|sprint|near|hit|escape|taunt))(?:_\d+)?$', k)
         if not m:
             print('소리 파일 이름 규칙 위반, 건너뜀:', f); continue
         sidx.setdefault(m.group(1) + '_' + m.group(2), []).append(f); sfiles.append(f)

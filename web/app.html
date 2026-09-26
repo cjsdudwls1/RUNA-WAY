@@ -446,6 +446,7 @@ function sfxLoad(aid) {
   const cls = CLASS[aid] || 'small', keys = [];
   for (const k of ['roam', 'sprint', 'tired']) { const key = SOUND_INDEX[aid + '_' + k] ? aid + '_' + k : SOUND_INDEX[cls + '_' + k] ? cls + '_' + k : null; if (key) keys.push(key); }
   for (const ev of LINE_EVENTS) if (SOUND_INDEX[aid + '_line_' + ev]) keys.push(aid + '_line_' + ev);
+  if (SOUND_INDEX[aid + '_step']) keys.push(aid + '_step');
   SFX.loading = Promise.all(keys.flatMap(key => SOUND_INDEX[key].map(f => fetch('sounds/' + f + '?v=' + SOUND_VER)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(b => { if (SFX.aid === aid) (SFX.bytes[key] = SFX.bytes[key] || []).push(b); })
@@ -1157,6 +1158,12 @@ function step() {
   if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', ['cool'], { pri: PRI.HIGH }); }
   // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
   const gapM = snap.gapCm / 100, frozen = snap.paused || snap.cooldown || st.manualPause;
+  // 발소리: 쫓아오는 속도 그대로 걸음이 들린다. 빨라지면 촘촘해지고 가까우면 커진다. 보폭 약 2.2m
+  if (!frozen && SFX.buf[a.id + '_step'] && snap.enemyCms > 50) {
+    const rate = Math.min(3.5, Math.max(0.8, snap.enemyCms / 220)) / vrate();
+    A.stepAcc = (A.stepAcc || 0) + rate; const n = Math.floor(A.stepAcc); A.stepAcc -= n;
+    for (let i = 0; i < n; i++) setTimeout(() => playSample(a.id + '_step', near, nrel, 0.7, true), i * 1000 / n / vrate() + Math.random() * 40);
+  }
   if (a.track === 'M' && !snap.warmup && !frozen) {       // 괴물 대사: 코앞, 멀어짐, 도발
     if (gapM < 40) mLine('near', near, nrel, 20);
     else if (a.style === 'steady' && gapM > 150) mLine('escape', near, nrel, 60);

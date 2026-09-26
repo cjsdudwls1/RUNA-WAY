@@ -523,6 +523,30 @@ function wav(sec, freq) {
   await ctx.close();
 }
 
+// 11. 실제 괴물 파일(로컬에서 만든 대사·괴성·발소리·배경음악)로 도깨비 주행
+{
+  const { ctx, page, errors, reqs } = await run({});
+  await page.addInitScript(() => { window.__loops = []; const st = AudioBufferSourceNode.prototype.start; AudioBufferSourceNode.prototype.start = function (...a) { if (this.loop && this.buffer && this.buffer.duration > 30) window.__loops.push(Math.round(this.buffer.duration)); return st.apply(this, a); }; });
+  await page.reload();
+  await page.click('#modeTabs [data-m="monster"]');
+  await page.mouse.click(200, 30); await page.waitForTimeout(2500);
+  await page.click('#openSet'); await page.click('#mode button[data-v="replay"]'); await page.click('#warmup button[data-v="0"]');
+  await page.evaluate(() => { window.__qa.starts = []; });
+  await page.click('#start');
+  await page.waitForFunction(() => { const t = document.querySelector('#nTime').textContent.split(':'); return +t[0] * 60 + +t[1] >= 130; }, null, { timeout: 90000 }).catch(() => { });
+  await page.waitForTimeout(1500);
+  const q = await page.evaluate(() => ({ starts: window.__qa.starts, loops: window.__loops }));
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log = await page.locator('#rLog').textContent();
+  const steps = q.starts.filter(d => d >= 0.3 && d <= 0.45).length;   // mp3를 풀면 앞뒤 여백이 붙어 파일 길이보다 약간 길다
+  const lines = (log.match(/괴물: \w+/g) || []);
+  check(steps >= 10, `실제 파일: 도깨비 발소리 ${steps}번`);
+  check(lines.includes('괴물: spot') && lines.includes('괴물: sprint'), `실제 파일: 도깨비 대사 ${lines.join(', ')}`);
+  check(q.loops.length >= 2 && reqs.some(u => u.includes('music/monster_home')) && reqs.some(u => u.includes('music/monster_run')), `실제 파일: 괴물 배경음악 홈→달리기 (${q.loops.join('초, ')}초)`);
+  check(errors.length === 0 && !/오류|실패/.test(log), `실제 괴물 파일 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+
 // 8. 입체 음향 실측. 앱의 출력 체인(out, makeVerb)을 그대로 꺼내 오프라인으로 렌더링하고 귀별 에너지를 잰다
 {
   const src = fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), 'app.html'), 'utf8');
