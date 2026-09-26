@@ -547,6 +547,55 @@ function wav(sec, freq) {
   await ctx.close();
 }
 
+// 12. 거리 (2026-09-26): 직접 입력, 자유달리기. 저승사자 접근
+//     저승사자는 예전에 150m 밖에 머물러 '도망쳐도 소용없다'만 반복했다(등속 ×1.0인데 따라잡기에서 빠졌다)
+{
+  const { ctx, page, errors } = await run({});
+  await page.click('#openSet');
+  await page.click('#course button[data-v="custom"]');
+  check(await page.locator('#courseKm').isVisible(), '거리 직접: 입력칸 표시');
+  await page.fill('#courseKm', '7.5');
+  const c1 = await page.evaluate(() => ({ sub: document.querySelector('#pickSub').textContent, ls: localStorage.getItem('course'), hint: document.querySelector('#courseHint').textContent }));
+  check(/7\.5 km/.test(c1.sub) && c1.ls === 'c7500' && /7\.5 km/.test(c1.hint), `거리 직접 7.5km 반영·저장 (${c1.sub} / ${c1.ls})`);
+  await page.reload(); await page.click('#openSet');
+  const c2 = await page.evaluate(() => ({ on: document.querySelector('#course .on').dataset.v, v: document.querySelector('#courseKm').value, sub: document.querySelector('#pickSub').textContent }));
+  check(c2.on === 'custom' && c2.v === '7.5' && /7\.5 km/.test(c2.sub), `다시 열어도 직접 7.5km 유지 (${c2.on}, ${c2.v})`);
+  await page.click('#course button[data-v="0"]');
+  const c3 = await page.evaluate(() => ({ sub: document.querySelector('#pickSub').textContent, ls: localStorage.getItem('course'), box: getComputedStyle(document.querySelector('#courseCustom')).display, hint: document.querySelector('#courseHint').textContent }));
+  check(/자유달리기/.test(c3.sub) && c3.ls === '0' && c3.box === 'none' && /쿨다운 없음/.test(c3.hint), `자유달리기 선택 (${c3.sub})`);
+  // 자유달리기 주행: 멈추고 싶을 때 종료. 결과 제목은 '중단'이 아니라 '자유달리기'
+  await page.click('#mode button[data-v="replay"]'); await page.click('#warmup button[data-v="0"]');
+  await page.click('#start');
+  await page.waitForFunction(() => { const t = document.querySelector('#nTime').textContent.split(':'); return +t[0] * 60 + +t[1] >= 90; }, null, { timeout: 60000 }).catch(() => { });
+  const nums = await page.evaluate(() => ['#nGap', '#nPace', '#nTime', '#nDist'].map(s => document.querySelector(s).textContent).join(' | '));
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const r = await page.evaluate(() => ({ label: document.querySelector('#rLabel').textContent, sub: document.querySelector('#rSub').textContent, table: document.querySelector('#rTable').textContent, log: document.querySelector('#rLog').textContent }));
+  check(/^자유달리기/.test(r.label) && /자유달리기/.test(r.sub), `자유달리기 결과: ${r.label} / ${r.sub}`);
+  check(!/NaN|undefined|Infinity/.test(nums + r.table + r.sub), `자유달리기 숫자 정상: ${nums}`);
+  check(/시작 .* 자유달리기/.test(r.log) && !/쿨다운/.test(r.log), '자유달리기 로그 정상, 쿨다운 없음');
+  // 저승사자: 실제 대사 파일, 기본 워밍업 2분. 워밍업이 끝나면 감지 반경(70m) 안에 있어야 하고 도발·코앞 대사가 나와야 한다
+  await page.click('#again');
+  await page.click('#modeTabs [data-m="monster"]');
+  await page.click('#openSet');
+  await page.click('#course button[data-v="3000"]'); await page.click('#warmup button[data-v="120"]');
+  await page.click('#animals .row[data-id="jeoseung"]');
+  await page.click('#start');
+  const gaps = [];
+  for (let i = 0; i < 160; i++) {
+    const g = await page.evaluate(() => { const t = document.querySelector('#nTime').textContent.split(':'); return [+t[0] * 60 + +t[1], parseFloat(document.querySelector('#nGap').textContent)]; });
+    gaps.push(g); if (g[0] >= 330) break; await page.waitForTimeout(250);
+  }
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log = await page.locator('#rLog').textContent();
+  const after = gaps.filter(([t, g]) => t >= 135 && Number.isFinite(g)).map(([, g]) => g);
+  const lines = log.match(/괴물: \w+/g) || [];
+  const other = lines.filter(l => !/escape/.test(l));
+  check(after.length >= 10 && Math.max(...after) <= 120, `저승사자 워밍업 뒤 거리 ${after.length ? Math.min(...after) + '~' + Math.max(...after) + 'm' : '측정 없음'} (150m 밖에 머물지 않는다)`);
+  check(other.some(l => /taunt|near/.test(l)), `저승사자 대사 escape만이 아니다: ${lines.join(', ') || '없음'}`);
+  check(errors.length === 0 && !/오류/.test(r.log + log), `거리·저승사자 오류 ${errors.join(' | ') || '없음'}`);
+  await ctx.close();
+}
+
 // 8. 입체 음향 실측. 앱의 출력 체인(out, makeVerb)을 그대로 꺼내 오프라인으로 렌더링하고 귀별 에너지를 잰다
 {
   const src = fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), 'app.html'), 'utf8');

@@ -1,2 +1,5 @@
 models/
 .cache/
+src/
+audition/
+preview/

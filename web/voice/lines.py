@@ -4,6 +4,7 @@
 - 동물 목소리는 뺐다. 사람이 의성어를 읽는 것이라 어색했다(사용자 피드백 2026-09-24)
 - 숫자는 한글로 적는다. 모델이 숫자를 영어로 읽는 사고를 막는다
 - tempo: 굽고 나서 템포만 올린다. 모델 속도를 올리면 발음이 무너진다(1.35에서 확인)
+- MOOD: 감정 연기 지시. 감정을 받는 TTS(Qwen3-TTS 등)로 외부에서 구울 때 쓴다. Supertonic은 무시한다
 """
 
 # 관제사 음색. Supertonic 3 화자 번호(0~4 여성, 5~9 남성). 9번이 한국어 ASR 역검증에서 가장 정확했다
@@ -108,3 +109,36 @@ HIT = [
     ('caught2', '두 번 잡혔다!', 1.1),
     ('caught3', '세 번 잡혔다. 끝났다.', 1.05),
 ]
+
+# 감정. 키 → 연기 지시. 외부 TTS(Qwen3-TTS)의 instruct로 넘긴다. ko는 사람용 설명
+# 조각은 런타임에 이어 붙는다. 한 문장 안에서 감정이 튀지 않게 이웃 조각끼리 같은 계열로 묶었다
+#   돌진: dc_(urgent) + kmh(tense) + hold(urgent) / 소개: intro_head + name + cnt + intro_hide + intro_max + kmh + intro_tail
+#   끝: end_arrive + end_hits + end_final + n + unit_min + n + unit_sec
+MOOD = {
+    'calm': {'ko': '차분하고 낮게. 상황 브리핑. 밑에 긴장이 깔려 있다',
+             'en': 'Calm, low and steady field briefing over a radio. Controlled, confident, a hint of tension underneath. Natural Korean intonation, not an announcer.'},
+    'tense': {'ko': '긴장. 짧게 끊어 또렷하게. 소리를 낮춘 경고',
+              'en': 'Tense and clipped. Quick, firm, clearly articulated warning. Focused, slightly hushed, urgency held back.'},
+    'urgent': {'ko': '다급한 외침. 빠르고 높게. 당장 뛰라고 소리친다',
+               'en': 'Urgent shout. Fast, loud, pitch rising, breathless alarm, yelling at someone to run right now. Real panic in the voice, but every word clear.'},
+    'eager': {'ko': '흥분. 기회를 잡았다. 몰아붙인다',
+              'en': 'Excited and eager, seizing a chance. Fast, energetic, pushing hard: now is the moment, go go go.'},
+    'triumph': {'ko': '안도와 환호. 밝게',
+                'en': 'Relieved and triumphant. Bright, warm, cheering, breathing out after a close call.'},
+    'grim': {'ko': '무겁고 낙담. 끝이 내려간다',
+             'en': 'Heavy and grim. Disappointed, slower, pitch falling at the end. It is over.'},
+}
+_MOOD_KEY = [   # 앞에서부터 처음 맞는 규칙
+    ('grim', r'^(end_fail|hit3|caught3)$'),
+    ('triumph', r'^end_arrive$'),
+    ('eager', r'^tired\d$'),
+    ('urgent', r'^(intro_now|spotted|again|stick|hold|half\d|hit\d|caught\d|dc_|dx_)'),
+    ('tense', r'^(warn|dr_|kmh|m\d|meter$|sisok$)'),
+]
+
+
+def mood_of(key):
+    import re
+    for m, pat in _MOOD_KEY:
+        if re.match(pat, key): return m
+    return 'calm'

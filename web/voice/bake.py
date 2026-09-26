@@ -12,8 +12,16 @@
   tar xjf *supertonic*.bz2 && tar xjf *korean*.bz2
 실행
   python3 web/voice/bake.py
+
+외부 TTS로 구운 wav를 팩으로 (VOICE_SRC)
+  - 감정 연기가 되는 TTS(Qwen3-TTS 등)는 GPU가 필요해 로컬에서 굽는다. 여기서는 받아서 똑같이 후처리하고 고르기만 한다
+  - 파일: <폴더>/<키>.wav 또는 후보 여러 개 <키>__1.wav, <키>__2.wav … 키는 lines.py의 OP, HIT
+  - 후보가 여럿이면 ASR 점수 + 길이 검사로 고른다. ASR 모델이 없으면 첫 후보
+  - 키가 하나라도 없으면 팩을 쓰지 않고 멈춘다. 목소리가 섞이면 이어 붙인 문장이 두 사람 말이 된다
+  - VOICE_SRC=web/voice/src VOICE_ENGINE="Qwen3-TTS (Qwen, Apache-2.0)" python3 web/voice/bake.py
+  - VOICE_SRC_TEMPO=1: lines.py의 템포를 입힌다. 기본은 안 입힌다(감정 연기가 속도를 이미 낸다)
 """
-import os, sys, json, hashlib, subprocess, re
+import os, sys, json, hashlib, subprocess, re, glob
 import numpy as np, soundfile as sf
 import scipy.signal as ss
 
@@ -31,6 +39,9 @@ RETRY_N = 5          # 오류율이 RETRY_CER를 넘으면 더 뽑는 후보 수
 RETRY_CER = 0.25     # 최종 mp3 기준. 같은 음성도 ASR이 0.15~0.2는 틀린다(신규 생성 24문장 실측 원본 0.19)
 SR_OUT = 24000
 THREADS = int(os.environ.get('VOICE_THREADS', os.cpu_count() or 4))
+SRC = os.environ.get('VOICE_SRC')
+SRC_TEMPO = os.environ.get('VOICE_SRC_TEMPO') == '1'
+ENGINE = os.environ.get('VOICE_ENGINE', 'Qwen3-TTS (Qwen, Apache-2.0)' if SRC else 'Supertonic 3 (Supertone, OpenRAIL-M)')
 
 
 def ffmpeg():
@@ -187,6 +198,48 @@ def bake(key, text, sid, speed, tempo=1.0, pitch=1.0):
     return meta, data
 
 
+def max_dur(text):
+    """이보다 길면 환각(말을 되풀이하거나 끝에 웅얼거림)으로 본다. 느린 연기와 말줄임표 쉼까지 넉넉히"""
+    return 0.35 * len(norm(text)) + 1.2
+
+
+def from_src(key, text, tempo=1.0):
+    """외부에서 구운 wav 후보 → 후처리 → 선택. 없으면 None"""
+    files = sorted(set(glob.glob(os.path.join(SRC, key + '.wav')) + glob.glob(os.path.join(SRC, key + '__*.wav'))))
+    if not files: return None
+    use_asr = os.path.isdir(ASR_DIR)
+    t = tempo if SRC_TEMPO else 1.0
+    best = None
+    for f in files:
+        raw = open(f, 'rb').read()
+        h = 'src-' + hashlib.sha1(raw + json.dumps([key, text, t, use_asr]).encode()).hexdigest()[:16]
+        cp = os.path.join(CACHE, h + '.json'); mp = os.path.join(CACHE, h + '.mp3')
+        if os.path.exists(cp) and os.path.exists(mp):
+            c = json.load(open(cp)); data = open(mp, 'rb').read()
+        else:
+            x, sr = sf.read(f, dtype='float32', always_2d=True)
+            data, dur = post(x.mean(axis=1), sr, t)
+            y = decode(data)
+            silent = len(y) == 0 or np.abs(y).max() < 0.1
+            hyp = transcribe(y, SR_OUT) if use_asr and not silent else ''
+            e = 9.0 if silent else (score(key, text, hyp) if use_asr else 0.0)
+            if dur > max_dur(text): e += 1   # 길이 벌점. ASR은 끝에 붙은 웅얼거림을 못 잡는다
+            c = {'score': round(e, 3), 'asr': hyp, 'dur': round(dur, 3), 'file': os.path.basename(f)}
+            os.makedirs(CACHE, exist_ok=True)
+            json.dump(c, open(cp, 'w'), ensure_ascii=False); open(mp, 'wb').write(data)
+        if best is None or c['score'] < best[0]['score']: best = (c, data)
+    c, data = best
+    if c['score'] >= 9: raise RuntimeError(f'{key}: 후보가 전부 무음 {files}')
+    meta = {'key': key, 'text': text, 'cer': round(cer(text, c['asr']), 3) if use_asr else -1, 'score': c['score'],
+            'asr': c['asr'], 'dur': c['dur'], 'file': c['file'], 'n': len(files)}
+    return meta, data
+
+
+def get(key, text, tempo):
+    if SRC: return from_src(key, text, tempo)
+    return bake(key, text, L.OP_SID, L.OP_SPEED, tempo)
+
+
 def pack(items):
     """mp3 조각을 한 파일로. 요청 1번, 조각별 디코드는 런타임에 필요할 때"""
     buf, idx = bytearray(), {}
@@ -202,22 +255,24 @@ def main():
         for j, (key, t, tempo) in enumerate(L.OP):
             if j % n == i: bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
         return
-    os.makedirs(OUT, exist_ok=True)
+    if SRC and not os.path.isdir(SRC): sys.exit(f'VOICE_SRC 폴더가 없다: {SRC}')
+    if SRC:   # 하나라도 빠지면 쓰지 않는다. 팩은 한 목소리여야 한다
+        miss = [k for k, _, _ in L.OP + L.HIT if not glob.glob(os.path.join(SRC, k + '.wav')) + glob.glob(os.path.join(SRC, k + '__*.wav'))]
+        if miss: sys.exit(f'{len(miss)}개 키의 wav가 없다. 팩을 쓰지 않았다: ' + ' '.join(miss[:40]) + (' …' if len(miss) > 40 else ''))
     qa = []
-    items, text = [], {}
-    for i, (key, t, tempo) in enumerate(L.OP):
-        meta, data = bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
-        items.append((key, data)); text[key] = t; qa.append(('op', key, meta))
-        print(f'[op {i + 1}/{len(L.OP)}] {key} cer={meta["cer"]} {t} → {meta["asr"]}', flush=True)
-    b, idx = pack(items)
+    got = {}
+    for grp, rows in (('op', L.OP), ('hit', L.HIT)):
+        for i, (key, t, tempo) in enumerate(rows):
+            meta, data = get(key, t, tempo)
+            got[key] = data; qa.append((grp, key, meta))
+            print(f'[{grp} {i + 1}/{len(rows)}] {key} cer={meta["cer"]} {t} → {meta["asr"]}', flush=True)
+    # 다 구운 뒤에 쓴다. 중간에 멈추면 이전 팩이 그대로 남는다
+    os.makedirs(OUT, exist_ok=True)
+    text = {k: t for k, t, _ in L.OP + L.HIT}
+    b, idx = pack([(k, got[k]) for k, _, _ in L.OP])
     open(os.path.join(OUT, 'op.bin'), 'wb').write(b)
-    man = {'op': idx, 'text': text}
-    items = []
-    for key, t, tempo in L.HIT:
-        meta, data = bake(key, t, L.OP_SID, L.OP_SPEED, tempo)
-        items.append((key, data)); text[key] = t; qa.append(('hit', key, meta))
-        print(f'[hit] {key} cer={meta["cer"]} {t} → {meta["asr"]}', flush=True)
-    b, man['hit'] = pack(items)
+    man = {'op': idx, 'text': text, 'engine': ENGINE}
+    b, man['hit'] = pack([(k, got[k]) for k, _, _ in L.HIT])
     open(os.path.join(OUT, 'hit.bin'), 'wb').write(b)
     ver = hashlib.sha1(json.dumps(man, sort_keys=True).encode()).hexdigest()[:10]
     man['ver'] = ver
@@ -225,11 +280,13 @@ def main():
         '// 자동 생성. web/voice/bake.py\nconst VOICE_PACK = ' + json.dumps(man, ensure_ascii=False, separators=(',', ':')) + ';\n'
         'if (typeof module !== "undefined") module.exports = VOICE_PACK;\n')
     with open(os.path.join(HERE, 'qa.tsv'), 'w', encoding='utf-8') as f:
-        f.write('voice\tkey\tcer\tdur\ttext\tasr\n')   # cer·asr는 최종 mp3를 다시 풀어 ASR로 읽은 값
-        for v, k, m in qa: f.write(f'{v}\t{k}\t{m["cer"]}\t{m["dur"]}\t{m["text"]}\t{m["asr"]}\n')
+        f.write(f'# engine: {ENGINE}\n')
+        f.write('voice\tkey\tmood\tcer\tdur\ttext\tasr\tfile\n')   # cer·asr는 최종 mp3를 다시 풀어 ASR로 읽은 값. file은 외부 굽기에서 고른 후보
+        for v, k, m in qa: f.write(f'{v}\t{k}\t{L.mood_of(k)}\t{m["cer"]}\t{m["dur"]}\t{m["text"]}\t{m["asr"]}\t{m.get("file", "")}\n')
     op = [m['cer'] for v, k, m in qa if v == 'op']
     size = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT))
-    print(f'ver {ver} · 관제 {len(op)}조각 평균 CER {np.mean(op):.3f} · CER>0.3 {sum(e > 0.3 for e in op)}개 · 총 {size // 1024} KB')
+    long = [k for v, k, m in qa if m['dur'] > max_dur(m['text'])]
+    print(f'ver {ver} · {ENGINE} · 관제 {len(op)}조각 평균 CER {np.mean(op):.3f} · CER>0.3 {sum(e > 0.3 for e in op)}개 · 너무 긴 조각 {len(long)} {" ".join(long[:20])} · 총 {size // 1024} KB')
 
 
 if __name__ == '__main__':
