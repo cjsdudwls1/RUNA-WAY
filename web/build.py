@@ -91,7 +91,7 @@ if midx:
         shutil.copy2(os.path.join(md, f), os.path.join(mp, f))
 cj = os.path.join(sd, 'credits.json')
 if os.path.exists(cj):
-    rows = json.load(open(cj, encoding='utf-8'))
+    rows = [r for r in json.load(open(cj, encoding='utf-8')) if r.get('file') in set(sfiles)]   # 빼낸 파일(교체 대기 등)의 출처는 싣지 않는다
     mc = os.path.join(md, 'credits.json')
     if os.path.exists(mc):
         rows += json.load(open(mc, encoding='utf-8'))

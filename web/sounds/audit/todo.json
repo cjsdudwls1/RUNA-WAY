@@ -1,0 +1,347 @@
+[
+ {
+  "slot": "bird_sprint",
+  "animal": "bird",
+  "name": "새 무리 공용",
+  "kind": "sprint",
+  "expect": "새 무리 공용",
+  "replace": [
+   "bird_sprint_1.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "bird_sprint_1.mp3: 기대 소리 약함(Bird 0.02) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "bird_tired",
+  "animal": "bird",
+  "name": "새 무리 공용",
+  "kind": "tired",
+  "expect": "새 무리 공용",
+  "replace": [
+   "bird_tired_1.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "bird_tired_1.mp3: frog로 들림(Frog 0.49) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "canine_tired",
+  "animal": "canine",
+  "name": "개 무리 공용",
+  "kind": "tired",
+  "expect": "개 무리 공용",
+  "replace": [
+   "canine_tired_1.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "canine_tired_1.mp3: 기대 소리 약함(Breathing 0.00) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "cat_roam",
+  "animal": "cat",
+  "name": "집고양이",
+  "kind": "roam",
+  "expect": "야옹",
+  "replace": [
+   "cat_roam_1.mp3"
+  ],
+  "keep": [
+   "cat_roam_2.mp3"
+  ],
+  "why": [
+   "cat_roam_1.mp3: dog로 들림(Howl 0.44) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "cheetah_roam",
+  "animal": "cheetah",
+  "name": "치타",
+  "kind": "roam",
+  "expect": "새 같은 짹 울음",
+  "replace": [
+   "cheetah_roam_2.mp3"
+  ],
+  "keep": [
+   "cheetah_roam_1.mp3"
+  ],
+  "why": [
+   "cheetah_roam_2.mp3: chicken로 들림(Fowl 0.45) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "cheetah_sprint",
+  "animal": "cheetah",
+  "name": "치타",
+  "kind": "sprint",
+  "expect": "쉭, 으르렁",
+  "replace": [
+   "cheetah_sprint_1.mp3",
+   "cheetah_sprint_2.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "cheetah_sprint_1.mp3: 기대 소리 약함(Hiss 0.02) (AI 추천)",
+   "cheetah_sprint_2.mp3: 기대 소리 약함(Cat 0.03) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "chihuahua_roam",
+  "animal": "chihuahua",
+  "name": "치와와",
+  "kind": "roam",
+  "expect": "낮은 으르렁",
+  "replace": [
+   "chihuahua_roam_2.mp3"
+  ],
+  "keep": [
+   "chihuahua_roam_1.mp3"
+  ],
+  "why": [
+   "chihuahua_roam_2.mp3: 기대 소리 약함(Dog 0.02) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "dokkaebi_roam",
+  "animal": "dokkaebi",
+  "name": "도깨비",
+  "kind": "roam",
+  "expect": "큰 몸집의 콧김, 낮은 그르렁",
+  "replace": [
+   "dokkaebi_roam_1.mp3"
+  ],
+  "keep": [
+   "dokkaebi_roam_2.mp3"
+  ],
+  "why": [
+   "dokkaebi_roam_1.mp3: music로 들림(Music 0.39) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "greyhound_roam",
+  "animal": "greyhound",
+  "name": "그레이하운드",
+  "kind": "roam",
+  "expect": "낮은 으르렁",
+  "replace": [
+   "greyhound_roam_2.mp3"
+  ],
+  "keep": [
+   "greyhound_roam_1.mp3"
+  ],
+  "why": [
+   "greyhound_roam_2.mp3: music로 들림(Music 0.38) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "hare_roam",
+  "animal": "hare",
+  "name": "유럽산토끼",
+  "kind": "roam",
+  "expect": "풀 바스락, 발 구름",
+  "replace": [
+   "hare_roam_1.mp3"
+  ],
+  "keep": [
+   "hare_roam_2.mp3"
+  ],
+  "why": [
+   "hare_roam_1.mp3: bird로 들림(Bird 0.65) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "hippo_roam",
+  "animal": "hippo",
+  "name": "하마",
+  "kind": "roam",
+  "expect": "낮은 그르렁",
+  "replace": [
+   "hippo_roam_2.mp3"
+  ],
+  "keep": [
+   "hippo_roam_1.mp3"
+  ],
+  "why": [
+   "hippo_roam_2.mp3: bird로 들림(Bird 0.52) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "hippo_sprint",
+  "animal": "hippo",
+  "name": "하마",
+  "kind": "sprint",
+  "expect": "크게 우는 포효",
+  "replace": [
+   "hippo_sprint_2.mp3"
+  ],
+  "keep": [
+   "hippo_sprint_1.mp3"
+  ],
+  "why": [
+   "hippo_sprint_2.mp3: cattle로 들림(Cattle, bovinae 0.88) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "horse_sprint",
+  "animal": "horse",
+  "name": "지구력경주마",
+  "kind": "sprint",
+  "expect": "히이잉, 질주 발굽",
+  "replace": [
+   "horse_sprint_2.mp3"
+  ],
+  "keep": [
+   "horse_sprint_1.mp3"
+  ],
+  "why": [
+   "horse_sprint_2.mp3: chicken로 들림(Fowl 0.67); 기대 소리 약함(Neigh, whinny 0.07) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "koala_roam",
+  "animal": "koala",
+  "name": "코알라",
+  "kind": "roam",
+  "expect": "낮은 벨로우",
+  "replace": [
+   "koala_roam_1.mp3"
+  ],
+  "keep": [
+   "koala_roam_2.mp3"
+  ],
+  "why": [
+   "koala_roam_1.mp3: cat로 들림(Purr 0.34) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "koala_sprint",
+  "animal": "koala",
+  "name": "코알라",
+  "kind": "sprint",
+  "expect": "크고 거친 벨로우",
+  "replace": [
+   "koala_sprint_1.mp3"
+  ],
+  "keep": [
+   "koala_sprint_2.mp3"
+  ],
+  "why": [
+   "koala_sprint_1.mp3: music로 들림(Music 0.71) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "pig_sprint",
+  "animal": "pig",
+  "name": "돼지",
+  "kind": "sprint",
+  "expect": "꽥 비명",
+  "replace": [
+   "pig_sprint_1.mp3",
+   "pig_sprint_2.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "pig_sprint_1.mp3: frog로 들림(Frog 0.72) (AI 추천)",
+   "pig_sprint_2.mp3: 돼지 꾸이익이 아니라 닭 소리 같음 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "small_roam",
+  "animal": "small",
+  "name": "작은 동물 공용",
+  "kind": "roam",
+  "expect": "작은 동물 공용",
+  "replace": [
+   "small_roam_1.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "small_roam_1.mp3: frog로 들림(Frog 0.31) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "small_sprint",
+  "animal": "small",
+  "name": "작은 동물 공용",
+  "kind": "sprint",
+  "expect": "작은 동물 공용",
+  "replace": [
+   "small_sprint_1.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "small_sprint_1.mp3: pig로 들림(Pig 0.30) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "small_tired",
+  "animal": "small",
+  "name": "작은 동물 공용",
+  "kind": "tired",
+  "expect": "작은 동물 공용",
+  "replace": [
+   "small_tired_1.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "small_tired_1.mp3: music로 들림(Music 0.67) (AI 추천)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "elephant_sprint",
+  "animal": "elephant",
+  "name": "코끼리",
+  "kind": "sprint",
+  "expect": "나팔 소리(트럼펫)",
+  "replace": [
+   "elephant_sprint_2.mp3"
+  ],
+  "keep": [
+   "elephant_sprint_1.mp3"
+  ],
+  "why": [
+   "elephant_sprint_2.mp3: 무슨 개 소리 남 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)"
+  ],
+  "hints": []
+ },
+ {
+  "slot": "greyhound_sprint",
+  "animal": "greyhound",
+  "name": "그레이하운드",
+  "kind": "sprint",
+  "expect": "짖음",
+  "replace": [
+   "greyhound_sprint_1.mp3",
+   "greyhound_sprint_2.mp3"
+  ],
+  "keep": [],
+  "why": [
+   "greyhound_sprint_1.mp3: 굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)",
+   "greyhound_sprint_2.mp3: 굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26) (사람 확인, 앱에서 뺐다)"
+  ],
+  "hints": []
+ }
+]

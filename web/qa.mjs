@@ -577,13 +577,19 @@ function wav(sec, freq) {
   // 자유달리기 주행: 멈추고 싶을 때 종료. 결과 제목은 '중단'이 아니라 '자유달리기'
   await page.click('#mode button[data-v="replay"]'); await page.click('#warmup button[data-v="0"]');
   await page.click('#start');
-  await page.waitForFunction(() => { const t = document.querySelector('#nTime').textContent.split(':'); return +t[0] * 60 + +t[1] >= 90; }, null, { timeout: 60000 }).catch(() => { });
+  const banners = new Set();
+  for (let i = 0; i < 120; i++) {
+    const b = await page.evaluate(() => { const t = document.querySelector('#nTime').textContent.split(':'); return [+t[0] * 60 + +t[1], document.querySelector('#banner').textContent, document.querySelector('#result').classList.contains('on')]; });
+    banners.add(b[1]); if (b[0] >= 90 || b[2]) break; await page.waitForTimeout(250);
+  }
+  const ended = await page.evaluate(() => document.querySelector('#result').classList.contains('on'));
+  check(!ended && ![...banners].some(t => /쿨다운/.test(t)), `자유달리기: 스스로 끝나지 않고 쿨다운 없음 (배너 ${[...banners].slice(0, 3).join(' / ')})`);
   const nums = await page.evaluate(() => ['#nGap', '#nPace', '#nTime', '#nDist'].map(s => document.querySelector(s).textContent).join(' | '));
   await page.click('#stop'); await page.waitForSelector('#result.on');
   const r = await page.evaluate(() => ({ label: document.querySelector('#rLabel').textContent, sub: document.querySelector('#rSub').textContent, table: document.querySelector('#rTable').textContent, log: document.querySelector('#rLog').textContent }));
   check(/^자유달리기/.test(r.label) && /자유달리기/.test(r.sub), `자유달리기 결과: ${r.label} / ${r.sub}`);
   check(!/NaN|undefined|Infinity/.test(nums + r.table + r.sub), `자유달리기 숫자 정상: ${nums}`);
-  check(/시작 .* 자유달리기/.test(r.log) && !/쿨다운/.test(r.log), '자유달리기 로그 정상, 쿨다운 없음');
+  check(/시작 .* 자유달리기/.test(r.log), '자유달리기 로그 정상');
   // 저승사자: 실제 대사 파일, 기본 워밍업 2분. 워밍업이 끝나면 감지 반경(70m) 안에 있어야 하고 도발·코앞 대사가 나와야 한다
   await page.click('#again');
   await page.click('#modeTabs [data-m="monster"]');
@@ -604,7 +610,19 @@ function wav(sec, freq) {
   check(after.length >= 10 && Math.max(...after) <= 120, `저승사자 워밍업 뒤 거리 ${after.length ? Math.min(...after) + '~' + Math.max(...after) + 'm' : '측정 없음'} (150m 밖에 머물지 않는다)`);
   const hitsJ = (log.match(/괴물: hit/g) || []).length;   // 잡히면 200m 뒤로 물러나 멀어짐 대사가 맞다. 안 잡혔으면 멀어짐 대사가 나오면 안 된다
   check(other.some(l => /taunt|near/.test(l)) && (hitsJ > 0 || !lines.includes('괴물: escape')), `저승사자 대사: 도발·코앞이 나오고, 안 잡혔는데 멀어짐은 없다 (${lines.join(', ') || '없음'})`);
-  check(errors.length === 0 && !/오류/.test(r.log + log), `거리·저승사자 오류 ${errors.join(' | ') || '없음'}`);
+  await page.click('#again'); await page.click('#openSet');
+  await page.click('#warmup button[data-v="0"]'); await page.click('#animals .row[data-id="jeoseung"]');
+  await page.click('#start');
+  const g0 = [];
+  for (let i = 0; i < 120; i++) {
+    const g = await page.evaluate(() => { const t = document.querySelector('#nTime').textContent.split(':'); return [+t[0] * 60 + +t[1], parseFloat(document.querySelector('#nGap').textContent)]; });
+    g0.push(g); if (g[0] >= 100) break; await page.waitForTimeout(250);
+  }
+  await page.click('#stop'); await page.waitForSelector('#result.on');
+  const log3 = await page.locator('#rLog').textContent();
+  const late = g0.filter(([t, g]) => t >= 60 && Number.isFinite(g)).map(([, g]) => g);
+  check(late.length >= 5 && Math.max(...late) <= 75, `저승사자 워밍업 없음: 감지 밖 100m에서 따라와 ${late.length ? Math.min(...late) + '~' + Math.max(...late) + 'm' : '측정 없음'} (따라잡기)`);
+  check(errors.length === 0 && !/오류/.test(r.log + log + log3), `거리·저승사자 오류 ${errors.join(' | ') || '없음'}`);
   await ctx.close();
 }
 

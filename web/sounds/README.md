@@ -129,6 +129,52 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
   - 왼쪽 뒤에서 오른쪽 뒤로 한 바퀴, 그다음 바로 뒤에서 멀리서 가까이 다가온다
 - 커밋은 `web/sounds/` 안의 파일만. 빌드 결과(docs/app, web/dist)는 커밋하지 않는다
 
+## 검사와 교체 (2026-09-26 추가)
+
+- 계기: 사용자가 들어 보니 엉뚱한 소리가 섞여 있었다. 코끼리 돌진에서 개 소리, 그레이하운드 돌진이 치와와 깽깽, 돼지 돌진이 닭 소리
+- 원인: 원본에서 구간을 자를 때 아무도 듣지 않았다. 0.3~0.5초 조각은 사람도 무슨 동물인지 못 가린다
+- 이제부터 모든 소리는 두 관문을 지난다. 분류기(audit.py) → 사람 귀(검수 페이지)
+
+### 도구
+
+| 파일 | 하는 일 |
+|---|---|
+| audit.py | AudioSet 분류기 2개(527종)로 "파일 이름의 동물 소리가 맞나"를 본다. BAD / SUSPECT / OK |
+| audit/report.json | 전체 검사 결과 |
+| audit/judge.json | AI 판정(교체 추천 / 들어볼 것 / 문제없음)과 이유, 교체 힌트 |
+| audit/marks.json | 사람 검수 결과(맞다 / 틀리다, 메모) |
+| audit/todo.json | 교체할 슬롯. 사람이 틀리다 + 사람이 안 본 것 중 AI 교체 추천 |
+| review.py | 검수 페이지 review/index.html을 만든다. 더블클릭으로 연다 |
+| candidates/ | 교체 후보. 앱에 안 들어간다(빌드는 web/sounds 맨 위 파일만 읽는다) |
+
+### 후보 규격
+
+- 폴더: `candidates/<슬롯>/<번호>.mp3`. 슬롯은 `<동물>_<상태>` (예: `pig_sprint`)
+- 슬롯마다 후보 3~5개. 서로 다른 원본 녹음에서 2개 이상
+- 음향 규격(위 표) 그대로. 단 sprint는 0.5초 이상(0.3초 조각은 못 알아듣는다)
+- 기록: `candidates/candidates.json`에 후보마다 credits.json과 같은 칸 + `slot`, `file`(candidates/...), `note`(왜 골랐나 한 줄), `dur`
+- 분류기 관문: `python3 web/sounds/audit.py web/sounds/candidates --json web/sounds/candidates/audit.json`
+  - BAD는 후보에 올리지 않는다
+  - SUSPECT는 note에 이유를 적을 때만(예: AudioSet에 코끼리가 없어 기대 소리가 약하게 나온다)
+  - 큰 개(그레이하운드, 진돗개, 늑대, 허스키) 짖음: Bark·Bow-wow가 Yip보다 커야 하고 음높이 600Hz 이하
+- 이미 다른 동물에 쓴 원본은 쓰지 않는다. 같은 녹음이 두 동물 소리가 되면 안 된다
+- 후보를 넣었으면 `python3 web/sounds/review.py` → review/index.html 맨 위 "후보 고르기"에 나온다
+
+### 사람 검수
+
+- `web/sounds/review/index.html` 더블클릭. 인터넷이 없어도 된다
+- 파일마다 재생 → 맞다 / 틀리다(+메모). 후보는 "쓴다"를 1~3개, 없으면 "다 별로"
+- 키보드: Space 재생, 1 맞다, 2 틀리다, J/K 다음·이전
+- 끝나면 "결과 복사" → AI에게 붙여 넣는다
+
+### 마무리 (AI가 한다)
+
+- 고른 후보 → `web/sounds/<슬롯>_<번호>.mp3`. 틀리다로 표시된 파일 자리부터 채운다. 슬롯당 최대 3개
+- credits.json: 뺀 파일의 줄은 지우고 새 파일의 줄을 넣는다
+- "다 별로"이고 쓸 만한 파일이 하나도 안 남는 슬롯은 파일을 빼 둔다(동물군 파일이나 합성음이 대신 난다). todo.json에 남긴다
+- marks.json에 이번 검수 결과를 합친다. 새로 넣은 파일은 사람이 "쓴다"로 고른 것이니 맞다로 적는다
+- candidates/ 폴더를 지운다 → `python3 web/sounds/audit.py` → `python3 web/sounds/review.py` → 커밋
+
 ## 괴물 (2026-09-25 추가)
 
 - 괴물은 동물과 같은 폴더, 같은 규격이다. 차이는 두 가지
