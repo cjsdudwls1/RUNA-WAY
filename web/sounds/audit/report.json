@@ -3,6 +3,94 @@
   "verdict": "OK",
   "notes": [],
   "expect": [
+   "Scratch",
+   0.344
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.036
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.688
+   ],
+   [
+    "Scratch",
+    0.344
+   ],
+   [
+    "Scratching (performance technique)",
+    0.259
+   ],
+   [
+    "Rustle",
+    0.121
+   ],
+   [
+    "Beep, bleep",
+    0.09
+   ]
+  ],
+  "hf_ratio": 0.014,
+  "h": "4fb4fbbee8",
+  "file": "armadillo_roam_1.mp3",
+  "animal": "armadillo",
+  "kind": "roam",
+  "dur": 0.85,
+  "rms_db": -19.0,
+  "peak_db": -1.4,
+  "f0": 457
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Scratch",
+   0.628
+  ],
+  "wrong": [
+   "goat",
+   "Sheep",
+   0.101
+  ],
+  "top": [
+   [
+    "Scratch",
+    0.628
+   ],
+   [
+    "Sound effect",
+    0.313
+   ],
+   [
+    "Flap",
+    0.289
+   ],
+   [
+    "Animal",
+    0.137
+   ],
+   [
+    "Engine",
+    0.123
+   ]
+  ],
+  "hf_ratio": 0.14,
+  "h": "0d5faeb3b4",
+  "file": "armadillo_roam_2.mp3",
+  "animal": "armadillo",
+  "kind": "roam",
+  "dur": 0.86,
+  "rms_db": -16.4,
+  "peak_db": -1.2,
+  "f0": 2000
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
    "Bird",
    0.923
   ],
@@ -366,52 +454,6 @@
  {
   "verdict": "BAD",
   "notes": [
-   "기대 소리 약함(Breathing 0.00)"
-  ],
-  "expect": [
-   "Breathing",
-   0.004
-  ],
-  "wrong": [
-   "speech",
-   "Speech",
-   0.019
-  ],
-  "top": [
-   [
-    "Engine",
-    0.362
-   ],
-   [
-    "Whoosh, swoosh, swish",
-    0.354
-   ],
-   [
-    "Train",
-    0.323
-   ],
-   [
-    "Rail transport",
-    0.295
-   ],
-   [
-    "Sound effect",
-    0.233
-   ]
-  ],
-  "hf_ratio": 0.775,
-  "h": "3128dce44f",
-  "file": "canine_tired_1.mp3",
-  "animal": "canine",
-  "kind": "tired",
-  "dur": 1.99,
-  "rms_db": -18.4,
-  "peak_db": -1.6,
-  "f0": 1067
- },
- {
-  "verdict": "BAD",
-  "notes": [
    "dog로 들림(Howl 0.44)"
   ],
   "expect": [
@@ -586,100 +628,6 @@
   "rms_db": -16.7,
   "peak_db": -1.3,
   "f0": 471
- },
- {
-  "verdict": "BAD",
-  "notes": [
-   "다른 종으로 들림(Owl 0.28)",
-   "기대 소리 약함(Gasp 0.04)"
-  ],
-  "expect": [
-   "Gasp",
-   0.041
-  ],
-  "wrong": [
-   "bird",
-   "Owl",
-   0.275
-  ],
-  "top": [
-   [
-    "Laughter",
-    0.373
-   ],
-   [
-    "Owl",
-    0.275
-   ],
-   [
-    "Sound effect",
-    0.132
-   ],
-   [
-    "Whimper",
-    0.111
-   ],
-   [
-    "Music",
-    0.107
-   ]
-  ],
-  "hf_ratio": 0.001,
-  "h": "4bc71cc304",
-  "file": "cat_tired_1.mp3",
-  "animal": "cat",
-  "kind": "tired",
-  "dur": 1.97,
-  "rms_db": -15.8,
-  "peak_db": -1.4,
-  "f0": 211
- },
- {
-  "verdict": "SUSPECT",
-  "notes": [
-   "dog 기미(Dog 0.18)",
-   "기대 소리 약함(Chirp, tweet 0.07)"
-  ],
-  "expect": [
-   "Chirp, tweet",
-   0.067
-  ],
-  "wrong": [
-   "dog",
-   "Dog",
-   0.183
-  ],
-  "top": [
-   [
-    "Animal",
-    0.318
-   ],
-   [
-    "Domestic animals, pets",
-    0.23
-   ],
-   [
-    "Dog",
-    0.183
-   ],
-   [
-    "Sound effect",
-    0.176
-   ],
-   [
-    "Whimper (dog)",
-    0.111
-   ]
-  ],
-  "hf_ratio": 1.049,
-  "h": "f721a74d5e",
-  "file": "cheetah_roam_1.mp3",
-  "animal": "cheetah",
-  "kind": "roam",
-  "dur": 0.93,
-  "rms_db": -15.3,
-  "peak_db": -1.4,
-  "f0": 478
  },
  {
   "verdict": "BAD",
@@ -1004,6 +952,50 @@
   "verdict": "OK",
   "notes": [],
   "expect": [
+   "Fowl",
+   0.848
+  ],
+  "wrong": [
+   "duck",
+   "Honk",
+   0.071
+  ],
+  "top": [
+   [
+    "Fowl",
+    0.848
+   ],
+   [
+    "Chicken, rooster",
+    0.766
+   ],
+   [
+    "Cluck",
+    0.759
+   ],
+   [
+    "Sound effect",
+    0.096
+   ],
+   [
+    "Crowing, cock-a-doodle-doo",
+    0.095
+   ]
+  ],
+  "hf_ratio": 0.087,
+  "h": "43a095d03c",
+  "file": "chicken_sprint_3.mp3",
+  "animal": "chicken",
+  "kind": "sprint",
+  "dur": 0.54,
+  "rms_db": -14.6,
+  "peak_db": -3.8,
+  "f0": 696
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
    "Chicken, rooster",
    0.315
   ],
@@ -1182,6 +1174,50 @@
   "rms_db": -18.0,
   "peak_db": -1.4,
   "f0": 2000
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Growling",
+   0.263
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.025
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.671
+   ],
+   [
+    "Growling",
+    0.263
+   ],
+   [
+    "Grunt",
+    0.213
+   ],
+   [
+    "Dog",
+    0.182
+   ],
+   [
+    "Animal",
+    0.175
+   ]
+  ],
+  "hf_ratio": 0.122,
+  "h": "1f078578b4",
+  "file": "chihuahua_roam_3.mp3",
+  "animal": "chihuahua",
+  "kind": "roam",
+  "dur": 1.17,
+  "rms_db": -18.7,
+  "peak_db": -1.4,
+  "f0": 1143
  },
  {
   "verdict": "SUSPECT",
@@ -2731,50 +2767,92 @@
   "f0": 302
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "기대 소리 약함(Breathing 0.05)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
-   "Breathing",
-   0.048
+   "Hiss",
+   0.009
+  ],
+  "wrong": [
+   "speech",
+   "Female speech, woman speaking",
+   0.003
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.726
+   ],
+   [
+    "Scratch",
+    0.124
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.107
+   ],
+   [
+    "Gasp",
+    0.097
+   ],
+   [
+    "Spray",
+    0.086
+   ]
+  ],
+  "hf_ratio": 5.45,
+  "h": "d4e5464a15",
+  "file": "gila_roam_1.mp3",
+  "animal": "gila",
+  "kind": "roam",
+  "dur": 0.69,
+  "rms_db": -16.5,
+  "peak_db": -1.3,
+  "f0": null
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Hiss",
+   0.021
   ],
   "wrong": [
    "bird",
    "Bird",
-   0.061
+   0.005
   ],
   "top": [
    [
-    "Laughter",
-    0.118
-   ],
-   [
-    "Inside, small room",
-    0.101
-   ],
-   [
     "Sound effect",
-    0.075
+    0.512
    ],
    [
-    "Bird",
-    0.061
+    "Blender",
+    0.131
    ],
    [
-    "Music",
-    0.058
+    "Scrape",
+    0.117
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.079
+   ],
+   [
+    "Tools",
+    0.077
    ]
   ],
-  "hf_ratio": 0.0,
-  "h": "28bbfd680f",
-  "file": "feline_tired_1.mp3",
-  "animal": "feline",
-  "kind": "tired",
-  "dur": 2.0,
-  "rms_db": -16.7,
-  "peak_db": -1.4,
-  "f0": 204
+  "hf_ratio": 6.313,
+  "h": "7266208df7",
+  "file": "gila_roam_2.mp3",
+  "animal": "gila",
+  "kind": "roam",
+  "dur": 0.93,
+  "rms_db": -18.3,
+  "peak_db": -1.5,
+  "f0": null
  },
  {
   "verdict": "OK",
@@ -2865,6 +2943,94 @@
   "rms_db": -17.9,
   "peak_db": -1.4,
   "f0": 2000
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.63
+  ],
+  "wrong": [
+   "bird",
+   "Bird",
+   0.013
+  ],
+  "top": [
+   [
+    "Animal",
+    0.67
+   ],
+   [
+    "Dog",
+    0.63
+   ],
+   [
+    "Domestic animals, pets",
+    0.558
+   ],
+   [
+    "Bow-wow",
+    0.399
+   ],
+   [
+    "Bark",
+    0.397
+   ]
+  ],
+  "hf_ratio": 0.006,
+  "h": "7342c9c109",
+  "file": "greyhound_sprint_1.mp3",
+  "animal": "greyhound",
+  "kind": "sprint",
+  "dur": 0.72,
+  "rms_db": -14.5,
+  "peak_db": -2.5,
+  "f0": 340
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Bow-wow",
+   0.592
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.014
+  ],
+  "top": [
+   [
+    "Bow-wow",
+    0.592
+   ],
+   [
+    "Dog",
+    0.376
+   ],
+   [
+    "Animal",
+    0.314
+   ],
+   [
+    "Bark",
+    0.306
+   ],
+   [
+    "Domestic animals, pets",
+    0.177
+   ]
+  ],
+  "hf_ratio": 0.027,
+  "h": "918ed02803",
+  "file": "greyhound_sprint_2.mp3",
+  "animal": "greyhound",
+  "kind": "sprint",
+  "dur": 0.58,
+  "rms_db": -14.7,
+  "peak_db": -1.8,
+  "f0": 372
  },
  {
   "verdict": "OK",
@@ -3315,6 +3481,50 @@
   "f0": 200
  },
  {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Roar",
+   0.48
+  ],
+  "wrong": [
+   "cattle",
+   "Cattle, bovinae",
+   0.013
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.559
+   ],
+   [
+    "Roar",
+    0.48
+   ],
+   [
+    "Groan",
+    0.447
+   ],
+   [
+    "Grunt",
+    0.418
+   ],
+   [
+    "Snort",
+    0.076
+   ]
+  ],
+  "hf_ratio": 0.093,
+  "h": "9024096b69",
+  "file": "hippo_sprint_3.mp3",
+  "animal": "hippo",
+  "kind": "sprint",
+  "dur": 0.64,
+  "rms_db": -16.5,
+  "peak_db": -1.4,
+  "f0": 164
+ },
+ {
   "verdict": "SUSPECT",
   "notes": [
    "insect 기미(Fly, housefly 0.28)"
@@ -3449,6 +3659,94 @@
   "rms_db": -17.4,
   "peak_db": -1.5,
   "f0": 1143
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Clip-clop",
+   0.885
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.01
+  ],
+  "top": [
+   [
+    "Clip-clop",
+    0.885
+   ],
+   [
+    "Horse",
+    0.532
+   ],
+   [
+    "Animal",
+    0.447
+   ],
+   [
+    "Sound effect",
+    0.128
+   ],
+   [
+    "Walk, footsteps",
+    0.063
+   ]
+  ],
+  "hf_ratio": 0.001,
+  "h": "04ee4ea82d",
+  "file": "hoof_sprint_2.mp3",
+  "animal": "hoof",
+  "kind": "sprint",
+  "dur": 0.8,
+  "rms_db": -18.7,
+  "peak_db": -1.4,
+  "f0": 416
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Clip-clop",
+   0.838
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.017
+  ],
+  "top": [
+   [
+    "Clip-clop",
+    0.838
+   ],
+   [
+    "Horse",
+    0.431
+   ],
+   [
+    "Animal",
+    0.419
+   ],
+   [
+    "Sound effect",
+    0.214
+   ],
+   [
+    "Flap",
+    0.182
+   ]
+  ],
+  "hf_ratio": 0.264,
+  "h": "c56748d82e",
+  "file": "hoof_sprint_3.mp3",
+  "animal": "hoof",
+  "kind": "sprint",
+  "dur": 0.76,
+  "rms_db": -19.1,
+  "peak_db": -1.3,
+  "f0": 2000
  },
  {
   "verdict": "OK",
@@ -3630,6 +3928,50 @@
   "rms_db": -14.2,
   "peak_db": -1.2,
   "f0": 1778
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Neigh, whinny",
+   0.944
+  ],
+  "wrong": [
+   "dog",
+   "Dog",
+   0.013
+  ],
+  "top": [
+   [
+    "Neigh, whinny",
+    0.944
+   ],
+   [
+    "Horse",
+    0.612
+   ],
+   [
+    "Animal",
+    0.369
+   ],
+   [
+    "Music",
+    0.238
+   ],
+   [
+    "Sound effect",
+    0.236
+   ]
+  ],
+  "hf_ratio": 0.457,
+  "h": "0a865f1cb7",
+  "file": "horse_sprint_3.mp3",
+  "animal": "horse",
+  "kind": "sprint",
+  "dur": 1.14,
+  "rms_db": -16.4,
+  "peak_db": -1.4,
+  "f0": 386
  },
  {
   "verdict": "OK",
@@ -4696,6 +5038,50 @@
   "f0": 356
  },
  {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Roar",
+   0.117
+  ],
+  "wrong": [
+   "frog",
+   "Croak",
+   0.014
+  ],
+  "top": [
+   [
+    "Burping, eructation",
+    0.341
+   ],
+   [
+    "Sound effect",
+    0.154
+   ],
+   [
+    "Roar",
+    0.117
+   ],
+   [
+    "Oink",
+    0.103
+   ],
+   [
+    "Clatter",
+    0.071
+   ]
+  ],
+  "hf_ratio": 0.143,
+  "h": "f2d51496e0",
+  "file": "koala_sprint_3.mp3",
+  "animal": "koala",
+  "kind": "sprint",
+  "dur": 0.7,
+  "rms_db": -16.5,
+  "peak_db": -1.5,
+  "f0": 308
+ },
+ {
   "verdict": "SUSPECT",
   "notes": [
    "cat 기미(Purr 0.21)"
@@ -4784,6 +5170,182 @@
   "rms_db": -15.7,
   "peak_db": -1.5,
   "f0": 205
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Chirp, tweet",
+   0.257
+  ],
+  "wrong": [
+   "bird",
+   "Coo",
+   0.021
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.389
+   ],
+   [
+    "Bird",
+    0.335
+   ],
+   [
+    "Chirp, tweet",
+    0.257
+   ],
+   [
+    "Animal",
+    0.189
+   ],
+   [
+    "Bird vocalization, bird call, bird song",
+    0.148
+   ]
+  ],
+  "hf_ratio": 2277.949,
+  "h": "16478f88f2",
+  "file": "loris_roam_1.mp3",
+  "animal": "loris",
+  "kind": "roam",
+  "dur": 0.58,
+  "rms_db": -17.0,
+  "peak_db": -0.9,
+  "f0": 2000
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Bird vocalization, bird call, bird song",
+   0.019
+  ],
+  "wrong": [
+   "insect",
+   "Insect",
+   0.13
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.295
+   ],
+   [
+    "Coin (dropping)",
+    0.175
+   ],
+   [
+    "Insect",
+    0.13
+   ],
+   [
+    "Cricket",
+    0.101
+   ],
+   [
+    "Frog",
+    0.075
+   ]
+  ],
+  "hf_ratio": 2478.048,
+  "h": "ff128f7a86",
+  "file": "loris_roam_2.mp3",
+  "animal": "loris",
+  "kind": "roam",
+  "dur": 0.7,
+  "rms_db": -16.3,
+  "peak_db": -1.7,
+  "f0": 1455
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Hiss",
+   0.004
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.007
+  ],
+  "top": [
+   [
+    "Gasp",
+    0.747
+   ],
+   [
+    "Snort",
+    0.352
+   ],
+   [
+    "Sound effect",
+    0.28
+   ],
+   [
+    "Breathing",
+    0.199
+   ],
+   [
+    "Music",
+    0.104
+   ]
+  ],
+  "hf_ratio": 0.089,
+  "h": "4147b555a4",
+  "file": "loris_sprint_1.mp3",
+  "animal": "loris",
+  "kind": "sprint",
+  "dur": 1.0,
+  "rms_db": -16.0,
+  "peak_db": -1.4,
+  "f0": 781
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Hiss",
+   0.026
+  ],
+  "wrong": [
+   "speech",
+   "Male speech, man speaking",
+   0.073
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.663
+   ],
+   [
+    "Breathing",
+    0.194
+   ],
+   [
+    "Gasp",
+    0.161
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.092
+   ],
+   [
+    "Snort",
+    0.089
+   ]
+  ],
+  "hf_ratio": 0.136,
+  "h": "a48130c758",
+  "file": "loris_sprint_2.mp3",
+  "animal": "loris",
+  "kind": "sprint",
+  "dur": 1.02,
+  "rms_db": -16.3,
+  "peak_db": -1.4,
+  "f0": 727
  },
  {
   "verdict": "SUSPECT",
@@ -4920,50 +5482,92 @@
   "f0": 2000
  },
  {
-  "verdict": "BAD",
-  "notes": [
-   "frog로 들림(Frog 0.72)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
-   "Screaming",
-   0.263
+   "Oink",
+   0.647
   ],
   "wrong": [
-   "frog",
-   "Frog",
-   0.722
+   "speech",
+   "Speech",
+   0.01
   ],
   "top": [
    [
-    "Frog",
-    0.722
+    "Oink",
+    0.647
    ],
    [
-    "Screaming",
-    0.263
+    "Sound effect",
+    0.318
    ],
    [
-    "Animal",
+    "Grunt",
     0.206
    ],
    [
-    "Speech",
-    0.127
+    "Pig",
+    0.197
    ],
    [
-    "Bird",
-    0.036
+    "Snort",
+    0.15
    ]
   ],
-  "hf_ratio": 12.406,
-  "h": "45c3f36ed0",
+  "hf_ratio": 4.451,
+  "h": "539fcc437b",
   "file": "pig_sprint_1.mp3",
   "animal": "pig",
   "kind": "sprint",
-  "dur": 1.09,
-  "rms_db": -14.0,
+  "dur": 0.6,
+  "rms_db": -19.2,
+  "peak_db": -1.1,
+  "f0": null
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Pig",
+   0.73
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.038
+  ],
+  "top": [
+   [
+    "Pig",
+    0.73
+   ],
+   [
+    "Animal",
+    0.686
+   ],
+   [
+    "Oink",
+    0.582
+   ],
+   [
+    "Grunt",
+    0.256
+   ],
+   [
+    "Livestock, farm animals, working animals",
+    0.056
+   ]
+  ],
+  "hf_ratio": 4.448,
+  "h": "ce3967d3ed",
+  "file": "pig_sprint_2.mp3",
+  "animal": "pig",
+  "kind": "sprint",
+  "dur": 0.95,
+  "rms_db": -15.9,
   "peak_db": -1.7,
-  "f0": 593
+  "f0": 2000
  },
  {
   "verdict": "SUSPECT",
@@ -5097,6 +5701,94 @@
   "dur": 0.41,
   "rms_db": -15.9,
   "peak_db": -1.9,
+  "f0": null
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Hiss",
+   0.38
+  ],
+  "wrong": [
+   "dog",
+   "Dog",
+   0.005
+  ],
+  "top": [
+   [
+    "Hiss",
+    0.38
+   ],
+   [
+    "Steam",
+    0.311
+   ],
+   [
+    "Train",
+    0.143
+   ],
+   [
+    "Rail transport",
+    0.143
+   ],
+   [
+    "Sound effect",
+    0.138
+   ]
+  ],
+  "hf_ratio": 3.8,
+  "h": "4eca7b3d2b",
+  "file": "reptile_roam_2.mp3",
+  "animal": "reptile",
+  "kind": "roam",
+  "dur": 1.3,
+  "rms_db": -19.1,
+  "peak_db": -0.5,
+  "f0": null
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Hiss",
+   0.098
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.016
+  ],
+  "top": [
+   [
+    "Frying (food)",
+    0.16
+   ],
+   [
+    "Inside, small room",
+    0.154
+   ],
+   [
+    "Spray",
+    0.137
+   ],
+   [
+    "Steam",
+    0.128
+   ],
+   [
+    "Electric toothbrush",
+    0.104
+   ]
+  ],
+  "hf_ratio": 91.698,
+  "h": "4c820b80a6",
+  "file": "reptile_roam_3.mp3",
+  "animal": "reptile",
+  "kind": "roam",
+  "dur": 1.98,
+  "rms_db": -18.9,
+  "peak_db": -1.2,
   "f0": null
  },
  {
@@ -5366,6 +6058,358 @@
   "f0": 485
  },
  {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.724
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.018
+  ],
+  "top": [
+   [
+    "Animal",
+    0.738
+   ],
+   [
+    "Dog",
+    0.724
+   ],
+   [
+    "Domestic animals, pets",
+    0.644
+   ],
+   [
+    "Bow-wow",
+    0.596
+   ],
+   [
+    "Bark",
+    0.403
+   ]
+  ],
+  "hf_ratio": 0.005,
+  "h": "160f3e2d83",
+  "file": "sleddog_sprint_3.mp3",
+  "animal": "sleddog",
+  "kind": "sprint",
+  "dur": 0.69,
+  "rms_db": -14.4,
+  "peak_db": -3.3,
+  "f0": 444
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.881
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.024
+  ],
+  "top": [
+   [
+    "Dog",
+    0.881
+   ],
+   [
+    "Animal",
+    0.872
+   ],
+   [
+    "Domestic animals, pets",
+    0.812
+   ],
+   [
+    "Pant",
+    0.63
+   ],
+   [
+    "Canidae, dogs, wolves",
+    0.153
+   ]
+  ],
+  "hf_ratio": 0.211,
+  "h": "5ed945d611",
+  "file": "sleddog_tired_1.mp3",
+  "animal": "sleddog",
+  "kind": "tired",
+  "dur": 1.48,
+  "rms_db": -18.2,
+  "peak_db": -1.5,
+  "f0": 1143
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.545
+  ],
+  "wrong": [
+   "horse",
+   "Neigh, whinny",
+   0.019
+  ],
+  "top": [
+   [
+    "Animal",
+    0.732
+   ],
+   [
+    "Domestic animals, pets",
+    0.569
+   ],
+   [
+    "Dog",
+    0.545
+   ],
+   [
+    "Pant",
+    0.482
+   ],
+   [
+    "Sound effect",
+    0.387
+   ]
+  ],
+  "hf_ratio": 0.284,
+  "h": "bbd4b27e11",
+  "file": "sleddog_tired_2.mp3",
+  "animal": "sleddog",
+  "kind": "tired",
+  "dur": 0.92,
+  "rms_db": -19.3,
+  "peak_db": -1.4,
+  "f0": 1067
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.993
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.035
+  ],
+  "top": [
+   [
+    "Dog",
+    0.993
+   ],
+   [
+    "Animal",
+    0.986
+   ],
+   [
+    "Domestic animals, pets",
+    0.983
+   ],
+   [
+    "Pant",
+    0.963
+   ],
+   [
+    "Canidae, dogs, wolves",
+    0.473
+   ]
+  ],
+  "hf_ratio": 0.095,
+  "h": "31d67cbc27",
+  "file": "sleddog_tired_3.mp3",
+  "animal": "sleddog",
+  "kind": "tired",
+  "dur": 1.2,
+  "rms_db": -19.4,
+  "peak_db": -1.5,
+  "f0": 1778
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Rustling leaves",
+   0.454
+  ],
+  "wrong": [
+   "cat",
+   "Meow",
+   0.005
+  ],
+  "top": [
+   [
+    "Rustling leaves",
+    0.454
+   ],
+   [
+    "Sound effect",
+    0.25
+   ],
+   [
+    "Rustle",
+    0.206
+   ],
+   [
+    "Water",
+    0.16
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.145
+   ]
+  ],
+  "hf_ratio": 22.482,
+  "h": "ccd701734b",
+  "file": "sloth_roam_1.mp3",
+  "animal": "sloth",
+  "kind": "roam",
+  "dur": 1.1,
+  "rms_db": -18.7,
+  "peak_db": -1.1,
+  "f0": null
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Rustling leaves",
+   0.296
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.007
+  ],
+  "top": [
+   [
+    "Ocean",
+    0.366
+   ],
+   [
+    "Rustling leaves",
+    0.296
+   ],
+   [
+    "Rustle",
+    0.226
+   ],
+   [
+    "Waves, surf",
+    0.149
+   ],
+   [
+    "Sound effect",
+    0.137
+   ]
+  ],
+  "hf_ratio": 13.73,
+  "h": "64da480388",
+  "file": "sloth_roam_2.mp3",
+  "animal": "sloth",
+  "kind": "roam",
+  "dur": 1.4,
+  "rms_db": -19.3,
+  "peak_db": -2.0,
+  "f0": null
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Whistle",
+   0.322
+  ],
+  "wrong": [
+   "duck",
+   "Quack",
+   0.013
+  ],
+  "top": [
+   [
+    "Bird",
+    0.558
+   ],
+   [
+    "Whistle",
+    0.322
+   ],
+   [
+    "Buzzer",
+    0.265
+   ],
+   [
+    "Chirp, tweet",
+    0.242
+   ],
+   [
+    "Bird vocalization, bird call, bird song",
+    0.227
+   ]
+  ],
+  "hf_ratio": 2931.47,
+  "h": "3f9b2e60be",
+  "file": "sloth_sprint_1.mp3",
+  "animal": "sloth",
+  "kind": "sprint",
+  "dur": 0.51,
+  "rms_db": -14.4,
+  "peak_db": -5.5,
+  "f0": 516
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Whistle",
+   0.417
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.009
+  ],
+  "top": [
+   [
+    "Whistle",
+    0.417
+   ],
+   [
+    "Tick-tock",
+    0.307
+   ],
+   [
+    "Sound effect",
+    0.225
+   ],
+   [
+    "Whistling",
+    0.12
+   ],
+   [
+    "Tick",
+    0.113
+   ]
+  ],
+  "hf_ratio": 17216.441,
+  "h": "5cd6ec78e7",
+  "file": "sloth_sprint_2.mp3",
+  "animal": "sloth",
+  "kind": "sprint",
+  "dur": 0.52,
+  "rms_db": -17.8,
+  "peak_db": -1.4,
+  "f0": 1200
+ },
+ {
   "verdict": "BAD",
   "notes": [
    "frog로 들림(Frog 0.31)"
@@ -5410,6 +6454,50 @@
   "rms_db": -15.3,
   "peak_db": -1.4,
   "f0": 516
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Rustle",
+   0.559
+  ],
+  "wrong": [
+   "horse",
+   "Clip-clop",
+   0.113
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.653
+   ],
+   [
+    "Rustle",
+    0.559
+   ],
+   [
+    "Rustling leaves",
+    0.122
+   ],
+   [
+    "Clip-clop",
+    0.113
+   ],
+   [
+    "Flap",
+    0.108
+   ]
+  ],
+  "hf_ratio": 0.476,
+  "h": "f8a41fb6c8",
+  "file": "small_roam_2.mp3",
+  "animal": "small",
+  "kind": "roam",
+  "dur": 0.85,
+  "rms_db": -19.3,
+  "peak_db": -1.4,
+  "f0": 2000
  },
  {
   "verdict": "BAD",
@@ -5458,51 +6546,92 @@
   "f0": 696
  },
  {
-  "verdict": "SUSPECT",
-  "notes": [
-   "horse 기미(Clip-clop 0.16)",
-   "음악처럼 들림(Music 0.67)"
-  ],
+  "verdict": "OK",
+  "notes": [],
   "expect": [
-   "Snort",
-   0.005
+   "Squeak",
+   0.382
   ],
   "wrong": [
-   "horse",
-   "Clip-clop",
-   0.156
+   "bird",
+   "Bird",
+   0.089
   ],
   "top": [
    [
-    "Music",
-    0.665
+    "Squeak",
+    0.382
    ],
    [
-    "Scratching (performance technique)",
-    0.55
+    "Sound effect",
+    0.351
    ],
    [
-    "Synthesizer",
-    0.249
+    "Mouse",
+    0.329
    ],
    [
-    "Electronic music",
-    0.206
+    "Rodents, rats, mice",
+    0.309
    ],
    [
-    "Clip-clop",
-    0.156
+    "Beep, bleep",
+    0.127
    ]
   ],
-  "hf_ratio": 0.052,
-  "h": "cb975bc1b2",
-  "file": "small_tired_1.mp3",
+  "hf_ratio": 220.626,
+  "h": "3f04d08fa7",
+  "file": "small_sprint_2.mp3",
   "animal": "small",
-  "kind": "tired",
-  "dur": 1.89,
-  "rms_db": -19.1,
-  "peak_db": -1.7,
-  "f0": 2000
+  "kind": "sprint",
+  "dur": 0.62,
+  "rms_db": -16.6,
+  "peak_db": -1.6,
+  "f0": 1333
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Squeak",
+   0.435
+  ],
+  "wrong": [
+   "bird",
+   "Bird",
+   0.097
+  ],
+  "top": [
+   [
+    "Squeak",
+    0.435
+   ],
+   [
+    "Sound effect",
+    0.391
+   ],
+   [
+    "Rodents, rats, mice",
+    0.12
+   ],
+   [
+    "Bird",
+    0.097
+   ],
+   [
+    "Mouse",
+    0.09
+   ]
+  ],
+  "hf_ratio": 79.306,
+  "h": "f428bdc962",
+  "file": "small_sprint_3.mp3",
+  "animal": "small",
+  "kind": "sprint",
+  "dur": 0.57,
+  "rms_db": -19.3,
+  "peak_db": -1.2,
+  "f0": 1333
  },
  {
   "verdict": "OK",
@@ -5690,6 +6819,50 @@
   "verdict": "OK",
   "notes": [],
   "expect": [
+   "Squeak",
+   0.457
+  ],
+  "wrong": [
+   "bird",
+   "Squawk",
+   0.087
+  ],
+  "top": [
+   [
+    "Sound effect",
+    0.563
+   ],
+   [
+    "Squeak",
+    0.457
+   ],
+   [
+    "Squawk",
+    0.087
+   ],
+   [
+    "Tick-tock",
+    0.062
+   ],
+   [
+    "Tick",
+    0.042
+   ]
+  ],
+  "hf_ratio": 549.168,
+  "h": "36ac2eac6c",
+  "file": "squirrel_sprint_3.mp3",
+  "animal": "squirrel",
+  "kind": "sprint",
+  "dur": 0.89,
+  "rms_db": -18.4,
+  "peak_db": -1.5,
+  "f0": 1600
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
    "Howl",
    0.911
   ],
@@ -5773,5 +6946,137 @@
   "rms_db": -14.2,
   "peak_db": -5.8,
   "f0": 400
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.751
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.029
+  ],
+  "top": [
+   [
+    "Animal",
+    0.797
+   ],
+   [
+    "Dog",
+    0.751
+   ],
+   [
+    "Domestic animals, pets",
+    0.635
+   ],
+   [
+    "Pant",
+    0.509
+   ],
+   [
+    "Whimper (dog)",
+    0.223
+   ]
+  ],
+  "hf_ratio": 0.462,
+  "h": "11b29c8c43",
+  "file": "wolf_tired_1.mp3",
+  "animal": "wolf",
+  "kind": "tired",
+  "dur": 1.5,
+  "rms_db": -15.6,
+  "peak_db": -1.6,
+  "f0": 571
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Dog",
+   0.96
+  ],
+  "wrong": [
+   "cat",
+   "Roaring cats (lions, tigers)",
+   0.043
+  ],
+  "top": [
+   [
+    "Dog",
+    0.96
+   ],
+   [
+    "Animal",
+    0.953
+   ],
+   [
+    "Domestic animals, pets",
+    0.89
+   ],
+   [
+    "Pant",
+    0.36
+   ],
+   [
+    "Whimper (dog)",
+    0.297
+   ]
+  ],
+  "hf_ratio": 0.257,
+  "h": "9b5ad28c4b",
+  "file": "wolf_tired_2.mp3",
+  "animal": "wolf",
+  "kind": "tired",
+  "dur": 1.5,
+  "rms_db": -15.8,
+  "peak_db": -1.5,
+  "f0": 444
+ },
+ {
+  "verdict": "OK",
+  "notes": [],
+  "expect": [
+   "Pant",
+   0.603
+  ],
+  "wrong": [
+   "speech",
+   "Speech",
+   0.031
+  ],
+  "top": [
+   [
+    "Animal",
+    0.678
+   ],
+   [
+    "Pant",
+    0.603
+   ],
+   [
+    "Dog",
+    0.531
+   ],
+   [
+    "Domestic animals, pets",
+    0.52
+   ],
+   [
+    "Breathing",
+    0.349
+   ]
+  ],
+  "hf_ratio": 0.233,
+  "h": "49f9b0cfe1",
+  "file": "wolf_tired_3.mp3",
+  "animal": "wolf",
+  "kind": "tired",
+  "dur": 1.26,
+  "rms_db": -18.4,
+  "peak_db": -1.8,
+  "f0": 667
  }
 ]

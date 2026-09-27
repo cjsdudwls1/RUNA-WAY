@@ -1,0 +1,453 @@
+[
+ {
+  "slot": "armadillo_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/soundmary/sounds/194938/",
+   "https://freesound.org/people/fthgurdy/sounds/528183/"
+  ],
+  "rejected": [],
+  "dropped": []
+ },
+ {
+  "slot": "armadillo_sprint",
+  "date": "2026-09-27",
+  "none": true,
+  "note": "쓰지마셈",
+  "used": [],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/JiggleSticks/sounds/635012/",
+    "title": "Small Animal Running on Grass.wav",
+    "edits": "1.42~2.30초 자름, 80Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 작은 동물의 잰 발소리(아르마딜로 달음질 대용)",
+    "note": "아르마딜로 녹음이 없어 작은 동물이 풀밭을 빠르게 딛는 발소리로 대신(초당 약 5걸음). Run·Walk 0.08로 기대 점수 약함, 말 기미 0.05, 80Hz 하이패스"
+   },
+   {
+    "source_url": "https://freesound.org/people/iainmccurdy/sounds/640245/",
+    "title": "Rats Gnawing, Scratching, Squeaking and Scuttling",
+    "edits": "6.02~6.52초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 쥐가 후다닥 긁으며 달리는 소리(아르마딜로 달음질 대용)",
+    "note": "아르마딜로 대신 쥐가 나무 들보 위를 후다닥 긁으며 달리는 소리(Scratch 0.24), 다른 동물·말 없음, 1번과 다른 녹음"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "chicken_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/Rudmer_Rotteveel/sounds/316921/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/dimapain/sounds/858644/",
+    "title": "animal_chicken_Clucking_cackle",
+    "edits": "15.31~15.97초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -4.9dBFS), Freesound HQ 미리듣기 ogg에서 작업, 암탉이 꽉 지르고 꼭 하고 끝남",
+    "note": "같은 암탉의 다른 꽉(Chicken 0.89), 2번보다 낮고 짧은 꽉 뒤 꼭, 창경고 없음"
+   },
+   {
+    "source_url": "https://freesound.org/people/evsecrets/sounds/346961/",
+    "title": "Chickens clucking and rooster with cockadoodledoo.wav",
+    "edits": "2.25~2.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 닭이 길게 꽈악 지르고 꼭꼭 잦아듦",
+    "note": "길게 끄는 꽈악 한 번(Chicken 0.85, f0 약 730Hz), 창경고 없음. Crowing 라벨 0.32는 분류기 연상, 수탉 꼬끼오는 녹음 끝부분에만 있음"
+   }
+  ],
+  "dropped": [
+   {
+    "source_url": "https://freesound.org/people/dimapain/sounds/858644/",
+    "title": "animal_chicken_Clucking_cackle",
+    "edits": "43.19~43.78초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.2dBFS), Freesound HQ 미리듣기 ogg에서 작업, 암탉 한 마리가 크게 꽉 지르고 짧게 꼭 한 번",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "chihuahua_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/nicoproson/sounds/195869/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/Sempoo/sounds/380756/",
+    "title": "Miniature Schnauzer growl.wav",
+    "edits": "20.77~21.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 미니어처 슈나우저의 짧은 으르렁",
+    "note": "작은 개 짧은 으르렁(첫머리부터), Dog 0.7대, Fart 0.00, 창경고 없음, 1번과 다른 대목"
+   }
+  ],
+  "dropped": [
+   {
+    "source_url": "https://freesound.org/people/Sempoo/sounds/380756/",
+    "title": "Miniature Schnauzer growl.wav",
+    "edits": "11.08~12.09초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.8dBFS), Freesound HQ 미리듣기 ogg에서 작업, 미니어처 슈나우저(작은 개)의 낮은 으르렁",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "gila_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/craigsmith/sounds/437957/",
+   "https://freesound.org/people/craigsmith/sounds/437957/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/craigsmith/sounds/437957/",
+    "title": "G12-25-Rattlesnake Hiss.wav",
+    "edits": "19.30~20.05초 자름, 200Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 방울뱀의 쉭 한 번, 끝이 길게 잦아듦",
+    "note": "힐라몬스터 녹음 없음, 방울뱀 쉭으로 대신(1번과 같은 녹음의 다른 쉭). 날카로운 시작 뒤 0.6초 감쇠, 2~8kHz 비 0.73, 숨소리(Breathing·Gasp) 기미, 다른 동물·말 없음"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "greyhound_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/minniemighty/sounds/729598/",
+   "https://freesound.org/people/v23/sounds/440866/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/v23/sounds/440866/",
+    "title": "Angry big dog barking - Close [d15].wav",
+    "edits": "0.12~0.71초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.7dBFS), Freesound HQ 미리듣기 ogg에서 작업, 중앙아시아 셰퍼드(큰 개)의 성난 짖음 두 번",
+    "note": "굵은 짖음 2번, 0.5초 창 전부 Bow-wow·Bark, hf 0.01, f0 약 410Hz, 1m 근접 녹음, 다른 개·말 없음"
+   },
+   {
+    "source_url": "https://freesound.org/people/minniemighty/sounds/729598/",
+    "title": "Great Dane on Duty",
+    "edits": "0.56~1.07초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.1dBFS), Freesound HQ 미리듣기 ogg에서 작업, 그레이트데인(큰 개)의 짖음 한 번",
+    "note": "그레이트데인 굵은 짖음 1번과 잦아듦, Dog·Bark 0.5대, hf 0.01 미만, f0 약 330Hz"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "hippo_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/TheVeoMammoth11/sounds/492652/"
+  ],
+  "rejected": [],
+  "dropped": [
+   {
+    "source_url": "https://freesound.org/people/YleArkisto/sounds/253082/",
+    "title": "Virtahevot ääntelevät / Hippopotamus, hippos making sounds nearby in the river",
+    "edits": "42.79~43.42초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 강가 하마의 크고 거친 honk 한 번",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "hoof_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/craigsmith/sounds/479722/",
+   "https://freesound.org/people/Max_Headroom/sounds/175356/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://bigsoundbank.com/horse-gallop-start-tall-grass-s1849.html",
+    "title": "Horse gallop, start, tall grass",
+    "edits": "6.02~6.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 키 큰 풀밭을 질주하는 말의 발굽 소리",
+    "note": "Clip-clop 0.68·Horse 0.39, 풀밭 위 발굽 5번 질주 리듬, 울음·말소리 없음, 창경고 없음"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "horse_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://bigsoundbank.com/horse-neighing-3-s0863.html"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://bigsoundbank.com/horse-neighing-5-s1542.html",
+    "title": "Horse neighing #5",
+    "edits": "0.10~1.26초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.7dBFS), BigSoundBank 원본 FLAC에서 작업, 말 한 마리의 히이잉 한 번(시작부터 잦아드는 끝까지)",
+    "note": "Neigh 0.90, 부드럽게 시작해 높은 부분·떨리며 내려가는 끝(-45dB)까지 한 번, 닭·오리 기미 없음, 창경고 없음. 1541과 다른 파일"
+   }
+  ],
+  "dropped": [
+   {
+    "source_url": "https://freesound.org/people/GoodListener/sounds/322445/",
+    "title": "Horse Whinny 1.wav",
+    "edits": "0.10~1.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마구간 말 한 마리의 히이잉 한 번",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "koala_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://commons.wikimedia.org/wiki/File:Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://commons.wikimedia.org/wiki/File:Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv",
+    "title": "Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv",
+    "edits": "18.98~19.48초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Commons 변환본(240p VP9 webm, Opus 음성)에서 작업. 원본 ogv와 같은 영상의 소리(원본은 upload.wikimedia.org 속도 제한으로 못 받음), 수컷 코알라 벨로우의 크고 거친 날숨 한 번",
+    "note": "가장 크고 거친 날숨(공격음 -10dB, cen 2.1kHz), Burping 0.8~0.95·Grunt 0.52, 창경고 없음. 끝은 다음 들숨(19.49초) 전. 기존 구간과 안 겹침. 코알라 원본이 이 영상 하나뿐"
+   },
+   {
+    "source_url": "https://commons.wikimedia.org/wiki/File:Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv",
+    "title": "Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv",
+    "edits": "9.08~9.77초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Commons 변환본(240p VP9 webm, Opus 음성)에서 작업. 원본 ogv와 같은 영상의 소리(원본은 upload.wikimedia.org 속도 제한으로 못 받음), 수컷 코알라 벨로우의 날숨이 커지며 터지는 부분",
+    "note": "트림 같은 날숨이 커지다 -10dB로 터지고 잦아듦, Burping 0.91·Grunt 0.19, 창경고 없음. 기존 구간과 안 겹침"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "loris_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://bigsoundbank.com/garden-dormouse-s1073.html",
+   "https://bigsoundbank.com/garden-dormouse-s1073.html"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://bigsoundbank.com/garden-dormouse-s1073.html",
+    "title": "Garden dormouse",
+    "edits": "4.28~4.85초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 정원겨울잠쥐의 짧은 찍 울음(로리스 울음 대용)",
+    "note": "1·2번과 같은 녹음의 다른 울음(겹치지 않음). 짧은 찍 한 번, 맨 위 Animal 0.38, 새 0.12·고양이 0.08 기미 약함, 150Hz 하이패스"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "loris_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/Alhadis/sounds/745196/",
+   "https://freesound.org/people/Alhadis/sounds/745196/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://bigsoundbank.com/garden-dormouse-s1073.html",
+    "title": "Garden dormouse",
+    "edits": "7.13~7.85초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 정원겨울잠쥐의 거친 경계 울음(로리스 경고음 대용)",
+    "note": "로리스 대신 나무 위 야행성 작은 설치류(정원겨울잠쥐)가 사람이 다가올 때 내는 거친 경계 울음. Animal 0.23, 곤충 기미 0.07, 150Hz 하이패스"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "pig_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/Jofae/sounds/352698/",
+   "https://freesound.org/people/Jofae/sounds/352698/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/felix.blume/sounds/434384/",
+    "title": "Four pigs screaming together",
+    "edits": "31.06~31.72초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 먹이를 기다리는 돼지의 거친 꽥 비명 한 번",
+    "note": "Oink 0.60·Pig 0.29, 평탄도 0.29 잡음 섞인 비명, 창경고 없음. Jofae와 다른 원본"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "reptile_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/florianreichelt/sounds/423454/",
+   "https://freesound.org/people/JesterWhoo/sounds/706981/"
+  ],
+  "rejected": [],
+  "dropped": []
+ },
+ {
+  "slot": "sleddog_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://bigsoundbank.com/old-dog-barking-3-s2354.html"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://bigsoundbank.com/pack-of-dogs-s2953.html",
+    "title": "Pack of Dogs",
+    "edits": "26.45~27.17초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 썰매개 무리 속 한 마리의 짖음 두 번",
+    "note": "썰매개 짖음 2번, Bark 0.64, hf 0.06, 뒤 무리 하울링은 34dB 아래, 창경고 없음"
+   },
+   {
+    "source_url": "https://bigsoundbank.com/pack-of-dogs-s2953.html",
+    "title": "Pack of Dogs",
+    "edits": "9.29~9.87초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.8dBFS), BigSoundBank 원본 FLAC에서 작업, 썰매개 무리 속 짖음 두 번(다른 대목)",
+    "note": "썰매개 짖음 2번, Bow-wow 0.52, hf 0.03, 창경고 없음, 무리 녹음이라 뒤에 다른 개가 약하게 깔림"
+   }
+  ],
+  "dropped": [
+   {
+    "source_url": "https://bigsoundbank.com/old-dog-barking-2-s2353.html",
+    "title": "Old dog barking #2",
+    "edits": "2.54~3.28초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.7dBFS), BigSoundBank 원본 FLAC에서 작업, 늙은 큰 개의 짖음 두 번(자갈길 야외, 다른 녹음)",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "sleddog_tired",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/AGFX/sounds/221496/",
+   "https://freesound.org/people/AGFX/sounds/221496/",
+   "https://freesound.org/people/DianaCastaneda/sounds/758703/"
+  ],
+  "rejected": [],
+  "dropped": []
+ },
+ {
+  "slot": "sloth_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/AGFX/sounds/538891/",
+   "https://freesound.org/people/AGFX/sounds/538891/"
+  ],
+  "rejected": [],
+  "dropped": []
+ },
+ {
+  "slot": "sloth_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/SoundsLikeYukon/sounds/822939/",
+   "https://freesound.org/people/TheKingOfGeeks360/sounds/871018/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/burgersmoke/sounds/640993/",
+    "title": "Ground Squirrel Second Chirp",
+    "edits": "0.56~1.06초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 땅다람쥐의 높고 짧은 짹 울음(나무늘보 울음 대용)",
+    "note": "나무늘보 울음 대신 땅다람쥐의 높은 짹 울음(Chirp 0.36, 곤충 기미 0.13). 다람쥐 슬롯과 다른 원본"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "small_roam",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/bruno.auzet/sounds/849903/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/Yin_Yang_Jake007/sounds/415203/",
+    "title": "Small Animal Scurrying Through Leaves.mp3",
+    "edits": "4.50~5.31초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 작은 동물이 낙엽 속을 헤집는 바스락",
+    "note": "작은 동물이 마른 낙엽 속을 헤집는 바스락(Rustling leaves 0.64), 새·사람·바람 없음. 올린 사람도 어떤 동물인지 모름(쥐·반디쿠트 등)"
+   },
+   {
+    "source_url": "https://freesound.org/people/Yin_Yang_Jake007/sounds/415203/",
+    "title": "Small Animal Scurrying Through Leaves.mp3",
+    "edits": "7.22~7.81초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 작은 동물이 낙엽 속을 헤집는 바스락",
+    "note": "1번과 같은 녹음의 다른 대목(겹치지 않음). 낙엽 바스락(Rustling leaves 0.54), 바스락이 잦아드는 곳에서 끝냄, 새·사람·바람 없음"
+   }
+  ],
+  "dropped": []
+ },
+ {
+  "slot": "small_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/TheKingOfGeeks360/sounds/841571/",
+   "https://freesound.org/people/TheKingOfGeeks360/sounds/841571/"
+  ],
+  "rejected": [],
+  "dropped": [
+   {
+    "source_url": "https://commons.wikimedia.org/wiki/File:Spying-on-small-wildlife-sounds-using-affordable-collar-mounted-miniature-microphones-an-innovative-srep10118-s2.oga",
+    "title": "Spying-on-small-wildlife-sounds-using-affordable-collar-mounted-miniature-microphones-an-innovative-srep10118-s2.oga",
+    "edits": "3.71~4.52초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Commons 원본 파일에서 작업, 줄무늬다람쥐의 빠른 찍찍(작은 동물 공용)",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "squirrel_sprint",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://freesound.org/people/JustinAmolsch/sounds/522176/"
+  ],
+  "rejected": [
+   {
+    "source_url": "https://freesound.org/people/JustinAmolsch/sounds/522176/",
+    "title": "Angry Squirrel on Deer Mt.wav",
+    "edits": "3.12~3.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 놀란 다람쥐의 빠른 찍찍 경계 수다",
+    "note": "1번과 같은 녹음의 다른 대목(겹치지 않음). 붉은다람쥐 찍찍 5번(초당 약 6번), Squeak 0.22, 새·말 없음"
+   },
+   {
+    "source_url": "https://freesound.org/people/DrinkingWindGames/sounds/744662/",
+    "title": "Squirrel Danger Chirps",
+    "edits": "14.28~14.80초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 놀란 땅다람쥐의 날카로운 경계 짹짹",
+    "note": "궁지에 몰린 땅다람쥐의 경계 짹 한 묶음(0.1초에 3번), 2~8kHz, 맨 위 Sound effect·Squeak, 새·말 없음. 150Hz 하이패스로 덤불 저역 제거"
+   }
+  ],
+  "dropped": [
+   {
+    "source_url": "https://freesound.org/people/burgersmoke/sounds/642004/",
+    "title": "Baby Chipmunk Warning Chirp",
+    "edits": "27.92~28.52초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 줄무늬다람쥐의 짧고 높은 경계 찍찍",
+    "note": "사람이 골랐으나 슬롯이 3개로 차서 못 넣음"
+   }
+  ]
+ },
+ {
+  "slot": "wolf_tired",
+  "date": "2026-09-27",
+  "none": false,
+  "note": "",
+  "used": [
+   "https://bigsoundbank.com/dogs-breathing-s1547.html",
+   "https://bigsoundbank.com/dogs-breathing-s1547.html",
+   "https://freesound.org/people/DC2014/sounds/231415/"
+  ],
+  "rejected": [],
+  "dropped": []
+ }
+]

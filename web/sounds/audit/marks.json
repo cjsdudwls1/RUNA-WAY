@@ -6,20 +6,460 @@
    "note": "무슨 개 소리 남 (사용자 2026-09-26)",
    "gone": true
   },
-  "greyhound_sprint_1.mp3": {
-   "v": "ng",
-   "note": "굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26)",
+  "canine_tired_1.mp3": {
+   "v": "removed",
+   "note": "사람 틀리다, 후보 없음: 지워 공장소리남",
    "gone": true
+  },
+  "cat_tired_1.mp3": {
+   "v": "removed",
+   "note": "사람 틀리다, 후보 없음: 지워",
+   "gone": true
+  },
+  "cheetah_roam_1.mp3": {
+   "v": "removed",
+   "note": "사람 틀리다, 후보 없음: 지워",
+   "gone": true
+  },
+  "feline_tired_1.mp3": {
+   "v": "removed",
+   "note": "사람 틀리다, 후보 없음: 지워",
+   "gone": true
+  },
+  "small_tired_1.mp3": {
+   "v": "removed",
+   "note": "사람 틀리다, 후보 없음: 지워",
+   "gone": true
+  },
+  "armadillo_roam_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "4fb4fbbee8"
+  },
+  "armadillo_roam_2.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "0d5faeb3b4"
+  },
+  "chicken_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "43a095d03c"
+  },
+  "chihuahua_roam_3.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "1f078578b4"
+  },
+  "gila_roam_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "d4e5464a15"
+  },
+  "gila_roam_2.mp3": {
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "7266208df7"
+  },
+  "greyhound_sprint_1.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "7342c9c109"
   },
   "greyhound_sprint_2.mp3": {
-   "v": "ng",
-   "note": "굵은 그레이하운드가 아니라 치와와 짖는 소리 (사용자 2026-09-26)",
-   "gone": true
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "918ed02803"
+  },
+  "hippo_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "9024096b69"
+  },
+  "hoof_sprint_2.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "04ee4ea82d"
+  },
+  "hoof_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "c56748d82e"
+  },
+  "horse_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "0a865f1cb7"
+  },
+  "koala_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "f2d51496e0"
+  },
+  "loris_roam_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "16478f88f2"
+  },
+  "loris_roam_2.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "ff128f7a86"
+  },
+  "loris_sprint_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "4147b555a4"
+  },
+  "loris_sprint_2.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "a48130c758"
+  },
+  "pig_sprint_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "539fcc437b"
   },
   "pig_sprint_2.mp3": {
-   "v": "ng",
-   "note": "돼지 꾸이익이 아니라 닭 소리 같음 (사용자 2026-09-26)",
-   "gone": true
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "ce3967d3ed"
+  },
+  "reptile_roam_2.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "4eca7b3d2b"
+  },
+  "reptile_roam_3.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "4c820b80a6"
+  },
+  "sleddog_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "160f3e2d83"
+  },
+  "sleddog_tired_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "5ed945d611"
+  },
+  "sleddog_tired_2.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "bbd4b27e11"
+  },
+  "sleddog_tired_3.mp3": {
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "31d67cbc27"
+  },
+  "sloth_roam_1.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "ccd701734b"
+  },
+  "sloth_roam_2.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "64da480388"
+  },
+  "sloth_sprint_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "3f9b2e60be"
+  },
+  "sloth_sprint_2.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "5cd6ec78e7"
+  },
+  "small_roam_2.mp3": {
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "f8a41fb6c8"
+  },
+  "small_sprint_2.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "3f04d08fa7"
+  },
+  "small_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "f428bdc962"
+  },
+  "squirrel_sprint_3.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "36ac2eac6c"
+  },
+  "wolf_tired_1.mp3": {
+   "v": "ok",
+   "note": "후보 1번 선택 (2026-09-27)",
+   "h": "11b29c8c43"
+  },
+  "wolf_tired_2.mp3": {
+   "v": "ok",
+   "note": "후보 2번 선택 (2026-09-27)",
+   "h": "9b5ad28c4b"
+  },
+  "wolf_tired_3.mp3": {
+   "v": "ok",
+   "note": "후보 3번 선택 (2026-09-27)",
+   "h": "49f9b0cfe1"
+  },
+  "bird_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "6cf751dbda"
+  },
+  "bird_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "c8e8c8f4d9"
+  },
+  "bird_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "1a14d63470"
+  },
+  "camel_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "1f8c55f4f4"
+  },
+  "camel_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "93c7baea1b"
+  },
+  "camel_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "fe7f5ff874"
+  },
+  "canine_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "a1b81993ad"
+  },
+  "canine_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "d139aa034c"
+  },
+  "cat_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "cb75c8c237"
+  },
+  "cat_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "04bbd98971"
+  },
+  "cheetah_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "74fdc37ed4"
+  },
+  "cheetah_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "b97ce6f8c6"
+  },
+  "cheetah_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "159fcaf77d"
+  },
+  "chicken_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "6c80023368"
+  },
+  "chihuahua_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "3a62e3c36f"
+  },
+  "chihuahua_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "a2ea4d01c7"
+  },
+  "crocodile_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "1f808a427d"
+  },
+  "dokkaebi_line_hit_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "99310dc8f8"
+  },
+  "dokkaebi_line_near_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "9c7eab8980"
+  },
+  "dokkaebi_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "b1615b3be5"
+  },
+  "dokkaebi_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "e689273479"
+  },
+  "dokkaebi_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "6e8906f6a3"
+  },
+  "elephant_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "7b8d9abdbb"
+  },
+  "elephant_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "3c19f25722"
+  },
+  "elephant_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "45d34e20f1"
+  },
+  "elephant_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "58f27b02da"
+  },
+  "feline_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "04bbd98971"
+  },
+  "greyhound_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "667264711b"
+  },
+  "hare_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "ec61d0910c"
+  },
+  "hare_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "14c5dc67aa"
+  },
+  "hare_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "c196de0c99"
+  },
+  "hippo_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "07ace6ad5d"
+  },
+  "hippo_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "1628155f87"
+  },
+  "hippo_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "7513921e49"
+  },
+  "hoof_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "1b0827bbf0"
+  },
+  "hoof_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "ffaada80ef"
+  },
+  "horse_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "d875b4c8f9"
+  },
+  "jeoseung_line_spot_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "b509ad3bda"
+  },
+  "koala_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "71ac8a22b2"
+  },
+  "koala_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "bc5235eed2"
+  },
+  "ostrich_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "e30a001b71"
+  },
+  "reptile_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "6bb164d1cb"
+  },
+  "reptile_tired_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "a47d42b096"
+  },
+  "sleddog_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "ddccfa3ba8"
+  },
+  "sleddog_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "f2b6c307bd"
+  },
+  "small_roam_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "bd7967faa4"
+  },
+  "small_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "920185a4ad"
+  },
+  "squirrel_roam_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "3342074522"
+  },
+  "squirrel_sprint_1.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "fd1d9030f8"
+  },
+  "squirrel_sprint_2.mp3": {
+   "v": "ok",
+   "note": "",
+   "h": "c55b1438b7"
   }
  }
 }
