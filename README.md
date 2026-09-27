@@ -8,12 +8,15 @@
 
 - PRD v0.9
 - M0 완료(`sim/`), Kotlin 코어 이식·검증 완료(`core/`)
+- 2026-09-27 방향 전환: 괴물런(가칭). 동물을 빼고 괴물 경주·공포 두 모드로. docs/prd/18-monster-run.md
 - 웹 앱 출시 가능 (2026-09-24). 신경망 음성 팩, 지도 끌기, 오프라인 캐시, 헤드리스 QA 통과. 판정은 docs/prd/12-launch.md
 
 ## 문서
 
 | 파일 | 내용 |
 |---|---|
+| docs/prd/18-monster-run.md | 괴물런(가칭) PRD. 동물 삭제, 경주·공포 두 모드. 03·17보다 우선 |
+| docs/prd/19-monster-sound.md | 괴물런 소리 설계. 사건표, 괴물 소리 카드, 대사 수, 모델 테스트 |
 | docs/prd/03-prd.md | PRD 핵심 (v0.6) |
 | docs/prd/05-appendix.md | PRD 부록. 지표, 안전, 법률, 소셜, 비용 등 상세 |
 | docs/prd/06-tts-research.md | TTS 공급자 조사 |
