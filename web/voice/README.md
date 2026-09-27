@@ -2,7 +2,7 @@
 
 - 2026-09-26 사용자 판정: 지금 관제 음성(Supertonic 3)은 말투가 어색하다. 감정 섞인 높낮이가 없다
 - 목표: 감정 연기가 되는 TTS로 관제 조각 405개(OP 402 + HIT 3)를 다시 굽는다. 앱 코드는 안 바뀐다
-- GPU가 필요하다. 사용자 로컬에서 굽고, 여기(web/voice/bake.py)는 받아서 후처리·선택·팩만 한다
+- GPU가 필요하다. Modal GPU(L4)에서 굽고(web/voice/qwen_modal.py), 여기(web/voice/bake.py)는 받아서 후처리·선택·팩만 한다
 
 ## 반드시 지킬 것
 
@@ -26,10 +26,26 @@
 - 관제사 묘사(초안): 30대 한국인 남성 무전 관제사. 중저음, 또렷한 발음. 방송 아나운서가 아니라 위험을 보며 무전기에 대고 말하는 사람
 - 어느 방식이든 문장마다 후보 3개(시드만 바꿔서)
 
+## Modal로 굽기 (2026-09-27)
+
+- 도구: `web/voice/qwen_modal.py`. 이 컴퓨터는 CPU만 있어도 된다. 키를 나눠 Modal에 보내고 wav만 받는다
+- 준비: `pip install "modal[api-proxy-support]"`, `modal token set`(또는 MODAL_TOKEN_ID, MODAL_TOKEN_SECRET)
+- 모델 3개(CustomVoice, VoiceDesign, Base)는 Modal Volume `runaway-qwen-tts`에 한 번 받는다: `--download`
+- 앱은 임시 앱이라 끝나면 멈춘다. 이번 실행의 앱이 남아 있으면 스크립트가 `modal app stop`으로 한 번 더 멈춘다
+- 끊겨도 다시 돌리면 이어서 한다(이미 있는 `<키>__<번호>.wav`는 건너뛴다)
+- 방식 B 참조: `--refs --voice op1`로 감정 6개 참조를 만들고 Volume의 `refs/op1/`에 둔다(로컬 사본 audition/B/refs/). 한 감정만 다시: `--refs --moods urgent --k 10`
+  - 참조의 발음 실수가 복제에 옮는다(오디션에서 다급 참조의 "뛰어"가 "돼요"로 옮았다). 참조는 ASR 오류가 낮은 것을 고른다(유사도 - 0.15 × 오류율)
+- 비용: `--bill`이 Modal 청구 내역에서 실행별 금액을 보여 준다. 실행 기록은 `<out>/../runs.jsonl`(app_id 포함)
+- 이 클라우드 세션에서는 Modal 클라이언트(grpclib)가 certifi 묶음만 믿어 연결이 안 된다. 환경의 CA 묶음을 쓰게 한 sitecustomize를 PYTHONPATH로 붙여 실행했다(검증은 끄지 않는다)
+
 ## 오디션 (전체 굽기 전에 사용자가 귀로 고른다)
 
-- 방식마다 아래를 굽는다. web/voice/audition/<방식>/
+- 방식마다 아래를 굽는다. web/voice/audition/<방식>/src/
+  - `python3 web/voice/qwen_modal.py --method A --keys @audition --out web/voice/audition/A/src`
 - 이어 붙이기 미리듣기는 앱과 같은 규칙: 조각 사이 0.035초, 조각이 . ! ?로 끝나면 0.1초
+  - `python3 web/voice/preview.py --src web/voice/audition/A/src --out web/voice/audition/A/preview`(bake.py와 같은 방법으로 후보를 고른다)
+  - 최종 팩으로: `python3 web/voice/preview.py --pack --out web/voice/preview`
+- 2026-09-27 오디션: 방식 C 화자는 CustomVoice 남성 5명 중 한국어 ASR 오류율이 가장 낮은 Ryan(0.113. Aiden 0.126, Dylan 0.143, Uncle_Fu 0.225, Eric 0.271)
 
 | 이름 | 조각 |
 |---|---|
@@ -80,6 +96,6 @@ VOICE_SRC=web/voice/src VOICE_ENGINE="Qwen3-TTS (Qwen, Apache-2.0)" python3 web/
 
 ## 커밋
 
-- 올린다: web/static/voice/*.bin, web/voice_manifest.js, web/voice/qa.tsv, 생성 스크립트(web/voice/qwen_gen.py), lines.py를 고쳤으면 lines.py
+- 올린다: web/static/voice/*.bin, web/voice_manifest.js, web/voice/qa.tsv, 생성 스크립트(web/voice/qwen_modal.py), 미리듣기(web/voice/preview.py), lines.py를 고쳤으면 lines.py
 - 안 올린다: src/, audition/, preview/, .cache/, models/
 - 라이선스: Qwen3-TTS 모델과 코드 Apache-2.0. 상업 이용 가능. 배포하는 건 합성된 음성 파일
