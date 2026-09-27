@@ -4,3 +4,4 @@ src/
 audition/
 preview/
 runs.jsonl
+model_test/
