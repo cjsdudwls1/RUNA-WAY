@@ -163,7 +163,7 @@ ffmpeg -i tmp.wav -af "volume=6.3dB" -b:a 96k web/sounds/elephant_sprint_1.mp3
   - 다른 종 라벨(까마귀, 비둘기, 닭, 소, 개구리 등)이 기대 소리보다 크면 BAD
   - 약한 슬롯(AudioSet에 그 동물이 없는 것): 동물 기미가 전혀 없고 맨 위가 차·바람·효과음이면 SUSPECT
   - 음악 라벨은 SUSPECT까지만(하울링, 트럼펫, 괴물 목소리가 음악으로 잘 잡힌다)
-  - 원본을 이미 다른 동물이 쓰면 BAD. credits.json과 candidates.json을 함께 본다(다른 슬롯 후보끼리도). freesound 주소는 번호로 맞춘다. 생성 모델 출력(라이선스 "생성: …")은 빼고 본다
+  - 원본을 이미 다른 동물이 쓰면 BAD. credits.json과 candidates.json을 함께 본다(다른 슬롯 후보끼리도). freesound·BigSoundBank 주소는 번호로 맞춘다(BigSoundBank는 주소 모양이 여럿이다). 생성 모델 출력(라이선스 "생성: …")은 빼고 본다
   - candidates.json에 줄이 없는 후보는 BAD(출처 모름)
   - 판정은 파일 내용 해시(h)에 묶인다. 후보 파일을 고치면 audit.py를 다시 돌린다
 - 이미 다른 동물에 쓴 원본은 쓰지 않는다. 같은 녹음이 두 동물 소리가 되면 안 된다

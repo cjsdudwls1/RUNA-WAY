@@ -253,7 +253,10 @@ def main():
     out = []
     def key(u):
         m = re.search(r'freesound\.org/(?:s|people/[^/]+/sounds)/(\d+)', u or '')
-        return 'freesound:' + m.group(1) if m else (u or '').split('#')[0].split('?')[0].rstrip('/').lower()
+        if m: return 'freesound:' + m.group(1)
+        m = re.search(r'bigsoundbank\.com/(?:.*-s(\d+)\.html|sound-s?(\d+))', u or '')   # 제목-s0863.html, sound-0863.html, sound-s0863.html은 같은 소리
+        if m: return 'bigsoundbank:' + str(int(m.group(1) or m.group(2)))
+        return (u or '').split('#')[0].split('?')[0].rstrip('/').lower()
     gen = lambda c: str(c.get('license', '')).startswith('생성') or 'huggingface.co/' in (c.get('source_url') or '')   # 생성 모델 출력은 '같은 녹음'이 아니다
     used = {}   # 원본 → 쓰는 동물들 (credits.json + 후보)
     try:
