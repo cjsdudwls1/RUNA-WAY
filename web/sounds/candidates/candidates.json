@@ -340,9 +340,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "Horse Galloping.wav",
-  "edits": "2.90~3.70초 자름, 80Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 8dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마이크 둘레를 질주하는 말의 발굽 소리",
-  "note": "Clip-clop 0.93·Horse 0.68, 마른 땅 위 가까운 질주 발굽, 울음·말소리 없음, 창경고 없음. 저역 웅웅(직류 성분)을 80Hz 하이패스로 뺌",
-  "dur": 0.8
+  "edits": "2.90~3.66초 자름, 80Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 8dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마이크 둘레를 질주하는 말의 발굽 소리",
+  "note": "Clip-clop 0.90·Horse 0.54, 마른 땅 위 가까운 질주 발굽, 끝은 다음 발굽 전 틈, 울음·말소리 없음, 창경고 없음. 저역 웅웅(직류 성분)을 80Hz 하이패스로 뺌",
+  "dur": 0.76
  },
  {
   "slot": "horse_sprint",
@@ -355,9 +355,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "1542.flac",
-  "edits": "0.10~1.22초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.8dBFS), BigSoundBank 원본 FLAC에서 작업, 말 한 마리의 히이잉 한 번(시작부터 잦아드는 끝까지)",
-  "note": "Neigh 0.90, 시작부터 높은 부분·떨리며 내려가는 끝까지 1.12초 한 번, 닭·오리 기미 없음, 창경고 없음. 1541과 다른 파일",
-  "dur": 1.12
+  "edits": "0.10~1.26초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.7dBFS), BigSoundBank 원본 FLAC에서 작업, 말 한 마리의 히이잉 한 번(시작부터 잦아드는 끝까지)",
+  "note": "Neigh 0.90, 부드럽게 시작해 높은 부분·떨리며 내려가는 끝(-45dB)까지 한 번, 닭·오리 기미 없음, 창경고 없음. 1541과 다른 파일",
+  "dur": 1.16
  },
  {
   "slot": "horse_sprint",
@@ -385,9 +385,9 @@
   "license": "CC BY 4.0",
   "license_url": "https://creativecommons.org/licenses/by/4.0/",
   "original_file": "Horse Whinny 1.wav",
-  "edits": "0.08~1.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마구간 말 한 마리의 히이잉 한 번",
-  "note": "Neigh 0.98·Horse 0.75, 시작부터 잦아드는 꼬리(-16dB)까지, 닭·오리 기미 없음, 창경고 없음. BigSoundBank가 아닌 원본",
-  "dur": 1.12
+  "edits": "0.10~1.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마구간 말 한 마리의 히이잉 한 번",
+  "note": "Neigh 0.99·Horse 0.69, 시작부터 잦아드는 꼬리까지, 닭·오리 기미 없음, 창경고 없음. BigSoundBank가 아닌 원본",
+  "dur": 1.1
  },
  {
   "slot": "koala_sprint",
@@ -400,9 +400,9 @@
   "license": "CC BY 2.5",
   "license_url": "https://creativecommons.org/licenses/by/2.5",
   "original_file": "Perception-of-Male-Caller-Identity-in-Koalas-(Phascolarctos-cinereus)-Acoustic-Analysis-and-pone.0020329.s001.ogv",
-  "edits": "18.99~19.55초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Commons 변환본(240p VP9 webm, Opus 음성)에서 작업. 원본 ogv와 같은 영상의 소리(원본은 upload.wikimedia.org 속도 제한으로 못 받음), 수컷 코알라 벨로우의 크고 거친 날숨 한 번",
-  "note": "가장 크고 거친 날숨(공격음 -10dB, cen 2.0kHz), Burping 0.92·Oink 0.58·Grunt 0.43, 창경고 없음. 기존 코알라 구간과 안 겹침. 코알라 원본이 이 영상 하나뿐",
-  "dur": 0.56
+  "edits": "18.98~19.48초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Commons 변환본(240p VP9 webm, Opus 음성)에서 작업. 원본 ogv와 같은 영상의 소리(원본은 upload.wikimedia.org 속도 제한으로 못 받음), 수컷 코알라 벨로우의 크고 거친 날숨 한 번",
+  "note": "가장 크고 거친 날숨(공격음 -10dB, cen 2.1kHz), Burping 0.8~0.95·Grunt 0.52, 창경고 없음. 끝은 다음 들숨(19.49초) 전. 기존 구간과 안 겹침. 코알라 원본이 이 영상 하나뿐",
+  "dur": 0.5
  },
  {
   "slot": "koala_sprint",
@@ -475,9 +475,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "1073.flac",
-  "edits": "4.27~4.85초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 정원겨울잠쥐의 짧은 찍 울음(로리스 울음 대용)",
+  "edits": "4.28~4.85초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 정원겨울잠쥐의 짧은 찍 울음(로리스 울음 대용)",
   "note": "1·2번과 같은 녹음의 다른 울음(겹치지 않음). 짧은 찍 한 번, 맨 위 Animal 0.38, 새 0.12·고양이 0.08 기미 약함, 150Hz 하이패스",
-  "dur": 0.58
+  "dur": 0.57
  },
  {
   "slot": "loris_sprint",
@@ -550,9 +550,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "Angry Pig Oinking",
-  "edits": "2.27~3.17초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 성난 돼지의 길게 끄는 꾸이익 비명 한 번",
-  "note": "Pig 0.58·Oink 0.40, cen 2.3kHz, 2~8kHz 비 0.69 비명, 창경고 없음. 1번 바로 뒤의 다른 울음",
-  "dur": 0.9
+  "edits": "2.27~3.22초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 성난 돼지의 길게 끄는 꾸이익 비명 한 번",
+  "note": "Pig 0.74·Oink 0.55, cen 2.3kHz, 2~8kHz 비 0.69 비명, 창경고 없음. 1번 바로 뒤의 다른 울음, 끝은 다음 소리(3.25초) 전 조용한 곳",
+  "dur": 0.95
  },
  {
   "slot": "pig_sprint",
@@ -730,7 +730,7 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "Pine tree branch light leaves move.wav",
-  "edits": "19.83~20.93초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 12dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 나뭇가지와 잎이 스치는 바스락(나무늘보 움직임 대용)",
+  "edits": "19.83~20.93초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 15dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 나뭇가지와 잎이 스치는 바스락(나무늘보 움직임 대용)",
   "note": "1번과 같은 녹음의 다른 대목(겹치지 않음). 잔가지 바스락(Rustling leaves 0.31), 새·말·바람 없음. 다른 가지 녹음은 바람·보트·사람 말로 잡혀 원본 1개",
   "dur": 1.1
  },

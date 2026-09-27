@@ -1,6 +1,6 @@
 {
  "note": "replace: 틀린 파일 교체(먼저). add: 전용 파일이 없어 다른 동물 소리(공용 파일)나 합성음이 나는 슬롯(priority high부터). avoid_sources: 지난 회차에 사람이 안 고른 후보(다시 가져오지 않는다)",
- "round": "ae10d28310",
+ "round": "f0c74a1df5",
  "replace": [
   {
    "slot": "pig_sprint",

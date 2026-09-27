@@ -1,0 +1,70 @@
+[
+ {
+  "slot": "cheetah_sprint",
+  "reason": "허용 출처에 44.1/48kHz 치타·퓨마 쉭·으르렁 녹음이 없다(치타는 11kHz 논문 녹음뿐). 그대로면 cheetah_sprint_1·2가 빠지고 고양이 하악(feline_sprint_1)이 난다. 두려면 아래 파일 목록에서 '맞다'"
+ },
+ {
+  "slot": "cheetah_roam",
+  "reason": "OK 후보가 논문 녹음의 야옹형 울음 하나뿐이다(Commons 치타 영상 울음은 강아지 깽깽으로 잡힌다). 그대로면 cheetah_roam_2가 빠지고 roam_1만 남는다"
+ },
+ {
+  "slot": "cheetah_tired",
+  "reason": "허용 출처에 고양이과 헐떡임 녹음이 없다(쉬는 숨, 그르릉뿐). 치타 지침은 합성 숨이 난다"
+ },
+ {
+  "slot": "cat_tired",
+  "reason": "진짜 고양이 헐떡임 녹음이 없다. 그대로면 cat_tired_1(사람 목소리 같은 '헉헉')이 빠지고 합성 숨이 난다"
+ },
+ {
+  "slot": "feline_tired",
+  "reason": "cat_tired와 같은 이유. 그대로면 feline_tired_1이 빠지고 합성 숨이 난다"
+ },
+ {
+  "slot": "komodo_roam",
+  "reason": "쓸 만한 뱀·도마뱀 쉭 원본이 셋뿐이라(방울뱀은 힐라, 코브라·사육실 뱀은 파충류 공용) 코모도 몫이 없다. 코모도 평상은 파충류 공용(reptile_roam)이 난다"
+ },
+ {
+  "slot": "canine_tired",
+  "reason": "큰 개 헐떡임 원본 4개를 늑대·허스키 전용에 먼저 썼다. 둘이 전용 파일을 가지면 이 슬롯은 아무도 안 쓴다. 그대로면 canine_tired_1이 빠진다"
+ },
+ {
+  "slot": "canine_roam",
+  "reason": "조건(Dog·Growling 0.3 이상, 엔진 없음)을 넘는 원본이 없다. 지금 이 파일을 쓰는 개가 없다. 그대로면 canine_roam_1이 빠진다"
+ },
+ {
+  "slot": "ostrich_roam",
+  "reason": "타조 붐 원본은 freesound 846529 하나뿐인데 분류기가 말(Speech 0.60)로 잡고 소리 길이도 0.29초라 탈락. Commons 타조 영상 12개는 말·차·바람 소리"
+ },
+ {
+  "slot": "ostrich_tired",
+  "reason": "타조 숨 녹음이 없다(콧김 0.44초 한 번뿐, ostrich_sprint_1과 같은 원본)"
+ },
+ {
+  "slot": "bird_roam",
+  "reason": "에뮤·화식조·레아 붐 5개가 모두 새 라벨 0(말·음악으로 잡힘)이라 BAD. 그대로면 bird_roam_1이 빠지고 타조 평상이 닭 합성음이 된다. 두려면 아래 파일 목록에서 bird_roam_1 '맞다'"
+ },
+ {
+  "slot": "bird_tired",
+  "reason": "화식조 신음은 창에 차 소리가 섞이고, 다른 녹음은 0.8초보다 짧다. 그대로면 bird_tired_1이 빠지고 타조 지침이 합성음이 된다. 두려면 bird_tired_1 '맞다'"
+ },
+ {
+  "slot": "bird_sprint",
+  "reason": "지금 이 파일을 쓰는 동물이 없어(닭·타조 전용 파일이 있다) 찾지 않았다. 그대로면 bird_sprint_1이 빠진다"
+ },
+ {
+  "slot": "elephant_sprint",
+  "reason": "조건(크고 거친 나팔, 5kHz 위 잡음 섞인 배음, 급한 시작)에 맞는 코끼리 나팔이 없다. 가장 가까운 freesound 527845는 750Hz 맑은 단일 음이라 개 하울처럼 들릴 위험(지난번 문제와 같은 종류). elephant_sprint_1 하나로 돈다"
+ },
+ {
+  "slot": "pronghorn_sprint",
+  "reason": "프롱혼 녹음은 소리 없는 영상 하나뿐이고, 사슴·영양 경고 콧김은 새·개 소리가 섞여 OK 2개를 못 채웠다. 프롱혼 돌진은 발굽 공용(hoof_sprint) 질주 발굽이 난다"
+ },
+ {
+  "slot": "kangaroo_roam",
+  "reason": "허용 출처에 캥거루·왈라비 울음 녹음이 없다(검색 결과는 만화 효과음, 단어 발음, 음악). 캥거루 평상은 발굽 공용(hoof_roam) 소리가 난다"
+ },
+ {
+  "slot": "kangaroo_sprint",
+  "reason": "캥거루 뛰는 소리 녹음이 없다(검색 결과는 '보잉' 스프링 효과음). 캥거루 돌진은 발굽 공용(hoof_sprint) 질주 발굽이 난다"
+ }
+]
