@@ -257,9 +257,15 @@ function renderList() {
   if (cur >= visible.length) cur = visible.length - 1;
   mark(cur, false);
 }
+function emptyHTML() {
+  const e = DATA.empty || [];
+  if (!e.length) return '';
+  return `<details class="cross"><summary>후보를 못 찾은 슬롯 ${e.length}개 <small class="save">교체 대상이면 빠지고 공용 파일이나 합성음이 난다</small></summary><ul>` +
+    e.map((x) => `<li><b>${esc(x.slot)}</b>: ${esc(x.reason)}</li>`).join('') + '</ul></details>';
+}
 function renderCands() {
   const slots = Object.entries(CANDS);
-  if (!slots.length) { $('#candsWrap').innerHTML = ''; return; }
+  if (!slots.length) { $('#candsWrap').innerHTML = emptyHTML(); return; }
   $('#candsWrap').innerHTML = `<h2 style="font-size:17px;margin:18px 0 0">후보 고르기 <small class="save">${slots.length}슬롯 · 쓸 것을 고른다. 마음에 드는 게 없으면 "다 별로"</small></h2><div class="cands">` +
     slots.map(([slot, c]) => {
       const p = S.picks[slot] || { sel: [] };
@@ -270,7 +276,7 @@ function renderCands() {
         <button type="button" class="pick" data-slot="${esc(slot)}" data-pick="${esc(it.file)}" aria-pressed="${p.sel.includes(it.file)}">쓴다</button></div>`).join('');
       return `<div class="slot"><h3>${esc(slot)} <small>${esc(c.expect || '')} · 최대 ${c.max}개 고른다</small></h3>${cur}${items}
         <div class="slotfoot"><button type="button" class="pick" data-slot="${esc(slot)}" data-none="1" aria-pressed="${!!p.none}">다 별로</button><input type="text" data-slotnote="${esc(slot)}" placeholder="메모 (예: 더 굵은 소리로)" value="${esc(p.note || '')}" aria-label="${esc(slot)} 메모"></div></div>`;
-    }).join('') + '</div>';
+    }).join('') + '</div>' + emptyHTML();
 }
 function renderProg() {
   const need = files.filter((f) => f.ai !== 'KEEP');

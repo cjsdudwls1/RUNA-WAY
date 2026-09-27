@@ -5,6 +5,7 @@
   - audit/report.json (audit.py 분류기 결과), audit/judge.json (AI 판정. 없으면 분류기 판정)
   - audit/marks.json (사람 검수 결과. 있으면 미리 채운다)
   - candidates/<슬롯>/<번호>.mp3 + candidates/candidates.json (교체 후보. 있으면 맨 위에 "후보 고르기")
+  - candidates/empty.json (후보를 못 찾은 슬롯과 이유. 있으면 "후보 고르기" 아래에 보인다)
 - 출력
   - review/index.html: 더블클릭으로 연다(인터넷 없어도 된다). 표시는 브라우저에 저장, "결과 복사"로 AI에게 붙여 넣는다
   - audit/todo.json: 교체할 슬롯 목록(사람이 틀리다고 한 것 + 사람이 안 본 것 중 AI가 교체 추천한 것)
@@ -155,8 +156,10 @@ def build(base='../', out=None, artifact=False):
     gname = {a: names.get(a) or CLASS_KO.get(a) or MONSTER_KO.get(a) or a for a in groups}
     seed = {f: {'v': m.get('v'), 'note': m.get('note', '')} for f, m in marks.items() if live(f) and m.get('v') in ('ok', 'ng')}
     rnd = hashlib.sha1(json.dumps([present, {k: v['set'] for k, v in cands.items()}, seed], sort_keys=True).encode()).hexdigest()[:10]
+    # 후보를 못 찾은 슬롯과 이유(candidates/empty.json: [{slot, reason}]). 사람이 보고 넘어가게 페이지에 보인다
+    empty = [e for e in load(os.path.join(HERE, 'candidates', 'empty.json'), []) if e.get('slot') not in cands]
     data = {'generated': datetime.date.today().isoformat(), 'round': rnd, 'base': base, 'groups': [[a, gname[a]] for a in groups], 'files': files,
-            'cands': cands, 'seed': seed, 'cross': judge.get('cross_issues', [])}
+            'cands': cands, 'empty': empty, 'seed': seed, 'cross': judge.get('cross_issues', [])}
     tpl = open(os.path.join(HERE, 'review_template.html'), encoding='utf-8').read()
     html = tpl.replace('/*DATA*/null', json.dumps(data, ensure_ascii=False).replace('</', '<\\/'))
     if not artifact:   # 파일로 여는 판은 완전한 문서로. claude.ai 게시판은 본문만(게시할 때 머리를 붙인다)
