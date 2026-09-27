@@ -70,9 +70,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "Chicken Alarm Call full with Occasional bird sound",
-  "edits": "1.01~1.58초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.0dBFS), Freesound HQ 미리듣기 ogg에서 작업, 고양이를 본 암탉의 큰 경계 꽉 한 번",
+  "edits": "1.04~1.58초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.2dBFS), Freesound HQ 미리듣기 ogg에서 작업, 고양이를 본 암탉의 큰 경계 꽉 한 번",
   "note": "경계 울음의 큰 꽉 한 번(Chicken 0.76, f0 약 700Hz 배음 뚜렷), 창경고 없음. 1번(316920=이 녹음 18.9~20.0초)과 같은 녹음의 다른 울음",
-  "dur": 0.57
+  "dur": 0.54
  },
  {
   "slot": "chicken_sprint",
@@ -85,9 +85,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "animal_chicken_Clucking_cackle",
-  "edits": "43.19~43.74초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.3dBFS), Freesound HQ 미리듣기 ogg에서 작업, 암탉 한 마리가 크게 꽉 지르고 짧게 꼭 한 번",
-  "note": "암탉 꼬꼬댁의 높은 꽉(Chicken 0.89, f0 약 1200Hz), 수탉 울음 라벨 0.11, 다른 동물·말 없음",
-  "dur": 0.55
+  "edits": "43.19~43.78초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.2dBFS), Freesound HQ 미리듣기 ogg에서 작업, 암탉 한 마리가 크게 꽉 지르고 짧게 꼭 한 번",
+  "note": "암탉 꼬꼬댁의 높은 꽉(Chicken 0.89, f0 약 1200Hz)과 짧은 꼭, 수탉 울음 라벨 0.11, 다른 동물·말 없음",
+  "dur": 0.59
  },
  {
   "slot": "chicken_sprint",
@@ -100,9 +100,9 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "animal_chicken_Clucking_cackle",
-  "edits": "15.31~15.93초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.0dBFS), Freesound HQ 미리듣기 ogg에서 작업, 암탉이 꽉꽉 지르는 소리",
-  "note": "같은 암탉의 다른 꽉(Chicken 0.86), 2번과 음 모양이 다름(짧은 꽉 두 마디), 창경고 없음",
-  "dur": 0.62
+  "edits": "15.31~15.97초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -4.9dBFS), Freesound HQ 미리듣기 ogg에서 작업, 암탉이 꽉 지르고 꼭 하고 끝남",
+  "note": "같은 암탉의 다른 꽉(Chicken 0.86), 2번과 음 모양이 다름(꽉 뒤 짧은 꼭), 창경고 없음",
+  "dur": 0.66
  },
  {
   "slot": "chicken_sprint",
@@ -115,9 +115,54 @@
   "license": "CC0 1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "original_file": "Chickens clucking and rooster with cockadoodledoo.wav",
-  "edits": "2.21~2.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 닭이 길게 꽈악 지르고 꼭꼭 잦아듦",
+  "edits": "2.25~2.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 닭이 길게 꽈악 지르고 꼭꼭 잦아듦",
   "note": "길게 끄는 꽈악 한 번(Chicken 0.87, f0 약 730Hz). Crowing 라벨 0.35는 분류기 연상, 수탉 꼬끼오 아님(녹음 끝부분에만 있음)",
-  "dur": 0.61
+  "dur": 0.58
+ },
+ {
+  "slot": "chihuahua_roam",
+  "file": "candidates/chihuahua_roam/1.mp3",
+  "animal": "chihuahua",
+  "kind": "roam",
+  "title": "Miniature Schnauzer growl.wav",
+  "source_url": "https://freesound.org/people/Sempoo/sounds/380756/",
+  "author": "Sempoo",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "original_file": "Miniature Schnauzer growl.wav",
+  "edits": "11.08~12.09초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.8dBFS), Freesound HQ 미리듣기 ogg에서 작업, 미니어처 슈나우저(작은 개)의 낮은 으르렁",
+  "note": "작은 개 이어지는 으르렁, Growling 0.71·Dog 0.72, Fart 0.00, 창경고 없음, 앞 마디와 이어진 으르렁의 골에서 시작",
+  "dur": 1.01
+ },
+ {
+  "slot": "chihuahua_roam",
+  "file": "candidates/chihuahua_roam/2.mp3",
+  "animal": "chihuahua",
+  "kind": "roam",
+  "title": "Dog Growl",
+  "source_url": "https://freesound.org/people/nicoproson/sounds/195869/",
+  "author": "nicoproson",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Dog Growl",
+  "edits": "42.78~43.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 잭러셀테리어(작은 개)의 이어지는 으르렁",
+  "note": "작은 개 으르렁 한 번(첫머리부터 잦아들 때까지), Growling 0.27·Dog 0.20, Fart 0.00, 근접 녹음, 슈나우저와 다른 녹음",
+  "dur": 1.17
+ },
+ {
+  "slot": "chihuahua_roam",
+  "file": "candidates/chihuahua_roam/3.mp3",
+  "animal": "chihuahua",
+  "kind": "roam",
+  "title": "Miniature Schnauzer growl.wav",
+  "source_url": "https://freesound.org/people/Sempoo/sounds/380756/",
+  "author": "Sempoo",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "original_file": "Miniature Schnauzer growl.wav",
+  "edits": "20.77~21.40초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 미니어처 슈나우저의 짧은 으르렁",
+  "note": "작은 개 짧은 으르렁(첫머리부터), Dog 0.7대, Fart 0.00, 창경고 없음, 1번과 다른 대목",
+  "dur": 0.64
  },
  {
   "slot": "gila_roam",
@@ -148,6 +193,21 @@
   "edits": "19.30~20.05초 자름, 200Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 방울뱀의 쉭 한 번, 끝이 길게 잦아듦",
   "note": "힐라몬스터 녹음 없음, 방울뱀 쉭으로 대신(1번과 같은 녹음의 다른 쉭). 날카로운 시작 뒤 0.6초 감쇠, 2~8kHz 비 0.73, 숨소리(Breathing·Gasp) 기미, 다른 동물·말 없음",
   "dur": 0.75
+ },
+ {
+  "slot": "gila_roam",
+  "file": "candidates/gila_roam/3.mp3",
+  "animal": "gila",
+  "kind": "roam",
+  "title": "G12-25-Rattlesnake Hiss.wav",
+  "source_url": "https://freesound.org/people/craigsmith/sounds/437957/",
+  "author": "craigsmith",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "G12-25-Rattlesnake Hiss.wav",
+  "edits": "14.62~15.55초 자름, 600Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 방울뱀의 쉭 한 번, 조금 긴 편",
+  "note": "힐라몬스터 녹음 없음, 방울뱀 쉭으로 대신(1·2번과 같은 녹음의 다른 쉭). 0.85초 쉭이 잦아듦, 2~8kHz 비 0.71, 다른 동물·말 없음. 테이프 험 창경고(Engine) 없애려고 600Hz 하이패스",
+  "dur": 0.93
  },
  {
   "slot": "greyhound_sprint",
@@ -240,6 +300,51 @@
   "dur": 0.63
  },
  {
+  "slot": "hoof_sprint",
+  "file": "candidates/hoof_sprint/1.mp3",
+  "animal": "hoof",
+  "kind": "sprint",
+  "title": "R13-50-Horse Heavy Gallop.wav",
+  "source_url": "https://freesound.org/people/craigsmith/sounds/479722/",
+  "author": "craigsmith",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "R13-50-Horse Heavy Gallop.wav",
+  "edits": "7.05~7.85초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 말 한 마리가 단단한 흙 위를 질주하는 발굽 소리",
+  "note": "Clip-clop 0.89·Horse 0.54, 따-따-둠 두 걸음(발굽 6번), 울음·말소리 없음, 창경고 없음. 옛 광학 녹음이라 고역이 적다",
+  "dur": 0.8
+ },
+ {
+  "slot": "hoof_sprint",
+  "file": "candidates/hoof_sprint/2.mp3",
+  "animal": "hoof",
+  "kind": "sprint",
+  "title": "Horse gallop, start, tall grass",
+  "source_url": "https://bigsoundbank.com/sound-1849.html",
+  "author": "Joseph SARDIN (BigSoundBank)",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "1849.flac",
+  "edits": "6.02~6.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 키 큰 풀밭을 질주하는 말의 발굽 소리",
+  "note": "Clip-clop 0.68·Horse 0.39, 풀밭 위 발굽 5번 질주 리듬, 울음·말소리 없음, 창경고 없음",
+  "dur": 0.93
+ },
+ {
+  "slot": "hoof_sprint",
+  "file": "candidates/hoof_sprint/3.mp3",
+  "animal": "hoof",
+  "kind": "sprint",
+  "title": "Horse Galloping.wav",
+  "source_url": "https://freesound.org/people/Max_Headroom/sounds/175356/",
+  "author": "Max_Headroom",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Horse Galloping.wav",
+  "edits": "2.90~3.70초 자름, 80Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 8dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마이크 둘레를 질주하는 말의 발굽 소리",
+  "note": "Clip-clop 0.93·Horse 0.68, 마른 땅 위 가까운 질주 발굽, 울음·말소리 없음, 창경고 없음. 저역 웅웅(직류 성분)을 80Hz 하이패스로 뺌",
+  "dur": 0.8
+ },
+ {
   "slot": "horse_sprint",
   "file": "candidates/horse_sprint/1.mp3",
   "animal": "horse",
@@ -283,21 +388,6 @@
   "edits": "0.08~1.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 마구간 말 한 마리의 히이잉 한 번",
   "note": "Neigh 0.98·Horse 0.75, 시작부터 잦아드는 꼬리(-16dB)까지, 닭·오리 기미 없음, 창경고 없음. BigSoundBank가 아닌 원본",
   "dur": 1.12
- },
- {
-  "slot": "komodo_roam",
-  "file": "candidates/komodo_roam/1.mp3",
-  "animal": "komodo",
-  "kind": "roam",
-  "title": "snarling Snake",
-  "source_url": "https://freesound.org/people/florianreichelt/sounds/423454/",
-  "author": "florianreichelt",
-  "license": "CC0 1.0",
-  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "original_file": "snarling Snake",
-  "edits": "1.04~2.34초 자름, 500Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 코브라의 강한 쉭 한 번",
-  "note": "코모도 쉭 녹음 없음(Commons 코모도 영상은 사람 말뿐), 코브라 쉭으로 대신. 터지듯 시작해 1초 끌리는 쉭, 분류기 Hiss 0.28, 중심 7.7kHz, 다른 동물·말 없음. 뒷마당 녹음이라 저역 웅웅 제거용 500Hz 하이패스",
-  "dur": 1.3
  },
  {
   "slot": "loris_roam",
@@ -433,6 +523,36 @@
   "edits": "31.06~31.72초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 먹이를 기다리는 돼지의 거친 꽥 비명 한 번",
   "note": "Oink 0.60·Pig 0.29, 평탄도 0.29 잡음 섞인 비명, 창경고 없음. Jofae와 다른 원본",
   "dur": 0.66
+ },
+ {
+  "slot": "reptile_roam",
+  "file": "candidates/reptile_roam/1.mp3",
+  "animal": "reptile",
+  "kind": "roam",
+  "title": "snarling Snake",
+  "source_url": "https://freesound.org/people/florianreichelt/sounds/423454/",
+  "author": "florianreichelt",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "snarling Snake",
+  "edits": "1.04~2.34초 자름, 500Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 코브라의 강한 쉭 한 번",
+  "note": "뒷마당 코브라의 터지듯 시작하는 쉭(코모도·힐라 평상시 대체용 공용). 분류기 Hiss 0.38, 중심 7.7kHz, 다른 동물·말 없음. 저역 웅웅 제거용 500Hz 하이패스. 분류기가 증기(Steam 0.31)와 헷갈림",
+  "dur": 1.3
+ },
+ {
+  "slot": "reptile_roam",
+  "file": "candidates/reptile_roam/2.mp3",
+  "animal": "reptile",
+  "kind": "roam",
+  "title": "Room tone. Inside a reptile room with a snake. AMB. OWI.wav",
+  "source_url": "https://freesound.org/people/JesterWhoo/sounds/706981/",
+  "author": "JesterWhoo",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Room tone. Inside a reptile room with a snake. AMB. OWI.wav",
+  "edits": "15.88~17.86초 자름, 300Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 사육실 뱀의 길게 끄는 쉭",
+  "note": "파충류 사육실 뱀의 쉭. 또렷한 시작 뒤 2초 이어지다 멎음, 2~8kHz 비 0.57, 분류기 Hiss·Snake 0.12~0.15, 다른 동물·말 없음. reptile_sprint_1·tired_1과 같은 녹음(reptile 전용)의 겹치지 않는 구간. 조용한 녹음이라 실내 잡음 제거용 300Hz 하이패스",
+  "dur": 1.98
  },
  {
   "slot": "sleddog_sprint",
