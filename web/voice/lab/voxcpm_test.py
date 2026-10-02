@@ -91,7 +91,7 @@ def fetch(refs, texts):
     from voxcpm import VoxCPM
     from voxcpm.model.utils import mask_multichar_chinese_tokens
     from transformers import LlamaTokenizerFast
-    rep['ver'] = {'torch': torch.__version__, 'torchaudio': torchaudio.__version__, 'transformers': transformers.__version__, 'librosa': librosa.__version__}
+    rep['ver'] = {'torch': str(torch.__version__), 'torchaudio': str(torchaudio.__version__), 'transformers': str(transformers.__version__), 'librosa': str(librosa.__version__)}   # TorchVersion을 그대로 보내면 로컬(torch 없음)에서 못 푼다
     rep['args'] = list(inspect.signature(VoxCPM._generate).parameters)
     tok = LlamaTokenizerFast.from_pretrained(MODEL_DIR)
     w = mask_multichar_chinese_tokens(tok)
@@ -129,7 +129,7 @@ def gen(jobs, refs, deadline_s, seed, run_id):
         yield {'kind': 'fatal', 'err': repr(e)[:800], 't': time.time() - t0}
         return
     yield {'kind': 'loaded', 'import_s': round(t_imp, 1), 'load_s': round(time.time() - t0, 1), 'sr': sr,
-           'gpu': torch.cuda.get_device_name(0), 'torch': torch.__version__}
+           'gpu': str(torch.cuda.get_device_name(0)), 'torch': str(torch.__version__)}
     gen_s, bad_run = 0.0, 0
     for i, j in enumerate(jobs):
         el = time.time() - t0
@@ -221,8 +221,9 @@ def do_fetch(a):
         tc = time.time()
         try:
             rep = fetch.remote(refs, texts)
-        finally:
-            call_s = time.time() - tc
+        except Exception as e:
+            rep = {'err': repr(e)[:400]}
+        call_s = time.time() - tc
     usd = round(call_s * CPU_RATE, 4)
     total = cost_add({'what': 'fetch', 'app_id': app_id, 'call_s': round(call_s), 'wall_s': round(time.time() - t0), 'usd_est': usd})
     print(json.dumps(rep, ensure_ascii=False, indent=1), flush=True)
