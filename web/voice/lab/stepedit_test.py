@@ -187,6 +187,11 @@ class Engine:
                 return orig(*a, **k)
             fm.infer_encoder = infer_encoder
             log('  onnx providers:', self.atok.ort_session.get_providers())
+            if self.dev.type == 'cuda' and 'CUDAExecutionProvider' not in self.atok.ort_session.get_providers():
+                so = onnxruntime.SessionOptions(); so.intra_op_num_threads = 2     # CUDA가 안 되면 CPU 스레드라도 늘린다
+                self.atok.ort_session = onnxruntime.InferenceSession(os.path.join(root, 'Step-Audio-Tokenizer', 'speech_tokenizer_v1.onnx'),
+                                                                     sess_options=so, providers=['CPUExecutionProvider'])
+                log('  경고: speech tokenizer ONNX가 CPU로 돈다')
             from stepvocoder.cosyvoice2.cli.cosyvoice import CosyVoice
             self.cosy_dtype = getattr(torch, cosy_dtype)
             self.cosy = CosyVoice(os.path.join(editx, 'CosyVoice-300M-25Hz'), dtype=self.cosy_dtype, enable_cuda_graph=False)
@@ -434,7 +439,7 @@ def prep():
     return {'dl_s': round(t1 - t0), 'tok_s': round(time.time() - t1), 'gb': round(size / 1e9, 2), 'tok_class': type(tok).__name__}
 
 
-@app.function(image=image, gpu=GPU, volumes={'/lab': lab}, timeout=GPU_TIMEOUT, max_containers=1, scaledown_window=2)
+@app.function(image=image, gpu=GPU, cpu=2.0, volumes={'/lab': lab}, timeout=GPU_TIMEOUT, max_containers=1, scaledown_window=2)
 def gpu_run(batches, refs_b, refs_text, seed=2026):
     """한 세션: 로딩 한 번 → 묶음 차례로. 조각마다 Volume에 저장하고 보낸다"""
     t_start = time.time()
@@ -625,15 +630,17 @@ def main():
                         if 'err' in ev:
                             errs += 1; meta[key] = {'err': ev['err']}; print('  실패', key, ev['err'], flush=True); continue
                         open(os.path.join(OUT, key + '.wav'), 'wb').write(ev['wav'])
-                        x, sr = read_wav(ev['wav'])
-                        ref = ev['new_text'] if ev.get('new_text') else ev['text']
-                        ref = re.sub(r'\[[^\]]*\]', '', ref)
-                        hyp = bake.transcribe(x, sr); c = bake.cer(bake.norm(ref), bake.norm(hyp))
-                        clips += 1; cers.append(c)
-                        meta[key] = {'take': ev['take'], 'text': ev['text'], 'dur': round(len(x) / sr, 2), 'cer': round(c, 3), 'hyp': hyp,
-                                     'tokens': ev['tokens'], 'cap': ev['cap'], 'hit_cap': ev['hit_cap']}
+                        clips += 1
+                        meta[key] = {'take': ev['take'], 'text': ev['text'], 'tokens': ev['tokens'], 'cap': ev['cap'], 'hit_cap': ev['hit_cap']}
                         if ev['take'] == 2: meta[key].update(edit_type=ev['edit_type'], edit_info=ev['edit_info'], new_text=ev['new_text'])
-                        print(f"  {key:16s} {len(x) / sr:4.1f}s CER {c:.2f}{' 상한' if ev['hit_cap'] else ''}  {hyp}", flush=True)
+                        try:            # 이 컴퓨터 쪽 검사가 실패해도 GPU 흐름은 계속
+                            x, sr = read_wav(ev['wav'])
+                            ref = re.sub(r'\[[^\]]*\]', '', ev['new_text'] if ev.get('new_text') else ev['text'])
+                            hyp = bake.transcribe(x, sr); c = bake.cer(bake.norm(ref), bake.norm(hyp))
+                            cers.append(c); meta[key].update(dur=round(len(x) / sr, 2), cer=round(c, 3), hyp=hyp)
+                            print(f"  {key:16s} {len(x) / sr:4.1f}s CER {c:.2f}{' 상한' if ev['hit_cap'] else ''}  {hyp}", flush=True)
+                        except Exception as e:
+                            print('  ASR 실패', key, repr(e)[:200], flush=True)
                     elif k == 'batch':
                         print(f"  묶음 {ev['batch']}: {ev['n']}줄 생성 {ev['gen_s']:.1f}s({ev['steps']}스텝) 보코더 {ev['voc_s']:.1f}s 준비 {ev['prep_s']:.1f}s, GPU {ev['t']:.0f}s", flush=True)
                         if ev['batch'] == 't1_smoke':
@@ -659,7 +666,7 @@ def main():
             if os.path.exists(p): prev = json.load(open(p, encoding='utf-8'))
             prev.update(meta)
             json.dump(prev, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-        if app_id and (gpu_s or prep_s):
+        if app_id and gpu_s:            # prep만 한 실행은 _cost.jsonl에만 남긴다
             rec = {'what': 'stepedit', 'app_id': app_id, 'clips': clips, 'errs': errs, 'gen_s': round(gpu_s), 'wall_s': round(time.time() - t_wall),
                    'gpu': GPU, 'usd_est': round(total, 4)}
             if cers: rec.update(cer=round(sum(cers) / len(cers), 3), cer_over_03=sum(c > 0.3 for c in cers))
