@@ -276,6 +276,8 @@
 
 - 비교 기준(같은 ASR): 1회차 Qwen3 0.33 / 0.18
 - Step-Audio-EditX는 이 컴퓨터 CPU로도 돈다(짧은 줄 30~40초). 직접 녹음 편집 시험에 쓸 수 있다
+- 청취 페이지(엔진 가림): https://claude.ai/artifact/VkXNMuyJHk5La1wTMYnhDC. 만들기: web/voice/lab/listen/lab2_page.py(결과는 model_test/_page2)
+- 무음에 가까운 조각(-60dBFS 아래)은 페이지에서 뺐다. VoxCPM2 2개
 
 ## 13. 녹음 대본
 

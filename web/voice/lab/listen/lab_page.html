@@ -1,0 +1,237 @@
+<title>괴물런 목소리 테스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
+<style>
+  /* 괴물런 설계 페이지와 같은 밤 색. 한 가지 어두운 모습 */
+  :root {
+    color-scheme: dark;
+    --bg: #0f0d12; --surface: #17141c; --surface-2: #201b27; --line: #2d2735;
+    --ink: #ece6ef; --muted: #a79db2; --red: #ff5468; --lilac: #c4a8ff; --mint: #7fdcc0; --gold: #ffd166;
+    --display: "Black Han Sans", "IBM Plex Sans KR", system-ui, sans-serif;
+    --body: "IBM Plex Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--body); }
+  .wrap { max-width: 900px; margin: 0 auto; padding-inline: 16px; padding-block: 26px 90px; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible, textarea:focus-visible { outline: 2px solid var(--lilac); outline-offset: 2px; }
+  header { display: grid; gap: 10px; }
+  .eyebrow { color: var(--muted); font-size: 13px; margin: 0; }
+  h1 { font-family: var(--display); font-weight: 400; font-size: clamp(34px, 8vw, 52px); line-height: 1.02; margin: 0; }
+  h1 span { color: var(--red); }
+  .lede { color: var(--muted); margin: 0; max-width: 64ch; }
+  .lede b { color: var(--ink); font-weight: 600; }
+  .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); margin-top: 16px; }
+  .bar .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-block: 9px; }
+  .tog { border: 1px solid var(--line); background: var(--surface); padding: 6px 12px; font-size: 14px; font-weight: 600; }
+  .tog[aria-pressed="true"] { border-color: var(--mint); color: var(--mint); }
+  .tog.reveal[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+  .prog { margin-left: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .save { font-size: 12.5px; color: var(--muted); }
+  section.role, section.sfx, section.res { padding-top: 30px; }
+  .rh { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .rh h2 { font-family: var(--display); font-weight: 400; font-size: 24px; margin: 0; }
+  .rh .sub { color: var(--muted); font-size: 13.5px; }
+  .ref { display: flex; gap: 10px; align-items: center; margin: 10px 0 4px; font-size: 13.5px; color: var(--muted); }
+  .line { background: var(--surface); border: 1px solid var(--line); padding: 12px; margin-top: 10px; display: grid; gap: 10px; }
+  .line.done { border-color: #3d3450; }
+  .lt { font-size: 16px; font-weight: 600; line-height: 1.45; }
+  .ld { color: var(--muted); font-size: 13px; }
+  .clips { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+  .clip { display: grid; gap: 4px; }
+  .play { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: var(--surface-2); border: 1px solid var(--line); padding: 9px 4px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .play svg { width: 15px; height: 15px; flex: none; }
+  .play.on { border-color: var(--red); color: var(--red); }
+  .pick { width: 100%; border: 1px solid var(--line); background: transparent; padding: 4px 2px; font-size: 12.5px; color: var(--muted); }
+  .pick[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #1b1408; font-weight: 600; }
+  .who { font-size: 11.5px; color: var(--gold); line-height: 1.3; min-height: 0; text-align: center; }
+  .who small { display: block; color: var(--muted); }
+  .memo { width: 100%; min-height: 64px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); font: inherit; font-size: 14px; padding: 9px 10px; margin-top: 10px; resize: vertical; }
+  .sfxk { background: var(--surface); border: 1px solid var(--line); padding: 12px; margin-top: 10px; display: grid; gap: 8px; }
+  .sfxk .kt { font-weight: 600; }
+  .sitems { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .sitem { display: grid; gap: 4px; }
+  .src { font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; }
+  .src a { color: var(--lilac); }
+  .none { justify-self: start; }
+  .tw { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); margin-top: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--surface-2); color: var(--muted); font-weight: 600; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td.n { text-align: right; }
+  .win { color: var(--gold); font-weight: 600; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--surface-2); border: 1px solid var(--line); padding: 8px 14px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .toast.on { opacity: 1; }
+  @media (max-width: 620px) { .clips { grid-template-columns: repeat(3, minmax(0, 1fr)); } .sitems { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+
+<main class="wrap">
+  <header>
+    <p class="eyebrow">괴물런 · 모델 테스트 1회차 · docs/prd/19-monster-sound.md 11·12장</p>
+    <h1>목소리 <span>테스트</span></h1>
+    <p class="lede" id="lede"></p>
+  </header>
+  <div class="bar"><div class="row">
+    <button type="button" class="tog" id="dspTog" aria-pressed="false">변조 켜기</button>
+    <button type="button" class="tog reveal" id="revTog" aria-pressed="false">엔진 공개</button>
+    <span class="save" id="save">이 브라우저에 저장됨</span>
+    <span class="prog" id="prog"></span>
+  </div></div>
+  <div id="roles"></div>
+  <section class="sfx" id="sfxSec"></section>
+  <section class="res" id="res"></section>
+  <section class="res">
+    <div class="rh"><h2>전체 메모</h2></div>
+    <textarea class="memo" id="memoAll" aria-label="전체 메모" placeholder="예: 캐스터는 Chatterbox가 제일 흥분됨. 할매는 전부 사투리가 어색"></textarea>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const DATA = /*DATA*/null;
+const KEY = 'rw-lab-v1';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+const STOP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 7h10v10H7z"/></svg>';
+const LINES = DATA.roles.flatMap((r) => r.lines);
+const CLIP = Object.fromEntries(LINES.flatMap((l) => l.clips.map((c) => [c.id, c])));
+
+let S = { pick: {}, sfx: {}, memo: {}, dsp: false, reveal: false }, pending = false;
+function clean(v) {
+  const o = { pick: {}, sfx: {}, memo: {}, dsp: !!v.dsp, reveal: !!v.reveal };
+  for (const [k, x] of Object.entries(v.pick || {})) if (CLIP[x] && LINES.some((l) => l.id === k)) o.pick[k] = x;
+  for (const [k, x] of Object.entries(v.sfx || {})) if (DATA.sfx.some((s) => s.id === k)) o.sfx[k] = x;
+  for (const [k, x] of Object.entries(v.memo || {})) o.memo[k] = String(x || '').slice(0, 4000);
+  return o;
+}
+try { const j = JSON.parse(localStorage.getItem(KEY) || 'null'); if (j) { S = clean(j); pending = !!j.pending; } } catch (e) { }
+function saveLocal(p) { try { localStorage.setItem(KEY, JSON.stringify({ ...S, pending: p })); } catch (e) { } }
+
+let db = null, saveT = 0, saving = false;
+function persist() {
+  pending = true; saveLocal(true);
+  if (!db) { $('#save').textContent = '이 브라우저에 저장됨'; return; }
+  $('#save').textContent = '저장 중…';
+  clearTimeout(saveT); saveT = setTimeout(flush, 600);
+}
+async function flush() {
+  if (!db) return;
+  if (saving) { saveT = setTimeout(flush, 400); return; }
+  saving = true;
+  try { await db.doc('lab/state').set({ pick: S.pick, sfx: S.sfx, memo: S.memo, updatedAt: new Date().toISOString() }); pending = false; saveLocal(false); $('#save').textContent = '저장됨'; }
+  catch (e) { $('#save').textContent = '저장 실패. 메모를 따로 옮겨 두자'; }
+  saving = false;
+}
+
+function lede() {
+  const n = LINES.length;
+  $('#lede').innerHTML = `같은 대사 ${n}줄을 TTS 세 개로 두 번씩 만들었다. 줄마다 1~6번을 듣고 제일 나은 것에 <b>고름</b>을 누른다. 번호와 엔진의 짝은 줄마다 섞여 있다. ` +
+    `괴물 네 역할은 <b>변조 켜기</b>로 피치·잔향을 입힌 소리도 들을 수 있다. 다 고르면 <b>엔진 공개</b>로 어느 엔진이 이겼는지 본다. 끝나면 대화창에 "모델 검수 끝"이라고 말하면 된다.`;
+}
+function prog() {
+  const a = Object.keys(S.pick).length, b = Object.keys(S.sfx).length;
+  $('#prog').textContent = `대사 ${a}/${LINES.length} · 효과음 ${b}/${DATA.sfx.length}`;
+}
+function clipHTML(l, c, i) {
+  const f = S.dsp && c.dsp ? c.dsp : c.file;
+  const on = S.pick[l.id] === c.id;
+  const e = DATA.engines[c.engine];
+  const who = S.reveal ? `<div class="who">${esc(e.name)}<small>${esc(e.takes[c.take])} · 오류율 ${c.cer.toFixed(2)}</small></div>` : '';
+  return `<div class="clip"><button type="button" class="play" data-play="${esc(f)}" aria-label="${esc(l.text)} ${i + 1}번 재생">${PLAY}${i + 1}</button>` +
+    `<button type="button" class="pick" data-line="${esc(l.id)}" data-clip="${esc(c.id)}" aria-pressed="${on}">${on ? '고름' : '고르기'}</button>${who}</div>`;
+}
+function renderRoles() {
+  $('#roles').innerHTML = DATA.roles.map((r) => `<section class="role" id="r-${esc(r.id)}">
+    <div class="rh"><h2>${esc(r.ko)}</h2><span class="sub">${esc(r.sub)}${r.dsp ? ' · 변조 있음' : ''}</span></div>
+    <div class="ref"><button type="button" class="play" style="width:auto;padding:6px 12px;white-space:nowrap;flex:none" data-play="${esc(r.ref)}" aria-label="${esc(r.ko)} 기준 목소리 재생">${PLAY}기준 목소리</button><span>Qwen3 목소리 설계로 만든 참조. 복제 테이크는 이 음색을 따른다</span></div>
+    ${r.lines.map((l) => `<div class="line${S.pick[l.id] ? ' done' : ''}"><div><div class="lt">${esc(l.text)}</div><div class="ld">${esc(l.dir)}</div></div>
+      <div class="clips">${l.clips.map((c, i) => clipHTML(l, c, i)).join('')}</div></div>`).join('')}
+    <textarea class="memo" data-memo="${esc(r.id)}" aria-label="${esc(r.ko)} 메모" placeholder="${esc(r.ko)} 메모(선택)">${esc(S.memo[r.id] || '')}</textarea>
+  </section>`).join('');
+}
+function renderSfx() {
+  if (!DATA.sfx.length) { $('#sfxSec').innerHTML = ''; return; }
+  $('#sfxSec').innerHTML = `<div class="rh"><h2>효과음</h2><span class="sub">CC0 녹음 후보. AI 생성(Stable Audio Open)은 허깅페이스 토큰이 생기면 같은 자리에 붙인다</span></div>` +
+    DATA.sfx.map((k) => `<div class="sfxk"><div class="kt">${esc(k.name)}</div><div class="sitems">${k.items.map((it) => {
+      const on = S.sfx[k.id] === it.n;
+      return `<div class="sitem"><button type="button" class="play" data-play="${esc(it.file)}" aria-label="${esc(k.name)} ${it.n}번 재생">${PLAY}${it.n}</button>
+        <button type="button" class="pick" data-sfx="${esc(k.id)}" data-n="${it.n}" aria-pressed="${on}">${on ? '고름' : '고르기'}</button>
+        <div class="src">${esc(it.title || '')} · ${esc(it.author || '')} · ${esc(it.license)}${it.source_url ? ` · <a href="${esc(it.source_url)}" target="_blank" rel="noopener">출처</a>` : ''}</div></div>`;
+    }).join('')}</div>
+    <button type="button" class="pick none" style="width:auto;padding:4px 12px" data-sfx="${esc(k.id)}" data-n="none" aria-pressed="${S.sfx[k.id] === 'none'}">다 별로</button></div>`).join('');
+}
+function renderRes() {
+  const E = Object.keys(DATA.engines);
+  const cnt = (rid) => { const o = Object.fromEntries(E.map((e) => [e, 0])); for (const l of (DATA.roles.find((r) => r.id === rid) || { lines: [] }).lines) { const c = CLIP[S.pick[l.id]]; if (c) o[c.engine]++; } return o; };
+  const head = `<tr><th>역할</th>${E.map((e) => `<th>${S.reveal ? esc(DATA.engines[e].name) : '엔진 ?'}</th>`).join('')}</tr>`;
+  const tot = Object.fromEntries(E.map((e) => [e, 0]));
+  const rows = DATA.roles.map((r) => { const c = cnt(r.id); const mx = Math.max(...E.map((e) => c[e])); E.forEach((e) => tot[e] += c[e]);
+    return `<tr><td>${esc(r.ko)}</td>${E.map((e) => `<td class="n${S.reveal && mx > 0 && c[e] === mx ? ' win' : ''}">${S.reveal ? c[e] : '·'}</td>`).join('')}</tr>`; }).join('');
+  const tmx = Math.max(...E.map((e) => tot[e]));
+  const foot = `<tr><td>합계</td>${E.map((e) => `<td class="n${S.reveal && tmx > 0 && tot[e] === tmx ? ' win' : ''}">${S.reveal ? tot[e] : '·'}</td>`).join('')}</tr>`;
+  const asr = `<tr><td>평균 글자 오류율(ASR)</td>${E.map((e) => `<td class="n">${S.reveal ? (DATA.engines[e].cer ?? '-') : '·'}</td>`).join('')}</tr>`;
+  const runs = DATA.runs.length ? `<div class="tw"><table><thead><tr><th>실행</th><th>GPU</th><th>조각</th><th>걸린 시간</th><th>비용</th></tr></thead><tbody>${DATA.runs.map((r) =>
+    `<tr><td>${esc(r.what)}</td><td>${esc(r.gpu || '-')}</td><td class="n">${esc(r.clips)}</td><td class="n">${r.wall_s != null ? Math.round(r.wall_s / 60) + '분' : '-'}</td><td class="n">${r.usd != null ? '$' + Number(r.usd).toFixed(2) : '청구 전'}</td></tr>`).join('')}</tbody></table></div>` : '';
+  $('#res').innerHTML = `<div class="rh"><h2>결과</h2><span class="sub">${S.reveal ? '역할별로 "고름"을 가장 많이 받은 엔진이 금색' : '엔진 공개를 누르면 보인다'}</span></div>
+    <div class="tw"><table><thead>${head}</thead><tbody>${rows}${foot}${asr}</tbody></table></div>${runs}
+    <p class="note">오류율은 한국어 음성 인식이 대사를 얼마나 틀리게 읽었는지다. 낮을수록 또렷하다. 속삭임·흐느낌은 원래 높게 나온다.</p>`;
+}
+function renderAll() { lede(); prog(); renderRoles(); renderSfx(); renderRes(); $('#dspTog').setAttribute('aria-pressed', S.dsp); $('#revTog').setAttribute('aria-pressed', S.reveal); $('#memoAll').value = S.memo._all || ''; }
+
+const audio = new Audio(); let playing = null;
+audio.addEventListener('ended', () => setPlaying(null));
+function setPlaying(f) {
+  playing = f;
+  document.querySelectorAll('[data-play]').forEach((b) => { const on = b.dataset.play === f; b.classList.toggle('on', on); const s = b.querySelector('svg'); if (s) s.outerHTML = on ? STOP : PLAY; });
+}
+function play(f) {
+  if (playing === f) { audio.pause(); setPlaying(null); return; }
+  audio.src = f; audio.currentTime = 0;
+  audio.play().then(() => setPlaying(f)).catch((e) => { if (e && e.name === 'AbortError') return; toast('재생이 안 된다. 다시 눌러 보자'); setPlaying(null); });
+}
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.play) { play(t.dataset.play); return; }
+  if (t.dataset.line) {
+    const k = t.dataset.line; S.pick[k] = S.pick[k] === t.dataset.clip ? undefined : t.dataset.clip; if (!S.pick[k]) delete S.pick[k];
+    persist(); const y = window.scrollY; renderRoles(); renderRes(); prog(); window.scrollTo(0, y); return;
+  }
+  if (t.dataset.sfx) {
+    const k = t.dataset.sfx, v = t.dataset.n === 'none' ? 'none' : Number(t.dataset.n);
+    if (S.sfx[k] === v) delete S.sfx[k]; else S.sfx[k] = v;
+    persist(); const y = window.scrollY; renderSfx(); prog(); window.scrollTo(0, y); return;
+  }
+  if (t.id === 'dspTog') { S.dsp = !S.dsp; saveLocal(pending); audio.pause(); setPlaying(null); const y = window.scrollY; renderRoles(); window.scrollTo(0, y); t.setAttribute('aria-pressed', S.dsp); toast(S.dsp ? '괴물 역할은 변조한 소리로 재생' : '원래 소리로 재생'); return; }
+  if (t.id === 'revTog') { S.reveal = !S.reveal; saveLocal(pending); const y = window.scrollY; renderRoles(); renderRes(); window.scrollTo(0, y); t.setAttribute('aria-pressed', S.reveal); return; }
+});
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.memo) { S.memo[t.dataset.memo] = t.value; persist(); }
+  else if (t.id === 'memoAll') { S.memo._all = t.value; persist(); }
+});
+let toastT = 0;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 1800); }
+
+renderAll();
+
+// claude.ai에 올린 페이지면 서버(db)가 기준이다. 이 브라우저에서 못 올린 변경만 얹는다
+(async () => {
+  if (!(window.claude && window.claude.use)) return;
+  try {
+    const d = await window.claude.use('db');
+    if (!d) return;
+    const snap = await d.doc('lab/state').get();
+    const local = { ...S };
+    if (snap.exists) { const v = clean(snap.data() || {}); S = { ...v, dsp: local.dsp, reveal: local.reveal }; if (pending) S = local; }
+    db = d;
+    const any = Object.keys(S.pick).length || Object.keys(S.sfx).length || Object.values(S.memo).some(Boolean);
+    if ((snap.exists && pending) || (!snap.exists && any)) persist(); else { pending = false; saveLocal(false); $('#save').textContent = '저장됨'; }
+    const y = window.scrollY; renderAll(); window.scrollTo(0, y);
+  } catch (e) { db = null; $('#save').textContent = '이 브라우저에 저장됨'; }
+})();
+</script>
