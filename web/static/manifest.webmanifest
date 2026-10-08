@@ -3,7 +3,7 @@
   "lang": "ko",
   "name": "러너웨이",
   "short_name": "러너웨이",
-  "description": "정한 페이스로 따라오는 상대. 경주 모드와 공포 모드.",
+  "description": "정한 페이스로 뒤에서 쫓아오는 아무개씨. 잡히지 마라.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

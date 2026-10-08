@@ -2,15 +2,14 @@
 <meta name="theme-color" content="#0a0f0d">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
 <style>
-  :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--red-dim:#7a1d17;--orange:#ff9a3c;--yellow:#ffd93d;--acc:var(--green);
+  :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--red-dim:#7a1d17;--orange:#ff9a3c;--yellow:#ffd93d;--acc:var(--red);
     --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
-  body.horror{--acc:var(--red)}
   *{box-sizing:border-box}html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
   body.flash{background:#5a0f0a}
   button{font-family:inherit;color:inherit;cursor:pointer}
   .screen{display:none;min-height:100vh;padding:16px 16px 40px;max-width:560px;margin:0 auto}.screen.on{display:block}
-  h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--green)}
+  h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--red)}
   h2{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;margin:8px 0 12px;color:var(--acc)}
   h3{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--dim);margin:24px 0 8px;font-weight:500}
   .sub{color:var(--dim);font-size:13px;margin:0 0 18px}
@@ -19,17 +18,12 @@
   .seg button.on{border-color:var(--acc);color:var(--acc)}
   .card{background:var(--panel);border:1px solid var(--line);padding:10px 12px;font-family:var(--mono);font-size:12px;color:var(--dim);white-space:pre-wrap}
   .card.ok{border-color:var(--green-dim);color:var(--text)}.card.bad{border-color:var(--red);color:var(--text)}
-  .mode{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);padding:18px 16px;margin:0 0 12px}
-  .mode b{display:block;font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1;margin-bottom:6px}
-  .mode span{display:block;color:var(--dim);font-size:14px;line-height:1.55}
-  .mode.race b{color:var(--green)}.mode.race:active{border-color:var(--green)}
-  .mode.horror b{color:var(--red)}.mode.horror:active{border-color:var(--red)}
   .back{background:none;border:0;color:var(--dim);font-family:var(--mono);font-size:13px;padding:8px 0}
   .stp{display:grid;grid-template-columns:1fr 52px 112px 52px;gap:6px;align-items:center;margin:8px 0}
   .stp .k{font-size:14px}.stp .k small{display:block;font-family:var(--mono);font-size:10px;color:var(--dim)}
   .stp button{height:46px;background:var(--panel);border:1px solid var(--line);font-family:var(--mono);font-size:22px;touch-action:manipulation}
   .stp .v{text-align:center;font-family:var(--mono);font-size:20px}
-  .big{display:block;width:100%;background:var(--acc);color:#04120c;border:0;padding:16px;font-family:var(--display);font-size:26px;margin-top:22px}
+  .big{display:block;width:100%;background:var(--acc);color:#140403;border:0;padding:16px;font-family:var(--display);font-size:26px;margin-top:22px}
   .ghost{display:block;background:transparent;border:1px solid var(--line);padding:12px;font-family:var(--mono);font-size:13px;width:100%;margin-top:8px}
   details.set{margin-top:26px;border-top:1px solid var(--line)}
   details.set summary{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim);padding:14px 2px;cursor:pointer}
@@ -38,12 +32,11 @@
   .rhead{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.08em}
   .gapbox{text-align:center;padding:26px 0 18px}
   #gapBig{font-family:var(--display);font-size:96px;line-height:1;color:var(--text)}
-  #gapBig.ahead{color:var(--green)}#gapBig.behind{color:var(--red)}#gapBig.warn{color:var(--orange)}#gapBig.dim{color:var(--dim)}
+  #gapBig.behind{color:var(--red)}#gapBig.warn{color:var(--orange)}#gapBig.dim{color:var(--dim)}
   #gapSub{font-family:var(--mono);font-size:14px;color:var(--dim);margin-top:8px;min-height:21px}
   .bar{position:relative;height:16px;background:var(--panel);border:1px solid var(--line);margin:8px 0 14px}
   .bar i{position:absolute;top:-5px;width:4px;height:24px;margin-left:-2px;transition:left .3s}
   #barMe{background:var(--text)}#barOpp{background:var(--acc)}
-  body.horror #barOpp{background:var(--red)}
   .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
   .num{background:var(--panel);border:1px solid var(--line);padding:8px}
   .num b{display:block;font-family:var(--mono);font-size:24px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
@@ -71,9 +64,9 @@
   .rv button.playing{border-color:var(--acc);color:var(--acc)}
 </style>
 
-<div id="pickMode" class="screen on">
+<div id="home" class="screen on">
   <h1>러너웨이</h1>
-  <p class="sub">상대는 당신이 정한 페이스 그대로 달린다. 이기려면 그보다 빨라야 한다.</p>
+  <p class="sub">아무개씨가 정한 페이스로 뒤에서 쫓아온다. 잡히지 마라.</p>
 
   <div class="card bad" id="embedWarn" style="display:none;white-space:normal;line-height:1.6;margin-bottom:12px">
     <b style="color:var(--red)">여기서는 실주행이 안 된다.</b><br>
@@ -82,9 +75,11 @@
     <a id="siteLink" href="#" target="_blank" rel="noopener" style="color:var(--green);word-break:break-all"></a>
   </div>
 
-  <button class="mode race" data-mode="race"><b>경주 모드</b><span>당신을 긁는 짜증나는 상대와 경주해 보세요. 상대는 당신이 설정한 페이스로 뜁니다</span></button>
-  <button class="mode horror" data-mode="horror"><b>공포 모드</b><span>당신을 쫓아오는 아무개씨를 피해 도망가세요. 상대는 당신이 설정한 페이스로 당신을 쫓아옵니다</span></button>
-  <p class="sub" style="margin-top:14px">이어폰을 끼면 화면은 안 봐도 된다.<br>차도와 횡단보도에서는 게임보다 신호를 먼저 본다.</p>
+  <div class="seg" id="kind"><button data-v="normal" class="on">일반런</button><button data-v="build">빌드업</button><button data-v="interval">인터벌</button></div>
+  <div id="params"></div>
+  <div class="card" id="planSum" style="margin-top:14px;white-space:normal;line-height:1.6"></div>
+  <button class="big" id="start">출발</button>
+  <p class="sub" style="margin-top:12px">이어폰을 끼면 화면은 안 봐도 된다. 차도와 횡단보도에서는 신호를 먼저 본다.</p>
 
   <details class="set" id="setBox">
     <summary>설정 · GPS 확인 · 소리 검수</summary>
@@ -93,24 +88,14 @@
     <button class="ghost" id="gpsTest">GPS 확인</button>
     <div class="lbl">위치</div>
     <div class="seg" id="src"><button data-v="gps" class="on">실주행 GPS</button><button data-v="demo">실내 데모</button></div>
-    <p class="sub" style="margin-top:6px">실내 데모: 녹화된 시속 10km 주행을 10배속으로 돌린다. 소리와 대사 확인용.</p>
+    <p class="sub" style="margin-top:6px">실내 데모: 녹화된 시속 10km 주행을 10배속으로 돌린다. 소리 확인용.</p>
     <div id="iosAudioBox" style="display:none">
       <div class="lbl">아이폰 소리</div>
       <div class="seg" id="iosAudio"><button data-v="playback" class="on">무음에서도 들림</button><button data-v="ambient">음악과 같이</button></div>
       <p class="sub" style="margin-top:6px">무음에서도 들림: 옆 스위치가 무음이어도 소리가 난다. 대신 듣던 음악이 멈춘다.<br>음악과 같이: 음악 위에 겹쳐 들린다. 대신 무음 모드면 아무 소리도 안 난다.</p>
     </div>
-    <button class="ghost" id="openReview">소리 · 대사 검수</button>
+    <button class="ghost" id="openReview">소리 검수</button>
   </details>
-</div>
-
-<div id="setup" class="screen">
-  <button class="back" id="back">&lt; 모드 다시 고르기</button>
-  <h2 id="setupTitle">경주 모드</h2>
-  <div class="seg" id="kind"><button data-v="normal" class="on">일반런</button><button data-v="build">빌드업</button><button data-v="interval">인터벌</button></div>
-  <p class="sub" id="kindDesc" style="margin-top:10px"></p>
-  <div id="params"></div>
-  <div class="card" id="planSum" style="margin-top:14px;white-space:normal;line-height:1.6"></div>
-  <button class="big" id="start">출발</button>
 </div>
 
 <div id="run" class="screen">
@@ -134,7 +119,7 @@
     <ul style="padding-left:18px;line-height:1.8;margin:0 0 22px">
       <li>차도와 횡단보도에서는 게임보다 신호를 먼저 본다</li>
       <li>이어폰 음량은 차 소리가 들리는 수준으로 유지한다</li>
-      <li>멈춰 서면 상대도 멈춘다. 신호등에서 무리하지 않는다</li>
+      <li>멈춰 서면 아무개씨도 멈춘다. 신호등에서 무리하지 않는다</li>
       <li>사고는 앱이 막아주지 않는다</li>
     </ul>
     <button class="big" id="safetyOk" style="--acc:var(--green)">알겠다</button>
@@ -159,19 +144,15 @@
 
 <div id="review" class="screen">
   <button class="back" id="reviewBack">&lt; 돌아가기</button>
-  <h2 style="color:var(--text)">소리 · 대사 검수</h2>
-  <p class="sub">이어폰으로 들을 것. 아무개씨 발소리는 뒤에서 난다.<br>소리를 바꾸려면 같은 이름의 녹음을 web/sounds/에 넣는다(web/sounds/README.md).</p>
+  <h2 style="color:var(--text)">소리 검수</h2>
+  <p class="sub">이어폰으로 들을 것. 아무개씨 소리는 뒤에서 난다.<br>소리를 바꾸려면 같은 이름의 녹음을 web/sounds/에 넣는다(web/sounds/README.md).</p>
   <button class="ghost" id="reviewStop">모두 정지</button>
-  <h3>공포 모드 소리</h3><div id="rvHorror"></div>
-  <h3>경주 모드 소리</h3><div id="rvRace"></div>
-  <h3>경주 모드 대사 · 상황별로 한 줄씩 무작위</h3><div id="rvLines"></div>
+  <div id="rvList"></div>
 </div>
 
 <script><!--CORE--></script>
 <script><!--GAME--></script>
 <script><!--SOUND--></script>
-<script><!--LINES--></script>
-<script><!--VOICE--></script>
 <script><!--REPLAYS--></script>
 <script><!--SOUNDS--></script>
 <script>
@@ -183,21 +164,19 @@ const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) {
 // 아이폰·아이패드. 아이패드 사파리는 맥이라고 자칭하므로 터치 여부로 가린다
 const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const QS = new URLSearchParams(location.search);
-const st = { src: 'gps', demoMs: Number(QS.get('demoMs')) || 100, wake: null, watchId: null, lastFix: null, timer: null, game: null, talk: null, log: [], tickN: 0, manualPause: false,
+const st = { src: 'gps', demoMs: Number(QS.get('demoMs')) || 100, wake: null, watchId: null, lastFix: null, timer: null, game: null, log: [], tickN: 0, manualPause: false,
   builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, hold: null, win: [], still: false, gpsReady: false, coarse: false, pocket: false };
-const DEF = { mode: 'race', type: 'normal', distM: 5000, pace: 360, p0: 390, p1: 300, ipace: 270, setM: 400, sets: 6, restS: 90 };
+const DEF = { type: 'normal', distM: 5000, pace: 360, p0: 390, p1: 300, ipace: 270, setM: 400, sets: 6, restS: 90 };
 let cfg = { ...DEF };
 try { cfg = { ...DEF, ...JSON.parse(localStorage.getItem('rw.cfg') || '{}') }; } catch (e) { }
 const saveCfg = () => { try { localStorage.setItem('rw.cfg', JSON.stringify(cfg)); } catch (e) { } };
 const fmt = (s) => { s = Math.max(0, Math.round(s)); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, r = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(r).padStart(2, '0'); };
 const paceFmt = (p) => (p ? fmt(p) : '-');
-const MODE_KO = { race: '경주', horror: '공포' }, KIND_KO = { normal: '일반런', build: '빌드업', interval: '인터벌' };
+const KIND_KO = { normal: '일반런', build: '빌드업', interval: '인터벌' };
 
-// ---------- 모드 고르기 ----------
+// ---------- 첫 화면 ----------
 function seg(id, on) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.toggle('on', x === b)); on(b.dataset.v); }); }
 const segSet = (id, v) => [...$(id).children].forEach(x => x.classList.toggle('on', x.dataset.v === v));
-document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => { cfg.mode = b.dataset.mode; saveCfg(); if (cfg.mode === 'race') vpLoad(); openSetup(); }));
-$('#back').addEventListener('click', () => show('pickMode'));
 seg('#src', v => { st.src = v; });
 $('#gpsTest').addEventListener('click', () => {
   const c = $('#gpsCard'); c.className = 'card'; c.textContent = '요청 중… 권한 창이 뜨면 허용.';
@@ -216,18 +195,12 @@ const P = {
   ipace: { k: '인터벌 페이스', n: '/km', min: 150, max: 720, step: 5, f: paceFmt },
   setM: { k: '세트당 거리', min: 100, max: 3000, step: 100, f: v => v + ' m' },
   sets: { k: '세트 수', min: 1, max: 20, step: 1, f: v => v + '세트' },
-  restS: { k: '회복 시간', n: '상대 없음', min: 15, max: 300, step: 15, f: v => fmt(v) },
+  restS: { k: '회복 시간', n: '아무개씨 없음', min: 15, max: 300, step: 15, f: v => fmt(v) },
 };
 const KINDS = { normal: ['distM', 'pace'], build: ['distM', 'p0', 'p1'], interval: ['ipace', 'setM', 'sets', 'restS'] };
-const KIND_DESC = { normal: '거리와 페이스를 정하고 끝까지 일정하게.', build: '느리게 시작해 점점 빠르게. 상대 페이스가 거리에 따라 시작에서 종료 페이스로 곧게 빨라진다.', interval: '정한 페이스로 한 세트를 달리고 회복, 반복. 회복 중에는 상대가 없다.' };
-function openSetup() {
-  document.body.classList.toggle('horror', cfg.mode === 'horror');
-  $('#setupTitle').textContent = MODE_KO[cfg.mode] + ' 모드';
-  segSet('#kind', cfg.type); drawParams(); show('setup');
-}
+function home() { segSet('#kind', cfg.type); drawParams(); show('home'); }
 seg('#kind', v => { cfg.type = v; saveCfg(); drawParams(); });
 function drawParams() {
-  $('#kindDesc').textContent = KIND_DESC[cfg.type];
   const box = $('#params'); box.innerHTML = '';
   for (const key of KINDS[cfg.type]) {
     const p = P[key], d = document.createElement('div'); d.className = 'stp';
@@ -245,16 +218,14 @@ function drawParams() {
   planSum();
 }
 function planSum() {
-  const p = GAME.plan(cfg), s0 = p.sets[0], who = cfg.mode === 'race' ? '상대' : '아무개씨';
-  let t = '';
-  if (cfg.type === 'interval') {
-    t = `${cfg.setM}m × ${cfg.sets}세트 · 총 ${(cfg.setM * cfg.sets / 1000).toFixed(1)} km<br>${who}는 세트당 ${fmt(GAME.planTimeS(s0))} · 회복 ${fmt(cfg.restS)}`;
-  } else {
-    t = `${who}의 기록 ${fmt(GAME.planTimeS(s0))}` + (cfg.type === 'build' ? ` · ${paceFmt(s0.p0)}에서 ${paceFmt(s0.p1)}까지 빨라진다` : ` · ${paceFmt(s0.p0)}/km 고정`);
+  const p = GAME.plan(cfg), s0 = p.sets[0];
+  let t = `아무개씨 ${Math.round(GAME.headM(s0))}m 뒤에서 출발 · `;
+  if (cfg.type === 'interval') t += `세트당 ${fmt(GAME.planTimeS(s0))}<br>총 ${(cfg.setM * cfg.sets / 1000).toFixed(1)} km · 회복 중에는 안 쫓아온다`;
+  else {
+    t += cfg.type === 'build' ? `${paceFmt(s0.p0)}에서 ${paceFmt(s0.p1)}까지 빨라진다` : `${paceFmt(s0.p0)}/km 고정`;
+    t += `<br>그 페이스로 완주 ${fmt(GAME.planTimeS(s0))}`;
     if (cfg.type === 'build' && s0.p1 >= s0.p0) t += '<br><span style="color:var(--orange)">종료 페이스가 시작보다 빨라야(숫자가 작아야) 빌드업이다</span>';
   }
-  if (cfg.mode === 'horror') t += `<br>아무개씨는 약 ${Math.round(GAME.headM(s0))}m 뒤에서 출발한다. 잡히면 비명, 다시 뒤로.`;
-  else t += '<br>상대는 옆에서 같이 출발한다.';
   $('#planSum').innerHTML = t;
 }
 
@@ -311,72 +282,6 @@ function newEngine() {
 }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
-
-// ---------- 경주모드 말 ----------
-// 미리 구운 AI 음성(web/voice/bake.py)을 튼다. 조각이 없는 줄(안 구웠거나 팩을 못 받음)만 기기 음성(TTS)으로 읽는다
-// 대사는 web/race_lines.md. 우선순위 큐 + 최소 간격 + 유통기한
-const TTS = { q: [], busy: false, lastEnd: 0, tok: 0, pick: GAME.picker(), GAP_MS: 4000, srcs: [] };
-const HAS_PACK = typeof VOICE_PACK !== 'undefined' && VOICE_PACK.clips;
-const VP = { bin: null, p: null, cache: new Map() };
-const vrate = () => (st.src === 'demo' ? 1000 / st.demoMs : 1);
-function koVoice() { try { return speechSynthesis.getVoices().find(x => x.lang && x.lang.replace('_', '-').startsWith('ko')); } catch (e) { return null; } }
-/** 음성 팩(한 파일)을 받는다. 경주 모드를 고르면 바로 받기 시작한다. 서비스 워커가 캐시해 두 번째부터는 오프라인에서도 된다 */
-function vpLoad() {
-  if (!HAS_PACK || VP.p || location.protocol === 'file:') return VP.p;
-  VP.p = fetch('voice/race.bin?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
-    .then(b => { VP.bin = b; }).catch(e => { VP.p = null; log('음성 팩 실패 → 기기 음성 ' + e.message); });
-  return VP.p;
-}
-/** 조각 하나를 필요할 때 디코드한다. 최근 것 몇 개만 들고 있는다 */
-function clipBuf(id) {
-  const ix = HAS_PACK && VOICE_PACK.clips[id];
-  if (!ix || !VP.bin || !A.ctx) return Promise.resolve(null);
-  if (VP.cache.has(id)) return VP.cache.get(id);
-  const p = A.ctx.decodeAudioData(VP.bin.slice(ix[0], ix[0] + ix[1])).catch(() => null);
-  VP.cache.set(id, p); if (VP.cache.size > 30) VP.cache.delete(VP.cache.keys().next().value);
-  return p;
-}
-/** 한 줄 말하기. 구운 조각 → 없으면 기기 음성. done은 끝나면 한 번 */
-async function speakLine(id, text, tok, done) {
-  if (!VP.bin && VP.p && HAS_PACK && VOICE_PACK.clips[id]) await Promise.race([VP.p, new Promise(r => setTimeout(r, 3000))]);   // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새지 않게
-  const b = await clipBuf(id);
-  if (tok !== TTS.tok) return;
-  if (b) {
-    audioWake();
-    const s = A.ctx.createBufferSource(), g = A.ctx.createGain(); g.gain.value = 1.1; s.buffer = b; s.connect(g); g.connect(A.ctx.destination);
-    s.start(); TTS.srcs = [s]; log('음성(팩) ' + text);
-    setTimeout(done, b.duration * 1000 + 80); return;
-  }
-  if (!('speechSynthesis' in window)) { done(); return; }
-  const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = 1.08; const v = koVoice(); if (v) u.voice = v;
-  u.onend = u.onerror = done;   // 일부 안드로이드 웹뷰는 onend를 안 쏜다
-  speechSynthesis.speak(u); log('음성(기기) ' + text);
-  setTimeout(done, 1500 + text.length * 200);
-}
-function sayItems(items) {
-  for (const it of items) {
-    const line = TTS.pick(it.key, RACE_LINES[it.key]); if (!line) continue;
-    const text = GAME.fill(line, it.vars), id = GAME.clipId(line, it.vars), now = Date.now();
-    log(`말(${it.key}): ${text}`);
-    const ttl = [20000, 10000, 6000][it.pri] / vrate();
-    TTS.q = TTS.q.filter(x => x.until > now && !(x.key === it.key));
-    TTS.q.push({ key: it.key, id, text, pri: it.pri, until: now + ttl });
-  }
-  TTS.q.sort((a, b) => a.pri - b.pri);
-  ttsPump();
-}
-function ttsPump() {
-  if (TTS.busy || !TTS.q.length) return;
-  const now = Date.now(); TTS.q = TTS.q.filter(x => x.until > now); if (!TTS.q.length) return;
-  const wait = TTS.GAP_MS / vrate() - (now - TTS.lastEnd);
-  if (wait > 0 && TTS.q[0].pri > 0) { clearTimeout(TTS.t); TTS.t = setTimeout(ttsPump, wait); return; }
-  const it = TTS.q.shift(), tok = ++TTS.tok;
-  TTS.busy = true;
-  speakLine(it.id, it.text, tok, () => { if (tok !== TTS.tok || !TTS.busy) return; TTS.busy = false; TTS.lastEnd = Date.now(); ttsPump(); });
-}
-function ttsHush() { TTS.q = []; TTS.tok++; TTS.busy = false; for (const s of TTS.srcs) { try { s.stop(); } catch (e) { } } TTS.srcs = []; try { speechSynthesis.cancel(); } catch (e) { } }
-/** iOS는 사용자가 누른 순간에 한 번 말해야 그 뒤 기기 음성이 나온다 */
-function ttsUnlock() { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'ko-KR'; speechSynthesis.speak(u); } catch (e) { } }
 
 // ---------- 위치 ----------
 function startGps() {
@@ -445,7 +350,8 @@ function fixToRow(t, fix) {
 
 // ---------- 주행 ----------
 function log(s) { const t = st.game ? st.game.t : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
-const H = { armed: true, nextAmb: 0 };   // 공포 연출 상태
+// 공포 연출 상태. amb = 멀 때 주변에서 나는 소리(녹음이 없는 것은 빌드에서 빠져 있으면 조용하다)
+const H = { armed: true, nextAmb: 0, nextGrowl: 0, amb: ['creak', 'howl', 'ring', 'drag'] };
 /** 게임 시계는 벽시계에서 온다. setInterval 횟수로 세면 화면이 꺼져 쓰로틀될 때 슬로모션이 된다 */
 function tick() {
   if (st.src === 'demo') { step(); return; }
@@ -469,37 +375,34 @@ function step() {
   render(r.snap, fix);
   if (g.done) finish();
 }
-/** 사건 → 소리·말 */
+/** 사건 → 소리. 말은 없다. 비명과 포효는 잡힐 때만 */
 function handle(ev, snap) {
-  const horror = cfg.mode === 'horror', E = A.E;
+  const E = A.E;
   for (const e of ev) {
-    if (e.type !== 'count') log(e.type + (e.set ? ' ' + e.set : '') + (e.margin !== undefined ? ` 차이 ${e.margin.toFixed(1)}s` : '') + (e.type === 'caught' ? ' ' + e.n : ''));
+    if (e.type !== 'count') log(e.type + (e.set ? ' ' + e.set : '') + (e.type === 'caught' ? ' ' + e.n : ''));
     if (!E) continue;
-    if (e.type === 'ready' && horror) { for (const id of ['wind', 'drone', 'tension']) { const l = E.loop(id); l.level.setTargetAtTime(id === 'wind' ? 0.3 : 0, A.ctx.currentTime, 1.5); } E.setNear(0); E.heartOn = true; E.run(); }
-    if (e.type === 'count') E.one(horror ? 'tick' : 'r_tick');
-    if (e.type === 'go') { E.one(horror ? 'bell' : 'r_go'); if (horror) { E.stepsOn = true; H.armed = true; H.nextAmb = st.game.t + 30 + Math.random() * 30; } }
-    if (e.type === 'caught') { E.one('caught'); E.holdUntil = A.ctx.currentTime + 3; buzz([400, 100, 600]); flash(); }
-    if (e.type === 'setEnd' && !horror) E.one(e.win ? 'r_win' : 'r_lose');
-    if (e.type === 'rest' && horror) { E.stepsOn = false; E.setNear(0); E.one('safe'); }
-    if (e.type === 'finish' && horror) { E.stepsOn = false; E.heartOn = false; E.stopLoops(); if (!e.quit) E.one('door'); }
+    if (e.type === 'ready') { for (const id of ['wind', 'drone', 'tension']) { const l = E.loop(id); l.level.setTargetAtTime(id === 'wind' ? 0.3 : 0, A.ctx.currentTime, 1.5); } E.setNear(0); E.heartOn = true; E.run(); }
+    if (e.type === 'count') E.one('tick');
+    if (e.type === 'go') { E.one('bell'); E.stepsOn = true; H.armed = true; H.nextAmb = st.game.t + 30 + Math.random() * 30; H.nextGrowl = st.game.t + 10; }
+    if (e.type === 'caught') { const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('caught', { at: t + 0.2 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash(); }
+    if (e.type === 'rest') { E.stepsOn = false; E.setNear(0); E.one('safe'); }
+    if (e.type === 'finish') { E.stepsOn = false; E.heartOn = false; E.stopLoops(); if (!e.quit) E.one('door'); }
   }
-  if (!snap) return;
-  if (!horror) {
-    const items = st.talk.feed(snap, ev);
-    if (E && items.some(x => x.key === 'overtake_me' || x.key === 'overtaken')) E.one('r_pass');
-    if (items.length) sayItems(items);
-    return;
-  }
-  if (!E || snap.phase !== 'run') return;
-  // 공포: 거리 → 소리. 100m 밖은 거의 안 들리고 붙으면 귀 뒤에서 난다
-  const gap = snap.gap, near = Math.max(0, Math.min(1, 1 - gap / 100));
+  if (!E || !snap || snap.phase !== 'run') return;
+  // 거리 → 소리. 100m 밖은 거의 안 들리고 붙으면 귀 뒤에서 난다
+  const gap = snap.gap, near = Math.max(0, Math.min(1, 1 - gap / 100)), t = st.game.t;
   E.setNear(near); E.spm = E.cadence(snap.oppPace); E.stepsOn = !snap.frozen;
-  if (H.armed && gap < 20 && !snap.frozen) { H.armed = false; E.one('close'); buzz([60, 40, 60]); }
+  if (snap.frozen) return;
+  if (H.armed && gap < 20) { H.armed = false; E.one('close'); buzz([60, 40, 60]); }
   if (gap > 35) H.armed = true;
-  if (st.game.t >= H.nextAmb) {
-    H.nextAmb = st.game.t + 35 + Math.random() * 45;
+  // 45m 안이면 으르렁. 가까울수록 자주
+  if (gap < 45 && t >= H.nextGrowl) { H.nextGrowl = t + 8 + 12 * Math.max(0, gap) / 45 + Math.random() * 4; E.one('growl', { chase: true }); }
+  // 가끔 주변에서 무서운 소리. 멀면 먼 소리, 가까우면 귀 옆 속삭임
+  if (t >= H.nextAmb) {
+    H.nextAmb = t + 35 + Math.random() * 45;
     const side = Math.random() < 0.5 ? -0.85 : 0.85;
-    if (gap < 25) E.one('whisper', { side, far: 0.1 }); else E.one('creak', { side, far: 0.6 + Math.random() * 0.3 });
+    if (gap < 25) E.one('whisper', { side, far: 0.1 });
+    else { const id = H.amb[Math.floor(Math.random() * H.amb.length)]; E.one(id, { side, far: id === 'howl' ? 0.85 : 0.5 + Math.random() * 0.3 }); }
   }
 }
 function renderWait(fix) {
@@ -512,31 +415,23 @@ function renderWait(fix) {
   $('#dbg').textContent = (fix ? 'acc ' + fix.acc.toFixed(0) + 'm' : '신호 없음') + ' · 위치 대기';
 }
 function render(s, fix) {
-  const horror = cfg.mode === 'horror', big = $('#gapBig'), sub = $('#gapSub'), b = $('#banner');
+  const big = $('#gapBig'), sub = $('#gapSub'), b = $('#banner');
   $('#rSet').textContent = s.sets > 1 ? `세트 ${s.set}/${s.sets}` : '';
   $('#nDist').textContent = (s.dist / 1000).toFixed(2);
   $('#nTime').textContent = fmt(s.moving);
   $('#nPace').textContent = s.phase === 'run' ? paceFmt(s.myPace) : '-';
   $('#nTarget').textContent = s.phase === 'rest' ? '회복' : paceFmt(s.target);
   let vig = 0;
-  if (s.phase === 'ready') { big.textContent = '준비'; big.className = 'dim'; sub.textContent = horror ? '뒤에서 뭔가 움직인다' : '상대가 옆에 섰다'; }
+  if (s.phase === 'ready') { big.textContent = '준비'; big.className = 'dim'; sub.textContent = '뒤에서 뭔가 움직인다'; }
   else if (s.phase === 'count') { big.textContent = String(s.cd); big.className = ''; sub.textContent = s.set > 1 ? `${s.set}세트` : '출발 준비'; }
   else if (s.phase === 'rest') { big.textContent = fmt(s.rest); big.className = 'dim'; sub.textContent = `회복 · 다음 ${s.set}/${s.sets}세트`; }
   else if (s.phase === 'run') {
     const g = Math.round(s.gap);
-    if (horror) {
-      big.textContent = Math.max(0, g) + 'm'; big.className = g < 20 ? 'behind' : g < 45 ? 'warn' : '';
-      sub.textContent = s.caught ? `아무개씨가 뒤에 · 잡힘 ${s.caught}회` : '아무개씨가 뒤에';
-      vig = Math.pow(Math.max(0, Math.min(1, 1 - s.gap / 60)), 2);
-    } else if (s.oppDone) {
-      big.textContent = (s.distM - s.me).toFixed(0) + 'm'; big.className = 'behind'; sub.textContent = '상대는 도착했다 · 남은 거리';
-    } else {
-      big.textContent = (g > 0 ? '+' : '') + g + 'm'; big.className = g >= 3 ? 'ahead' : g <= -3 ? 'behind' : '';
-      const sec = Math.abs(s.gap) / (1000 / s.oppPace);
-      sub.textContent = Math.abs(g) < 3 ? '나란히' : (g > 0 ? '앞섬' : '뒤짐') + ` · 약 ${Math.round(sec)}초`;
-    }
+    big.textContent = Math.max(0, g) + 'm'; big.className = g < 20 ? 'behind' : g < 45 ? 'warn' : '';
+    sub.textContent = s.caught ? `아무개씨가 뒤에 · 잡힘 ${s.caught}회` : '아무개씨가 뒤에';
+    vig = Math.pow(Math.max(0, Math.min(1, 1 - s.gap / 60)), 2);
   }
-  $('#vig').style.opacity = horror ? vig.toFixed(2) : 0;
+  $('#vig').style.opacity = vig.toFixed(2);
   const pct = (x) => Math.max(0, Math.min(100, x / s.distM * 100)) + '%';
   $('#barMe').style.left = s.phase === 'run' ? pct(s.me) : '0%';
   $('#barOpp').style.left = s.phase === 'run' ? pct(s.opp) : '0%';
@@ -544,25 +439,23 @@ function render(s, fix) {
   b.className = 'banner';
   if (st.src === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr; }
   else if (Date.now() < (st.wakeWarnUntil || 0)) { b.className = 'banner bad'; b.textContent = IOS ? '화면이 꺼지면 멈춘다 · 설정 > 디스플레이 및 밝기 > 자동 잠금 > 안 함' : '화면이 꺼지면 멈춘다 · 화면 자동 꺼짐 시간을 늘려라'; }
-  else if (s.phase === 'run' && s.lost) { b.className = 'banner bad'; b.textContent = 'GPS 약함 · 판정 동결 · 상대도 멈춤'; }
-  else if (s.manual) b.textContent = '일시정지 · 상대도 멈춤';
-  else if (s.phase === 'run' && s.auto) b.textContent = '멈춤 · 상대도 멈춤';
+  else if (s.phase === 'run' && s.lost) { b.className = 'banner bad'; b.textContent = 'GPS 약함 · 판정 동결 · 아무개씨도 멈춤'; }
+  else if (s.manual) b.textContent = '일시정지 · 아무개씨도 멈춤';
+  else if (s.phase === 'run' && s.auto) b.textContent = '멈춤 · 아무개씨도 멈춤';
   else b.textContent = '';
-  $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m` : '신호 없음') + ` · ${st.src}` + (horror && A.E ? ` · 발 ${Math.round(A.E.spm)}spm` : '');
+  $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m` : '신호 없음') + ` · ${st.src}` + (A.E ? ` · 발 ${Math.round(A.E.spm)}spm` : '');
 }
 function start() {
   audioInit(); const E = newEngine();
-  if (cfg.mode === 'race') { vpLoad(); ttsUnlock(); try { speechSynthesis.getVoices(); } catch (e) { } }
-  ttsHush();
   const p = GAME.plan(cfg);
-  st.game = new GAME.Game(p); st.talk = new GAME.Talk(p); st.builder = new RW.TrackBuilder();
+  st.game = new GAME.Game(p); st.builder = new RW.TrackBuilder();
   st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.hold = null; st.win = []; st.still = false; st.gpsReady = false; st.coarse = false; st.pocket = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
   $('#pause').textContent = '일시정지';
   if (st.src === 'demo') { st.replay = REPLAYS.steady10; st.replayI = 0; } else startGps();
   wakeLock();
-  $('#rMode').textContent = MODE_KO[cfg.mode] + ' · ' + KIND_KO[cfg.type];
+  $('#rMode').textContent = KIND_KO[cfg.type];
   renderWait(null); show('run');
-  log(`시작 ${cfg.mode} ${cfg.type} ${JSON.stringify(p.sets[0])} ×${p.sets.length} ${st.src}`);
+  log(`시작 ${cfg.type} ${JSON.stringify(p.sets[0])} ×${p.sets.length} ${st.src}`);
   st.t0 = Date.now();
   st.timer = setInterval(tick, st.src === 'demo' ? st.demoMs : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
 }
@@ -575,32 +468,26 @@ function finish() {
   showResult(g.summary());
 }
 function showResult(s) {
-  const horror = s.mode === 'horror', inter = s.kind === 'interval', R = s.results;
+  const inter = s.kind === 'interval', R = s.results;
   let title, hero, fail = false, story;
-  const myT = R.reduce((a, r) => a + r.myT, 0), dist = R.reduce((a, r) => a + r.distM, 0);
+  const myT = R.reduce((a, r) => a + r.myT, 0), dist = R.reduce((a, r) => a + r.distM, 0), closest = Math.max(0, Math.round(s.minGap || 0));
   if (s.quit && !R.length) { title = '중단'; hero = fmt(s.moving); story = '끝까지 못 갔다.'; fail = true; }
-  else if (horror) {
+  else {
     fail = s.caught > 0;
     title = s.quit ? '중단' : fail ? '잡혔다' : '탈출 성공';
     hero = fail ? `잡힘 ${s.caught}회` : fmt(myT);
-    story = fail ? `아무개씨한테 ${s.caught}번 잡혔다. 가장 가까이 온 건 ${Math.max(0, Math.round(s.minGap || 0))}m.` : `한 번도 안 잡혔다. 가장 가까이 온 건 ${Math.max(0, Math.round(s.minGap || 0))}m.`;
-  } else if (inter) {
-    fail = s.wins < s.losses; title = s.quit ? '중단' : s.wins > s.losses ? '승리' : s.wins < s.losses ? '패배' : '무승부';
-    hero = `${s.wins}승 ${s.losses}패`; story = `세트 ${R.length}개 중 ${s.wins}개를 이겼다.`;
-  } else {
-    const m = R.length ? R[0].margin : 0; fail = m <= 0; title = s.quit ? '중단' : m > 0 ? '승리' : '패배';
-    hero = fmt(myT); story = R.length ? `상대보다 ${GAME.secText(m)} ${m > 0 ? '빨랐다' : '늦었다'}. 상대 기록 ${fmt(R[0].oppT)}.` : '';
+    story = (fail ? `아무개씨한테 ${s.caught}번 잡혔다.` : '한 번도 안 잡혔다.') + ` 가장 가까이 온 건 ${closest}m.`;
   }
-  $('#rLabel').textContent = title + (horror || inter ? '' : ' · 내 기록');
+  $('#rLabel').textContent = title;
   $('#rHero').textContent = hero; $('#rHero').className = 'hero' + (fail ? ' fail' : '');
-  $('#rSub').textContent = `${MODE_KO[s.mode]} 모드 · ${KIND_KO[s.kind]} · ${st.src === 'gps' ? '실주행' : '실내 데모'}`;
+  $('#rSub').textContent = `${KIND_KO[s.kind]} · ${st.src === 'gps' ? '실주행' : '실내 데모'}`;
   const avg = dist && myT ? myT / (dist / 1000) : (s.dist && s.moving ? s.moving / (s.dist / 1000) : 0);
   $('#rStats').innerHTML = [[(s.dist / 1000).toFixed(2), 'KM'], [fmt(s.moving), '이동 시간'], [paceFmt(avg), '평균 /KM']].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
   $('#rStory').textContent = story;
-  $('#rSets').innerHTML = inter && R.length ? '<table><tr><th>세트</th><th>나</th><th>' + (horror ? '잡힘' : '상대') + '</th><th>' + (horror ? '' : '차이') + '</th></tr>' +
-    R.map(r => `<tr><td>${r.set}</td><td>${fmt(r.myT)}</td><td>${horror ? r.caught : fmt(r.oppT)}</td><td>${horror ? '' : (r.win ? '+' : '-') + GAME.secText(r.margin)}</td></tr>`).join('') + '</table>' : '';
+  $('#rSets').innerHTML = inter && R.length ? '<table><tr><th>세트</th><th>나</th><th>잡힘</th></tr>' +
+    R.map(r => `<tr><td>${r.set}</td><td>${fmt(r.myT)}</td><td>${r.caught}</td></tr>`).join('') + '</table>' : '';
   $('#rLog').textContent = st.log.join('\n');
-  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), ...cfg, src: st.src, result: { title, hero, dist: s.dist, moving: s.moving, caught: s.caught, wins: s.wins, losses: s.losses } }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-50))); } catch (e) { }
+  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), ...cfg, src: st.src, result: { title, hero, dist: s.dist, moving: s.moving, caught: s.caught } }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-50))); } catch (e) { }
   st.lastResult = { title, hero, fail, dist: s.dist, moving: s.moving, avg, s };
   show('result'); drawShareCard();
 }
@@ -608,23 +495,23 @@ const SHARE_URL = '<!--SITE-->';
 /** 결과 이미지. 러닝 게임은 결과 스크린샷으로 퍼진다 */
 function drawShareCard() {
   const c = $('#shareCard'), g = c.getContext('2d'), W = 1080, r = st.lastResult; if (!r) return;
-  const horror = r.s.mode === 'horror', acc = r.fail ? '#ff4a3d' : horror ? '#ff4a3d' : '#3ff2a5';
-  g.fillStyle = horror ? '#0d0707' : '#0a0f0d'; g.fillRect(0, 0, W, W);
-  g.strokeStyle = horror ? '#2b1b1b' : '#1f2b27'; g.lineWidth = 2;
+  const acc = r.fail ? '#ff4a3d' : '#3ff2a5';
+  g.fillStyle = '#0d0707'; g.fillRect(0, 0, W, W);
+  g.strokeStyle = '#2b1b1b'; g.lineWidth = 2;
   for (let x = 90; x < W; x += 90) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, W); g.stroke(); }
   g.textAlign = 'center';
   g.fillStyle = '#7d8f88'; g.font = '44px "IBM Plex Mono", monospace';
-  g.fillText(`${MODE_KO[r.s.mode]} 모드 · ${KIND_KO[r.s.kind]}`, W / 2, 200);
+  g.fillText(`공포 · ${KIND_KO[r.s.kind]}`, W / 2, 200);
   g.fillStyle = acc; g.font = '140px "Black Han Sans", sans-serif'; g.fillText(r.title, W / 2, 400);
   g.fillStyle = '#dfe9e4'; g.font = '500 120px "IBM Plex Mono", monospace'; g.fillText(r.hero, W / 2, 580);
   g.fillStyle = '#dfe9e4'; g.font = '600 56px "IBM Plex Sans KR", sans-serif';
   g.fillText(`${(r.dist / 1000).toFixed(2)} km · ${fmt(r.moving)} · ${paceFmt(r.avg)}/km`, W / 2, 720);
-  g.fillStyle = '#3ff2a5'; g.font = '64px "Black Han Sans", sans-serif'; g.fillText('러너웨이', W / 2, 920);
+  g.fillStyle = '#ff4a3d'; g.font = '64px "Black Han Sans", sans-serif'; g.fillText('러너웨이', W / 2, 920);
   g.fillStyle = '#7d8f88'; g.font = '32px "IBM Plex Mono", monospace'; g.fillText(SHARE_URL, W / 2, 980);
 }
 async function shareCard() {
   const c = $('#shareCard'), r = st.lastResult;
-  const text = r ? `러너웨이 ${MODE_KO[r.s.mode]} 모드 ${r.title}. ${(r.dist / 1000).toFixed(2)}km ${fmt(r.moving)}` : '러너웨이';
+  const text = r ? `러너웨이 ${r.title}. ${(r.dist / 1000).toFixed(2)}km ${fmt(r.moving)}` : '러너웨이';
   const blob = await new Promise(res => c.toBlob(res, 'image/png'));
   const file = blob ? new File([blob], 'runaway.png', { type: 'image/png' }) : null;
   try {
@@ -638,7 +525,7 @@ $('#start').addEventListener('click', start);
 $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#share').addEventListener('click', shareCard);
-$('#again').addEventListener('click', () => openSetup());
+$('#again').addEventListener('click', home);
 $('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent; navigator.clipboard && navigator.clipboard.writeText(t); });
 $('#pocket').addEventListener('click', () => { st.pocket = true; $('#pocketCover').style.display = 'flex'; });
 $('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
@@ -680,32 +567,18 @@ function reviewEngine() {
 }
 function playing(btn, sec) { btn.classList.add('playing'); btn.textContent = '재생 중'; clearTimeout(btn._t); btn._t = setTimeout(() => { btn.classList.remove('playing'); btn.textContent = '재생'; }, sec * 1000); }
 function drawReview() {
-  for (const [box, mode] of [['#rvHorror', 'horror'], ['#rvRace', 'race']]) {
-    const el = $(box); el.innerHTML = '';
-    SND.LIST.filter(x => x.mode === mode).forEach((it) => {
-      const d = document.createElement('div'); d.className = 'rv';
-      d.innerHTML = `<div><b>${it.name}</b><code>${it.id}${HAS_SFX && SOUND_INDEX[it.id] ? ' · 녹음' : ''}</code><p>${it.when}</p><p>${it.desc}</p></div><button>재생</button>`;
-      d.querySelector('button').addEventListener('click', (e) => { const E = A.rv || reviewEngine(); playing(e.target, E.demo(it.id)); });
-      el.appendChild(d);
-    });
-  }
-  const SAMPLE = { km: 3, set: 2 };   // 변수가 든 줄은 이 값으로 들려준다
-  const el = $('#rvLines'); el.innerHTML = '';
-  for (const key of Object.keys(RACE_LINES)) {
-    const L = RACE_LINES[key], d = document.createElement('div'); d.className = 'rv';
-    const baked = HAS_PACK ? L.filter(t => VOICE_PACK.clips[GAME.clipId(t, SAMPLE)]).length : 0;
-    d.innerHTML = `<div><b>${RACE_LINE_INFO[key] || key}</b><code>${key} · ${L.length}줄 · 구움 ${baked}/${L.length}</code><p class="ln">${L.length ? GAME.fill(L[0], SAMPLE) : '(대사 없음)'}</p></div><button ${L.length ? '' : 'disabled'}>듣기</button>`;
-    d.querySelector('button').addEventListener('click', (e) => {
-      const line = TTS.pick(key, L); if (!line) return; const text = GAME.fill(line, SAMPLE);
-      d.querySelector('.ln').textContent = text; ttsHush();
-      speakLine(GAME.clipId(line, SAMPLE), text, TTS.tok, () => { });
-      playing(e.target, 1 + text.length * 0.15);
-    });
+  const el = $('#rvList'); el.innerHTML = '';
+  SND.LIST.forEach((it) => {
+    const rec = HAS_SFX && SOUND_INDEX[it.id];
+    const d = document.createElement('div'); d.className = 'rv';
+    d.innerHTML = `<div><b>${it.name}</b><code>${it.id}${rec ? ' · 녹음 ' + rec.length : ''}</code><p>${it.when}</p><p>${it.desc}</p></div><button>재생</button>`;
+    d.querySelector('button').addEventListener('click', (e) => { const E = A.rv || reviewEngine(); playing(e.target, E.demo(it.id)); });
     el.appendChild(d);
-  }
+  });
 }
-$('#openReview').addEventListener('click', () => { st.reviewFrom = 'pickMode'; reviewEngine(); vpLoad(); drawReview(); show('review'); });   // 엔진을 미리 만들어 녹음 디코드가 첫 재생 전에 끝나게
-$('#reviewBack').addEventListener('click', () => { $('#reviewStop').click(); show(st.reviewFrom || 'pickMode'); });
-$('#reviewStop').addEventListener('click', () => { if (A.rv) { A.rv.halt(); A.rv.stopLoops(); } reviewEngine(); ttsHush(); document.querySelectorAll('.rv button.playing').forEach(b => { clearTimeout(b._t); b.classList.remove('playing'); b.textContent = b.closest('#rvLines') ? '듣기' : '재생'; }); });
+$('#openReview').addEventListener('click', () => { reviewEngine(); drawReview(); show('review'); });   // 엔진을 미리 만들어 녹음 디코드가 첫 재생 전에 끝나게
+$('#reviewBack').addEventListener('click', () => { $('#reviewStop').click(); show('home'); });
+$('#reviewStop').addEventListener('click', () => { if (A.rv) { A.rv.halt(); A.rv.stopLoops(); } reviewEngine(); document.querySelectorAll('.rv button.playing').forEach(b => { clearTimeout(b._t); b.classList.remove('playing'); b.textContent = '재생'; }); });
+home();
 })();
 </script>

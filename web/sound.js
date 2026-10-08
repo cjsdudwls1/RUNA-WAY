@@ -1,35 +1,36 @@
-// 러너웨이 소리. 전부 절차 합성(Web Audio)이라 파일 없이 돈다.
-// 같은 id의 녹음(web/sounds/<id>_<번호>.mp3)을 넣으면 그 소리만 녹음으로 바뀐다. 목록은 LIST, 규격은 web/sounds/README.md
+// 러너웨이 공포 모드 소리. 합성음(Web Audio)이 기본이라 파일 없이도 돈다.
+// 같은 id의 녹음(web/sounds/<id>_<번호>.mp3)이 있으면 그 소리는 녹음으로 바뀐다. 목록은 LIST, 규격은 web/sounds/README.md
+// growl, pounce, howl, ring, drag는 녹음만 있다(합성음 없음)
 // 실시간(AudioContext)과 오프라인(OfflineAudioContext)에서 같은 코드가 돈다. 검수용 WAV(web/render_sounds.mjs)도 이걸로 굽는다
 const SND = (() => {
   // kind: loop = 계속 깔리는 소리, beat = 박자마다 반복, one = 한 번. dur = 미리듣기 길이(초)
   const LIST = [
-    { id: 'scene', mode: 'horror', kind: 'demo', dur: 26, name: '전체 장면', when: '검수용. 아무개씨가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 심장, 불협 현, 접근 경고, 잡힘을 실제 순서대로 섞었다' },
-    { id: 'drone', mode: 'horror', kind: 'loop', dur: 9, name: '저음 드론', when: '공포모드 내내 깔린다. 가까워질수록 커진다', desc: '41Hz 톱니파 둘을 살짝 어긋나게 겹친 맥놀이 + 서브 + 저역 럼블. 필터가 느리게 숨 쉰다' },
-    { id: 'wind', mode: 'horror', kind: 'loop', dur: 7, name: '바람', when: '공포모드 내내. 정적을 메운다', desc: '브라운 노이즈 + 저역 통과. 돌풍처럼 천천히 일렁인다' },
-    { id: 'tension', mode: 'horror', kind: 'loop', dur: 8, name: '불협 현', when: '아무개씨가 약 45m 안으로 들어오면 서서히 커진다', desc: '반음씩 붙은 고음 현 네 줄의 떨림 + 저음 단2도. 공포 영화 바이올린' },
-    { id: 'step', mode: 'horror', kind: 'beat', dur: 11, name: '아무개씨 발소리', when: '달리는 내내 끊기지 않는다. 박자는 설정 페이스의 케이던스, 크기와 밝기는 거리', desc: '뒤꿈치 쿵 + 흙 밟는 사각. 좌우 발이 번갈아 뒤에서 들린다. 미리듣기는 100m에서 0m까지' },
-    { id: 'heart', mode: 'horror', kind: 'beat', dur: 8, name: '내 심장', when: '달리는 내내. 가까워질수록 빨라진다(70~160bpm)', desc: '쿵쿵 두 박. 미리듣기는 느림에서 빠름까지' },
-    { id: 'breath', mode: 'horror', kind: 'beat', dur: 5, name: '아무개씨 숨소리', when: '12m 안. 발 두 번에 한 번', desc: '거친 들숨 날숨. 목이 긁히는 소리가 섞인다' },
-    { id: 'tick', mode: 'horror', kind: 'one', dur: 1.2, name: '카운트다운', when: '출발 3, 2, 1초 전. 인터벌은 회복 끝 3초 전', desc: '낮은 시계 초침' },
-    { id: 'bell', mode: 'horror', kind: 'one', dur: 6, name: '출발 종', when: '출발 순간. 아무개씨가 움직이기 시작한다', desc: '낮은 G 교회 종. 비배음 배음이 길게 운다' },
-    { id: 'close', mode: 'horror', kind: 'one', dur: 4, name: '접근 경고', when: '20m 안으로 들어오는 순간(35m 밖으로 나가야 다시 울림)', desc: '거꾸로 빨려드는 스웰 뒤 쾅. 진동 함께' },
-    { id: 'caught', mode: 'horror', kind: 'one', dur: 2.6, name: '잡힘', when: '거리 0m. 잡힌 횟수 +1, 아무개씨는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동' },
-    { id: 'creak', mode: 'horror', kind: 'one', dur: 3.5, name: '먼 삐걱임', when: '25m 밖일 때. 35~80초마다 한 번, 왼쪽이나 오른쪽 멀리서', desc: '녹슨 철문이 멀리서 끼익. 좌우 한쪽에서 울린다' },
-    { id: 'whisper', mode: 'horror', kind: 'one', dur: 2.6, name: '속삭임', when: '25m 안일 때. 삐걱임 대신 35~80초마다 한 번, 귀 옆에서', desc: '숨 섞인 하아아. 말은 없다' },
-    { id: 'safe', mode: 'horror', kind: 'one', dur: 5, name: '잠시 안전', when: '인터벌 세트 끝, 회복 시작. 발소리가 멎는다', desc: '낮은 단조 화음이 천천히 떴다 가라앉는다' },
-    { id: 'door', mode: 'horror', kind: 'one', dur: 4, name: '탈출', when: '목표 거리 완주', desc: '문이 끼익 열리고 쾅 닫힌 뒤 걸쇠가 걸린다' },
-    { id: 'r_tick', mode: 'race', kind: 'one', dur: 0.6, name: '카운트다운', when: '출발 3, 2, 1초 전', desc: '삑' },
-    { id: 'r_go', mode: 'race', kind: 'one', dur: 1.2, name: '출발 호루라기', when: '출발 순간', desc: '호루라기' },
-    { id: 'r_pass', mode: 'race', kind: 'one', dur: 1, name: '추월', when: '앞뒤가 바뀌는 순간', desc: '휙' },
-    { id: 'r_win', mode: 'race', kind: 'one', dur: 1.8, name: '승리', when: '이겼을 때(세트 포함)', desc: '빠라밤' },
-    { id: 'r_lose', mode: 'race', kind: 'one', dur: 2.8, name: '패배', when: '졌을 때(세트 포함)', desc: '뿌뿌뿌뿌우' },
+    { id: 'scene', kind: 'demo', dur: 26, name: '전체 장면', when: '검수용. 아무개씨가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 울부짖음, 심장, 으르렁, 불협 현, 접근 경고, 숨소리, 덮침을 실제 순서대로 섞었다' },
+    { id: 'drone', kind: 'loop', dur: 9, name: '저음 드론', when: '공포모드 내내 깔린다. 가까워질수록 커진다', desc: '41Hz 톱니파 둘을 살짝 어긋나게 겹친 맥놀이 + 서브 + 저역 럼블. 필터가 느리게 숨 쉰다' },
+    { id: 'wind', kind: 'loop', dur: 7, name: '바람', when: '공포모드 내내. 정적을 메운다', desc: '브라운 노이즈 + 저역 통과. 돌풍처럼 천천히 일렁인다' },
+    { id: 'tension', kind: 'loop', dur: 8, name: '불협 현', when: '아무개씨가 약 45m 안으로 들어오면 서서히 커진다', desc: '반음씩 붙은 고음 현 네 줄의 떨림 + 저음 단2도. 공포 영화 바이올린' },
+    { id: 'step', kind: 'beat', dur: 11, name: '아무개씨 발소리', when: '달리는 내내 끊기지 않는다. 박자는 설정 페이스의 케이던스, 크기와 밝기는 거리', desc: '무거운 발 쿵. 좌우 발이 번갈아 뒤에서 들린다. 미리듣기는 100m에서 0m까지' },
+    { id: 'heart', kind: 'beat', dur: 8, name: '내 심장', when: '달리는 내내. 가까워질수록 빨라진다(70~160bpm)', desc: '쿵쿵 두 박. 미리듣기는 느림에서 빠름까지' },
+    { id: 'breath', kind: 'beat', dur: 6, name: '아무개씨 숨소리', when: '12m 안. 한 번이 끝나면 다음 숨', desc: '낮고 거친 헐떡임. 뒤에서, 바로 귀 뒤에서' },
+    { id: 'growl', kind: 'one', dur: 2.2, name: '으르렁', when: '45m 안. 8~20초마다 한 번, 뒤에서. 가까울수록 크다', desc: '큰 짐승의 콧김과 낮은 그르렁' },
+    { id: 'tick', kind: 'one', dur: 1.2, name: '카운트다운', when: '출발 3, 2, 1초 전. 인터벌은 회복 끝 3초 전', desc: '낮은 시계 초침' },
+    { id: 'bell', kind: 'one', dur: 6, name: '출발 종', when: '출발 순간. 아무개씨가 움직이기 시작한다', desc: '낮은 G 교회 종. 비배음 배음이 길게 운다' },
+    { id: 'close', kind: 'one', dur: 4, name: '접근 경고', when: '20m 안으로 들어오는 순간(35m 밖으로 나가야 다시 울림)', desc: '거꾸로 빨려드는 스웰 뒤 쾅. 진동 함께' },
+    { id: 'pounce', kind: 'one', dur: 1.6, name: '덮침 포효', when: '거리 0m. 잡힘과 같이', desc: '괴물 포효. 덮치는 순간에만 난다' },
+    { id: 'caught', kind: 'one', dur: 2.6, name: '잡힘 비명', when: '거리 0m. 잡힌 횟수 +1, 아무개씨는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동. 비명은 이때만' },
+    { id: 'creak', kind: 'one', dur: 3.5, name: '먼 삐걱임', when: '25m 밖일 때. 35~80초마다 한 번, 왼쪽이나 오른쪽 멀리서', desc: '녹슨 철문이 멀리서 끼익. 좌우 한쪽에서 울린다' },
+    { id: 'howl', kind: 'one', dur: 2.4, name: '먼 울부짖음', when: '25m 밖일 때. 삐걱임 대신 가끔, 멀리 한쪽에서', desc: '늑대 하울링이 멀리서 길게' },
+    { id: 'ring', kind: 'one', dur: 2.4, name: '방울', when: '25m 밖일 때. 삐걱임 대신 가끔, 한쪽에서', desc: '저승사자 요령이 한 번 울린다' },
+    { id: 'drag', kind: 'one', dur: 1.4, name: '발 끄는 소리', when: '25m 밖일 때. 삐걱임 대신 가끔, 한쪽에서', desc: '자갈 위로 발을 질질 끈다' },
+    { id: 'whisper', kind: 'one', dur: 2.6, name: '속삭임', when: '25m 안일 때. 삐걱임 대신 35~80초마다 한 번, 귀 옆에서', desc: '숨 섞인 하아아. 말은 없다' },
+    { id: 'safe', kind: 'one', dur: 5, name: '잠시 안전', when: '인터벌 세트 끝, 회복 시작. 발소리가 멎는다', desc: '낮은 단조 화음이 천천히 떴다 가라앉는다' },
+    { id: 'door', kind: 'one', dur: 4, name: '탈출', when: '목표 거리 완주', desc: '문이 끼익 열리고 쾅 닫힌 뒤 걸쇠가 걸린다' },
   ];
   const BY = Object.fromEntries(LIST.map(x => [x.id, x]));
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function engine(ctx, out) {
-    const E = { ctx, samples: {}, last: {}, near: 0, spm: 165, stepsOn: false, heartOn: false, nextStep: 0, nextBeat: 0, stepN: 0, holdUntil: 0, loops: {} };
+    const E = { ctx, samples: {}, last: {}, near: 0, breathAt: 0, spm: 165, stepsOn: false, heartOn: false, nextStep: 0, nextBeat: 0, stepN: 0, holdUntil: 0, loops: {} };
     const sr = ctx.sampleRate, R = Math.random;
     const noise = (sec, brown) => {
       const n = Math.floor(sr * sec), b = ctx.createBuffer(1, n, sr), d = b.getChannelData(0);
@@ -90,10 +91,11 @@ const SND = (() => {
       let i = Math.floor(R() * l.length); if (l.length > 1 && i === E.last[id]) i = (i + 1) % l.length;
       E.last[id] = i; return l[i];
     }
+    /** 녹음 재생. 틀었으면 길이(초), 녹음이 없으면 0 */
     function playSample(id, t, dest, vol) {
-      const b = sample(id); if (!b) return false;
+      const b = sample(id); if (!b) return 0;
       const s = N(b), g = G(vol === undefined ? 1 : vol, dest); s.connect(g); s.playbackRate.value = 0.97 + R() * 0.06; s.start(t);
-      return true;
+      return b.duration || 1;
     }
     /** 받은 바이트를 디코드해 둔다. 실패한 파일은 합성음으로 남는다 */
     E.addSample = (id, bytes) => ctx.decodeAudioData(bytes).then(b => { (E.samples[id] = E.samples[id] || []).push(b); return true; }).catch(() => false);
@@ -208,39 +210,10 @@ const SND = (() => {
       const k = h + 0.55, m = O('square', 2200), mb = F('bandpass', 2200, 8), mg = G(0); env(mg.gain, k, 0.001, 0.3, 0.04); m.connect(mb); mb.connect(mg); mg.connect(dest); play(m, k, 0.05);   // 걸쇠
       const m2 = O('square', 1700), mg2 = G(0); env(mg2.gain, k + 0.07, 0.001, 0.25, 0.05); m2.connect(mb); mb.connect(mg2); mg2.connect(dest); play(m2, k + 0.07, 0.06);
     };
-    // 경주모드
-    S.r_tick = (t, dest) => { const o = O('sine', 880), g = G(0); env(g.gain, t, 0.005, 0.5, 0.16); o.connect(g); g.connect(dest); play(o, t, 0.18); };
-    S.r_go = (t, dest) => {
-      const o = O('sine', 2900), lfo = O('sine', 32), lg = G(180), g = G(0); lfo.connect(lg); lg.connect(o.frequency);
-      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.45, t + 0.03); g.gain.setValueAtTime(0.45, t + 0.6); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.75);
-      o.connect(g); g.connect(dest); play(o, t, 0.8); play(lfo, t, 0.8);
-      const n = N(WHITE), bp = F('bandpass', 2900, 3), ng = G(0); env(ng.gain, t, 0.02, 0.12, 0.75); n.connect(bp); bp.connect(ng); ng.connect(dest); play(n, t, 0.8);
-    };
-    S.r_pass = (t, dest) => {
-      const n = N(WHITE), bp = F('bandpass', 400, 2), g = G(0); bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(5000, t + 0.35);
-      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1.2, t + 0.25); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
-      let tl = g; if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.setValueAtTime(-0.8, t); p.pan.linearRampToValueAtTime(0.8, t + 0.5); g.connect(p); tl = p; }
-      n.connect(bp); bp.connect(g); tl.connect(dest); play(n, t, 0.55);
-    };
-    S.r_win = (t, dest) => {
-      [523.3, 659.3, 784, 1046.5].forEach((f, i) => {
-        const at = t + i * 0.13, len = i === 3 ? 0.9 : 0.14;
-        for (const ty of ['square', 'triangle']) { const o = O(ty, f), lp = F('lowpass', 3500), g = G(0); env(g.gain, at, 0.01, ty === 'square' ? 0.12 : 0.3, len); o.connect(lp); lp.connect(g); g.connect(dest); play(o, at, len + 0.02); }
-      });
-    };
-    S.r_lose = (t, dest) => {
-      [196, 185, 174.6, 164.8].forEach((f, i) => {
-        const at = t + i * 0.45, len = i === 3 ? 1.3 : 0.4, o = O('sawtooth', f), lp = F('lowpass', 900, 2), g = G(0);
-        if (i === 3) { const v = O('sine', 6), vg = G(5); v.connect(vg); vg.connect(o.frequency); play(v, at, len); }
-        g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(0.35, at + 0.05); g.gain.setValueAtTime(0.35, at + len - 0.1); g.gain.exponentialRampToValueAtTime(0.0001, at + len);
-        o.connect(lp); lp.connect(g); g.connect(dest); play(o, at, len + 0.02);
-      });
-    };
-
-    /** 한 번 나는 소리. 녹음이 있으면 녹음, 없으면 합성. o.side/o.far를 주면 좌우 한쪽에서 */
+    /** 한 번 나는 소리. 녹음이 있으면 녹음, 없으면 합성. o.side/o.far를 주면 좌우 한쪽에서, o.chase면 아무개씨 자리(뒤, 거리 반영)에서 */
     E.one = (id, o) => {
       o = o || {}; const t = o.at !== undefined ? o.at : ctx.currentTime + 0.02;
-      const dest = o.dest || (o.side !== undefined ? sideOut(o.side, o.far || 0) : id.startsWith('r_') || id === 'tick' ? E.ui : E.master);
+      const dest = o.dest || (o.chase ? E.chaseIn : o.side !== undefined ? sideOut(o.side, o.far || 0) : id === 'tick' ? E.ui : E.master);
       if (playSample(id, t, dest, o.vol)) return;
       if (S[id]) S[id](t, o.vol !== undefined ? G(o.vol, dest) : dest, o.v === undefined ? 1 : o.v);
     };
@@ -322,7 +295,7 @@ const SND = (() => {
           const sp = ctx.createStereoPanner ? ctx.createStereoPanner() : null, d = sp || E.chaseIn;   // 왼발 오른발
           if (sp) { sp.pan.value = E.stepN % 2 ? -0.14 : 0.14; sp.connect(E.chaseIn); }
           if (!playSample('step', t, d, 0.6 + 0.4 * n)) S.step(t, d, 0.6 + 0.4 * n);
-          if (n > 0.88 && E.stepN % 2 === 0 && !playSample('breath', t, E.chaseIn, 0.8)) S.breath(t, E.chaseIn, 0.5 + 0.5 * n);
+          if (n > 0.88 && t >= E.breathAt) E.breathAt = t + 0.25 + (playSample('breath', t, E.chaseIn, 0.9) || (S.breath(t, E.chaseIn, 0.5 + 0.5 * n), 0.95));
         }
         E.nextStep += (60 / E.spm) * (1 + (R() - 0.5) * 0.05);
       }
@@ -343,7 +316,14 @@ const SND = (() => {
     E.demo = (id) => {
       const t0 = ctx.currentTime + 0.05, it = BY[id]; if (!it) return 0;
       const end = t0 + it.dur;
-      if (it.kind === 'one') { E.one(id, id === 'creak' ? { at: t0, side: -0.8, far: 0.7 } : id === 'whisper' ? { at: t0, side: 0.7, far: 0.1 } : { at: t0 }); return it.dur; }
+      if (it.kind === 'one') {
+        const far = { creak: 0.7, howl: 0.8, ring: 0.5, drag: 0.4 };
+        if (far[id] !== undefined) E.one(id, { at: t0, side: -0.8, far: far[id] });
+        else if (id === 'whisper') E.one(id, { at: t0, side: 0.7, far: 0.1 });
+        else if (id === 'growl') { E.setNear(0.75, t0); E.one(id, { at: t0, chase: true }); }
+        else E.one(id, { at: t0 });
+        return it.dur;
+      }
       if (id === 'drone' || id === 'wind' || id === 'tension') {
         const l = E.loop(id, t0); l.level.setValueAtTime(0, t0);
         const top = id === 'drone' ? LV.drone(1) : id === 'tension' ? LV.tension(1) : 0.35;
@@ -373,8 +353,10 @@ const SND = (() => {
         E.pump(catchAt, nearAt); E.stepsOn = false; E.heartOn = false;
         const closeAt = run0 + (catchAt - run0) * 0.8 - 1.5;   // 20m = near 0.8 지점에 쾅이 맞도록
         E.one('close', { at: closeAt });
+        E.one('howl', { at: run0 + 6, side: 0.85, far: 0.85 });
+        E.one('growl', { at: run0 + (catchAt - run0) * 0.5, chase: true });
         E.one('whisper', { at: run0 + (catchAt - run0) * 0.62, side: 0.75, far: 0.1 });
-        E.one('caught', { at: catchAt });
+        E.one('pounce', { at: catchAt }); E.one('caught', { at: catchAt + 0.2 });
         d.stop(end - 1.4); w.stop(end - 1.4); te.stop(end - 1.4);
         return it.dur;
       }

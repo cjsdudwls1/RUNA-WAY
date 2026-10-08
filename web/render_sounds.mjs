@@ -36,7 +36,7 @@ for (const it of SND.LIST) {
   const data = Buffer.from(r.pcm, 'base64'), h = Buffer.alloc(44);
   h.write('RIFF', 0); h.writeUInt32LE(36 + data.length, 4); h.write('WAVE', 8); h.write('fmt ', 12); h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(2, 22);
   h.writeUInt32LE(r.sr, 24); h.writeUInt32LE(r.sr * 4, 28); h.writeUInt16LE(4, 32); h.writeUInt16LE(16, 34); h.write('data', 36); h.writeUInt32LE(data.length, 40);
-  const f = `${it.n}_${it.mode}_${it.id}.wav`;
+  const f = `${it.n}_${it.id}.wav`;
   fs.writeFileSync(path.join(outDir, f), Buffer.concat([h, data]));
   const db = (v) => (20 * Math.log10(Math.max(v, 1e-6))).toFixed(1);
   rows.push(`${f.padEnd(28)} ${it.name.padEnd(10)} peak ${db(r.peak)} dB  rms ${db(r.rms)} dB`);
