@@ -8,7 +8,7 @@
 ## 상태
 
 - 2026-10-05 개편. 동물 추격자, 동물별 소리·대사, 관제 음성 팩, 지도 삭제. 명세는 docs/prd/17-modes.md
-- 경주 대사: 초안. 사용자가 web/race_lines.md를 직접 쓴다
+- 경주 대사: 초안. 사용자가 web/race_lines.md를 직접 쓴다. AI 음성으로 미리 굽는다(web/voice/bake.py). 숫자 변수는 {km}, {set}만
 - 공포 소리: 합성음 초안. 검수표 docs/prd/18-horror-sounds.md
 
 ## 문서

@@ -101,6 +101,18 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   check(r.qa.tts.length >= 3, `경주: 대사 ${r.qa.tts.length}번 말함 (${r.qa.tts.slice(0, 3).join(' / ')})`);
   check(r.log.includes('말(ready)') && r.log.includes('말(go)'), '경주: 준비·출발 대사');
   check(/말\((win|lose|win_close|lose_close)\)/.test(r.log), '경주: 결과 대사');
+  const pack = (r.log.match(/음성\(팩\)/g) || []).length, dev = (r.log.match(/음성\(기기\)/g) || []).length;
+  check(pack >= 3 && dev === 0, `경주: 구운 음성으로 말함 (팩 ${pack}, 기기 ${dev})`);
+}
+// 2-1) 음성 팩을 못 받으면 기기 음성으로
+{
+  const { ctx, page, errors } = await open({ ...base, mode: 'race', type: 'normal' }, { query: '?src=demo&demoMs=10' });
+  await page.route('**/voice/race.bin*', r => r.abort());
+  await page.click('.mode.race'); await page.click('#start');
+  await page.waitForSelector('#result.on', { timeout: 120000 }).catch(() => { });
+  const log = await page.textContent('#rLog'), qa = await page.evaluate(() => window.__qa);
+  check(/음성 팩 실패/.test(log) && qa.tts.length >= 3, `팩 차단: 기기 음성으로 대체 ${qa.tts.length}번`);
+  await ctx.close();
 }
 {
   const r = await demo({ ...base, mode: 'race', type: 'build' }, '경주 빌드업');

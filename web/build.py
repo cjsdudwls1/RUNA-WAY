@@ -1,5 +1,5 @@
-"""app.html + core.js + game.js + sound.js + race_lines.md + replays.js → dist/runaway.html, docs/app/ (Pages)
-대사: web/race_lines.md의 `## 키 · 설명` 아래 `- ` 줄. 경주모드가 브라우저 음성으로 읽는다
+"""app.html + core.js + game.js + sound.js + race_lines.md + voice_manifest.js + replays.js → dist/runaway.html, docs/app/ (Pages)
+대사: web/race_lines.md(web/linebook.py로 읽는다). 구운 음성은 web/voice/bake.py → static/voice/race.bin, 없는 줄은 기기 음성
 녹음: web/sounds/<소리id>[_번호].(mp3|m4a|ogg|wav). 있으면 그 소리만 합성음 대신 녹음. 규격은 web/sounds/README.md"""
 import os, json, re, hashlib, shutil
 # 배포 주소. Pages 주소가 바뀌면 여기 한 줄만 고치면 된다 (공유 카드·OG·매니페스트가 모두 이걸 쓴다)
@@ -11,27 +11,27 @@ here = os.path.dirname(os.path.abspath(__file__))
 r = lambda n: open(os.path.join(here, n), encoding='utf-8').read()
 
 
-def parse_lines(md):
-    """## 키 · 설명 → 그 아래 '- ' 줄들. 첫 헤딩 전(쓰는 법)은 건너뛴다"""
-    lines, info, key = {}, {}, None
-    for raw in md.splitlines():
-        m = re.match(r'^##\s+([a-z0-9_]+)\s*(?:·\s*(.*))?$', raw.strip())
-        if m:
-            key = m.group(1); lines[key] = []; info[key] = (m.group(2) or key).strip(); continue
-        if key and raw.startswith('- '):
-            t = raw[2:].strip()
-            if t:
-                lines[key].append(t)
-    return lines, info
-
-
-race_lines, race_info = parse_lines(r('race_lines.md'))
+import sys
+sys.path.insert(0, here)
+import linebook
+race_lines, race_info = linebook.parse()
+errs = linebook.check(race_lines)
+if errs:   # 구울 수 없는 대사. 앱에 넣기 전에 막는다
+    print('\n'.join(['대사표 오류 (web/race_lines.md):'] + errs)); sys.exit(1)
 lines_js = 'const RACE_LINES = ' + json.dumps(race_lines, ensure_ascii=False) + ', RACE_LINE_INFO = ' + json.dumps(race_info, ensure_ascii=False) + ';\n'
 # 해설 엔진이 쓰는 키가 대사표에 다 있는지. 오타 난 키는 조용히 안 나오므로 빌드에서 알린다
 used = set(re.findall(r"say\('([a-z0-9_]+)'", r('game.js'))) | set(re.findall(r"'((?:lead|behind)_(?:small|big|huge)|tie|win(?:_close)?|lose(?:_close)?|overtake_me|overtaken|set_win|set_lose|last_set|set_start|interval_win|interval_lose|draw)'", r('game.js')))
 missing = sorted(k for k in used if k not in race_lines)
 if missing:
     print('대사표에 없는 상황:', missing)
+# 구운 대사(web/voice/bake.py 산출물). 없거나 대사를 고친 뒤 안 구웠으면 그 줄만 기기 음성으로 읽는다
+vm = r('voice_manifest.js') if os.path.exists(os.path.join(here, 'voice_manifest.js')) else ''
+if vm:
+    have = set(json.loads(vm[vm.index('{'):vm.rindex('}') + 1])['clips'])
+    want = [c for c, _, _ in linebook.clips(race_lines)]
+    stale = [c for c in want if c not in have]
+    if stale:
+        print(f'안 구운 대사 {len(stale)}조각 (python3 web/voice/bake.py). 예:', stale[:3])
 
 ids = re.findall(r"\{ id: '([a-z_]+)'", r('sound.js'))
 sd = os.path.join(here, 'sounds')
@@ -49,7 +49,7 @@ sver = hashlib.sha1(b''.join(open(os.path.join(sd, f), 'rb').read() for f in sfi
 sounds_js = 'const SOUND_INDEX = ' + json.dumps(sidx) + ', SOUND_VER = ' + json.dumps(sver) + ';\n'
 
 html = (r('app.html').replace('<!--SITE-->', SITE.replace('https://', '').rstrip('/')).replace('<!--CORE-->', r('core.js')).replace('<!--GAME-->', r('game.js'))
-        .replace('<!--SOUND-->', r('sound.js')).replace('<!--LINES-->', lines_js).replace('<!--REPLAYS-->', r('replays.js')).replace('<!--SOUNDS-->', sounds_js))
+        .replace('<!--SOUND-->', r('sound.js')).replace('<!--LINES-->', lines_js).replace('<!--VOICE-->', vm).replace('<!--REPLAYS-->', r('replays.js')).replace('<!--SOUNDS-->', sounds_js))
 os.makedirs(os.path.join(here, 'dist'), exist_ok=True)
 out = os.path.join(here, 'dist', 'runaway.html')
 open(out, 'w', encoding='utf-8').write(html)
@@ -76,7 +76,7 @@ cjs = ('<script data-goatcounter="https://%s.goatcounter.com/count" async src="/
 head = HEAD.replace('{SITE}', SITE).replace('{COUNTER}', cjs)
 open(os.path.join(pages, 'index.html'), 'w', encoding='utf-8').write(head + html + '</body></html>')
 # 예전 빌드 산출물(음성 팩, 동물 녹음 출처)이 남지 않게
-for old in ('voice', 'credits.html'):
+for old in ('voice', 'credits.html'):   # voice/는 static/에 있으면 아래에서 다시 복사된다
     p = os.path.join(pages, old)
     if os.path.isdir(p): shutil.rmtree(p)
     elif os.path.exists(p): os.remove(p)

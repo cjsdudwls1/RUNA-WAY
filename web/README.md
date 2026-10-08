@@ -5,7 +5,7 @@
 - 화면: 모드 고르기(경주/공포) → 운동 설정(일반런/빌드업/인터벌) → 주행 → 결과. 명세는 docs/prd/17-modes.md
 - 규칙: game.js. `node web/test_game.mjs`
 - 소리: sound.js. 전부 합성. web/sounds/<id>_<번호>.mp3를 넣으면 그 소리만 녹음으로. 검수표 docs/prd/18-horror-sounds.md
-- 경주 대사: race_lines.md. 기기 내장 음성(TTS)으로 읽는다
+- 경주 대사: race_lines.md. 변수는 {km}, {set}만(linebook.py가 검사). `python3 web/voice/bake.py`로 AI 음성을 미리 굽는다 → static/voice/race.bin. 안 구운 줄은 기기 음성. 준비는 bake.py 맨 위
 - 위치: 실주행 GPS(watchPosition, Wake Lock) / 실내 데모(녹화 주행 10배속). `?src=demo&demoMs=10`이면 100배속
 - GPS 거리 계산(TrackBuilder)은 core.js. Python 시뮬·Kotlin 코어와 골든 테스트로 일치 확인: `node web/test_golden.mjs`
 - 제약: 화면 꺼지면 GPS 멈춤. 백그라운드 없음

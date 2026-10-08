@@ -142,71 +142,68 @@ const GAME = (() => {
       for (const e of ev) {
         if (e.type === 'ready') say('ready', {}, PRI.CRIT);
         else if (e.type === 'go') { this.reset(); if (e.set === 1) say('go', {}, PRI.CRIT); }
-        else if (e.type === 'setSoon') say(e.last ? 'last_set' : 'set_start', { set: e.set, sets: e.sets }, PRI.CRIT);
-        else if (e.type === 'rest') say('rest', { rest: e.s }, PRI.HIGH);
-        else if (e.type === 'restSoon') say('rest_end', { rest: e.left }, PRI.HIGH);
+        else if (e.type === 'setSoon') say(e.last ? 'last_set' : 'set_start', { set: e.set }, PRI.CRIT);
+        else if (e.type === 'rest') say('rest', {}, PRI.HIGH);
+        else if (e.type === 'restSoon') say('rest_end', {}, PRI.HIGH);
         else if (e.type === 'pause') say('pause', {}, PRI.NORM);
         else if (e.type === 'resume') say('resume', {}, PRI.NORM);
         else if (e.type === 'gpsLost') say('gps_lost', {}, PRI.NORM);
         else if (e.type === 'oppDone') say('opp_finished', {}, PRI.HIGH);
-        else if (e.type === 'setEnd' && inter && !e.last) say(e.win ? 'set_win' : 'set_lose', { margin: Math.abs(e.margin), set: e.set }, PRI.CRIT);
+        else if (e.type === 'setEnd' && inter && !e.last) say(e.win ? 'set_win' : 'set_lose', { set: e.set }, PRI.CRIT);
         else if (e.type === 'finish') {
           if (e.quit) say('quit', {}, PRI.CRIT);
-          else if (inter) say(e.wins > e.losses ? 'interval_win' : e.wins < e.losses ? 'interval_lose' : 'draw', { wins: e.wins, losses: e.losses }, PRI.CRIT);
-          else { const m = e.margin, close = Math.abs(m) <= 3; say(m > 0 ? (close ? 'win_close' : 'win') : (close ? 'lose_close' : 'lose'), { margin: Math.abs(m) }, PRI.CRIT); }
+          else if (inter) say(e.wins > e.losses ? 'interval_win' : e.wins < e.losses ? 'interval_lose' : 'draw', {}, PRI.CRIT);
+          else { const m = e.margin, close = Math.abs(m) <= 3; say(m > 0 ? (close ? 'win_close' : 'win') : (close ? 'lose_close' : 'lose'), {}, PRI.CRIT); }
         }
       }
       if (snap.phase !== 'run' || snap.frozen) return out;
       const s = this.p.sets[snap.set - 1], early = snap.setS < 6;
       // 추월: 3m 넘게 앞뒤가 바뀌어야 인정한다. 나란히 달릴 때 매초 추월이라고 떠들지 않게
       const sign = gap >= Z.SWAP ? 1 : gap <= -Z.SWAP ? -1 : this.sign;
-      if (!early && sign !== this.sign && this.sign !== 0 && !snap.oppDone) { say(sign > 0 ? 'overtake_me' : 'overtaken', { gap: Math.abs(gap) }, PRI.CRIT); this.swapAt = this.t; }
+      if (!early && sign !== this.sign && this.sign !== 0 && !snap.oppDone) { say(sign > 0 ? 'overtake_me' : 'overtaken', {}, PRI.CRIT); this.swapAt = this.t; }
       this.sign = sign;
       // 거리 구간. 4초 머물러야 바뀐 걸로 본다. 같은 구간에 오래 있으면 75초마다 한 마디
       const z = zoneOf(gap);
       if (z === this.cand) this.candN++; else { this.cand = z; this.candN = 1; }
       if (!early && !snap.oppDone && this.candN >= Z.DEBOUNCE_S) {
-        if (z !== this.zone) { this.zone = z; this.zoneAt = this.t; if (this.t - this.swapAt > 8) say(z, { gap: Math.abs(gap) }, PRI.HIGH); }
-        else if (this.t - this.zoneAt >= Z.REPEAT_S) { this.zoneAt = this.t; say(z, { gap: Math.abs(gap) }, PRI.NORM); }
+        if (z !== this.zone) { this.zone = z; this.zoneAt = this.t; if (this.t - this.swapAt > 8) say(z, {}, PRI.HIGH); }
+        else if (this.t - this.zoneAt >= Z.REPEAT_S) { this.zoneAt = this.t; say(z, {}, PRI.NORM); }
       }
       // 거리 표지
       const D = s.distM, me = snap.me, F = this.flags;
-      if (!inter) { const k = Math.floor(me / 1000); if (k > this.km && me < D - 50) { this.km = k; if (!(D >= 2000 && Math.abs(me - D / 2) < 60)) say('km', { km: k, gap: Math.abs(gap), status: gap }, PRI.HIGH); } }
-      if (D >= 2000 && me >= D / 2 && !F.half) { F.half = 1; say('half', { gap: Math.abs(gap), status: gap }, PRI.HIGH); }
-      if (D >= 1500 && me >= D - 500 && !F.l500) { F.l500 = 1; say('last_500', { gap: Math.abs(gap), status: gap }, PRI.HIGH); }
-      if (D >= 300 && me >= D - 100 && !F.l100) { F.l100 = 1; say('last_100', { gap: Math.abs(gap), status: gap }, PRI.CRIT); }
+      if (!inter) { const k = Math.floor(me / 1000); if (k > this.km && me < D - 50) { this.km = k; if (!(D >= 2000 && Math.abs(me - D / 2) < 60)) say('km', { km: k }, PRI.HIGH); } }
+      if (D >= 2000 && me >= D / 2 && !F.half) { F.half = 1; say('half', {}, PRI.HIGH); }
+      if (D >= 1500 && me >= D - 500 && !F.l500) { F.l500 = 1; say('last_500', {}, PRI.HIGH); }
+      if (D >= 300 && me >= D - 100 && !F.l100) { F.l100 = 1; say('last_100', {}, PRI.CRIT); }
       // 페이스 잔소리. 상대와의 거리와 별개로, 목표보다 크게 처지거나 크게 앞서 달리면
       if (snap.myPace !== null) {
         this.slowN = snap.myPace - snap.target >= Z.SLOW_D ? this.slowN + 1 : 0;
         this.fastN = snap.target - snap.myPace >= Z.FAST_D ? this.fastN + 1 : 0;
         if (this.t - this.nagAt >= Z.NAG_CD) {
-          if (this.slowN >= Z.SLOW_S) { this.slowN = 0; this.nagAt = this.t; say('my_slow', { pace: snap.myPace, target: snap.target }, PRI.NORM); }
-          else if (this.fastN >= Z.FAST_S) { this.fastN = 0; this.nagAt = this.t; say('my_fast', { pace: snap.myPace, target: snap.target }, PRI.NORM); }
+          if (this.slowN >= Z.SLOW_S) { this.slowN = 0; this.nagAt = this.t; say('my_slow', {}, PRI.NORM); }
+          else if (this.fastN >= Z.FAST_S) { this.fastN = 0; this.nagAt = this.t; say('my_fast', {}, PRI.NORM); }
         }
       }
       // 빌드업: 상대 페이스가 15초 빨라질 때마다
       if (this.p.type === 'build' && s.p1 < s.p0) {
         if (this.buildAt === null) this.buildAt = s.p0;
-        if (this.buildAt - snap.oppPace >= Z.BUILD_STEP) { this.buildAt = snap.oppPace; say('build_faster', { target: snap.oppPace }, PRI.NORM); }
+        if (this.buildAt - snap.oppPace >= Z.BUILD_STEP) { this.buildAt = snap.oppPace; say('build_faster', {}, PRI.NORM); }
       }
-      if (this.t - this.lastAny >= Z.IDLE_S) say('idle', { gap: Math.abs(gap), status: gap }, PRI.NORM);
+      if (this.t - this.lastAny >= Z.IDLE_S) say('idle', {}, PRI.NORM);
       return out;
     }
   }
 
   // ---------- 말로 바꾸기 ----------
-  const secText = (s) => { s = Math.abs(s); if (s < 10) return `${Number(s.toFixed(1))}초`; s = Math.round(s); const m = Math.floor(s / 60), r = s % 60; return m ? `${m}분` + (r ? ` ${r}초` : '') : `${r}초`; };   // 10초 안쪽은 소수 한 자리. 0초 차이로 졌다고 하면 억울하다
+  // 대사는 미리 구운 음성으로 튼다. 그래서 변수는 값이 정해진 범위인 둘만 쓴다(web/linebook.py가 값마다 통째로 굽는다)
+  const VARS = { km: [1, 41], set: [1, 20] };
+  const secText = (s) => { s = Math.abs(s); if (s < 10) return `${Number(s.toFixed(1))}초`; s = Math.round(s); const m = Math.floor(s / 60), r = s % 60; return m ? `${m}분` + (r ? ` ${r}초` : '') : `${r}초`; };   // 10초 안쪽은 소수 한 자리
   const paceText = (p) => { p = Math.round(p); const m = Math.floor(p / 60), r = p % 60; return `${m}분` + (r ? ` ${r}초` : ''); };
-  const statusText = (g) => { const m = Math.round(Math.abs(g)); return g >= Z.TIE ? `네가 ${m}미터 앞` : g <= -Z.TIE ? `내가 ${m}미터 앞` : '나란히'; };
-  /** 대사의 {변수}를 말로 채운다. 모르는 변수는 그대로 둔다 */
-  function fill(line, v) {
-    const T = {
-      gap: () => `${Math.round(v.gap)}미터`, margin: () => secText(v.margin), pace: () => paceText(v.pace), target: () => paceText(v.target),
-      km: () => `${v.km}킬로`, status: () => statusText(v.status), set: () => `${v.set}`, sets: () => `${v.sets}`, rest: () => secText(v.rest),
-      wins: () => `${v.wins}`, losses: () => `${v.losses}`,
-    };
-    return line.replace(/\{(\w+)\}/g, (m, k) => (T[k] && v[k] !== undefined && v[k] !== null ? T[k]() : m));
-  }
+  /** 대사에 든 변수와 값. 없으면 null. 구운 조각의 이름(대사|값)을 만들 때 쓴다 */
+  function lineVar(line, v) { const m = /\{(km|set)\}/.exec(line); return m && v[m[1]] !== undefined ? v[m[1]] : null; }
+  /** 화면과 기기 음성용 문장. {km} → 3킬로, {set} → 2 */
+  function fill(line, v) { return line.replace(/\{(km|set)\}/g, (m, k) => (v[k] === undefined ? m : k === 'km' ? `${v[k]}킬로` : `${v[k]}`)); }
+  const clipId = (line, v) => { const x = lineVar(line, v); return line + '|' + (x === null ? '' : x); };
   /** 같은 묶음에서 방금 쓴 대사는 다 돌 때까지 다시 안 쓴다 */
   function picker() {
     const bag = {};
@@ -216,6 +213,6 @@ const GAME = (() => {
       return lines[bag[key].pop()];
     };
   }
-  return { C, Z, PRI, plan, paceAt, planTimeS, headM, Game, Talk, zoneOf, fill, picker, secText, paceText };
+  return { C, Z, PRI, VARS, plan, paceAt, planTimeS, headM, Game, Talk, zoneOf, fill, lineVar, clipId, picker, secText, paceText };
 })();
 if (typeof module !== 'undefined') module.exports = GAME;

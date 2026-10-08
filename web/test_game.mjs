@@ -106,10 +106,10 @@ function sim(cfg, speed, opt = {}) {
   const e = g.stop(); const t = new G.Talk(p).feed(g.snap(), e).map(x => x.key);
   check(e[0].type === 'finish' && e[0].quit && t[0] === 'quit', '중도 종료 → quit');
 }
-// 11) 말 채우기
+// 11) 말 채우기. 변수는 km, set 둘뿐
 {
-  check(G.fill('{gap} 차이, {margin}, {pace}, {km}, {status}', { gap: 23.4, margin: 75, pace: 330, km: 3, status: -12 }) === '23미터 차이, 1분 15초, 5분 30초, 3킬로, 내가 12미터 앞', G.fill('{gap} 차이, {margin}, {pace}, {km}, {status}', { gap: 23.4, margin: 75, pace: 330, km: 3, status: -12 }));
-  check(G.fill('{모름} {gap}', { gap: 5 }) === '{모름} 5미터', '모르는 변수는 그대로');
+  check(G.fill('{km} 지났다. {set}세트', { km: 3, set: 2 }) === '3킬로 지났다. 2세트', G.fill('{km} 지났다. {set}세트', { km: 3, set: 2 }));
+  check(G.clipId('{km} 지났다.', { km: 7 }) === '{km} 지났다.|7' && G.clipId('간다!', {}) === '간다!|', '구운 조각 이름 = 대사|값');
   const pick = G.picker(), L = ['a', 'b', 'c'], got = new Set([pick('k', L), pick('k', L), pick('k', L)]);
   check(got.size === 3, '한 바퀴 돌기 전에는 같은 대사 반복 없음');
 }

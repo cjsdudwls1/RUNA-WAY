@@ -45,8 +45,22 @@
   - 거리 100m 밖은 거의 안 들리고, 가까울수록 크고 밝고 잔향이 줄어든다. 입체 음향으로 바로 뒤에서
 - 경주 모드: 상대 대사 + 짧은 효과음(카운트다운, 호루라기, 추월, 승리, 패배)
   - 대사표: web/race_lines.md. 사용자가 직접 쓴다. 상황 37개
-  - 읽기: 기기 내장 음성(TTS). 신경망 음성 팩은 대사가 확정되면 다시 굽는다
+  - 대사는 AI 음성(Supertonic 3, 로컬 굽기, 비용 0)으로 미리 굽는다. 아래 '경주 대사 음성'
 - 모든 소리는 절차 합성. 같은 id의 녹음을 web/sounds/에 넣으면 그 소리만 바뀐다
+
+## 경주 대사 음성
+
+- 2026-10-08 결정: 대사는 통째로 미리 굽는다. 문장 중간에 값이 바뀌는 변수는 쓰지 않는다
+  - 거리 차, 시간 차, 페이스는 말하지 않는다. 화면에 나온다. 상황이 조금/많이/압도적으로 나뉘어 있어 숫자 없이도 판세가 전달된다
+  - 변수는 범위가 정해진 둘만: `{km}`(km 상황, 1~41), `{set}`(세트 상황 4개, 1~20). 값마다 문장을 통째로 굽는다
+  - 문장과 숫자를 따로 구워 잇는 방식은 기각. 억양이 끊기고 ASR 실측에서 "육십"이 "6시"로 들렸다(15-voice-pack.md)
+- 규칙 검사: web/linebook.py. 위반하면 빌드가 멈춘다
+- 굽기: `python3 web/voice/bake.py` → web/static/voice/race.bin(한 파일) + web/voice_manifest.js + web/voice/qa.tsv
+  - 문장마다 후보 2~6개를 만들어 한국어 ASR로 되읽고 오류율이 가장 낮은 것을 고른다
+  - 캐시(web/voice/.cache)는 문장+화자 해시. 대사를 고치면 그 줄만 다시 굽는다
+  - 화자: 기본 9번(남). `VOICE_SID=3 python3 web/voice/bake.py`로 바꾼다. 고르기용: `python3 web/voice/bake.py voices "문장"` → web/dist/voices/
+- 앱: 조각 이름 = `대사|값`. 경주 모드를 고르면 팩을 받는다. 조각이 없는 줄(안 구움, 팩 실패)만 기기 음성으로 읽는다
+- 검수 화면에 상황별 '구움 n/m' 표시
 
 ## 파일
 
@@ -55,6 +69,8 @@
 | web/game.js | 규칙(Game), 경주 해설 판단(Talk), 말 채우기 |
 | web/sound.js | 소리 엔진. 합성, 녹음 대체, 거리 반영, 미리듣기 |
 | web/race_lines.md | 경주 대사표. 빌드가 읽는다 |
+| web/linebook.py | 대사표 읽기, 변수 규칙 검사, 굽는 문장 펼치기 |
+| web/voice/bake.py | 대사 굽기 |
 | web/app.html | 화면 |
 | web/test_game.mjs | 규칙 시험. `node web/test_game.mjs` |
 | web/qa.mjs | 헤드리스 크롬 QA |
@@ -63,7 +79,7 @@
 ## 지운 것
 
 - 동물 25종, 동물 녹음(web/sounds/*.mp3)과 출처표
-- 관제 음성 팩(web/voice/, static/voice/op.bin)과 대사
+- 관제 음성 팩(static/voice/op.bin)과 관제 대사
 - 지도·레이더, 지도 키, 나침반, 위협 게이지, 워밍업, 적 수
 - sim/, core/, android/, web/core.js의 동물 추격 엔진은 그대로 둔다. 웹 앱은 core.js의 GPS 거리 계산(TrackBuilder)만 쓴다. 골든 테스트는 계속 돈다
 
@@ -71,5 +87,6 @@
 
 - 경주 대사 확정 → web/race_lines.md
 - 공포 소리 검수 → 18-horror-sounds.md 검수 칸
-- 대사 확정 뒤 신경망 음성으로 굽기(기기 TTS는 기기마다 음색이 다르다)
+- 대사 확정 뒤 다시 굽기(바뀐 줄만 구워진다)
+- 상대 목소리(화자) 확정
 - og.png, 스토어 이미지가 아직 동물 컨셉

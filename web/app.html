@@ -171,6 +171,7 @@
 <script><!--GAME--></script>
 <script><!--SOUND--></script>
 <script><!--LINES--></script>
+<script><!--VOICE--></script>
 <script><!--REPLAYS--></script>
 <script><!--SOUNDS--></script>
 <script>
@@ -195,7 +196,7 @@ const MODE_KO = { race: '경주', horror: '공포' }, KIND_KO = { normal: '일�
 // ---------- 모드 고르기 ----------
 function seg(id, on) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.toggle('on', x === b)); on(b.dataset.v); }); }
 const segSet = (id, v) => [...$(id).children].forEach(x => x.classList.toggle('on', x.dataset.v === v));
-document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => { cfg.mode = b.dataset.mode; saveCfg(); openSetup(); }));
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => { cfg.mode = b.dataset.mode; saveCfg(); if (cfg.mode === 'race') vpLoad(); openSetup(); }));
 $('#back').addEventListener('click', () => show('pickMode'));
 seg('#src', v => { st.src = v; });
 $('#gpsTest').addEventListener('click', () => {
@@ -312,37 +313,69 @@ function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
 
 // ---------- 경주모드 말 ----------
-// 브라우저 음성(TTS)으로 읽는다. 대사는 web/race_lines.md. 우선순위 큐 + 최소 간격 + 유통기한
-const TTS = { q: [], busy: false, lastEnd: 0, tok: 0, pick: GAME.picker(), GAP_MS: 4000 };
+// 미리 구운 AI 음성(web/voice/bake.py)을 튼다. 조각이 없는 줄(안 구웠거나 팩을 못 받음)만 기기 음성(TTS)으로 읽는다
+// 대사는 web/race_lines.md. 우선순위 큐 + 최소 간격 + 유통기한
+const TTS = { q: [], busy: false, lastEnd: 0, tok: 0, pick: GAME.picker(), GAP_MS: 4000, srcs: [] };
+const HAS_PACK = typeof VOICE_PACK !== 'undefined' && VOICE_PACK.clips;
+const VP = { bin: null, p: null, cache: new Map() };
 const vrate = () => (st.src === 'demo' ? 1000 / st.demoMs : 1);
 function koVoice() { try { return speechSynthesis.getVoices().find(x => x.lang && x.lang.replace('_', '-').startsWith('ko')); } catch (e) { return null; } }
+/** 음성 팩(한 파일)을 받는다. 경주 모드를 고르면 바로 받기 시작한다. 서비스 워커가 캐시해 두 번째부터는 오프라인에서도 된다 */
+function vpLoad() {
+  if (!HAS_PACK || VP.p || location.protocol === 'file:') return VP.p;
+  VP.p = fetch('voice/race.bin?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+    .then(b => { VP.bin = b; }).catch(e => { VP.p = null; log('음성 팩 실패 → 기기 음성 ' + e.message); });
+  return VP.p;
+}
+/** 조각 하나를 필요할 때 디코드한다. 최근 것 몇 개만 들고 있는다 */
+function clipBuf(id) {
+  const ix = HAS_PACK && VOICE_PACK.clips[id];
+  if (!ix || !VP.bin || !A.ctx) return Promise.resolve(null);
+  if (VP.cache.has(id)) return VP.cache.get(id);
+  const p = A.ctx.decodeAudioData(VP.bin.slice(ix[0], ix[0] + ix[1])).catch(() => null);
+  VP.cache.set(id, p); if (VP.cache.size > 30) VP.cache.delete(VP.cache.keys().next().value);
+  return p;
+}
+/** 한 줄 말하기. 구운 조각 → 없으면 기기 음성. done은 끝나면 한 번 */
+async function speakLine(id, text, tok, done) {
+  if (!VP.bin && VP.p && HAS_PACK && VOICE_PACK.clips[id]) await Promise.race([VP.p, new Promise(r => setTimeout(r, 3000))]);   // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새지 않게
+  const b = await clipBuf(id);
+  if (tok !== TTS.tok) return;
+  if (b) {
+    audioWake();
+    const s = A.ctx.createBufferSource(), g = A.ctx.createGain(); g.gain.value = 1.1; s.buffer = b; s.connect(g); g.connect(A.ctx.destination);
+    s.start(); TTS.srcs = [s]; log('음성(팩) ' + text);
+    setTimeout(done, b.duration * 1000 + 80); return;
+  }
+  if (!('speechSynthesis' in window)) { done(); return; }
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = 1.08; const v = koVoice(); if (v) u.voice = v;
+  u.onend = u.onerror = done;   // 일부 안드로이드 웹뷰는 onend를 안 쏜다
+  speechSynthesis.speak(u); log('음성(기기) ' + text);
+  setTimeout(done, 1500 + text.length * 200);
+}
 function sayItems(items) {
   for (const it of items) {
     const line = TTS.pick(it.key, RACE_LINES[it.key]); if (!line) continue;
-    const text = GAME.fill(line, it.vars), now = Date.now();
+    const text = GAME.fill(line, it.vars), id = GAME.clipId(line, it.vars), now = Date.now();
     log(`말(${it.key}): ${text}`);
     const ttl = [20000, 10000, 6000][it.pri] / vrate();
     TTS.q = TTS.q.filter(x => x.until > now && !(x.key === it.key));
-    TTS.q.push({ key: it.key, text, pri: it.pri, until: now + ttl });
+    TTS.q.push({ key: it.key, id, text, pri: it.pri, until: now + ttl });
   }
   TTS.q.sort((a, b) => a.pri - b.pri);
   ttsPump();
 }
 function ttsPump() {
-  if (TTS.busy || !TTS.q.length || !('speechSynthesis' in window)) return;
+  if (TTS.busy || !TTS.q.length) return;
   const now = Date.now(); TTS.q = TTS.q.filter(x => x.until > now); if (!TTS.q.length) return;
   const wait = TTS.GAP_MS / vrate() - (now - TTS.lastEnd);
   if (wait > 0 && TTS.q[0].pri > 0) { clearTimeout(TTS.t); TTS.t = setTimeout(ttsPump, wait); return; }
   const it = TTS.q.shift(), tok = ++TTS.tok;
   TTS.busy = true;
-  const done = () => { if (tok !== TTS.tok || !TTS.busy) return; TTS.busy = false; TTS.lastEnd = Date.now(); ttsPump(); };
-  const u = new SpeechSynthesisUtterance(it.text); u.lang = 'ko-KR'; u.rate = 1.08; const v = koVoice(); if (v) u.voice = v;
-  u.onend = u.onerror = done;   // 일부 안드로이드 웹뷰는 onend를 안 쏜다
-  speechSynthesis.speak(u);
-  setTimeout(done, 1500 + it.text.length * 200);
+  speakLine(it.id, it.text, tok, () => { if (tok !== TTS.tok || !TTS.busy) return; TTS.busy = false; TTS.lastEnd = Date.now(); ttsPump(); });
 }
-function ttsHush() { TTS.q = []; TTS.tok++; TTS.busy = false; try { speechSynthesis.cancel(); } catch (e) { } }
-/** iOS는 사용자가 누른 순간에 한 번 말해야 그 뒤 음성이 나온다 */
+function ttsHush() { TTS.q = []; TTS.tok++; TTS.busy = false; for (const s of TTS.srcs) { try { s.stop(); } catch (e) { } } TTS.srcs = []; try { speechSynthesis.cancel(); } catch (e) { } }
+/** iOS는 사용자가 누른 순간에 한 번 말해야 그 뒤 기기 음성이 나온다 */
 function ttsUnlock() { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'ko-KR'; speechSynthesis.speak(u); } catch (e) { } }
 
 // ---------- 위치 ----------
@@ -519,7 +552,7 @@ function render(s, fix) {
 }
 function start() {
   audioInit(); const E = newEngine();
-  if (cfg.mode === 'race') { ttsUnlock(); speechSynthesis && speechSynthesis.getVoices && speechSynthesis.getVoices(); }
+  if (cfg.mode === 'race') { vpLoad(); ttsUnlock(); try { speechSynthesis.getVoices(); } catch (e) { } }
   ttsHush();
   const p = GAME.plan(cfg);
   st.game = new GAME.Game(p); st.talk = new GAME.Talk(p); st.builder = new RW.TrackBuilder();
@@ -656,21 +689,22 @@ function drawReview() {
       el.appendChild(d);
     });
   }
-  const SAMPLE = { gap: 23, status: 15, margin: 12, pace: 330, target: 360, km: 2, set: 2, sets: 6, rest: 90, wins: 4, losses: 2 };
+  const SAMPLE = { km: 3, set: 2 };   // 변수가 든 줄은 이 값으로 들려준다
   const el = $('#rvLines'); el.innerHTML = '';
   for (const key of Object.keys(RACE_LINES)) {
     const L = RACE_LINES[key], d = document.createElement('div'); d.className = 'rv';
-    d.innerHTML = `<div><b>${RACE_LINE_INFO[key] || key}</b><code>${key} · ${L.length}줄</code><p class="ln">${L.length ? GAME.fill(L[0], SAMPLE) : '(대사 없음)'}</p></div><button ${L.length ? '' : 'disabled'}>듣기</button>`;
+    const baked = HAS_PACK ? L.filter(t => VOICE_PACK.clips[GAME.clipId(t, SAMPLE)]).length : 0;
+    d.innerHTML = `<div><b>${RACE_LINE_INFO[key] || key}</b><code>${key} · ${L.length}줄 · 구움 ${baked}/${L.length}</code><p class="ln">${L.length ? GAME.fill(L[0], SAMPLE) : '(대사 없음)'}</p></div><button ${L.length ? '' : 'disabled'}>듣기</button>`;
     d.querySelector('button').addEventListener('click', (e) => {
       const line = TTS.pick(key, L); if (!line) return; const text = GAME.fill(line, SAMPLE);
       d.querySelector('.ln').textContent = text; ttsHush();
-      const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = 1.08; const v = koVoice(); if (v) u.voice = v; speechSynthesis.speak(u);
+      speakLine(GAME.clipId(line, SAMPLE), text, TTS.tok, () => { });
       playing(e.target, 1 + text.length * 0.15);
     });
     el.appendChild(d);
   }
 }
-$('#openReview').addEventListener('click', () => { st.reviewFrom = 'pickMode'; reviewEngine(); drawReview(); show('review'); });   // 엔진을 미리 만들어 녹음 디코드가 첫 재생 전에 끝나게
+$('#openReview').addEventListener('click', () => { st.reviewFrom = 'pickMode'; reviewEngine(); vpLoad(); drawReview(); show('review'); });   // 엔진을 미리 만들어 녹음 디코드가 첫 재생 전에 끝나게
 $('#reviewBack').addEventListener('click', () => { $('#reviewStop').click(); show(st.reviewFrom || 'pickMode'); });
 $('#reviewStop').addEventListener('click', () => { if (A.rv) { A.rv.halt(); A.rv.stopLoops(); } reviewEngine(); ttsHush(); document.querySelectorAll('.rv button.playing').forEach(b => { clearTimeout(b._t); b.classList.remove('playing'); b.textContent = b.closest('#rvLines') ? '듣기' : '재생'; }); });
 })();
