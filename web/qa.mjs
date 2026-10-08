@@ -98,11 +98,12 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
 {
   const r = await demo({ ...base, mode: 'race', type: 'normal' }, '경주 일반런');
   check(/승리|패배/.test(r.label), '경주 일반런 결과: ' + r.label + ' ' + r.hero);
-  check(r.qa.tts.length >= 3, `경주: 대사 ${r.qa.tts.length}번 말함 (${r.qa.tts.slice(0, 3).join(' / ')})`);
+  const said = (r.log.match(/말\(/g) || []).length;
+  check(said >= 5, `경주: 대사 ${said}번 (${(r.log.match(/말\([^)]*\): [^\n]*/g) || []).slice(0, 3).join(' / ')})`);
   check(r.log.includes('말(ready)') && r.log.includes('말(go)'), '경주: 준비·출발 대사');
   check(/말\((win|lose|win_close|lose_close)\)/.test(r.log), '경주: 결과 대사');
   const pack = (r.log.match(/음성\(팩\)/g) || []).length, dev = (r.log.match(/음성\(기기\)/g) || []).length;
-  check(pack >= 3 && dev === 0, `경주: 구운 음성으로 말함 (팩 ${pack}, 기기 ${dev})`);
+  check(pack >= 1 && dev === 0, `경주: 구운 음성으로 말함 (팩 ${pack}, 기기 ${dev}. 100배속이라 대부분은 말할 틈 없이 버려진다)`);
 }
 // 2-1) 음성 팩을 못 받으면 기기 음성으로
 {
@@ -147,10 +148,14 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   check(n === 15 && m === 5, `검수: 공포 소리 ${n}개, 경주 소리 ${m}개`);
   check(l >= 30, `검수: 대사 상황 ${l}개`);
   for (const b of await page.locator('#rvHorror button, #rvRace button').all()) await b.click();
-  await page.locator('#rvLines button').first().click();
   await page.waitForTimeout(500);
+  const b0 = await page.evaluate(() => window.__qa.buf);
+  await page.locator('#rvLines button').first().click();
+  await page.waitForTimeout(800);
   const qa = await page.evaluate(() => window.__qa);
-  check(qa.osc > 100 && qa.tts.length === 1, `검수 재생: 합성음 ${qa.osc}, 대사 ${qa.tts.length}`);
+  check(qa.osc > 100 && qa.buf > b0 && qa.tts.length === 0, `검수 재생: 합성음 ${qa.osc}, 대사는 구운 음성(버퍼 +${qa.buf - b0}, 기기 ${qa.tts.length})`);
+  const baked = await page.textContent('#rvLines');
+  check(!/구움 0\//.test(baked) && /구움 3\/3/.test(baked), '검수: 전 상황 구움 표시');
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'review.png'), fullPage: true });
   await page.click('#reviewStop'); await page.click('#reviewBack');
   check(await page.isVisible('#pickMode') && errors.length === 0, '검수 닫기, 오류 없음 ' + errors.join(' | '));
