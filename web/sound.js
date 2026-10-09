@@ -1,6 +1,6 @@
 // 러너웨이 공포 모드 소리. 합성음(Web Audio)이 기본이라 파일 없이도 돈다.
 // 같은 id의 녹음(web/sounds/<id>_<번호>.mp3)이 있으면 그 소리는 녹음으로 바뀐다. 목록은 LIST, 규격은 web/sounds/README.md
-// growl, pounce, howl, ring, drag는 녹음만 있다(합성음 없음)
+// growl, pounce, howl, ring, drag는 녹음만 있다(합성음 없음). roar는 pounce 녹음을 같이 쓴다
 // 실시간(AudioContext)과 오프라인(OfflineAudioContext)에서 같은 코드가 돈다. 검수용 WAV(web/render_sounds.mjs)도 이걸로 굽는다
 const SND = (() => {
   // kind: loop = 계속 깔리는 소리, beat = 박자마다 반복, one = 한 번. dur = 미리듣기 길이(초)
@@ -16,8 +16,10 @@ const SND = (() => {
     { id: 'tick', kind: 'one', dur: 1.2, name: '카운트다운', when: '출발 3, 2, 1초 전. 인터벌은 회복 끝 3초 전', desc: '낮은 시계 초침' },
     { id: 'bell', kind: 'one', dur: 6, name: '출발 종', when: '출발 순간. 아무개씨가 움직이기 시작한다', desc: '낮은 G 교회 종. 비배음 배음이 길게 운다' },
     { id: 'close', kind: 'one', dur: 4, name: '접근 경고', when: '20m 안으로 들어오는 순간(35m 밖으로 나가야 다시 울림)', desc: '거꾸로 빨려드는 스웰 뒤 쾅. 진동 함께' },
-    { id: 'pounce', kind: 'one', dur: 1.6, name: '덮침 포효', when: '거리 0m. 잡힘과 같이', desc: '괴물 포효. 덮치는 순간에만 난다' },
-    { id: 'caught', kind: 'one', dur: 2.6, name: '잡힘 비명', when: '거리 0m. 잡힌 횟수 +1, 아무개씨는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동. 비명은 이때만' },
+    { id: 'pounce', kind: 'one', dur: 1.6, name: '덮침 포효', when: '거리 0m. 잡힘과 같이, 반드시', desc: '괴물 포효. 바로 뒤에서 크게' },
+    { id: 'caught', kind: 'one', dur: 2.6, name: '잡힘 비명', when: '거리 0m. 잡힌 횟수 +1, 아무개씨는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동' },
+    { id: 'scream', kind: 'one', dur: 2.4, name: '먼 비명', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 멀리 한쪽에서', desc: '누군가 멀리서 지르는 비명. 쾅 없이 비명만' },
+    { id: 'roar', kind: 'one', dur: 1.8, name: '먼 포효', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 아무개씨 자리(뒤)에서, 거리만큼 작게', desc: '덮침 포효 녹음과 같은 소리. 녹음이 없으면 조용' },
     { id: 'creak', kind: 'one', dur: 3.5, name: '먼 삐걱임', when: '25m 밖일 때. 35~80초마다 한 번, 왼쪽이나 오른쪽 멀리서', desc: '녹슨 철문이 멀리서 끼익. 좌우 한쪽에서 울린다' },
     { id: 'howl', kind: 'one', dur: 2.4, name: '먼 울부짖음', when: '25m 밖일 때. 삐걱임 대신 가끔, 멀리 한쪽에서', desc: '늑대 하울링이 멀리서 길게' },
     { id: 'ring', kind: 'one', dur: 2.4, name: '방울', when: '25m 밖일 때. 삐걱임 대신 가끔, 한쪽에서', desc: '저승사자 요령이 한 번 울린다' },
@@ -86,7 +88,9 @@ const SND = (() => {
 
     // ---------- 녹음 ----------
     /** 같은 id에 녹음이 여러 개면 직전 것과 다른 걸 고른다. 같은 소리 반복이 제일 먼저 질린다 */
+    const SAME = { roar: 'pounce' };   // 같은 녹음을 다른 자리에서 쓰는 소리
     function sample(id) {
+      id = SAME[id] || id;
       const l = E.samples[id]; if (!l || !l.length) return null;
       let i = Math.floor(R() * l.length); if (l.length > 1 && i === E.last[id]) i = (i + 1) % l.length;
       E.last[id] = i; return l[i];
@@ -162,7 +166,8 @@ const SND = (() => {
       const v = G(0.6, E.verb); cg.connect(v);
       for (const f of [1480, 1568, 1661, 1760]) { const o = O('sawtooth', f), lp = F('lowpass', 4000), og = G(0); env(og.gain, h, 0.005, 0.05, 1.6); o.connect(lp); lp.connect(og); og.connect(dest); og.connect(v); play(o, h, 1.7); }
     };
-    S.caught = (t, dest) => {
+    /** 비명만. 잡힘(caught)은 여기에 쾅을 더한다. 주행 중 먼 비명(scream)은 이것만 */
+    S.scream = (t, dest) => {
       const ws = ctx.createWaveShaper(), cv = new Float32Array(512); for (let i = 0; i < 512; i++) { const x = i / 256 - 1; cv[i] = Math.tanh(4 * x); } ws.curve = cv;
       const f1 = F('bandpass', 1300, 1.4), f2 = F('bandpass', 2700, 2.5), g = G(0); ws.connect(f1); ws.connect(f2); f1.connect(g); f2.connect(g); g.connect(dest);
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.75, t + 0.06); g.gain.setValueAtTime(0.75, t + 0.9); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.7);
@@ -173,6 +178,9 @@ const SND = (() => {
         const og = G(0.3); o.connect(og); og.connect(ws); play(o, t, 1.75); play(vib, t, 1.75);
       }
       const n = N(WHITE), hp = F('highpass', 1800), ng = G(0); env(ng.gain, t, 0.01, 0.4, 0.5); n.connect(hp); hp.connect(ng); ng.connect(dest); play(n, t, 0.55);
+    };
+    S.caught = (t, dest) => {
+      S.scream(t, dest);
       const b = O('sine', 45), bg = G(0); b.frequency.setValueAtTime(60, t); b.frequency.exponentialRampToValueAtTime(30, t + 1); env(bg.gain, t, 0.005, 1, 1.2); b.connect(bg); bg.connect(dest); play(b, t, 1.3);
     };
     S.creak = (t, dest) => {
@@ -317,10 +325,10 @@ const SND = (() => {
       const t0 = ctx.currentTime + 0.05, it = BY[id]; if (!it) return 0;
       const end = t0 + it.dur;
       if (it.kind === 'one') {
-        const far = { creak: 0.7, howl: 0.8, ring: 0.5, drag: 0.4 };
+        const far = { creak: 0.7, howl: 0.8, ring: 0.5, drag: 0.4, scream: 0.75 };
         if (far[id] !== undefined) E.one(id, { at: t0, side: -0.8, far: far[id] });
         else if (id === 'whisper') E.one(id, { at: t0, side: 0.7, far: 0.1 });
-        else if (id === 'growl') { E.setNear(0.75, t0); E.one(id, { at: t0, chase: true }); }
+        else if (id === 'growl' || id === 'roar') { E.setNear(0.75, t0); E.one(id, { at: t0, chase: true }); }
         else E.one(id, { at: t0 });
         return it.dur;
       }
@@ -354,6 +362,7 @@ const SND = (() => {
         const closeAt = run0 + (catchAt - run0) * 0.8 - 1.5;   // 20m = near 0.8 지점에 쾅이 맞도록
         E.one('close', { at: closeAt });
         E.one('howl', { at: run0 + 6, side: 0.85, far: 0.85 });
+        E.one('scream', { at: run0 + 10, side: -0.9, far: 0.75 });
         E.one('growl', { at: run0 + (catchAt - run0) * 0.5, chase: true });
         E.one('whisper', { at: run0 + (catchAt - run0) * 0.62, side: 0.75, far: 0.1 });
         E.one('pounce', { at: catchAt }); E.one('caught', { at: catchAt + 0.2 });

@@ -16,7 +16,7 @@
 | breath | breath_3~4 | wolf_tired_1~2 | 짐승 숨소리 |
 | growl | growl_1~2 | dokkaebi_roam_1~2 | 콧김, 낮은 그르렁 |
 | growl | growl_3 | canine_roam_1 | 짐승 으르렁 |
-| pounce | pounce_1~2 | dokkaebi_sprint_1~2 | 포효. 잡힐 때만 |
+| pounce | pounce_1~2 | dokkaebi_sprint_1~2 | 포효. 잡힐 때 반드시, 주행 중 가끔(roar) |
 | howl | howl_1~2 | wolf_roam_1~2 | 먼 늑대 울부짖음 |
 | ring | ring_1 | jeoseung_roam_2 | 방울(요령) 한 번 |
 | drag | drag_1 | jeoseung_roam_1 | 발 끄는 소리 |

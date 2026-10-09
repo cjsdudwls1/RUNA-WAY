@@ -351,7 +351,7 @@ function fixToRow(t, fix) {
 // ---------- 주행 ----------
 function log(s) { const t = st.game ? st.game.t : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
 // 공포 연출 상태. amb = 멀 때 주변에서 나는 소리(녹음이 없는 것은 빌드에서 빠져 있으면 조용하다)
-const H = { armed: true, nextAmb: 0, nextGrowl: 0, amb: ['creak', 'howl', 'ring', 'drag'] };
+const H = { armed: true, nextAmb: 0, nextGrowl: 0, nextCry: 0, amb: ['creak', 'howl', 'ring', 'drag'] };
 /** 게임 시계는 벽시계에서 온다. setInterval 횟수로 세면 화면이 꺼져 쓰로틀될 때 슬로모션이 된다 */
 function tick() {
   if (st.src === 'demo') { step(); return; }
@@ -375,7 +375,7 @@ function step() {
   render(r.snap, fix);
   if (g.done) finish();
 }
-/** 사건 → 소리. 말은 없다. 비명과 포효는 잡힐 때만 */
+/** 사건 → 소리. 말은 없다. 잡힐 때는 포효 + 비명이 반드시, 주행 중에는 가끔 먼 비명이나 포효 */
 function handle(ev, snap) {
   const E = A.E;
   for (const e of ev) {
@@ -383,7 +383,7 @@ function handle(ev, snap) {
     if (!E) continue;
     if (e.type === 'ready') { for (const id of ['wind', 'drone', 'tension']) { const l = E.loop(id); l.level.setTargetAtTime(id === 'wind' ? 0.3 : 0, A.ctx.currentTime, 1.5); } E.setNear(0); E.heartOn = true; E.run(); }
     if (e.type === 'count') E.one('tick');
-    if (e.type === 'go') { E.one('bell'); E.stepsOn = true; H.armed = true; H.nextAmb = st.game.t + 30 + Math.random() * 30; H.nextGrowl = st.game.t + 10; }
+    if (e.type === 'go') { E.one('bell'); E.stepsOn = true; H.armed = true; H.nextAmb = st.game.t + 30 + Math.random() * 30; H.nextGrowl = st.game.t + 10; H.nextCry = st.game.t + 40 + Math.random() * 40; }
     if (e.type === 'caught') { const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('caught', { at: t + 0.2 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash(); }
     if (e.type === 'rest') { E.stepsOn = false; E.setNear(0); E.one('safe'); }
     if (e.type === 'finish') { E.stepsOn = false; E.heartOn = false; E.stopLoops(); if (!e.quit) E.one('door'); }
@@ -397,6 +397,14 @@ function handle(ev, snap) {
   if (gap > 35) H.armed = true;
   // 45m 안이면 으르렁. 가까울수록 자주
   if (gap < 45 && t >= H.nextGrowl) { H.nextGrowl = t + 8 + 12 * Math.max(0, gap) / 45 + Math.random() * 4; E.one('growl', { chase: true }); }
+  // 가끔 비명이나 포효. 비명은 멀리 한쪽에서, 포효는 아무개씨 자리(뒤)에서 거리만큼 작게
+  if (t >= H.nextCry) {
+    H.nextCry = t + 50 + Math.random() * 60;
+    const cry = Math.random() < 0.5 ? 'scream' : 'roar'; log('소리 ' + cry);
+    if (cry === 'scream') E.one('scream', { side: Math.random() < 0.5 ? -0.9 : 0.9, far: 0.6 + Math.random() * 0.3 });
+    else E.one('roar', { chase: true });
+    H.nextAmb = Math.max(H.nextAmb, t + 12);   // 다른 주변 소리와 바로 겹치지 않게
+  }
   // 가끔 주변에서 무서운 소리. 멀면 먼 소리, 가까우면 귀 옆 속삭임
   if (t >= H.nextAmb) {
     H.nextAmb = t + 35 + Math.random() * 45;
@@ -569,7 +577,7 @@ function playing(btn, sec) { btn.classList.add('playing'); btn.textContent = '�
 function drawReview() {
   const el = $('#rvList'); el.innerHTML = '';
   SND.LIST.forEach((it) => {
-    const rec = HAS_SFX && SOUND_INDEX[it.id];
+    const rec = HAS_SFX && SOUND_INDEX[it.id === 'roar' ? 'pounce' : it.id];
     const d = document.createElement('div'); d.className = 'rv';
     d.innerHTML = `<div><b>${it.name}</b><code>${it.id}${rec ? ' · 녹음 ' + rec.length : ''}</code><p>${it.when}</p><p>${it.desc}</p></div><button>재생</button>`;
     d.querySelector('button').addEventListener('click', (e) => { const E = A.rv || reviewEngine(); playing(e.target, E.demo(it.id)); });
