@@ -5,14 +5,14 @@
 const SND = (() => {
   // kind: loop = 계속 깔리는 소리, beat = 박자마다 반복, one = 한 번. dur = 미리듣기 길이(초)
   const LIST = [
-    { id: 'scene', kind: 'demo', dur: 28, name: '전체 장면', when: '검수용. 추격자가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 울부짖음, 심장, 으르렁, 불협 현, 접근 경고, 숨소리, 덮침을 실제 순서대로 섞었다' },
+    { id: 'scene', kind: 'demo', dur: 28, name: '전체 장면', when: '검수용. 추격자가 100m 뒤에서 붙을 때까지', desc: '주행 때 나는 소리만. 발소리, 내 심장, 울음, 잡힐 때 소리. 거리는 실제 거리 공식 그대로' },
     { id: 'drone', kind: 'loop', dur: 9, name: '저음 드론', when: '공포모드 내내 깔린다. 가까워질수록 커진다', desc: '41Hz 톱니파 둘을 살짝 어긋나게 겹친 맥놀이 + 서브 + 저역 럼블. 필터가 느리게 숨 쉰다' },
     { id: 'wind', kind: 'loop', dur: 7, name: '바람', when: '공포모드 내내. 정적을 메운다', desc: '브라운 노이즈 + 저역 통과. 돌풍처럼 천천히 일렁인다' },
     { id: 'tension', kind: 'loop', dur: 8, name: '불협 현', when: '추격자가 약 45m 안으로 들어오면 서서히 커진다', desc: '반음씩 붙은 고음 현 네 줄의 떨림 + 저음 단2도. 공포 영화 바이올린' },
     { id: 'step', kind: 'beat', dur: 11, name: '추격자 발소리', when: '달리는 내내 끊기지 않는다. 박자는 설정 페이스의 케이던스, 크기와 밝기는 거리', desc: '무거운 발 쿵. 좌우 발이 번갈아 뒤에서 들린다. 미리듣기는 100m에서 0m까지' },
     { id: 'heart', kind: 'beat', dur: 8, name: '내 심장', when: '달리는 내내. 가까워질수록 빨라진다(70~160bpm)', desc: '쿵쿵 두 박. 미리듣기는 느림에서 빠름까지' },
     { id: 'breath', kind: 'beat', dur: 6, name: '추격자 숨소리', when: '12m 안. 한 번이 끝나면 다음 숨', desc: '낮고 거친 헐떡임. 뒤에서, 바로 귀 뒤에서' },
-    { id: 'growl', kind: 'one', dur: 2.2, name: '으르렁', when: '45m 안. 8~20초마다 한 번, 뒤에서. 가까울수록 크다', desc: '큰 짐승의 콧김과 낮은 그르렁' },
+    { id: 'growl', kind: 'one', dur: 2.2, name: '추격자 울음', when: '달리는 내내 10~30초마다, 추격자 자리에서. 멀면 멀리서 작고 먹먹하게, 가까우면 귀 뒤에서', desc: '큰 짐승의 콧김과 낮은 그르렁' },
     { id: 'tick', kind: 'one', dur: 1.2, name: '카운트다운', when: '출발 3, 2, 1초 전. 인터벌은 회복 끝 3초 전', desc: '낮은 시계 초침' },
     { id: 'bell', kind: 'one', dur: 6, name: '출발 종', when: '출발 순간. 추격자가 움직이기 시작한다', desc: '낮은 G 교회 종. 비배음 배음이 길게 운다' },
     { id: 'close', kind: 'one', dur: 4, name: '접근 경고', when: '20m 안으로 들어오는 순간(35m 밖으로 나가야 다시 울림)', desc: '거꾸로 빨려드는 스웰 뒤 쾅. 진동 함께' },
@@ -72,7 +72,7 @@ const SND = (() => {
       try {
         const p = ctx.createPanner(); p.panningModel = 'HRTF'; p.distanceModel = 'linear'; p.rolloffFactor = 0;
         if (p.positionX) { p.positionX.value = 0; p.positionY.value = 0; p.positionZ.value = 1; } else p.setPosition(0, 0, 1);   // 듣는 사람은 -z를 본다. +z = 바로 뒤
-        tail.connect(p); tail = p;
+        tail.connect(p); tail = p; E.panner = p;
       } catch (e) { }
     }
     tail.connect(E.master);
@@ -289,6 +289,24 @@ const SND = (() => {
       if (E.loops.drone) set(E.loops.drone.level, LV.drone(near));
       if (E.loops.tension) set(E.loops.tension.level, LV.tension(near));
     };
+    /** 실주행용. 추격자까지 실제 거리(m)로 소리를 정한다. 진짜 거리감의 세 가지 단서를 물리대로
+     *  1) 크기: 거리 역제곱 법칙(음압 1/r). 2배 멀어지면 -6dB
+     *  2) 공기 흡수: 멀수록 고음이 먼저 사라진다
+     *  3) 직접음 대 잔향: 잔향은 거리와 상관없이 비슷하고 직접음만 줄어든다 → 멀수록 울려 들린다
+     *  심장(near)은 60m 안에서 반응한다 */
+    const GAP = {
+      gain: (d) => 3 / (Math.max(0, d) + 3),                              // 0m 1.0, 20m 0.13, 40m 0.07, 100m 0.03
+      lp: (d) => clamp(16000 / (1 + Math.max(0, d) / 6), 700, 16000),      // 0m 16k, 20m 3.7k, 40m 2k, 100m 0.9k
+      verb: (d) => 0.05 + 0.05 * clamp(d / 60, 0, 1),
+    };
+    E.GAP = GAP;
+    E.setGap = (d, at) => {
+      const t = at !== undefined ? at : ctx.currentTime, set = (p, v) => p.setTargetAtTime(v, t, 0.3);
+      E.gapM = d; E.near = clamp(1 - d / 60, 0, 1);
+      set(E.chaseGain.gain, GAP.gain(d)); set(E.chaseLP.frequency, GAP.lp(d)); set(E.chaseVerb.gain, GAP.verb(d));
+      // 정확히 뒤에서만 나면 귀는 앞뒤를 헷갈린다. 추격자가 좌우로 조금씩 흔들리며 온다
+      if (E.panner && E.panner.positionX) { E.sway = (E.sway || 0) * 0.92 + (R() - 0.5) * 0.08; set(E.panner.positionX, clamp(E.sway, -0.35, 0.35)); }
+    };
     /** 미리듣기용. t0~t1 동안 거리 곡선을 0.25초 간격 점으로 찍는다(직선 하나로 이으면 거리감이 틀린다) */
     function rampNear(t0, t1, nearAt) {
       const P = [[E.chaseGain.gain, LV.chase], [E.chaseLP.frequency, LV.lp], [E.chaseVerb.gain, LV.verb]];
@@ -306,8 +324,9 @@ const SND = (() => {
           E.stepN++;
           const sp = ctx.createStereoPanner ? ctx.createStereoPanner() : null, d = sp || E.chaseIn;   // 왼발 오른발
           if (sp) { sp.pan.value = E.stepN % 2 ? -0.14 : 0.14; sp.connect(E.chaseIn); }
-          if (!E.silent('step') && !(E.pickRec('step') && playSample('step', t, d, 0.6 + 0.4 * n))) S.step(t, d, 0.6 + 0.4 * n);
-          if (n > 0.88 && t >= E.breathAt && !E.silent('breath')) E.breathAt = t + 0.25 + ((E.pickRec('breath') && playSample('breath', t, E.chaseIn, 0.9)) || (S.breath(t, E.chaseIn, 0.5 + 0.5 * n), 0.95));
+          const sv = E.gapM !== undefined ? 0.85 + R() * 0.15 : 0.6 + 0.4 * n;   // 실주행은 거리감을 체인이 다 낸다. 발마다 세기만 살짝 다르게
+          if (!E.silent('step') && !(E.pickRec('step') && playSample('step', t, d, sv))) S.step(t, d, sv);
+          if (E.breath !== false && n > 0.88 && t >= E.breathAt && !E.silent('breath')) E.breathAt = t + 0.25 + ((E.pickRec('breath') && playSample('breath', t, E.chaseIn, 0.9)) || (S.breath(t, E.chaseIn, 0.5 + 0.5 * n), 0.95));
         }
         E.nextStep += (60 / E.spm) * (1 + (R() - 0.5) * 0.05);
       }
@@ -350,27 +369,16 @@ const SND = (() => {
       }
       if (id === 'heart') { E.heartOn = true; E.stepsOn = false; E.nextBeat = t0; E.pump(end - 0.4, (t) => clamp((t - t0) / (it.dur - 1), 0, 1)); E.heartOn = false; return it.dur; }
       if (id === 'scene') {
-        // 실제 주행과 같은 순서: 종 → 발소리가 100m에서 다가온다 → 20m에서 접근 경고 → 0m 잡힘
-        const run0 = t0 + 3, catchAt = end - 5, nearAt = (t) => clamp((t - run0) / (catchAt - run0), 0, 1);
-        const d = E.loop('drone', t0), w = E.loop('wind', t0), te = E.loop('tension', t0);
-        d.level.setValueAtTime(0, t0); d.level.linearRampToValueAtTime(LV.drone(0), t0 + 2);
-        w.level.setValueAtTime(0, t0); w.level.linearRampToValueAtTime(0.3, t0 + 2);
-        te.level.setValueAtTime(0, t0);
-        for (let t = run0; t <= catchAt; t += 0.5) { const n = nearAt(t); d.level.linearRampToValueAtTime(LV.drone(n), t); te.level.linearRampToValueAtTime(LV.tension(n), t); }
-        te.level.linearRampToValueAtTime(0, catchAt + 0.3);
-        E.one('bell', { at: t0 + 0.3 });
-        E.one('creak', { at: run0 + 3, side: -0.8, far: 0.8 });
-        rampNear(t0, catchAt, (t) => (t < run0 ? 0 : nearAt(t)));
+        // 실제 주행 소리 그대로: 추격자 발소리가 100m에서 다가오고, 내 심장이 빨라지고, 가끔 울음, 0m에서 잡힘
+        const run0 = t0 + 1, catchAt = end - 5, gapAt = (t) => 100 * (1 - clamp((t - run0) / (catchAt - run0), 0, 1));
+        const P = [[E.chaseGain.gain, GAP.gain], [E.chaseLP.frequency, GAP.lp], [E.chaseVerb.gain, GAP.verb]];
+        for (const [p, f] of P) { p.cancelScheduledValues(t0); p.setValueAtTime(f(100), t0); for (let t = run0; t <= catchAt; t += 0.25) p.linearRampToValueAtTime(f(gapAt(t)), t); }
+        const nearAt = (t) => clamp(1 - gapAt(t) / 60, 0, 1);
+        E.gapM = 100; E.breath = false;
         E.spm = 168; E.stepsOn = true; E.heartOn = true; E.nextStep = run0; E.nextBeat = run0;
         E.pump(catchAt, nearAt); E.stepsOn = false; E.heartOn = false;
-        const closeAt = run0 + (catchAt - run0) * 0.8 - 1.5;   // 20m = near 0.8 지점에 쾅이 맞도록
-        E.one('close', { at: closeAt });
-        E.one('howl', { at: run0 + 6, side: 0.85, far: 0.85 });
-        E.one('scream', { at: run0 + 10, side: -0.9, far: 0.75 });
-        E.one('growl', { at: run0 + (catchAt - run0) * 0.5, chase: true });
-        E.one('whisper', { at: run0 + (catchAt - run0) * 0.62, side: 0.75, far: 0.1 });
+        for (const f of [0.15, 0.5, 0.8]) E.one('growl', { at: run0 + (catchAt - run0) * f, chase: true });
         E.one('pounce', { at: catchAt }); E.one('caught', { at: catchAt + 0.2 }); E.one('gotcha', { at: catchAt + 1.2 });
-        d.stop(end - 1.4); w.stop(end - 1.4); te.stop(end - 1.4);
         return it.dur;
       }
       return 0;
