@@ -1,65 +1,118 @@
 <title>러너웨이</title>
-<meta name="theme-color" content="#0a0f0d">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
+<meta name="theme-color" content="#0c0c0c">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Anton&family=Gothic+A1:wght@400;700;900&display=swap">
 <style>
-  :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--red-dim:#7a1d17;--orange:#ff9a3c;--yellow:#ffd93d;--acc:var(--red);
-    --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+  /* E 호러 스포츠: 검정 바탕, 초대형 이탤릭 숫자, 추격자가 가까우면 화면 전체가 빨강 */
+  :root{--bg:#0c0c0c;--panel:#161616;--line:#2a2a2a;--text:#f2f0ec;--dim:#8a8781;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff2a1f;--red-dim:#7a1d17;--orange:#ff9a3c;--yellow:#ffd93d;--acc:var(--red);
+    --display:"Gasoek One","Black Han Sans",sans-serif;--num:"Anton",Impact,sans-serif;--body:"Gothic A1",system-ui,sans-serif;--mono:"Gothic A1",system-ui,sans-serif}
   *{box-sizing:border-box}html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;transition:background .25s,color .25s}
   body.flash{background:#5a0f0a}
   button{font-family:inherit;color:inherit;cursor:pointer}
+  button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
   .screen{display:none;min-height:100vh;padding:16px 16px 40px;max-width:560px;margin:0 auto}.screen.on{display:block}
-  h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--red)}
-  h2{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;margin:8px 0 12px;color:var(--acc)}
-  h3{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--dim);margin:24px 0 8px;font-weight:500}
+  h1{font-family:var(--display);font-weight:400;font-size:46px;line-height:1.02;margin:18px 0 4px;color:var(--text);letter-spacing:-.01em}
+  h1 em{font-style:normal;color:var(--red)}
+  h2{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1;margin:8px 0 12px;color:var(--acc)}
+  h3{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--dim);margin:24px 0 8px}
   .sub{color:var(--dim);font-size:13px;margin:0 0 18px}
-  .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--dim);margin:18px 0 8px}
-  .seg{display:flex;gap:6px}.seg button{flex:1;background:var(--panel);border:1px solid var(--line);padding:12px 6px;font-family:var(--mono);font-size:14px}
-  .seg button.on{border-color:var(--acc);color:var(--acc)}
-  .card{background:var(--panel);border:1px solid var(--line);padding:10px 12px;font-family:var(--mono);font-size:12px;color:var(--dim);white-space:pre-wrap}
-  .card.ok{border-color:var(--green-dim);color:var(--text)}.card.bad{border-color:var(--red);color:var(--text)}
-  .back{background:none;border:0;color:var(--dim);font-family:var(--mono);font-size:13px;padding:8px 0}
-  .stp{display:grid;grid-template-columns:1fr 52px 112px 52px;gap:6px;align-items:center;margin:8px 0}
-  .stp .k{font-size:14px}.stp .k small{display:block;font-family:var(--mono);font-size:10px;color:var(--dim)}
-  .stp button{height:46px;background:var(--panel);border:1px solid var(--line);font-family:var(--mono);font-size:22px;touch-action:manipulation}
-  .stp .v{width:100%;height:46px;text-align:center;font-family:var(--mono);font-size:20px;color:var(--text);background:transparent;border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:0;user-select:text;-webkit-user-select:text}
-  .stp .v:focus{outline:0;border-bottom:1px solid var(--acc);background:var(--panel)}
-  .desc{font-size:13px;line-height:1.6;color:var(--dim);margin:10px 0 4px}.desc b{color:var(--text);font-weight:600}.desc p{margin:0 0 4px}
-  .last{font-family:var(--mono);font-size:12px;color:var(--dim);border-left:3px solid var(--line);padding:4px 10px;margin:0 0 14px}.last b{color:var(--text);font-weight:500}
-  .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);border:1px solid var(--line);padding:0 6px;margin-right:6px}
-  .big{display:block;width:100%;background:var(--acc);color:#140403;border:0;padding:16px;font-family:var(--display);font-size:26px;margin-top:22px}
-  .ghost{display:block;background:transparent;border:1px solid var(--line);padding:12px;font-family:var(--mono);font-size:13px;width:100%;margin-top:8px}
+  .lbl{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--dim);margin:18px 0 8px}
+  .seg{display:flex;gap:6px}.seg button{flex:1;background:var(--panel);border:0;border-radius:99px;padding:12px 6px;font-size:14px;font-weight:700;color:var(--dim)}
+  .seg button.on{background:var(--text);color:var(--bg)}
+  #kind{gap:18px;margin-top:18px;border-bottom:1px solid var(--line)}
+  #kind button{flex:none;background:none;border-radius:0;padding:8px 0;font-size:17px;font-weight:900;color:#5a5853}
+  #kind button.on{background:none;color:var(--text);box-shadow:inset 0 -3px 0 var(--red)}
+  .card{background:var(--panel);border:0;border-radius:14px;padding:10px 12px;font-size:12px;color:var(--dim);white-space:pre-wrap}
+  .card.ok{box-shadow:inset 0 0 0 1px var(--green-dim);color:var(--text)}.card.bad{box-shadow:inset 0 0 0 1px var(--red);color:var(--text)}
+  .back{background:none;border:0;color:var(--dim);font-size:13px;padding:8px 0}
+  #params{border-bottom:1px solid var(--line)}
+  .stp{display:grid;grid-template-columns:1fr 46px minmax(0,128px) 46px;gap:6px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+  .stp .k{font-size:14px;font-weight:700}.stp .k small{display:block;font-size:10px;font-weight:400;color:var(--dim)}
+  .stp button{height:46px;width:46px;border-radius:50%;background:var(--panel);border:0;font-size:22px;font-weight:700;touch-action:manipulation}
+  .stp button:active{background:var(--red)}
+  .stp .v{width:100%;height:50px;text-align:center;font-family:var(--num);font-style:italic;font-size:34px;line-height:1;color:var(--text);background:transparent;border:0;border-radius:8px;padding:0;user-select:text;-webkit-user-select:text}
+  .stp .v:focus{outline:0;background:var(--panel)}
+  .desc{font-size:13px;line-height:1.6;color:var(--dim);margin:10px 0 4px}.desc b{color:var(--text);font-weight:700}.desc p{margin:0 0 4px}
+  .last{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--dim);border-bottom:1px solid var(--line);padding:4px 0 8px;margin:0}.last b{color:var(--text);font-weight:700;text-align:right}
+  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--bg);background:var(--dim);border-radius:4px;padding:0 6px;margin-right:6px}
+  .chase{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:center;margin:14px -16px 0;background:#1a0b0a;padding:12px 16px;font-size:13px;line-height:1.55}
+  .chase svg{width:28px;height:56px;display:block}
+  .chase b{color:var(--red)}
+  /* 점진적 과부하: 같은 설정 기록 */
+  .prog{margin-top:14px}
+  .prog .ph{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--dim)}
+  .prog .ph b{font-size:12px;letter-spacing:0;color:var(--text)}
+  .bars{display:flex;align-items:flex-end;gap:6px;height:64px;margin-top:8px}
+  .bars div{flex:1;max-width:34px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-family:var(--num);font-size:15px;color:var(--dim)}
+  .bars i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--red);margin-top:3px;min-height:3px}
+  .bars div.zero{color:var(--text)}.bars div.zero i{background:var(--text)}
+  .bars div.now{color:var(--text)}.bars div.now i{box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--text)}
+  .up{margin-top:12px;border-radius:16px;background:var(--text);color:var(--bg);padding:14px}
+  .up b{display:block;font-family:var(--display);font-weight:400;font-size:22px;line-height:1.15}
+  .up p{margin:4px 0 10px;font-size:13px;color:#4a4844}
+  .up .opts{display:flex;gap:8px}
+  .up .opts button{flex:1;border:0;border-radius:99px;background:var(--bg);color:var(--text);padding:11px 6px;font-size:13px;font-weight:700;line-height:1.3}
+  .up .opts button small{display:block;font-family:var(--num);font-style:italic;font-size:19px;font-weight:400;color:var(--red)}
+  .trend{margin-top:10px;font-size:14px;line-height:1.55}.trend b{color:var(--red)}
+  /* 밀어서 출발 */
+  .slide{position:relative;height:68px;border-radius:99px;background:var(--red);margin-top:22px;box-shadow:0 10px 30px rgba(255,42,31,.3);touch-action:none;overflow:hidden}
+  .slide .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-left:56px;color:var(--text);font-weight:900;font-size:18px;pointer-events:none;transition:opacity .15s}
+  .slide .lab i{font-style:normal;opacity:.5;letter-spacing:-2px;margin-left:8px}
+  .slide.nudge{animation:nudge .5s}
+  @keyframes nudge{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+  #start{position:absolute;left:7px;top:7px;width:54px;height:54px;border-radius:50%;background:var(--text);color:var(--red);border:0;font-size:26px;font-weight:900;padding:0;touch-action:none;transition:transform .25s cubic-bezier(.2,.8,.3,1)}
+  #start.drag{transition:none}
+  .slidehint{text-align:center;font-size:12px;color:var(--dim);margin-top:8px;min-height:18px}
+  .big{display:block;width:100%;background:var(--acc);color:var(--text);border:0;border-radius:99px;padding:16px;font-size:17px;font-weight:900;margin-top:22px}
+  .ghost{display:block;background:transparent;border:1px solid var(--line);border-radius:99px;padding:12px;font-size:13px;font-weight:700;width:100%;margin-top:8px}
   details.set{margin-top:26px;border-top:1px solid var(--line)}
-  details.set summary{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim);padding:14px 2px;cursor:pointer}
+  details.set summary{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--dim);padding:14px 2px;cursor:pointer}
   /* run */
-  #run{padding:12px 14px 20px}
-  .rhead{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.08em}
-  .gapbox{text-align:center;padding:26px 0 18px}
-  #gapBig{font-family:var(--display);font-size:96px;line-height:1;color:var(--text)}
-  #gapBig.behind{color:var(--red)}#gapBig.warn{color:var(--orange)}#gapBig.dim{color:var(--dim)}
-  #gapSub{font-family:var(--mono);font-size:14px;color:var(--dim);margin-top:8px;min-height:21px}
-  .bar{position:relative;height:16px;background:var(--panel);border:1px solid var(--line);margin:8px 0 14px}
-  .bar i{position:absolute;top:-5px;width:4px;height:24px;margin-left:-2px;transition:left .3s}
-  #barMe{background:var(--text)}#barOpp{background:var(--acc)}
-  .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
-  .num{background:var(--panel);border:1px solid var(--line);padding:8px}
-  .num b{display:block;font-family:var(--mono);font-size:24px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
-  .banner{font-family:var(--mono);font-size:12px;color:var(--yellow);text-align:center;padding:8px;min-height:34px}
+  #run{padding:12px 16px 20px}
+  .rhead{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--dim)}
+  .gapbox{padding:14px 0 4px}
+  #gapBig{font-family:var(--num);font-style:italic;font-size:150px;line-height:.86;letter-spacing:-.02em;color:var(--text)}
+  #gapBig.behind{color:var(--text)}#gapBig.warn{color:var(--red)}#gapBig.dim{color:var(--dim)}
+  #gapSub{font-family:var(--display);font-size:26px;line-height:1.1;color:var(--text);margin-top:8px;min-height:29px}
+  .bar{position:relative;height:14px;background:var(--panel);border-radius:99px;margin:24px 0 4px}
+  .bar i{position:absolute;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;transition:left .3s}
+  #barMe{background:var(--text);box-shadow:0 0 0 3px var(--bg)}#barOpp{background:var(--red)}
+  .barl{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--dim)}
+  .nums{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0 8px;border-top:2px solid var(--line)}
+  .num{padding:8px 0}.num+.num{border-left:2px solid var(--line);padding-left:10px}
+  .num b{display:block;font-family:var(--num);font-size:30px;font-weight:400;line-height:1.1}.num span{font-size:10px;font-weight:700;color:var(--dim)}
+  .banner{font-size:13px;font-weight:700;color:var(--yellow);text-align:center;padding:8px;min-height:36px}
   .banner.bad{color:var(--red)}
-  .ctl{display:flex;gap:6px;margin-top:6px}.ctl button{flex:1;background:var(--panel);border:1px solid var(--line);padding:14px;font-family:var(--mono)}
-  .dbg{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;text-align:right}
+  .ctl{display:flex;gap:8px;margin-top:6px}.ctl button{flex:1;background:transparent;border:2px solid var(--line);border-radius:99px;padding:13px 4px;font-size:13px;font-weight:900}
+  .ctl #stop{background:var(--text);color:var(--bg);border-color:var(--text)}
+  .dbg{font-size:10px;color:var(--dim);margin-top:8px;text-align:right}
+  /* 추격자가 20m 안: 화면 전체가 빨강 */
+  body.hot{background:var(--red);color:#0c0c0c}
+  body.hot #run .rhead,body.hot #run .num span,body.hot #run .barl,body.hot #run .dbg{color:rgba(0,0,0,.6)}
+  body.hot #gapBig,body.hot #gapSub{color:#0c0c0c}
+  body.hot .bar{background:rgba(0,0,0,.22)}body.hot #barOpp{background:#0c0c0c}body.hot #barMe{box-shadow:0 0 0 3px var(--red)}
+  body.hot .nums{border-top-color:#0c0c0c}body.hot .num+.num{border-left-color:#0c0c0c}
+  body.hot .ctl button{border-color:#0c0c0c}body.hot .ctl #stop{background:#0c0c0c;color:var(--red)}
+  body.hot .banner{color:#0c0c0c}
   #vig{position:fixed;inset:0;pointer-events:none;opacity:0;z-index:50;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 35%,rgba(110,0,0,.95) 100%);transition:opacity .6s}
+  body.hot #vig{display:none}
   /* result */
-  .hero{font-family:var(--display);font-weight:400;font-size:60px;line-height:1;color:var(--green);margin:6px 0 0}
-  .hero.fail{color:var(--red)}
-  .hero-l{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.12em}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}
-  .stat{background:var(--panel);border:1px solid var(--line);padding:10px}
-  .stat b{display:block;font-family:var(--mono);font-size:22px;font-weight:500}.stat span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
+  .hero-l{font-family:var(--display);font-size:32px;line-height:1.05;color:var(--text);margin-top:10px}
+  .hero-l.fail{color:var(--red)}
+  .hero{font-family:var(--num);font-style:italic;font-weight:400;font-size:92px;line-height:.92;color:var(--text);margin:4px 0 0}
+  .vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:16px 0 10px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .vs b{display:block;font-family:var(--num);font-size:30px;font-weight:400;line-height:1}.vs span{font-size:11px;color:var(--dim)}
+  .vs .mid{font-weight:900;color:var(--red)}.vs div:last-child{text-align:right}
+  .closest{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--dim)}.closest b{font-family:var(--num);font-size:40px;font-weight:400;color:var(--text)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);margin:14px 0;border-top:2px solid var(--line)}
+  .stat{padding:8px 0}.stat+.stat{border-left:2px solid var(--line);padding-left:10px}
+  .stat b{display:block;font-family:var(--num);font-size:26px;font-weight:400;line-height:1.1}.stat span{font-size:10px;font-weight:700;color:var(--dim)}
   .story{border-left:3px solid var(--acc);padding:8px 12px;margin:10px 0;font-size:15px}
-  details{margin-top:10px}summary{font-family:var(--mono);font-size:12px;color:var(--dim);cursor:pointer;padding:8px 0}
-  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}th{color:var(--dim);font-weight:400;font-size:11px}
-  .log{font-family:var(--mono);font-size:11px;color:var(--dim);max-height:220px;overflow:auto;border:1px solid var(--line);padding:6px;white-space:pre-wrap}
+  details{margin-top:10px}summary{font-size:12px;font-weight:700;color:var(--dim);cursor:pointer;padding:8px 0}
+  table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}th{color:var(--dim);font-weight:400;font-size:11px}
+  .log{font-family:ui-monospace,monospace;font-size:11px;color:var(--dim);max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px;white-space:pre-wrap}
+  #shareCard{width:100%;margin-top:18px;border-radius:12px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   /* review */
   .rvg{border-bottom:1px solid var(--line);margin:0}.rvg summary{padding:12px 2px;color:var(--text);font-family:var(--body);font-size:15px}.rvg summary code{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:8px}
   .rvg p{margin:0 0 8px;font-size:12px;color:var(--dim);line-height:1.5}
@@ -76,8 +129,6 @@
 </style>
 
 <div id="home" class="screen on">
-  <h1>러너웨이</h1>
-  <p class="sub">추격자가 정한 페이스로 뒤에서 쫓아온다. 잡히지 마라.</p>
 
   <div class="card bad" id="embedWarn" style="display:none;white-space:normal;line-height:1.6;margin-bottom:12px">
     <b style="color:var(--red)">여기서는 실주행이 안 된다.</b><br>
@@ -87,12 +138,16 @@
   </div>
 
   <div class="last" id="last" style="display:none"></div>
+  <h1>오늘도<br>뒤에서 <em>온다.</em></h1>
+  <p class="sub" style="margin:6px 0 0">추격자가 내가 정한 페이스로 쫓아온다. 잡히지 마라.</p>
   <div class="seg" id="kind"><button data-v="normal" class="on">일반런</button><button data-v="build">빌드업</button><button data-v="interval">인터벌</button></div>
   <div class="desc" id="kindDesc"></div>
   <div id="params"></div>
-  <div class="card" id="planSum" style="margin-top:14px;white-space:normal;line-height:1.6"></div>
-  <button class="big" id="start">출발</button>
-  <p class="sub" style="margin-top:12px">이어폰을 끼면 화면은 안 봐도 된다. 차도와 횡단보도에서는 신호를 먼저 본다.</p>
+  <div class="chase"><svg viewBox="0 0 50 110" aria-hidden="true"><ellipse cx="25" cy="12" rx="8" ry="10" fill="#ff2a1f"/><path d="M14 24 Q25 19 36 24 L42 60 Q40 64 37 61 L34 44 L35 70 L38 108 L30 108 L26 76 L23 108 L15 108 L16 70 L16 44 L13 62 Q10 64 8 60 Z" fill="#ff2a1f"/></svg><div id="planSum"></div></div>
+  <div class="prog" id="prog" style="display:none"></div>
+  <div class="slide" id="slide"><div class="lab">밀어서 도망치기<i>›››</i></div><button id="start" aria-label="출발. 오른쪽으로 밀거나 엔터">›</button></div>
+  <div class="slidehint" id="slideHint"></div>
+  <p class="sub" style="margin-top:6px">이어폰을 끼면 화면은 안 봐도 된다. 차도와 횡단보도에서는 신호를 먼저 본다.</p>
 
   <details class="set" id="setBox">
     <summary>설정 · GPS 확인 · 소리 검수</summary>
@@ -112,9 +167,10 @@
 </div>
 
 <div id="run" class="screen">
-  <div class="rhead"><span id="rMode">-</span><span id="rSet"></span></div>
+  <div class="rhead"><span id="rMode">-</span><span><span id="rSet"></span> <span id="rCaught">잡힘 0</span></span></div>
   <div class="gapbox"><div id="gapBig" class="dim">GPS</div><div id="gapSub">위치 잡는 중</div></div>
   <div class="bar"><i id="barOpp" style="left:0"></i><i id="barMe" style="left:0"></i></div>
+  <div class="barl"><span>출발</span><span id="barMid"></span><span>완주</span></div>
   <div class="nums">
     <div class="num"><b id="nPace">-</b><span>내 페이스</span></div>
     <div class="num"><b id="nTarget">-</b><span>목표 페이스</span></div>
@@ -128,28 +184,31 @@
 
 <div id="safety" style="display:none;position:fixed;inset:0;background:rgba(4,8,7,.96);z-index:120;align-items:center;justify-content:center;padding:24px">
   <div style="max-width:420px">
-    <h2 style="color:var(--red);margin:0 0 14px">달리기 전에</h2>
+    <h2 style="margin:0 0 14px">달리기 전에</h2>
     <ul style="padding-left:18px;line-height:1.8;margin:0 0 22px">
       <li>차도와 횡단보도에서는 게임보다 신호를 먼저 본다</li>
       <li>이어폰 음량은 차 소리가 들리는 수준으로 유지한다</li>
       <li>멈춰 서면 추격자도 멈춘다. 신호등에서 무리하지 않는다</li>
       <li>사고는 앱이 막아주지 않는다</li>
     </ul>
-    <button class="big" id="safetyOk" style="--acc:var(--green)">알겠다</button>
+    <button class="big" id="safetyOk">알겠다</button>
   </div>
 </div>
 
 <div id="pocketCover" style="display:none;position:fixed;inset:0;background:#000;z-index:99;align-items:center;justify-content:center;color:#1d3a30;font:14px monospace">화면 꺼둠 · 탭하면 돌아온다</div>
 
 <div id="result" class="screen">
+  <p class="sub" id="rSub" style="margin:4px 0 0;font-weight:700;letter-spacing:.1em"></p>
   <div class="hero-l" id="rLabel">결과</div>
   <div class="hero" id="rHero">-</div>
-  <p class="sub" id="rSub"></p>
+  <div class="vs" id="rVs"></div>
+  <div class="closest" id="rClose"></div>
+  <div class="prog" id="rProg"></div>
   <div class="stats" id="rStats"></div>
   <div class="story" id="rStory"></div>
   <div id="rSets"></div>
   <details><summary>이벤트 로그</summary><div class="log" id="rLog"></div></details>
-  <canvas id="shareCard" width="1080" height="1080" style="width:100%;margin-top:18px;border:1px solid var(--line)"></canvas>
+  <canvas id="shareCard" width="1080" height="1080"></canvas>
   <button class="big" id="share">결과 이미지 공유</button>
   <button class="ghost" id="again">다시</button>
   <button class="ghost" id="copy">결과 텍스트 복사</button>
@@ -907,10 +966,51 @@ function drawLast() {
   let r = null; try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); r = all[all.length - 1]; } catch (e) { }
   const el = $('#last'); if (!r || !r.result) { el.style.display = 'none'; return; }
   const d = new Date(r.at), when = `${d.getMonth() + 1}월 ${d.getDate()}일`;
-  el.innerHTML = `지난 기록 · ${when} ${r.src === 'demo' ? ' (데모)' : ''}<br><b>${KIND_KO[r.type] || ''} ${(r.result.dist / 1000).toFixed(2)}km · ${fmt(r.result.moving)} · ${r.result.title}</b>`;
-  el.style.display = 'block';
+  el.innerHTML = `<span>지난 기록 · ${when}${r.src === 'demo' ? ' (데모)' : ''}</span><b>${KIND_KO[r.type] || ''} ${(r.result.dist / 1000).toFixed(2)}km · ${fmt(r.result.moving)} · ${r.result.title}</b>`;
+  el.style.display = 'flex';
 }
 const KINDS = { normal: ['distM', 'pace'], build: ['distM', 'p0', 'p1'], interval: ['ipace', 'setM', 'sets', 'restS'] };
+
+// ---------- 점진적 과부하 ----------
+// 같은 설정(종류 + 값 전부)으로 달린 기록끼리 잡힌 횟수를 비교한다. 줄어들다 0회가 되면 한 단계 올리자고 한다
+// 실내 데모와 중단한 기록은 비교에서 뺀다
+const setKey = (c) => (c.type || 'normal') + '|' + (KINDS[c.type] || KINDS.normal).map(k => c[k]).join('|');
+const counted = (r) => r && r.result && r.src !== 'demo' && !(r.result.quit || r.result.title === '중단');
+function runsOf(c) {
+  let all = []; try { all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); } catch (e) { }
+  const k = setKey(c); return all.filter(r => counted(r) && setKey(r) === k);
+}
+/** 다음 단계 두 가지. 페이스를 올리거나(숫자 작게) 양을 늘린다 */
+function nextUp(c) {
+  const fast = (v, d) => Math.max(P.pace.min, v - d), more = (m) => Math.max(m + 100, Math.round(m * 1.1 / 100) * 100);
+  if (c.type === 'build') return [
+    { k: '페이스 올리기', v: `${paceFmt(c.p0)}→${paceFmt(c.p1)} 를 ${paceFmt(fast(c.p0, 10))}→${paceFmt(fast(c.p1, 10))}`, short: `${paceFmt(fast(c.p0, 10))}→${paceFmt(fast(c.p1, 10))}`, set: { p0: fast(c.p0, 10), p1: fast(c.p1, 10) } },
+    { k: '거리 늘리기', v: `${kmTxt(c.distM)}km 를 ${kmTxt(more(c.distM))}km`, short: kmTxt(more(c.distM)) + 'km', set: { distM: more(c.distM) } }];
+  if (c.type === 'interval') return [
+    { k: '페이스 올리기', v: `${paceFmt(c.ipace)} 를 ${paceFmt(fast(c.ipace, 5))}`, short: paceFmt(fast(c.ipace, 5)), set: { ipace: fast(c.ipace, 5) } },
+    { k: '세트 늘리기', v: `${c.sets}세트를 ${Math.min(P.sets.max, c.sets + 1)}세트`, short: Math.min(P.sets.max, c.sets + 1) + '세트', set: { sets: Math.min(P.sets.max, c.sets + 1) } }];
+  return [
+    { k: '페이스 올리기', v: `${paceFmt(c.pace)} 를 ${paceFmt(fast(c.pace, 10))}`, short: paceFmt(fast(c.pace, 10)), set: { pace: fast(c.pace, 10) } },
+    { k: '거리 늘리기', v: `${kmTxt(c.distM)}km 를 ${kmTxt(more(c.distM))}km`, short: kmTxt(more(c.distM)) + 'km', set: { distM: more(c.distM) } }];
+}
+/** 같은 설정 기록 막대 + 0회면 다음 단계 카드. now = 방금 끝난 기록을 강조 */
+function progHTML(c, now) {
+  const rs = runsOf(c); if (!rs.length) return '';
+  const last8 = rs.slice(-8), mx = Math.max(1, ...last8.map(r => r.result.caught || 0));
+  let h = `<div class="ph"><span>이 설정 · 잡힌 횟수</span><b>${rs.length}번째 기록</b></div><div class="bars">` +
+    last8.map((r, i) => { const n = r.result.caught || 0; return `<div class="${n ? '' : 'zero'}${now && i === last8.length - 1 ? ' now' : ''}">${n}<i style="height:${n ? Math.round(n / mx * 44) + 4 : 3}px"></i></div>`; }).join('') + '</div>';
+  const n = rs[rs.length - 1].result.caught || 0, prev = rs.length > 1 ? rs[rs.length - 2].result.caught || 0 : null;
+  if (now && prev !== null) h += `<div class="trend">${n < prev ? `지난번 ${prev}회 → 이번 <b>${n}회</b>. 줄었다.` : n > prev ? `지난번 ${prev}회 → 이번 <b>${n}회</b>. 오늘은 버거웠다.` : `지난번과 같은 ${n}회.`}</div>`;
+  if (n === 0) h += `<div class="up"><b>한 번도 안 잡혔다. 올릴 때다.</b><p>같은 설정은 이제 쉽다. 하나만 올려서 다시 잡히는 횟수를 줄여 가라.</p><div class="opts">` +
+    nextUp(c).map((o, i) => `<button data-up="${i}" title="${o.v}">${o.k}<small>${o.short}</small></button>`).join('') + '</div></div>';
+  return h;
+}
+function drawProg(box, c, now) {
+  const h = progHTML(c, now); box.innerHTML = h; box.style.display = h ? '' : 'none';
+  box.querySelectorAll('[data-up]').forEach(b => b.addEventListener('click', () => {
+    const o = nextUp(c)[+b.dataset.up]; cfg = { ...c, ...o.set }; saveCfg(); log('단계 올림 ' + JSON.stringify(o.set)); home();
+  }));
+}
 function home() { segSet('#kind', cfg.type); drawLast(); drawParams(); show('home'); }
 seg('#kind', v => { cfg.type = v; saveCfg(); drawParams(); });
 function drawParams() {
@@ -943,7 +1043,7 @@ function drawParams() {
 }
 function planSum() {
   const p = GAME.plan(cfg), s0 = p.sets[0];
-  let t = (cfgPrev ? '<span class="tag">지난번 설정</span>' : '') + `추격자 ${Math.round(GAME.headM(s0))}m 뒤에서 출발 · `;
+  let t = (cfgPrev ? '<span class="tag">지난번 설정</span>' : '') + `추격자 <b>${Math.round(GAME.headM(s0))}m</b> 뒤에서 출발 · `;
   if (cfg.type === 'interval') t += `세트당 ${fmt(GAME.planTimeS(s0))}<br>총 ${(cfg.setM * cfg.sets / 1000).toFixed(1)} km · 회복 중에는 안 쫓아온다`;
   else {
     t += cfg.type === 'build' ? `${paceFmt(s0.p0)}에서 ${paceFmt(s0.p1)}까지 빨라진다` : `${paceFmt(s0.p0)}/km 고정`;
@@ -951,6 +1051,7 @@ function planSum() {
     if (cfg.type === 'build' && s0.p1 >= s0.p0) t += '<br><span style="color:var(--orange)">종료 페이스가 시작보다 빨라야(숫자가 작아야) 빌드업이다</span>';
   }
   $('#planSum').innerHTML = t;
+  drawProg($('#prog'), cfg, false);
 }
 
 // ---------- 오디오 ----------
@@ -1174,7 +1275,7 @@ function handle(ev, snap) {
   }
 }
 function renderWait(fix) {
-  $('#gapBig').textContent = 'GPS'; $('#gapBig').className = 'dim';
+  $('#gapBig').textContent = 'GPS'; $('#gapBig').className = 'dim'; document.body.classList.remove('hot');
   $('#gapSub').textContent = '위치 잡는 중';
   const b = $('#banner'); b.className = 'banner bad';
   b.textContent = st.gpsErr ? 'GPS ' + st.gpsErr
@@ -1184,22 +1285,26 @@ function renderWait(fix) {
 }
 function render(s, fix) {
   const big = $('#gapBig'), sub = $('#gapSub'), b = $('#banner');
-  $('#rSet').textContent = s.sets > 1 ? `세트 ${s.set}/${s.sets}` : '';
+  $('#rSet').textContent = s.sets > 1 ? `세트 ${s.set}/${s.sets} · ` : '';
+  $('#rCaught').textContent = `잡힘 ${s.caught}`;
+  $('#barMid').textContent = s.phase === 'run' ? `${(s.me / 1000).toFixed(2)} / ${(s.distM / 1000).toFixed(2)} km` : '';
   $('#nDist').textContent = (s.dist / 1000).toFixed(2);
   $('#nTime').textContent = fmt(s.moving);
   $('#nPace').textContent = s.phase === 'run' ? paceFmt(s.myPace) : '-';
   $('#nTarget').textContent = s.phase === 'rest' ? '회복' : paceFmt(s.target);
-  let vig = 0;
+  let vig = 0, hot = false;
   if (s.phase === 'ready') { big.textContent = '준비'; big.className = 'dim'; sub.textContent = '뒤에서 뭔가 움직인다'; }
   else if (s.phase === 'count') { big.textContent = String(s.cd); big.className = ''; sub.textContent = s.set > 1 ? `${s.set}세트` : '출발 준비'; }
   else if (s.phase === 'rest') { big.textContent = fmt(s.rest); big.className = 'dim'; sub.textContent = `회복 · 다음 ${s.set}/${s.sets}세트`; }
   else if (s.phase === 'run') {
     const g = Math.round(s.gap);
     big.textContent = Math.max(0, g) + 'm'; big.className = g < 20 ? 'behind' : g < 45 ? 'warn' : '';
-    sub.textContent = s.caught ? `추격자가 뒤에 · 잡힘 ${s.caught}회` : '추격자가 뒤에';
+    sub.textContent = g < 20 ? '추격자가 바로 뒤에 있다' : g < 45 ? '추격자가 가까워진다' : '추격자가 뒤에';
+    hot = g < 20;
     vig = Math.pow(Math.max(0, Math.min(1, 1 - s.gap / 60)), 2);
   }
   $('#vig').style.opacity = vig.toFixed(2);
+  document.body.classList.toggle('hot', hot);
   const pct = (x) => Math.max(0, Math.min(100, x / s.distM * 100)) + '%';
   $('#barMe').style.left = s.phase === 'run' ? pct(s.me) : '0%';
   $('#barOpp').style.left = s.phase === 'run' ? pct(s.opp) : '0%';
@@ -1236,7 +1341,7 @@ function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
   const g = st.game; if (!g) return;
   if (!g.done) handle(g.stop(), g.snap());
-  st.game = null; $('#vig').style.opacity = 0;
+  st.game = null; $('#vig').style.opacity = 0; document.body.classList.remove('hot');
   if (A.E) { const E = A.E; setTimeout(() => { if (A.E === E) E.halt(); }, 6000); }
   showResult(g.summary());
 }
@@ -1251,36 +1356,48 @@ function showResult(s) {
     hero = fail ? `잡힘 ${s.caught}회` : fmt(myT);
     story = (fail ? `추격자한테 ${s.caught}번 잡혔다.` : '한 번도 안 잡혔다.') + ` 가장 가까이 온 건 ${closest}m.`;
   }
-  $('#rLabel').textContent = title;
-  $('#rHero').textContent = hero; $('#rHero').className = 'hero' + (fail ? ' fail' : '');
+  $('#rLabel').textContent = title; $('#rLabel').className = 'hero-l' + (fail ? ' fail' : '');
+  $('#rHero').textContent = hero;
   $('#rSub').textContent = `${KIND_KO[s.kind]} · ${st.src === 'gps' ? '실주행' : '실내 데모'}`;
   const avg = dist && myT ? myT / (dist / 1000) : (s.dist && s.moving ? s.moving / (s.dist / 1000) : 0);
+  const opp = s.kind === 'build' ? `${paceFmt(cfg.p0)}→${paceFmt(cfg.p1)}` : paceFmt(s.kind === 'interval' ? cfg.ipace : cfg.pace);
+  $('#rVs').innerHTML = `<div><b>${paceFmt(avg)}</b><span>나 평균 /km</span></div><div class="mid">VS</div><div><b>${opp}</b><span>추격자 /km</span></div>`;
+  $('#rClose').innerHTML = s.minGap === null ? '' : `<b>${closest}m</b>가장 가까이 온 거리`;
   $('#rStats').innerHTML = [[(s.dist / 1000).toFixed(2), 'KM'], [fmt(s.moving), '이동 시간'], [paceFmt(avg), '평균 /KM']].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
   $('#rStory').textContent = story;
   $('#rSets').innerHTML = inter && R.length ? '<table><tr><th>세트</th><th>나</th><th>잡힘</th></tr>' +
     R.map(r => `<tr><td>${r.set}</td><td>${fmt(r.myT)}</td><td>${r.caught}</td></tr>`).join('') + '</table>' : '';
   $('#rLog').textContent = st.log.join('\n');
-  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), ...cfg, src: st.src, result: { title, hero, dist: s.dist, moving: s.moving, caught: s.caught } }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-50))); } catch (e) { }
-  st.lastResult = { title, hero, fail, dist: s.dist, moving: s.moving, avg, s };
+  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), ...cfg, src: st.src, result: { title, hero, dist: s.dist, moving: s.moving, caught: s.caught, quit: !!s.quit } }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-200))); } catch (e) { }
+  if (st.src === 'demo') { $('#rProg').innerHTML = '<div class="trend">실내 데모는 잡힌 횟수 비교에 넣지 않는다.</div>'; }
+  else if (s.quit) { $('#rProg').innerHTML = '<div class="trend">중단한 기록은 잡힌 횟수 비교에서 뺀다.</div>'; }
+  else drawProg($('#rProg'), cfg, true);
+  st.lastResult = { title, hero, fail, dist: s.dist, moving: s.moving, avg, opp, s };
   show('result'); drawShareCard();
+  if (document.fonts) document.fonts.ready.then(drawShareCard);   // 글꼴이 늦게 오면 다시 그린다
 }
 const SHARE_URL = 'cjsdudwls1.github.io/RUNA-WAY';
 /** 결과 이미지. 러닝 게임은 결과 스크린샷으로 퍼진다 */
 function drawShareCard() {
   const c = $('#shareCard'), g = c.getContext('2d'), W = 1080, r = st.lastResult; if (!r) return;
-  const acc = r.fail ? '#ff4a3d' : '#3ff2a5';
-  g.fillStyle = '#0d0707'; g.fillRect(0, 0, W, W);
-  g.strokeStyle = '#2b1b1b'; g.lineWidth = 2;
-  for (let x = 90; x < W; x += 90) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, W); g.stroke(); }
-  g.textAlign = 'center';
-  g.fillStyle = '#7d8f88'; g.font = '44px "IBM Plex Mono", monospace';
-  g.fillText(`공포 · ${KIND_KO[r.s.kind]}`, W / 2, 200);
-  g.fillStyle = acc; g.font = '140px "Black Han Sans", sans-serif'; g.fillText(r.title, W / 2, 400);
-  g.fillStyle = '#dfe9e4'; g.font = '500 120px "IBM Plex Mono", monospace'; g.fillText(r.hero, W / 2, 580);
-  g.fillStyle = '#dfe9e4'; g.font = '600 56px "IBM Plex Sans KR", sans-serif';
-  g.fillText(`${(r.dist / 1000).toFixed(2)} km · ${fmt(r.moving)} · ${paceFmt(r.avg)}/km`, W / 2, 720);
-  g.fillStyle = '#ff4a3d'; g.font = '64px "Black Han Sans", sans-serif'; g.fillText('러너웨이', W / 2, 920);
-  g.fillStyle = '#7d8f88'; g.font = '32px "IBM Plex Mono", monospace'; g.fillText(SHARE_URL, W / 2, 980);
+  const RED = '#ff2a1f', W2 = '#f2f0ec', DIM = '#8a8781';
+  g.fillStyle = '#0c0c0c'; g.fillRect(0, 0, W, W);
+  g.fillStyle = RED; g.fillRect(0, W - 18, W, 18);
+  g.textAlign = 'left';
+  g.fillStyle = DIM; g.font = '700 40px "Gothic A1", sans-serif';
+  g.fillText(`${KIND_KO[r.s.kind]} · ${(r.dist / 1000).toFixed(2)} KM`, 80, 150);
+  g.fillStyle = r.fail ? RED : W2; g.font = '120px "Gasoek One", "Black Han Sans", sans-serif'; g.fillText(r.title, 80, 300);
+  let fs = 300; g.font = `italic ${fs}px "Anton", Impact, sans-serif`;
+  while (fs > 120 && g.measureText(r.hero).width > W - 160) { fs -= 10; g.font = `italic ${fs}px "Anton", Impact, sans-serif`; }
+  g.fillStyle = W2; g.fillText(r.hero, 70, 610);
+  g.fillStyle = '#2a2a2a'; g.fillRect(80, 680, W - 160, 3);
+  g.fillStyle = W2; g.font = '84px "Anton", Impact, sans-serif';
+  g.fillText(paceFmt(r.avg), 80, 800); g.textAlign = 'right'; g.fillText(r.opp, W - 80, 800);
+  g.fillStyle = DIM; g.font = '700 32px "Gothic A1", sans-serif';
+  g.textAlign = 'left'; g.fillText('나 평균 /km', 80, 850); g.textAlign = 'right'; g.fillText('추격자 /km', W - 80, 850);
+  g.textAlign = 'center'; g.fillStyle = RED; g.font = '900 44px "Gothic A1", sans-serif'; g.fillText('VS', W / 2, 790);
+  g.textAlign = 'left'; g.fillStyle = RED; g.font = '56px "Gasoek One", "Black Han Sans", sans-serif'; g.fillText('러너웨이', 80, 990);
+  g.textAlign = 'right'; g.fillStyle = DIM; g.font = '700 30px "Gothic A1", sans-serif'; g.fillText(SHARE_URL, W - 80, 985);
 }
 async function shareCard() {
   const c = $('#shareCard'), r = st.lastResult;
@@ -1294,7 +1411,24 @@ async function shareCard() {
   const url = URL.createObjectURL(blob), link = document.createElement('a');
   link.href = url; link.download = 'runaway.png'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
-$('#start').addEventListener('click', start);
+// 밀어서 출발. 탭 한 번으로는 출발하지 않는다(주머니 속 오작동 방지). 키보드는 엔터·스페이스로 출발
+function go() { if (!safeSeen && st.src === 'gps') { $('#safety').style.display = 'flex'; return; } start(); }
+{
+  const knob = $('#start'), track = $('#slide'), hint = $('#slideHint');
+  let x0 = null, dx = 0, moved = false;
+  const maxX = () => track.clientWidth - knob.offsetWidth - 14;
+  const put = (x) => { knob.style.transform = `translateX(${x}px)`; track.querySelector('.lab').style.opacity = String(Math.max(0, 1 - x / (maxX() * 0.6))); };
+  const reset = () => { knob.classList.remove('drag'); put(0); };
+  knob.addEventListener('pointerdown', e => { x0 = e.clientX; dx = 0; moved = false; knob.classList.add('drag'); try { knob.setPointerCapture(e.pointerId); } catch (err) { } });
+  knob.addEventListener('pointermove', e => { if (x0 === null) return; dx = Math.max(0, Math.min(maxX(), e.clientX - x0)); if (dx > 6) moved = true; put(dx); });
+  const up = () => {
+    if (x0 === null) return; x0 = null; knob.classList.remove('drag');
+    if (dx >= maxX() * 0.85) { hint.textContent = ''; reset(); go(); }   // 사용자 동작 안에서 바로 출발해야 아이폰 소리가 켜진다
+    else { reset(); if (!moved) { hint.textContent = '오른쪽 끝까지 밀어야 출발한다'; track.classList.remove('nudge'); void track.offsetWidth; track.classList.add('nudge'); } }
+  };
+  knob.addEventListener('pointerup', up); knob.addEventListener('pointercancel', up);
+  knob.addEventListener('click', e => { if (e.detail === 0) go(); });   // 키보드·보조기기
+}
 $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#share').addEventListener('click', shareCard);
@@ -1313,7 +1447,6 @@ window.addEventListener('unhandledrejection', e => log('오류(비동기) ' + ((
 let safeSeen = false;
 try { safeSeen = localStorage.getItem('safetyOk') === '1'; } catch (e) { }
 $('#safetyOk').addEventListener('click', () => { try { localStorage.setItem('safetyOk', '1'); } catch (e) { } $('#safety').style.display = 'none'; safeSeen = true; });
-$('#start').addEventListener('click', (e) => { if (!safeSeen && st.src === 'gps') { e.stopImmediatePropagation(); $('#safety').style.display = 'flex'; } }, true);
 // 끼워진 창에서 열렸으면 실주행이 안 된다. 앱이 고장난 줄 알게 두지 않는다
 if (EMBEDDED) {
   const url = 'https://' + SHARE_URL + '/';
