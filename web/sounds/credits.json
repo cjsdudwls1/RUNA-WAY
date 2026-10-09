@@ -651,6 +651,612 @@
   "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
  },
  {
+  "file": "gotcha/dokkaebi-demon.mp3",
+  "title": "도깨비 \"으하하하! 잡았다!\" · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "license": "생성: Qwen3-TTS VoiceDesign (Apache-2.0)",
+  "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+  "from": "dokkaebi_line_hit_1.mp3 (괴물런)",
+  "edits": "가공 demon"
+ },
+ {
+  "file": "gotcha/dokkaebi-low.mp3",
+  "title": "도깨비 \"으하하하! 잡았다!\" · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "license": "생성: Qwen3-TTS VoiceDesign (Apache-2.0)",
+  "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+  "from": "dokkaebi_line_hit_1.mp3 (괴물런)",
+  "edits": "가공 low"
+ },
+ {
+  "file": "gotcha/dokkaebi-orig.mp3",
+  "title": "도깨비 \"으하하하! 잡았다!\" · orig",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "license": "생성: Qwen3-TTS VoiceDesign (Apache-2.0)",
+  "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+  "from": "dokkaebi_line_hit_1.mp3 (괴물런)",
+  "edits": "가공 orig"
+ },
+ {
+  "file": "gotcha/s2-l1-child.mp3",
+  "title": "\"잡았다~\" 화자 2 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 child"
+ },
+ {
+  "file": "gotcha/s2-l1-clear.mp3",
+  "title": "\"잡았다~\" 화자 2 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 clear"
+ },
+ {
+  "file": "gotcha/s2-l1-deep.mp3",
+  "title": "\"잡았다~\" 화자 2 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 deep"
+ },
+ {
+  "file": "gotcha/s2-l1-demon.mp3",
+  "title": "\"잡았다~\" 화자 2 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 demon"
+ },
+ {
+  "file": "gotcha/s2-l1-drag.mp3",
+  "title": "\"잡았다~\" 화자 2 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 drag"
+ },
+ {
+  "file": "gotcha/s2-l1-low.mp3",
+  "title": "\"잡았다~\" 화자 2 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 low"
+ },
+ {
+  "file": "gotcha/s2-l1-reverse.mp3",
+  "title": "\"잡았다~\" 화자 2 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s2-l1-whisper.mp3",
+  "title": "\"잡았다~\" 화자 2 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s2-l3-child.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 child"
+ },
+ {
+  "file": "gotcha/s2-l3-clear.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 clear"
+ },
+ {
+  "file": "gotcha/s2-l3-deep.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 deep"
+ },
+ {
+  "file": "gotcha/s2-l3-demon.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 demon"
+ },
+ {
+  "file": "gotcha/s2-l3-drag.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 drag"
+ },
+ {
+  "file": "gotcha/s2-l3-low.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 low"
+ },
+ {
+  "file": "gotcha/s2-l3-reverse.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s2-l3-whisper.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 2 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 2, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s4-l2-child.mp3",
+  "title": "\"잡았다아~\" 화자 4 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 child"
+ },
+ {
+  "file": "gotcha/s4-l2-clear.mp3",
+  "title": "\"잡았다아~\" 화자 4 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 clear"
+ },
+ {
+  "file": "gotcha/s4-l2-deep.mp3",
+  "title": "\"잡았다아~\" 화자 4 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 deep"
+ },
+ {
+  "file": "gotcha/s4-l2-demon.mp3",
+  "title": "\"잡았다아~\" 화자 4 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 demon"
+ },
+ {
+  "file": "gotcha/s4-l2-drag.mp3",
+  "title": "\"잡았다아~\" 화자 4 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 drag"
+ },
+ {
+  "file": "gotcha/s4-l2-low.mp3",
+  "title": "\"잡았다아~\" 화자 4 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 low"
+ },
+ {
+  "file": "gotcha/s4-l2-reverse.mp3",
+  "title": "\"잡았다아~\" 화자 4 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s4-l2-whisper.mp3",
+  "title": "\"잡았다아~\" 화자 4 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s4-l4-child.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 child"
+ },
+ {
+  "file": "gotcha/s4-l4-clear.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 clear"
+ },
+ {
+  "file": "gotcha/s4-l4-deep.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 deep"
+ },
+ {
+  "file": "gotcha/s4-l4-demon.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 demon"
+ },
+ {
+  "file": "gotcha/s4-l4-drag.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 drag"
+ },
+ {
+  "file": "gotcha/s4-l4-low.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 low"
+ },
+ {
+  "file": "gotcha/s4-l4-reverse.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s4-l4-whisper.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 4 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 4, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s6-l2-child.mp3",
+  "title": "\"잡았다아~\" 화자 6 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 child"
+ },
+ {
+  "file": "gotcha/s6-l2-clear.mp3",
+  "title": "\"잡았다아~\" 화자 6 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 clear"
+ },
+ {
+  "file": "gotcha/s6-l2-deep.mp3",
+  "title": "\"잡았다아~\" 화자 6 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 deep"
+ },
+ {
+  "file": "gotcha/s6-l2-demon.mp3",
+  "title": "\"잡았다아~\" 화자 6 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 demon"
+ },
+ {
+  "file": "gotcha/s6-l2-drag.mp3",
+  "title": "\"잡았다아~\" 화자 6 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 drag"
+ },
+ {
+  "file": "gotcha/s6-l2-low.mp3",
+  "title": "\"잡았다아~\" 화자 6 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 low"
+ },
+ {
+  "file": "gotcha/s6-l2-reverse.mp3",
+  "title": "\"잡았다아~\" 화자 6 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s6-l2-whisper.mp3",
+  "title": "\"잡았다아~\" 화자 6 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s6-l4-child.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 child"
+ },
+ {
+  "file": "gotcha/s6-l4-clear.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 clear"
+ },
+ {
+  "file": "gotcha/s6-l4-deep.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 deep"
+ },
+ {
+  "file": "gotcha/s6-l4-demon.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 demon"
+ },
+ {
+  "file": "gotcha/s6-l4-drag.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 drag"
+ },
+ {
+  "file": "gotcha/s6-l4-low.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 low"
+ },
+ {
+  "file": "gotcha/s6-l4-reverse.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s6-l4-whisper.mp3",
+  "title": "\"찾았다… 잡았다.\" 화자 6 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 6, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s9-l1-child.mp3",
+  "title": "\"잡았다~\" 화자 9 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 child"
+ },
+ {
+  "file": "gotcha/s9-l1-clear.mp3",
+  "title": "\"잡았다~\" 화자 9 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 clear"
+ },
+ {
+  "file": "gotcha/s9-l1-deep.mp3",
+  "title": "\"잡았다~\" 화자 9 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 deep"
+ },
+ {
+  "file": "gotcha/s9-l1-demon.mp3",
+  "title": "\"잡았다~\" 화자 9 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 demon"
+ },
+ {
+  "file": "gotcha/s9-l1-drag.mp3",
+  "title": "\"잡았다~\" 화자 9 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 drag"
+ },
+ {
+  "file": "gotcha/s9-l1-low.mp3",
+  "title": "\"잡았다~\" 화자 9 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 low"
+ },
+ {
+  "file": "gotcha/s9-l1-reverse.mp3",
+  "title": "\"잡았다~\" 화자 9 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s9-l1-whisper.mp3",
+  "title": "\"잡았다~\" 화자 9 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 whisper"
+ },
+ {
+  "file": "gotcha/s9-l3-child.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · child",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 child"
+ },
+ {
+  "file": "gotcha/s9-l3-clear.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · clear",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 clear"
+ },
+ {
+  "file": "gotcha/s9-l3-deep.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · deep",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 deep"
+ },
+ {
+  "file": "gotcha/s9-l3-demon.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · demon",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 demon"
+ },
+ {
+  "file": "gotcha/s9-l3-drag.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · drag",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 drag"
+ },
+ {
+  "file": "gotcha/s9-l3-low.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · low",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 low"
+ },
+ {
+  "file": "gotcha/s9-l3-reverse.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · reverse",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 reverse"
+ },
+ {
+  "file": "gotcha/s9-l3-whisper.mp3",
+  "title": "\"히히히… 잡았다.\" 화자 9 · whisper",
+  "author": "러너웨이",
+  "source_url": "https://huggingface.co/Supertone/supertonic",
+  "license": "생성: Supertonic 3 (모델 OpenRAIL-M, 코드 MIT)",
+  "license_url": "https://github.com/supertone-inc/supertonic",
+  "edits": "Supertonic 3 화자 9, 가공 whisper"
+ },
+ {
   "file": "growl/dokkaebi-1.mp3",
   "title": "도깨비 콧김·그르렁: 곰 콧김, 곰 그르렁, 돼지 꿀꿀을 겹쳐 4~5반음 내림",
   "source_url": "https://freesound.org/people/Nivatius/sounds/519598/",

@@ -5,7 +5,7 @@
 const SND = (() => {
   // kind: loop = 계속 깔리는 소리, beat = 박자마다 반복, one = 한 번. dur = 미리듣기 길이(초)
   const LIST = [
-    { id: 'scene', kind: 'demo', dur: 26, name: '전체 장면', when: '검수용. 추격자가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 울부짖음, 심장, 으르렁, 불협 현, 접근 경고, 숨소리, 덮침을 실제 순서대로 섞었다' },
+    { id: 'scene', kind: 'demo', dur: 28, name: '전체 장면', when: '검수용. 추격자가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 울부짖음, 심장, 으르렁, 불협 현, 접근 경고, 숨소리, 덮침을 실제 순서대로 섞었다' },
     { id: 'drone', kind: 'loop', dur: 9, name: '저음 드론', when: '공포모드 내내 깔린다. 가까워질수록 커진다', desc: '41Hz 톱니파 둘을 살짝 어긋나게 겹친 맥놀이 + 서브 + 저역 럼블. 필터가 느리게 숨 쉰다' },
     { id: 'wind', kind: 'loop', dur: 7, name: '바람', when: '공포모드 내내. 정적을 메운다', desc: '브라운 노이즈 + 저역 통과. 돌풍처럼 천천히 일렁인다' },
     { id: 'tension', kind: 'loop', dur: 8, name: '불협 현', when: '추격자가 약 45m 안으로 들어오면 서서히 커진다', desc: '반음씩 붙은 고음 현 네 줄의 떨림 + 저음 단2도. 공포 영화 바이올린' },
@@ -18,6 +18,7 @@ const SND = (() => {
     { id: 'close', kind: 'one', dur: 4, name: '접근 경고', when: '20m 안으로 들어오는 순간(35m 밖으로 나가야 다시 울림)', desc: '거꾸로 빨려드는 스웰 뒤 쾅. 진동 함께' },
     { id: 'pounce', kind: 'one', dur: 1.6, name: '덮침 포효', when: '거리 0m. 잡힘과 같이, 반드시', desc: '괴물 포효. 바로 뒤에서 크게' },
     { id: 'caught', kind: 'one', dur: 2.6, name: '잡힘 비명', when: '거리 0m. 잡힌 횟수 +1, 추격자는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동' },
+    { id: 'gotcha', kind: 'one', dur: 4, name: '잡았다 목소리', when: '잡힐 때 반드시. 포효·비명 1초 뒤, 귀 바로 앞에서', desc: '기괴한 목소리로 "잡았다~"' },
     { id: 'scream', kind: 'one', dur: 2.4, name: '먼 비명', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 멀리 한쪽에서', desc: '누군가 멀리서 지르는 비명. 쾅 없이 비명만' },
     { id: 'roar', kind: 'one', dur: 1.8, name: '먼 포효', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 추격자 자리(뒤)에서, 거리만큼 작게', desc: '덮침 포효 녹음과 같은 소리. 녹음이 없으면 조용' },
     { id: 'creak', kind: 'one', dur: 3.5, name: '먼 삐걱임', when: '25m 밖일 때. 35~80초마다 한 번, 왼쪽이나 오른쪽 멀리서', desc: '녹슨 철문이 멀리서 끼익. 좌우 한쪽에서 울린다' },
@@ -350,7 +351,7 @@ const SND = (() => {
       if (id === 'heart') { E.heartOn = true; E.stepsOn = false; E.nextBeat = t0; E.pump(end - 0.4, (t) => clamp((t - t0) / (it.dur - 1), 0, 1)); E.heartOn = false; return it.dur; }
       if (id === 'scene') {
         // 실제 주행과 같은 순서: 종 → 발소리가 100m에서 다가온다 → 20m에서 접근 경고 → 0m 잡힘
-        const run0 = t0 + 3, catchAt = end - 3.2, nearAt = (t) => clamp((t - run0) / (catchAt - run0), 0, 1);
+        const run0 = t0 + 3, catchAt = end - 5, nearAt = (t) => clamp((t - run0) / (catchAt - run0), 0, 1);
         const d = E.loop('drone', t0), w = E.loop('wind', t0), te = E.loop('tension', t0);
         d.level.setValueAtTime(0, t0); d.level.linearRampToValueAtTime(LV.drone(0), t0 + 2);
         w.level.setValueAtTime(0, t0); w.level.linearRampToValueAtTime(0.3, t0 + 2);
@@ -368,7 +369,7 @@ const SND = (() => {
         E.one('scream', { at: run0 + 10, side: -0.9, far: 0.75 });
         E.one('growl', { at: run0 + (catchAt - run0) * 0.5, chase: true });
         E.one('whisper', { at: run0 + (catchAt - run0) * 0.62, side: 0.75, far: 0.1 });
-        E.one('pounce', { at: catchAt }); E.one('caught', { at: catchAt + 0.2 });
+        E.one('pounce', { at: catchAt }); E.one('caught', { at: catchAt + 0.2 }); E.one('gotcha', { at: catchAt + 1.2 });
         d.stop(end - 1.4); w.stop(end - 1.4); te.stop(end - 1.4);
         return it.dur;
       }
@@ -377,7 +378,7 @@ const SND = (() => {
     return E;
   }
   // 합성음이 없는 소리(녹음만). 앱 검수 화면이 '합성음' 후보를 빼는 데 쓴다
-  const NOSYN = ['growl', 'pounce', 'roar', 'howl', 'ring', 'drag'];
+  const NOSYN = ['growl', 'pounce', 'roar', 'howl', 'ring', 'drag', 'gotcha'];
   // 같은 녹음 후보를 쓰는 소리. 먼 포효 = 덮침 포효 녹음, 잡힘 = 비명 녹음
   const POOL = { roar: 'pounce', caught: 'scream' };
   return { LIST, BY, engine, NOSYN, POOL };

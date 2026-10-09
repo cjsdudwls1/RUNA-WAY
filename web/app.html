@@ -463,7 +463,7 @@ function step() {
   render(r.snap, fix);
   if (g.done) finish();
 }
-/** 사건 → 소리. 말은 없다. 잡힐 때는 포효 + 비명이 반드시, 주행 중에는 가끔 먼 비명이나 포효 */
+/** 사건 → 소리. 잡힐 때는 포효 + 비명 + '잡았다~'가 반드시, 주행 중에는 가끔 먼 비명이나 포효 */
 function handle(ev, snap) {
   const E = A.E;
   for (const e of ev) {
@@ -472,7 +472,7 @@ function handle(ev, snap) {
     if (e.type === 'ready') { for (const id of ['wind', 'drone', 'tension']) { const l = E.loop(id); l.level.setTargetAtTime(id === 'wind' ? 0.3 : 0, A.ctx.currentTime, 1.5); } E.setNear(0); E.heartOn = true; E.run(); }
     if (e.type === 'count') E.one('tick');
     if (e.type === 'go') { E.one('bell'); E.stepsOn = true; H.armed = true; H.nextAmb = st.game.t + 30 + Math.random() * 30; H.nextGrowl = st.game.t + 10; H.nextCry = st.game.t + 40 + Math.random() * 40; }
-    if (e.type === 'caught') { const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('caught', { at: t + 0.2 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash(); }
+    if (e.type === 'caught') { const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('caught', { at: t + 0.2 }); E.one('gotcha', { at: t + 1.2 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash(); }
     if (e.type === 'rest') { E.stepsOn = false; E.setNear(0); E.one('safe'); }
     if (e.type === 'finish') { E.stepsOn = false; E.heartOn = false; E.stopLoops(); if (!e.quit) E.one('door'); }
   }

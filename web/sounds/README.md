@@ -20,6 +20,8 @@
 
 - `python3 web/sounds/collect.py [id ...]` → freesound 검색(CC0만) + 괴물런 녹음. 검색어는 맨 위 `PLAN`
 - `python3 web/sounds/collect.py monster [id ...]` → 괴물화 변형
+- `python3 web/sounds/gotcha.py` → "잡았다~" 목소리. Supertonic 3(로컬 TTS)으로 문장 4개 × 화자 2명씩 굽고 6가지로 비튼다(low 괴물, demon 악마, drag 늘임, child 섬뜩한 아이, whisper 속삭임, reverse 거꾸로 잔향). 괴물런 도깨비 대사 '으하하하! 잡았다!'도 3가지
+  - 후보 이름 `s<화자>-l<문장>-<가공>`. 문장 1 잡았다~, 2 잡았다아~, 3 히히히… 잡았다., 4 찾았다… 잡았다.
 - 다듬기: 모노 44.1kHz, 앞 무음 자름, 길이 제한, 페이드, 피크 -1dBFS
   - 발소리·초침: 소리 한 번씩 잘라 6조각
   - 심장: 쿵쿵 한 쌍씩 잘라 6조각
