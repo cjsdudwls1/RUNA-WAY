@@ -61,6 +61,13 @@
   table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}th{color:var(--dim);font-weight:400;font-size:11px}
   .log{font-family:var(--mono);font-size:11px;color:var(--dim);max-height:220px;overflow:auto;border:1px solid var(--line);padding:6px;white-space:pre-wrap}
   /* review */
+  .rvg{border-bottom:1px solid var(--line);margin:0}.rvg summary{padding:12px 2px;color:var(--text);font-family:var(--body);font-size:15px}.rvg summary code{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:8px}
+  .rvg p{margin:0 0 8px;font-size:12px;color:var(--dim);line-height:1.5}
+  .cand{display:grid;grid-template-columns:40px 1fr 52px 52px;gap:6px;align-items:center;padding:4px 0;font-size:12px;color:var(--dim)}.cand.on span{color:var(--text)}
+  .cand span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cand button{height:36px;background:var(--panel);border:1px solid var(--line);font-family:var(--mono);font-size:12px;padding:0}
+  .cand.on .use{border-color:var(--acc);color:var(--acc)}.cand button.playing{border-color:var(--acc);color:var(--acc)}
+  .cand.head span{color:var(--text)}
   .rv{display:grid;grid-template-columns:1fr 64px;gap:10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--line)}
   .rv b{font-size:15px}.rv code{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:6px}
   .rv p{margin:2px 0 0;font-size:12px;color:var(--dim);line-height:1.5}
@@ -151,7 +158,7 @@
 <div id="review" class="screen">
   <button class="back" id="reviewBack">&lt; 돌아가기</button>
   <h2 style="color:var(--text)">소리 검수</h2>
-  <p class="sub">이어폰으로 들을 것. 추격자 소리는 뒤에서 난다.<br>소리를 바꾸려면 같은 이름의 녹음을 web/sounds/에 넣는다(web/sounds/README.md).</p>
+  <p class="sub">이어폰으로. 소리마다 후보를 ▶로 듣고 '사용'을 켜고 끈다. 주행은 고른 후보만, 여럿이면 매번 무작위로 쓴다. 고른 것은 이 기기에 저장된다.</p>
   <button class="ghost" id="reviewStop">모두 정지</button>
   <div id="rvList"></div>
 </div>
@@ -315,18 +322,40 @@ function clickSnd() {
   } catch (e) { }
 }
 document.addEventListener('pointerdown', e => { if (e.target.closest('button, summary')) clickSnd(); }, true);
-// 녹음으로 바꾼 소리(web/sounds/). 바이트만 먼저 받아 두고 엔진마다 디코드한다
-const HAS_SFX = typeof SOUND_INDEX !== 'undefined' && Object.keys(SOUND_INDEX).length > 0;
-const SFXB = {}; let sfxP = null;
-function sfxFetch() {
-  if (!HAS_SFX || sfxP || location.protocol === 'file:') return sfxP;
-  sfxP = Promise.all(Object.entries(SOUND_INDEX).flatMap(([id, files]) => files.map(f => fetch('sounds/' + f + '?v=' + SOUND_VER)
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
-    .then(b => { (SFXB[id] = SFXB[id] || []).push(b); })
-    .catch(e => log('소리 파일 실패 ' + f + ' ' + e.message)))));
-  return sfxP;
+// ---------- 소리 후보 ----------
+// web/sounds/<id>/<후보>. 소리 검수에서 고른 후보만 주행에 쓴다. 고른 게 여럿이면 매번 무작위. 'synth' = 합성음
+// 아직 안 골랐으면 녹음 후보 전부(녹음이 없으면 합성음). 하나도 안 고르면 그 소리는 끈다
+const SIDX = typeof SOUND_INDEX !== 'undefined' ? SOUND_INDEX : {};
+const poolOf = (id) => SND.POOL[id] || id;
+const candsOf = (id) => Object.keys(SIDX[poolOf(id)] || {});
+const hasSynth = (id) => !SND.NOSYN.includes(id);
+let SEL = {};
+try { SEL = JSON.parse(localStorage.getItem('rw.snd') || '{}'); } catch (e) { }
+const saveSel = () => { try { localStorage.setItem('rw.snd', JSON.stringify(SEL)); } catch (e) { } };
+function selOf(id) {
+  const all = candsOf(id);
+  if (Array.isArray(SEL[id])) return SEL[id].filter(c => c === 'synth' ? hasSynth(id) : all.includes(c));
+  return all.length ? all : hasSynth(id) ? ['synth'] : [];
 }
-function feedSamples(E) { const go = () => { for (const id in SFXB) for (const b of SFXB[id]) E.addSample(id, b.slice(0)); }; if (sfxP) sfxP.then(go); }
+const filesOf = (id, cands) => cands.filter(c => c !== 'synth').flatMap(c => SIDX[poolOf(id)][c] || []);
+const BYTES = new Map();
+function getBytes(f) {
+  if (!BYTES.has(f)) BYTES.set(f, fetch('sounds/' + f + '?v=' + SOUND_VER).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).catch(e => { BYTES.delete(f); log('소리 파일 실패 ' + f + ' ' + e.message); return null; }));
+  return BYTES.get(f);
+}
+/** 고른 후보를 미리 받아 둔다(주행 시작 전에) */
+function sfxFetch() { if (location.protocol === 'file:') return; for (const it of SND.LIST) for (const f of filesOf(it.id, selOf(it.id))) getBytes(f); }
+/** 엔진에 소리를 넣는다. pick = { id: [후보] }를 주면 그것만(검수 미리듣기), 아니면 고른 대로. 다 디코드되면 끝나는 Promise */
+function feedSamples(E, pick) {
+  const jobs = [];
+  for (const it of SND.LIST) {
+    const id = it.id, cands = pick ? pick[id] : selOf(id);
+    if (!cands) continue;
+    E.synth[id] = cands.includes('synth');
+    for (const f of filesOf(id, cands)) jobs.push(getBytes(f).then(b => b && E.addSample(id, b.slice(0))));
+  }
+  return Promise.all(jobs);
+}
 function audioInit() {
   audioSession();
   if (!A.ctx) { const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C(); }
@@ -336,7 +365,7 @@ function audioInit() {
 function newEngine() {
   if (A.E) { A.E.halt(); A.E.stopLoops(); try { A.E.out.disconnect(); } catch (e) { } }
   const out = A.ctx.createGain(); out.connect(A.ctx.destination);
-  A.E = SND.engine(A.ctx, out); A.E.out = out; feedSamples(A.E);
+  A.E = SND.engine(A.ctx, out); A.E.out = out; A.E.fed = feedSamples(A.E);
   return A.E;
 }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
@@ -523,8 +552,13 @@ function start() {
   $('#rMode').textContent = KIND_KO[cfg.type];
   renderWait(null); show('run');
   log(`시작 ${cfg.type} ${JSON.stringify(p.sets[0])} ×${p.sets.length} ${st.src}`);
-  st.t0 = Date.now();
-  st.timer = setInterval(tick, st.src === 'demo' ? st.demoMs : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
+  // 고른 녹음이 다 들어간 뒤 시작(최대 4초). 깔리는 소리는 시작할 때 정해지므로
+  const g = st.game;
+  Promise.race([E.fed, new Promise(r => setTimeout(r, 4000))]).then(() => {
+    if (st.game !== g) return;
+    st.t0 = Date.now();
+    st.timer = setInterval(tick, st.src === 'demo' ? st.demoMs : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
+  });
 }
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
@@ -624,28 +658,60 @@ if (IOS) {
 }
 
 // ---------- 검수 ----------
-// 같은 엔진, 같은 코드. 여기서 들리는 게 주행 중에 나는 소리다
-function reviewEngine() {
-  audioInit();
-  if (A.rvOut) { try { A.rvOut.disconnect(); } catch (e) { } }
-  A.rvOut = A.ctx.createGain(); A.rvOut.connect(A.ctx.destination);
-  A.rv = SND.engine(A.ctx, A.rvOut); feedSamples(A.rv);
-  return A.rv;
+// 같은 엔진, 같은 코드. 여기서 들리는 게 주행 중에 나는 소리다. 후보마다 들어 보고 '사용'을 켜고 끈다
+let rvTok = 0;
+/** 미리듣기마다 새 엔진. 앞 소리는 끊는다 */
+async function rvPlay(btn, id, pick) {
+  audioInit(); rvStop();
+  const tok = ++rvTok, out = A.ctx.createGain(); out.connect(A.ctx.destination);
+  const E = SND.engine(A.ctx, out); A.rv = E; A.rvOut = out;
+  btn.classList.add('playing'); btn.textContent = '…';
+  await feedSamples(E, pick);
+  if (tok !== rvTok) return;
+  const sec = E.demo(id);
+  btn.textContent = '■'; clearTimeout(btn._t); btn._t = setTimeout(() => { btn.classList.remove('playing'); btn.textContent = '▶'; }, sec * 1000);
 }
-function playing(btn, sec) { btn.classList.add('playing'); btn.textContent = '재생 중'; clearTimeout(btn._t); btn._t = setTimeout(() => { btn.classList.remove('playing'); btn.textContent = '재생'; }, sec * 1000); }
+function rvStop() {
+  rvTok++;
+  if (A.rv) { A.rv.halt(); A.rv.stopLoops(); try { A.rvOut.disconnect(); } catch (e) { } A.rv = null; }
+  document.querySelectorAll('#review button.playing').forEach(b => { clearTimeout(b._t); b.classList.remove('playing'); b.textContent = '▶'; });
+}
+function rvRow(id, c, label, sel, redraw) {
+  const r = document.createElement('div'); r.className = 'cand' + (sel.includes(c) ? ' on' : '');
+  r.innerHTML = `<button class="pl">▶</button><span>${label}</span><button class="only">이것만</button><button class="use">${sel.includes(c) ? '사용' : '안 씀'}</button>`;
+  r.querySelector('.pl').addEventListener('click', e => rvPlay(e.target, id, { [id]: [c] }));
+  r.querySelector('.only').addEventListener('click', () => { SEL[id] = [c]; saveSel(); redraw(); });
+  r.querySelector('.use').addEventListener('click', () => { const s = selOf(id); SEL[id] = s.includes(c) ? s.filter(x => x !== c) : [...s, c]; saveSel(); redraw(); });
+  return r;
+}
 function drawReview() {
   const el = $('#rvList'); el.innerHTML = '';
-  SND.LIST.forEach((it) => {
-    const rec = HAS_SFX && SOUND_INDEX[it.id === 'roar' ? 'pounce' : it.id];
-    const d = document.createElement('div'); d.className = 'rv';
-    d.innerHTML = `<div><b>${it.name}</b><code>${it.id}${rec ? ' · 녹음 ' + rec.length : ''}</code><p>${it.when}</p><p>${it.desc}</p></div><button>재생</button>`;
-    d.querySelector('button').addEventListener('click', (e) => { const E = A.rv || reviewEngine(); playing(e.target, E.demo(it.id)); });
-    el.appendChild(d);
-  });
+  for (const it of SND.LIST) {
+    const id = it.id, d = document.createElement('details'); d.className = 'rvg'; d.dataset.id = id;
+    const draw = () => {
+      const open = d.open, sel = selOf(id), all = candsOf(id), n = all.length + (hasSynth(id) ? 1 : 0);
+      d.innerHTML = `<summary><b>${it.name}</b><code>${id} · ${it.kind === 'demo' ? '고른 소리로' : sel.length ? `${sel.length}/${n} 사용` : '끔'}</code></summary>`
+        + `<p>${it.when}. ${it.desc}</p><div class="cands"></div>`;
+      d.open = open;
+      const box = d.querySelector('.cands');
+      const top = document.createElement('div'); top.className = 'cand head';
+      top.innerHTML = `<button class="pl">▶</button><span>고른 소리로 듣기${SND.POOL[id] ? ` · 후보는 '${SND.BY[SND.POOL[id]].name}'과 같은 녹음` : ''}</span>` + (it.kind === 'demo' ? '' : '<button class="all">전부</button><button class="none">끄기</button>');
+      top.querySelector('.pl').addEventListener('click', e => rvPlay(e.target, id));
+      if (it.kind !== 'demo') {
+        top.querySelector('.all').addEventListener('click', () => { SEL[id] = [...(hasSynth(id) ? ['synth'] : []), ...all]; saveSel(); draw(); });
+        top.querySelector('.none').addEventListener('click', () => { SEL[id] = []; saveSel(); draw(); });
+      }
+      box.appendChild(top);
+      if (it.kind === 'demo') return;
+      if (hasSynth(id)) box.appendChild(rvRow(id, 'synth', '합성음(기계음)', sel, draw));
+      for (const c of all) box.appendChild(rvRow(id, c, (typeof SOUND_INFO !== 'undefined' && SOUND_INFO[poolOf(id) + '/' + c]) || c, sel, draw));
+    };
+    draw(); el.appendChild(d);
+  }
 }
-$('#openReview').addEventListener('click', () => { reviewEngine(); drawReview(); show('review'); });   // 엔진을 미리 만들어 녹음 디코드가 첫 재생 전에 끝나게
-$('#reviewBack').addEventListener('click', () => { $('#reviewStop').click(); show('home'); });
-$('#reviewStop').addEventListener('click', () => { if (A.rv) { A.rv.halt(); A.rv.stopLoops(); } reviewEngine(); document.querySelectorAll('.rv button.playing').forEach(b => { clearTimeout(b._t); b.classList.remove('playing'); b.textContent = '재생'; }); });
+$('#openReview').addEventListener('click', () => { audioInit(); drawReview(); show('review'); });
+$('#reviewBack').addEventListener('click', () => { rvStop(); sfxFetch(); show('home'); });
+$('#reviewStop').addEventListener('click', rvStop);
 home();
 })();
 </script>

@@ -1,6 +1,6 @@
 // 러너웨이 공포 모드 소리. 합성음(Web Audio)이 기본이라 파일 없이도 돈다.
 // 같은 id의 녹음(web/sounds/<id>_<번호>.mp3)이 있으면 그 소리는 녹음으로 바뀐다. 목록은 LIST, 규격은 web/sounds/README.md
-// growl, pounce, howl, ring, drag는 녹음만 있다(합성음 없음). roar는 pounce 녹음을 같이 쓴다
+// growl, pounce, howl, ring, drag는 녹음만 있다(합성음 없음). 어떤 녹음 후보를 쓸지는 앱이 정해 넣는다(E.samples, E.synth)
 // 실시간(AudioContext)과 오프라인(OfflineAudioContext)에서 같은 코드가 돈다. 검수용 WAV(web/render_sounds.mjs)도 이걸로 굽는다
 const SND = (() => {
   // kind: loop = 계속 깔리는 소리, beat = 박자마다 반복, one = 한 번. dur = 미리듣기 길이(초)
@@ -32,7 +32,7 @@ const SND = (() => {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function engine(ctx, out) {
-    const E = { ctx, samples: {}, last: {}, near: 0, breathAt: 0, spm: 165, stepsOn: false, heartOn: false, nextStep: 0, nextBeat: 0, stepN: 0, holdUntil: 0, loops: {} };
+    const E = { ctx, samples: {}, synth: {}, last: {}, near: 0, breathAt: 0, spm: 165, stepsOn: false, heartOn: false, nextStep: 0, nextBeat: 0, stepN: 0, holdUntil: 0, loops: {} };
     const sr = ctx.sampleRate, R = Math.random;
     const noise = (sec, brown) => {
       const n = Math.floor(sr * sec), b = ctx.createBuffer(1, n, sr), d = b.getChannelData(0);
@@ -87,10 +87,12 @@ const SND = (() => {
     }
 
     // ---------- 녹음 ----------
+    // E.samples[id] = 고른 녹음들, E.synth[id] = 합성음도 고름. 둘 다 있으면 매번 무작위(합성음은 녹음 하나와 같은 몫)
+    // 아무것도 안 넣은 엔진(E.synth 비어 있음)은 합성음만 낸다. 앱이 고른 것만 넣는다
+    E.pickRec = (id) => { const n = (E.samples[id] || []).length; if (!n) return false; return E.synth[id] ? R() < n / (n + 1) : true; };
+    E.silent = (id) => E.synth[id] === false && !(E.samples[id] || []).length;   // 다 끔
     /** 같은 id에 녹음이 여러 개면 직전 것과 다른 걸 고른다. 같은 소리 반복이 제일 먼저 질린다 */
-    const SAME = { roar: 'pounce' };   // 같은 녹음을 다른 자리에서 쓰는 소리
     function sample(id) {
-      id = SAME[id] || id;
       const l = E.samples[id]; if (!l || !l.length) return null;
       let i = Math.floor(R() * l.length); if (l.length > 1 && i === E.last[id]) i = (i + 1) % l.length;
       E.last[id] = i; return l[i];
@@ -98,7 +100,7 @@ const SND = (() => {
     /** 녹음 재생. 틀었으면 길이(초), 녹음이 없으면 0 */
     function playSample(id, t, dest, vol) {
       const b = sample(id); if (!b) return 0;
-      const s = N(b), g = G(vol === undefined ? 1 : vol, dest); s.connect(g); s.playbackRate.value = 0.97 + R() * 0.06; s.start(t);
+      const s = N(b), g = G(vol === undefined ? 1 : vol, dest); s.connect(g); s.playbackRate.value = 0.95 + R() * 0.1; s.start(t);
       return b.duration || 1;
     }
     /** 받은 바이트를 디코드해 둔다. 실패한 파일은 합성음으로 남는다 */
@@ -179,8 +181,8 @@ const SND = (() => {
       }
       const n = N(WHITE), hp = F('highpass', 1800), ng = G(0); env(ng.gain, t, 0.01, 0.4, 0.5); n.connect(hp); hp.connect(ng); ng.connect(dest); play(n, t, 0.55);
     };
-    S.caught = (t, dest) => {
-      S.scream(t, dest);
+    S.caught = (t, dest) => { S.scream(t, dest); S.boom(t, dest); };
+    S.boom = (t, dest) => {
       const b = O('sine', 45), bg = G(0); b.frequency.setValueAtTime(60, t); b.frequency.exponentialRampToValueAtTime(30, t + 1); env(bg.gain, t, 0.005, 1, 1.2); b.connect(bg); bg.connect(dest); play(b, t, 1.3);
     };
     S.creak = (t, dest) => {
@@ -222,7 +224,8 @@ const SND = (() => {
     E.one = (id, o) => {
       o = o || {}; const t = o.at !== undefined ? o.at : ctx.currentTime + 0.02;
       const dest = o.dest || (o.chase ? E.chaseIn : o.side !== undefined ? sideOut(o.side, o.far || 0) : id === 'tick' ? E.ui : E.master);
-      if (playSample(id, t, dest, o.vol)) return;
+      if (E.silent(id)) { if (id === 'caught') S.boom(t, dest); return; }
+      if (E.pickRec(id) && playSample(id, t, dest, o.vol)) { if (id === 'caught') S.boom(t, dest); return; }   // 잡힘은 녹음 비명이어도 쾅은 같이
       if (S[id]) S[id](t, o.vol !== undefined ? G(o.vol, dest) : dest, o.v === undefined ? 1 : o.v);
     };
 
@@ -259,7 +262,7 @@ const SND = (() => {
     E.loop = (id, at) => {
       if (E.loops[id]) return E.loops[id];
       const t = at !== undefined ? at : ctx.currentTime, g = G(0, E.bgm);
-      const srcs = loopSample(id, g) || LOOPS[id](g);
+      const srcs = E.silent(id) ? [] : (E.pickRec(id) && loopSample(id, g)) || LOOPS[id](g);
       for (const s of srcs) s.start(t);
       return (E.loops[id] = { level: g.gain, stop(t2) { const w = t2 !== undefined ? t2 : ctx.currentTime; g.gain.cancelScheduledValues(w); g.gain.setValueAtTime(g.gain.value, w); g.gain.linearRampToValueAtTime(0, w + 1.2); for (const s of srcs) try { s.stop(w + 1.3); } catch (e) { } delete E.loops[id]; } });
     };
@@ -302,14 +305,14 @@ const SND = (() => {
           E.stepN++;
           const sp = ctx.createStereoPanner ? ctx.createStereoPanner() : null, d = sp || E.chaseIn;   // 왼발 오른발
           if (sp) { sp.pan.value = E.stepN % 2 ? -0.14 : 0.14; sp.connect(E.chaseIn); }
-          if (!playSample('step', t, d, 0.6 + 0.4 * n)) S.step(t, d, 0.6 + 0.4 * n);
-          if (n > 0.88 && t >= E.breathAt) E.breathAt = t + 0.25 + (playSample('breath', t, E.chaseIn, 0.9) || (S.breath(t, E.chaseIn, 0.5 + 0.5 * n), 0.95));
+          if (!E.silent('step') && !(E.pickRec('step') && playSample('step', t, d, 0.6 + 0.4 * n))) S.step(t, d, 0.6 + 0.4 * n);
+          if (n > 0.88 && t >= E.breathAt && !E.silent('breath')) E.breathAt = t + 0.25 + ((E.pickRec('breath') && playSample('breath', t, E.chaseIn, 0.9)) || (S.breath(t, E.chaseIn, 0.5 + 0.5 * n), 0.95));
         }
         E.nextStep += (60 / E.spm) * (1 + (R() - 0.5) * 0.05);
       }
       while (E.nextBeat < until) {
         const t = E.nextBeat, n = nearAt ? nearAt(t) : E.near;
-        if (E.heartOn) { if (!playSample('heart', t, E.master, LV.heart(n))) S.heart(t, E.master, LV.heart(n)); }
+        if (E.heartOn && !E.silent('heart')) { if (!(E.pickRec('heart') && playSample('heart', t, E.master, LV.heart(n)))) S.heart(t, E.master, LV.heart(n)); }
         E.nextBeat += 60 / LV.bpm(n);
       }
     };
@@ -373,6 +376,10 @@ const SND = (() => {
     };
     return E;
   }
-  return { LIST, BY, engine };
+  // 합성음이 없는 소리(녹음만). 앱 검수 화면이 '합성음' 후보를 빼는 데 쓴다
+  const NOSYN = ['growl', 'pounce', 'roar', 'howl', 'ring', 'drag'];
+  // 같은 녹음 후보를 쓰는 소리. 먼 포효 = 덮침 포효 녹음, 잡힘 = 비명 녹음
+  const POOL = { roar: 'pounce', caught: 'scream' };
+  return { LIST, BY, engine, NOSYN, POOL };
 })();
 if (typeof module !== 'undefined') module.exports = SND;

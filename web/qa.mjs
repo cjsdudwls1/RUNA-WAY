@@ -27,11 +27,12 @@ let fails = 0;
 const check = (ok, msg) => { console.log((ok ? 'OK   ' : 'FAIL ') + msg); if (!ok) fails++; };
 const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
 
-/** 소리 계측: 합성 노드 시작 수, 버퍼 재생 수, 녹음 재생 수(길이 0.3초 넘는 버퍼), 브라우저 TTS 호출 */
+/** 소리 계측: 합성 노드 시작 수, 버퍼 재생 수, 녹음 재생 수(디코드한 파일), 브라우저 TTS 호출 */
 const PROBE = () => {
-  window.__qa = { osc: 0, buf: 0, rec: 0, tts: [] };
+  window.__qa = { osc: 0, buf: 0, rec: 0, tts: [] }; window.__dec = new WeakSet();
+  const dd = BaseAudioContext.prototype.decodeAudioData; BaseAudioContext.prototype.decodeAudioData = function (...a) { return dd.apply(this, a).then(b => { window.__dec.add(b); return b; }); };
   const os = OscillatorNode.prototype.start; OscillatorNode.prototype.start = function (...a) { window.__qa.osc++; return os.apply(this, a); };
-  const bs = AudioBufferSourceNode.prototype.start; AudioBufferSourceNode.prototype.start = function (...a) { window.__qa.buf++; if (this.buffer && this.buffer.numberOfChannels === 1 && this.buffer.duration < 2.5 && this.buffer.duration > 0.3 && !this.loop) window.__qa.rec++; return bs.apply(this, a); };
+  const bs = AudioBufferSourceNode.prototype.start; AudioBufferSourceNode.prototype.start = function (...a) { window.__qa.buf++; if (this.buffer && window.__dec.has(this.buffer)) window.__qa.rec++; return bs.apply(this, a); };
   if (window.speechSynthesis) { const sp = speechSynthesis.speak.bind(speechSynthesis); speechSynthesis.speak = (u) => { if (u.text.trim()) window.__qa.tts.push(u.text); return sp(u); }; }
 };
 
@@ -120,23 +121,53 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   check(r.sets === 3 && r.log.includes('rest'), '인터벌 세트 표와 회복');
 }
 
-// 3) 검수 화면: 모든 소리 재생
+// 3) 검수 화면: 소리마다 후보 목록, 후보 미리듣기, 고르기
 {
   const { ctx, page, errors } = await open({});
-  await page.waitForTimeout(1500);
   await page.click('#setBox summary'); await page.click('#openReview');
-  await page.waitForTimeout(800);
-  const n = await page.locator('#rvList .rv').count(), want = await page.evaluate(() => SND.LIST.length);
+  const n = await page.locator('#rvList .rvg').count(), want = await page.evaluate(() => SND.LIST.length);
   check(n === want, `검수: 소리 ${n}개`);
-  const recs = await page.locator('#rvList code', { hasText: '녹음' }).count();
-  check(recs >= 7, `검수: 녹음 있는 소리 ${recs}개`);
-  for (const b of await page.locator('#rvList button').all()) await b.click();
-  await page.waitForTimeout(500);
-  const qa = await page.evaluate(() => window.__qa);
-  check(qa.osc > 100 && qa.rec >= 7 && qa.tts.length === 0, `검수 재생: 합성음 ${qa.osc}, 녹음 ${qa.rec}`);
+  const cands = await page.evaluate(() => Object.fromEntries(Object.entries(SOUND_INDEX).map(([k, v]) => [k, Object.keys(v).length])));
+  check(Object.keys(cands).length >= 15, `검수: 녹음 후보가 있는 소리 ${Object.keys(cands).length}개 ` + JSON.stringify(cands));
+  // 으르렁: 후보 하나 미리듣기 → 녹음이 울린다
+  const g = page.locator('.rvg[data-id=growl]');
+  await g.locator('summary').click();
+  const rows = await g.locator('.cand:not(.head)').count();
+  check(rows === cands.growl, `으르렁 후보 ${rows}개`);
+  const r0 = await page.evaluate(() => window.__qa.rec);
+  await g.locator('.cand:not(.head) .pl').nth(2).click(); await page.waitForTimeout(1500);
+  check(await page.evaluate(() => window.__qa.rec) > r0, '후보 미리듣기: 녹음 재생');
+  // 이것만 → 하나만 사용, 끄기 → 끔, 전부 → 다시 전부
+  await g.locator('.cand:not(.head) .only').nth(1).click();
+  let sel = JSON.parse(await page.evaluate(() => localStorage.getItem('rw.snd')));
+  check(sel.growl.length === 1 && (await g.locator('summary code').textContent()).includes(`1/${rows}`), '이것만: ' + JSON.stringify(sel.growl));
+  await g.locator('.cand.head .none').click();
+  check((await g.locator('summary code').textContent()).includes('끔'), '끄기');
+  await g.locator('.cand.head .all').click();
+  sel = JSON.parse(await page.evaluate(() => localStorage.getItem('rw.snd')));
+  check(sel.growl.length === rows, '전부');
+  // 합성음 후보가 있는 소리: 발소리. 합성음만 고르면 녹음 없이 합성음
+  const st = page.locator('.rvg[data-id=step]');
+  await st.locator('summary').click();
+  check((await st.textContent()).includes('합성음'), '발소리: 합성음도 후보');
+  // 전체 장면: 고른 소리로
+  const o0 = await page.evaluate(() => window.__qa.buf);
+  const sc = page.locator('.rvg[data-id=scene]'); await sc.locator('summary').click(); await sc.locator('.pl').click(); await page.waitForTimeout(2500);
+  check(await page.evaluate(() => window.__qa.buf) > o0, '전체 장면 재생');
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'review.png'), fullPage: true });
   await page.click('#reviewStop'); await page.click('#reviewBack');
   check(await page.isVisible('#home') && errors.length === 0, '검수 닫기, 오류 없음 ' + errors.join(' | '));
+  await ctx.close();
+}
+// 3-1) 고른 대로 주행: 발소리를 합성음만 고르면 발소리 녹음이 안 나온다
+{
+  const { ctx, page, errors } = await open({ ...{ safe: true, distM: 300, pace: 345 }, type: 'normal' }, { query: '?src=demo&demoMs=10' });
+  await page.evaluate(() => { const s = {}; for (const it of SND.LIST) s[it.id] = []; s.step = ['synth']; localStorage.setItem('rw.snd', JSON.stringify(s)); });
+  await page.reload({ waitUntil: 'load' }); await page.waitForTimeout(500);
+  await page.click('#start'); await page.waitForSelector('#result.on', { timeout: 120000 }).catch(() => { });
+  const qa = await page.evaluate(() => window.__qa);
+  check(qa.rec === 0 && qa.osc >= 2, `고른 대로: 발소리 합성음만(녹음 ${qa.rec}, 합성 ${qa.osc})`);
+  check(errors.length === 0, '고른 대로 주행 오류 없음 ' + errors.join(' | '));
   await ctx.close();
 }
 
@@ -151,7 +182,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   const s = await page.evaluate(() => ({ big: document.querySelector('#gapBig').textContent, sub: document.querySelector('#gapSub').textContent }));
   check(/m$/.test(s.big) && s.sub.includes('추격자'), `GPS: 달리는 중 표시 ${s.big} ${s.sub}`);
   const qa = await page.evaluate(() => window.__qa);
-  check(qa.osc > 50 && qa.rec > 5 && qa.tts.length === 0, `GPS 실시간(준비 4초·카운트 3초 뒤 약 9초 주행): 합성음 ${qa.osc}개, 녹음 ${qa.rec}번(발소리), 말 ${qa.tts.length}`);
+  check(qa.osc + qa.rec > 50 && qa.rec > 5 && qa.tts.length === 0, `GPS 실시간(준비 4초·카운트 3초 뒤 약 9초 주행): 합성음 ${qa.osc}개, 녹음 ${qa.rec}번(발소리), 말 ${qa.tts.length}`);
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'run.png') });
   await page.click('#pause');
   check(await page.textContent('#pause') === '재개', '일시정지 버튼');
