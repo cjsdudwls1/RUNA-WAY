@@ -107,7 +107,7 @@ async function demo(cfg, label) {
 const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, setM: 100, sets: 2, restS: 15 };
 {
   const r = await demo({ ...base, type: 'normal' }, '일반런');
-  check(r.qa.osc > 30, `합성음 ${r.qa.osc}개 울림(100배속이라 적다. 실시간은 4번에서)`);
+  check(r.qa.osc + r.qa.rec > 30, `소리 ${r.qa.osc + r.qa.rec}번 울림(합성 ${r.qa.osc}, 녹음 ${r.qa.rec})`);
   check(r.qa.rec > 5, `녹음 ${r.qa.rec}번 울림(발소리 등)`);
   check(/탈출 성공|잡혔다/.test(r.label), '결과: ' + r.label + ' ' + r.hero);
   check(/소리 (scream|roar)/.test(r.log), '주행 중 먼 비명·포효: ' + (r.log.match(/소리 (scream|roar)/g) || []).join(', '));

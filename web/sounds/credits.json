@@ -1,5 +1,65 @@
 [
  {
+  "file": "bell/fs329324.mp3",
+  "title": "funeral bell-cloche funèbre.wav",
+  "author": "aoristos",
+  "source_url": "https://freesound.org/people/aoristos/sounds/329324/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "church bell toll",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 6.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "bell/fs397352.mp3",
+  "title": "Montbell (Bonshō) von Japan",
+  "author": "Vurca",
+  "source_url": "https://freesound.org/people/Vurca/sounds/397352/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "large bell",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 6.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "bell/fs474266.mp3",
+  "title": "Bell with Crows",
+  "author": "MKzing",
+  "source_url": "https://freesound.org/people/MKzing/sounds/474266/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bell toll",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 6.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "bell/fs479985.mp3",
+  "title": "R04-59-Short Bell Tolls.wav",
+  "author": "craigsmith",
+  "source_url": "https://freesound.org/people/craigsmith/sounds/479985/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "church bell toll",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 6.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "bell/fs569356.mp3",
+  "title": "Church Bell.wav",
+  "author": "MVMTech",
+  "source_url": "https://freesound.org/people/MVMTech/sounds/569356/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "church bell toll",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 6.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "bell/fs73678.mp3",
+  "title": "TollBell.wav",
+  "author": "daytripper",
+  "source_url": "https://freesound.org/people/daytripper/sounds/73678/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bell toll",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 6.0초, 페이드, 피크 -1dBFS"
+ },
+ {
   "file": "breath/dokkaebi.mp3",
   "title": "도깨비 헐떡임: 소 숨, 돼지 숨, 곰 그르렁을 겹쳐 4~5반음 내림",
   "source_url": "https://freesound.org/people/JarredGibb/sounds/233137/",
@@ -11,6 +71,96 @@
   "from": "dokkaebi_tired_1.mp3"
  },
  {
+  "file": "breath/fs119515.mp3",
+  "title": "Animal_breathing_monster.aif",
+  "author": "vrodge",
+  "source_url": "https://freesound.org/people/vrodge/sounds/119515/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs121584.mp3",
+  "title": "Ghostbreath1.wav",
+  "author": "slugzilla",
+  "source_url": "https://freesound.org/people/slugzilla/sounds/121584/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs163383.mp3",
+  "title": "Heavy Breathing",
+  "author": "Under7dude",
+  "source_url": "https://freesound.org/people/Under7dude/sounds/163383/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heavy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs181767.mp3",
+  "title": "dog panting.wav",
+  "author": "keweldog",
+  "source_url": "https://freesound.org/people/keweldog/sounds/181767/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "breathing woman panting",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs276577.mp3",
+  "title": "Dragons Dying Breath",
+  "author": "MickBoere",
+  "source_url": "https://freesound.org/people/MickBoere/sounds/276577/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs33939.mp3",
+  "title": "Breathing.wav",
+  "author": "scarbelly25",
+  "source_url": "https://freesound.org/people/scarbelly25/sounds/33939/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heavy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs345464.mp3",
+  "title": "Male_Medium_Breathing_01",
+  "author": "Artmasterrich",
+  "source_url": "https://freesound.org/people/Artmasterrich/sounds/345464/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "panting man",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs511319.mp3",
+  "title": "Dog Panting",
+  "author": "onehugeeye",
+  "source_url": "https://freesound.org/people/onehugeeye/sounds/511319/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dog panting",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "breath/fs567723.mp3",
+  "title": "BORIERO_Nolwen_2020_2021_Monster breathing.wav",
+  "author": "iut_Paris8",
+  "source_url": "https://freesound.org/people/iut_Paris8/sounds/567723/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
   "file": "breath/jeoseung.mp3",
   "title": "저승사자 낮은 숨: 깊은 숨 녹음을 5반음 내림",
   "source_url": "https://freesound.org/people/rrehl/sounds/717167/",
@@ -20,6 +170,57 @@
   "original_file": "- Deep Breath (717167)",
   "edits": "층1 깊은 숨(freesound 717167) 1.90~3.20초, 2500Hz 저역 통과, 5반음 내림, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.12초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/rrehl/sounds/717167/",
   "from": "jeoseung_roam_3.mp3"
+ },
+ {
+  "file": "breath/mon-fs119515.mp3",
+  "title": "괴물화 Animal_breathing_monster.aif",
+  "author": "vrodge",
+  "source_url": "https://freesound.org/people/vrodge/sounds/119515/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "breath/mon-fs121584.mp3",
+  "title": "괴물화 Ghostbreath1.wav",
+  "author": "slugzilla",
+  "source_url": "https://freesound.org/people/slugzilla/sounds/121584/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "breath/mon-fs163383.mp3",
+  "title": "괴물화 Heavy Breathing",
+  "author": "Under7dude",
+  "source_url": "https://freesound.org/people/Under7dude/sounds/163383/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heavy breathing",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "breath/mon-fs181767.mp3",
+  "title": "괴물화 dog panting.wav",
+  "author": "keweldog",
+  "source_url": "https://freesound.org/people/keweldog/sounds/181767/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "breathing woman panting",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "breath/old-dog-breath.mp3",
+  "title": "20170520 Chihuahua Dog Breathing Heavily",
+  "source_url": "https://freesound.org/people/kijjaz/sounds/393570/",
+  "author": "kijjaz",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "20170520 Chihuahua Dog Breathing Heavily",
+  "edits": "1.35~3.55초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 7dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업",
+  "from": "chihuahua_tired_1.mp3 (괴물런)"
  },
  {
   "file": "breath/old-dogs-1.mp3",
@@ -44,6 +245,351 @@
   "from": "wolf_tired_2.mp3"
  },
  {
+  "file": "breath/old-horse-breath-1.mp3",
+  "title": "Horse Breathing.wav",
+  "source_url": "https://freesound.org/people/metaepitome/sounds/275388/",
+  "author": "metaepitome",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Horse Breathing.wav",
+  "edits": "0.19~1.62초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 말의 거친 숨 두 번",
+  "from": "horse_tired_1.mp3 (괴물런)"
+ },
+ {
+  "file": "breath/old-horse-breath-2.mp3",
+  "title": "Breath Horse #4",
+  "source_url": "https://bigsoundbank.com/breath-horse-4-s1543.html",
+  "author": "Joseph SARDIN (BigSoundBank)",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "1543.flac",
+  "edits": "0.05~0.72초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 말 콧김 한 번, 원본 최대 피크 몇 곳이 0dBFS에 닿아 있음(0.4 ms 이하)",
+  "from": "horse_roam_1.mp3 (괴물런)"
+ },
+ {
+  "file": "breath/old-hound-pant.mp3",
+  "title": "Old hound dog panting - then shakes off",
+  "source_url": "https://freesound.org/people/lukiacostello/sounds/479419/",
+  "author": "lukiacostello",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Old hound dog panting - then shakes off",
+  "edits": "8.00~9.90초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 10dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 몸 털기 뒤 헐떡임 구간, 늙은 하운드 녹음으로 진돗개 대체",
+  "from": "jindo_tired_1.mp3 (괴물런)"
+ },
+ {
+  "file": "breath/old-mule-breath.mp3",
+  "title": "Mules - Mule Breaths, Close Perspective",
+  "source_url": "https://freesound.org/people/TheKingOfGeeks360/sounds/832102/",
+  "author": "TheKingOfGeeks360",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Mules - Mule Breaths, Close Perspective",
+  "edits": "1.15~2.45초 자름, 150Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.1dBFS), Freesound HQ 미리듣기 mp3에서 작업, 가까이서 휴대폰으로 녹음한 노새의 코 숨 한 번",
+  "from": "hoof_tired_1.mp3 (괴물런)"
+ },
+ {
+  "file": "breath/old-retriever-pant.mp3",
+  "title": "Dog Retreiver fast panting play grunt 15.wav",
+  "source_url": "https://freesound.org/people/AGFX/sounds/221496/",
+  "author": "AGFX",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Dog Retreiver fast panting play grunt 15.wav",
+  "edits": "3.16~4.64초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 골든 리트리버의 빠른 헐떡임",
+  "from": "sleddog_tired_1.mp3 (괴물런)"
+ },
+ {
+  "file": "close/fs177242.mp3",
+  "title": "Cinematic Impact",
+  "author": "deleted_user_3277771",
+  "source_url": "https://freesound.org/people/deleted_user_3277771/sounds/177242/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "cinematic boom",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs218354.mp3",
+  "title": "Movie Short Swell",
+  "author": "jordivburgel",
+  "source_url": "https://freesound.org/people/jordivburgel/sounds/218354/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "reverse swell",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs255111.mp3",
+  "title": "Cinematic_Boom_Rhapsodize.wav",
+  "author": "rhapsodize",
+  "source_url": "https://freesound.org/people/rhapsodize/sounds/255111/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "cinematic boom",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs341670.mp3",
+  "title": "Jump scare sound 3",
+  "author": "dangthaiduy007",
+  "source_url": "https://freesound.org/people/dangthaiduy007/sounds/341670/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "jump scare",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs457514.mp3",
+  "title": "Ghost Scare Vintage",
+  "author": "onderwish",
+  "source_url": "https://freesound.org/people/onderwish/sounds/457514/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "jump scare",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs460042.mp3",
+  "title": "Piano Shock Impact",
+  "author": "DianneLaChauveSouris",
+  "source_url": "https://freesound.org/people/DianneLaChauveSouris/sounds/460042/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror stinger",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs530778.mp3",
+  "title": "breath stinger1",
+  "author": "Tissman",
+  "source_url": "https://freesound.org/people/Tissman/sounds/530778/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror stinger",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "close/fs753746.mp3",
+  "title": "JumpscareSound_Remake_Freesound.wav",
+  "author": "TheTVBunny",
+  "source_url": "https://freesound.org/people/TheTVBunny/sounds/753746/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror stinger",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.5초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs168650.mp3",
+  "title": "DoorCreak.wav",
+  "author": "0XMUSEX0",
+  "source_url": "https://freesound.org/people/0XMUSEX0/sounds/168650/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "door creak",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs216878.mp3",
+  "title": "Squeaky door opened quickly.wav",
+  "author": "CastIronCarousel",
+  "source_url": "https://freesound.org/people/CastIronCarousel/sounds/216878/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wood creak",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs219499.mp3",
+  "title": "Door - Creak.wav",
+  "author": "JarredGibb",
+  "source_url": "https://freesound.org/people/JarredGibb/sounds/219499/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "door creak",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs339184.mp3",
+  "title": "squeak_01.wav",
+  "author": "joedeshon",
+  "source_url": "https://freesound.org/people/joedeshon/sounds/339184/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "door creak",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs377552.mp3",
+  "title": "Wooden Creak",
+  "author": "Mafon2",
+  "source_url": "https://freesound.org/people/Mafon2/sounds/377552/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wood creak",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs394673.mp3",
+  "title": "Scary old rusty gate squeaking",
+  "author": "ihitokage",
+  "source_url": "https://freesound.org/people/ihitokage/sounds/394673/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creaking gate",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs429130.mp3",
+  "title": "Spring Loaded Metal Door Creak Open Close 02",
+  "author": "leonelmail",
+  "source_url": "https://freesound.org/people/leonelmail/sounds/429130/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "rusty hinge",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "creak/fs456814.mp3",
+  "title": "Creaking Wood",
+  "author": "Breviceps",
+  "source_url": "https://freesound.org/people/Breviceps/sounds/456814/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creaking gate",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "door/fs15419.mp3",
+  "title": "dorm door opening.wav",
+  "author": "pagancow",
+  "source_url": "https://freesound.org/people/pagancow/sounds/15419/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heavy door close",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "door/fs266915.mp3",
+  "title": "Door slam - Gun shot.mp3",
+  "author": "coolguy244e",
+  "source_url": "https://freesound.org/people/coolguy244e/sounds/266915/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "door slam",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "door/fs344360.mp3",
+  "title": "Door Open Close",
+  "author": "amholma",
+  "source_url": "https://freesound.org/people/amholma/sounds/344360/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "door slam",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "door/fs466864.mp3",
+  "title": "Door closing, door closed",
+  "author": "steinhyrningur",
+  "source_url": "https://freesound.org/people/steinhyrningur/sounds/466864/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heavy door close",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "door/fs48980.mp3",
+  "title": "Metal Door Slam_SoundSmith.wav",
+  "author": "Lunardrive",
+  "source_url": "https://freesound.org/people/Lunardrive/sounds/48980/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "metal door slam",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "door/fs80449.mp3",
+  "title": "JailDoorClose.wav",
+  "author": "TurtleLG",
+  "source_url": "https://freesound.org/people/TurtleLG/sounds/80449/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "door slam",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs167914.mp3",
+  "title": "Steel chain dragged, shower reverb",
+  "author": "ani_music",
+  "source_url": "https://freesound.org/people/ani_music/sounds/167914/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "chain drag",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs167916.mp3",
+  "title": "Steel chain hard clicking",
+  "author": "ani_music",
+  "source_url": "https://freesound.org/people/ani_music/sounds/167916/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "chain drag",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs207843.mp3",
+  "title": "Blade/Knife drag sound",
+  "author": "Macif",
+  "source_url": "https://freesound.org/people/Macif/sounds/207843/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "drag body",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs272375.mp3",
+  "title": "Feet Shuffling.wav",
+  "author": "danhelbling",
+  "source_url": "https://freesound.org/people/danhelbling/sounds/272375/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "shuffling feet",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs319204.mp3",
+  "title": "Foot Drag Dirt 4.wav",
+  "author": "worthahep88",
+  "source_url": "https://freesound.org/people/worthahep88/sounds/319204/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dragging feet",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs319210.mp3",
+  "title": "Foot Drags Dirt 2 .wav",
+  "author": "worthahep88",
+  "source_url": "https://freesound.org/people/worthahep88/sounds/319210/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dragging feet",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "drag/fs507473.mp3",
+  "title": "Body Drag.wav",
+  "author": "Wallch503",
+  "source_url": "https://freesound.org/people/Wallch503/sounds/507473/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "drag body",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
   "file": "drag/jeoseung.mp3",
   "title": "저승사자 짚신 끄는 발소리: 자갈 위 발 끌기 녹음을 3반음 내림",
   "source_url": "https://freesound.org/people/DigPro120/sounds/811939/",
@@ -53,6 +599,56 @@
   "original_file": "dragging feet in gravel (811939)",
   "edits": "층1 자갈 위 발 끌기(freesound 811939) 2.30~3.05초, 250Hz 고역 통과, 3반음 내림, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 끝 0.1초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/DigPro120/sounds/811939/",
   "from": "jeoseung_roam_1.mp3"
+ },
+ {
+  "file": "drone/fs155142.mp3",
+  "title": "terror ambience.mp3",
+  "author": "burning-mir",
+  "source_url": "https://freesound.org/people/burning-mir/sounds/155142/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dark drone",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "drone/fs164272.mp3",
+  "title": "Dark Ambience - Abandoned Fields",
+  "author": "Dredile",
+  "source_url": "https://freesound.org/people/Dredile/sounds/164272/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror ambience",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "drone/fs195260.mp3",
+  "title": "fx_drone_kc_low-tone-mech-drone-pulse-tlspc_02.wav",
+  "author": "kayceemixer",
+  "source_url": "https://freesound.org/people/kayceemixer/sounds/195260/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "low drone",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "drone/fs20705.mp3",
+  "title": "spacedrone3.wav",
+  "author": "Elektrocell",
+  "source_url": "https://freesound.org/people/Elektrocell/sounds/20705/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dark drone",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "drone/fs66015.mp3",
+  "title": "ambience06.wav",
+  "author": "yewbic",
+  "source_url": "https://freesound.org/people/yewbic/sounds/66015/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror ambience",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
  },
  {
   "file": "growl/dokkaebi-1.mp3",
@@ -77,6 +673,177 @@
   "from": "dokkaebi_roam_2.mp3"
  },
  {
+  "file": "growl/fs133974.mp3",
+  "title": "Horrific Zombie Growl",
+  "author": "MrPokephile",
+  "source_url": "https://freesound.org/people/MrPokephile/sounds/133974/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "zombie growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs13789.mp3",
+  "title": "growl.wav",
+  "author": "wingz",
+  "source_url": "https://freesound.org/people/wingz/sounds/13789/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dog growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs170454.mp3",
+  "title": "Angry Beast.wav",
+  "author": "husky70",
+  "source_url": "https://freesound.org/people/husky70/sounds/170454/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs171178.mp3",
+  "title": "MonsterGrowl.mp3",
+  "author": "yatoimtop",
+  "source_url": "https://freesound.org/people/yatoimtop/sounds/171178/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creature growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs20208.mp3",
+  "title": "growl1.wav",
+  "author": "ubecareful",
+  "source_url": "https://freesound.org/people/ubecareful/sounds/20208/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs342204.mp3",
+  "title": "Beast Snarling",
+  "author": "Christopherderp",
+  "source_url": "https://freesound.org/people/Christopherderp/sounds/342204/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bear growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs347410.mp3",
+  "title": "Monster Roar 02",
+  "author": "zerokingfull",
+  "source_url": "https://freesound.org/people/zerokingfull/sounds/347410/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creature growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs370036.mp3",
+  "title": "Grunt.wav",
+  "author": "punisherman",
+  "source_url": "https://freesound.org/people/punisherman/sounds/370036/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "zombie growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs398908.mp3",
+  "title": "Monster Roar 2.wav",
+  "author": "quadraslayer",
+  "source_url": "https://freesound.org/people/quadraslayer/sounds/398908/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs445983.mp3",
+  "title": "Zombie gargles",
+  "author": "Breviceps",
+  "source_url": "https://freesound.org/people/Breviceps/sounds/445983/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bear growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/fs481642.mp3",
+  "title": "Monster Growl",
+  "author": "JonCon_Library",
+  "source_url": "https://freesound.org/people/JonCon_Library/sounds/481642/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dog growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "growl/mon-fs133974.mp3",
+  "title": "괴물화 Horrific Zombie Growl",
+  "author": "MrPokephile",
+  "source_url": "https://freesound.org/people/MrPokephile/sounds/133974/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "zombie growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "growl/mon-fs13789.mp3",
+  "title": "괴물화 growl.wav",
+  "author": "wingz",
+  "source_url": "https://freesound.org/people/wingz/sounds/13789/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dog growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "growl/mon-fs170454.mp3",
+  "title": "괴물화 Angry Beast.wav",
+  "author": "husky70",
+  "source_url": "https://freesound.org/people/husky70/sounds/170454/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "growl/mon-fs171178.mp3",
+  "title": "괴물화 MonsterGrowl.mp3",
+  "author": "yatoimtop",
+  "source_url": "https://freesound.org/people/yatoimtop/sounds/171178/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creature growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "growl/mon-fs20208.mp3",
+  "title": "괴물화 growl1.wav",
+  "author": "ubecareful",
+  "source_url": "https://freesound.org/people/ubecareful/sounds/20208/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster growl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "growl/old-alligator.mp3",
+  "title": "Alligator bellowing (from http://www.fws.gov/video/sound.htm)",
+  "source_url": "https://commons.wikimedia.org/wiki/File:27alligator2bellow.ogg",
+  "author": "U.S. Fish and Wildlife Service (Wikimedia Commons)",
+  "license": "Public domain (PD-USGov-FWS, 미국 어류야생동물국 저작물)",
+  "license_url": "https://commons.wikimedia.org/wiki/Template:PD-USGov-FWS",
+  "original_file": "27alligator2bellow.ogg",
+  "edits": "0.88~2.45초 자름, 3000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.6dBFS), Commons 원본 ogg에서 작업, 5.3kHz 곤충 소리 대역 제거용 로우패스, 미시시피악어(Alligator mississippiensis) 녹음으로 나일악어 대체",
+  "from": "crocodile_roam_1.mp3 (괴물런)"
+ },
+ {
   "file": "growl/old-beast.mp3",
   "title": "Dog Growl - Beast / Creature",
   "source_url": "https://freesound.org/people/coldvet/sounds/404920/",
@@ -86,6 +853,444 @@
   "original_file": "Dog Growl - Beast / Creature",
   "edits": "10.07~12.00초 자름, 8000Hz 로우패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -5.4dBFS), Freesound HQ 미리듣기 mp3에서 작업, 밥그릇에 콘덴서 마이크를 두고 녹음한 개의 으르렁",
   "from": "canine_roam_1.mp3"
+ },
+ {
+  "file": "growl/old-dog-growl-1.mp3",
+  "title": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
+  "source_url": "https://freesound.org/people/kijjaz/sounds/393573/",
+  "author": "kijjaz",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "20170520 Kijjaz - Chihuahua Dog Growling.wav",
+  "edits": "1.73~3.45초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 2dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업",
+  "from": "chihuahua_roam_1.mp3 (괴물런)"
+ },
+ {
+  "file": "growl/old-dog-growl-2.mp3",
+  "title": "Dog Growl",
+  "source_url": "https://freesound.org/people/nicoproson/sounds/195869/",
+  "author": "nicoproson",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Dog Growl",
+  "edits": "42.78~43.95초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 잭러셀테리어(작은 개)의 이어지는 으르렁",
+  "from": "chihuahua_roam_3.mp3 (괴물런)"
+ },
+ {
+  "file": "growl/old-dog-growl-3.mp3",
+  "title": "dog_growling_mono_4824.wav",
+  "source_url": "https://freesound.org/people/Mystikuum/sounds/401820/",
+  "author": "Mystikuum",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "dog_growling_mono_4824.wav",
+  "edits": "9.00~10.45초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업",
+  "from": "greyhound_roam_2.mp3 (괴물런)"
+ },
+ {
+  "file": "growl/old-dog-snarl-1.mp3",
+  "title": "Dog Growling Snarling Grumbling",
+  "source_url": "https://freesound.org/people/qubodup/sounds/122183/",
+  "author": "qubodup",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Dog Growling Snarling Grumbling",
+  "edits": "23.80~25.78초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 낮은 으르렁 세 번, 중형 이하 혼종견 녹음으로 진돗개 대체",
+  "from": "jindo_roam_1.mp3 (괴물런)"
+ },
+ {
+  "file": "growl/old-dog-snarl-2.mp3",
+  "title": "Dog Growling Snarling Grumbling",
+  "source_url": "https://freesound.org/people/qubodup/sounds/122183/",
+  "author": "qubodup",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Dog Growling Snarling Grumbling",
+  "edits": "26.76~28.56초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 낮은 으르렁, 중형 이하 혼종견 녹음으로 진돗개 대체",
+  "from": "jindo_roam_2.mp3 (괴물런)"
+ },
+ {
+  "file": "growl/old-pig-grunt.mp3",
+  "title": "Pig - Grunt 2 - 96kHz.wav",
+  "source_url": "https://freesound.org/people/JarredGibb/sounds/233170/",
+  "author": "JarredGibb",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Pig - Grunt 2 - 96kHz.wav",
+  "edits": "0.02~0.82초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업",
+  "from": "pig_roam_1.mp3 (괴물런)"
+ },
+ {
+  "file": "growl/old-snake-snarl.mp3",
+  "title": "snarling Snake",
+  "source_url": "https://freesound.org/people/florianreichelt/sounds/423454/",
+  "author": "florianreichelt",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "snarling Snake",
+  "edits": "1.04~2.34초 자름, 500Hz 하이패스, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 코브라의 강한 쉭 한 번",
+  "from": "reptile_roam_2.mp3 (괴물런)"
+ },
+ {
+  "file": "heart/fs146765-1.mp3",
+  "title": "Heart Beat",
+  "author": "thenudo",
+  "source_url": "https://freesound.org/people/thenudo/sounds/146765/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs146765-2.mp3",
+  "title": "Heart Beat",
+  "author": "thenudo",
+  "source_url": "https://freesound.org/people/thenudo/sounds/146765/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs146765-3.mp3",
+  "title": "Heart Beat",
+  "author": "thenudo",
+  "source_url": "https://freesound.org/people/thenudo/sounds/146765/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs146765-4.mp3",
+  "title": "Heart Beat",
+  "author": "thenudo",
+  "source_url": "https://freesound.org/people/thenudo/sounds/146765/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs146765-5.mp3",
+  "title": "Heart Beat",
+  "author": "thenudo",
+  "source_url": "https://freesound.org/people/thenudo/sounds/146765/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs146765-6.mp3",
+  "title": "Heart Beat",
+  "author": "thenudo",
+  "source_url": "https://freesound.org/people/thenudo/sounds/146765/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs21409-1.mp3",
+  "title": "heart beat.mp3",
+  "author": "greyseraphim",
+  "source_url": "https://freesound.org/people/greyseraphim/sounds/21409/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs21409-2.mp3",
+  "title": "heart beat.mp3",
+  "author": "greyseraphim",
+  "source_url": "https://freesound.org/people/greyseraphim/sounds/21409/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs21409-3.mp3",
+  "title": "heart beat.mp3",
+  "author": "greyseraphim",
+  "source_url": "https://freesound.org/people/greyseraphim/sounds/21409/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs21409-4.mp3",
+  "title": "heart beat.mp3",
+  "author": "greyseraphim",
+  "source_url": "https://freesound.org/people/greyseraphim/sounds/21409/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs21409-5.mp3",
+  "title": "heart beat.mp3",
+  "author": "greyseraphim",
+  "source_url": "https://freesound.org/people/greyseraphim/sounds/21409/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs21409-6.mp3",
+  "title": "heart beat.mp3",
+  "author": "greyseraphim",
+  "source_url": "https://freesound.org/people/greyseraphim/sounds/21409/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs22416-1.mp3",
+  "title": "Four Heartbeats HQ_BeatSmith.wav",
+  "author": "Lunardrive",
+  "source_url": "https://freesound.org/people/Lunardrive/sounds/22416/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 5개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs22416-2.mp3",
+  "title": "Four Heartbeats HQ_BeatSmith.wav",
+  "author": "Lunardrive",
+  "source_url": "https://freesound.org/people/Lunardrive/sounds/22416/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 5개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs22416-3.mp3",
+  "title": "Four Heartbeats HQ_BeatSmith.wav",
+  "author": "Lunardrive",
+  "source_url": "https://freesound.org/people/Lunardrive/sounds/22416/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 5개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs22416-4.mp3",
+  "title": "Four Heartbeats HQ_BeatSmith.wav",
+  "author": "Lunardrive",
+  "source_url": "https://freesound.org/people/Lunardrive/sounds/22416/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 5개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs22416-5.mp3",
+  "title": "Four Heartbeats HQ_BeatSmith.wav",
+  "author": "Lunardrive",
+  "source_url": "https://freesound.org/people/Lunardrive/sounds/22416/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 5개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs250965-1.mp3",
+  "title": "CarCrash_heartbeat-SloMo.wav",
+  "author": "Pertti.Orn",
+  "source_url": "https://freesound.org/people/Pertti.Orn/sounds/250965/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs250965-2.mp3",
+  "title": "CarCrash_heartbeat-SloMo.wav",
+  "author": "Pertti.Orn",
+  "source_url": "https://freesound.org/people/Pertti.Orn/sounds/250965/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs250965-3.mp3",
+  "title": "CarCrash_heartbeat-SloMo.wav",
+  "author": "Pertti.Orn",
+  "source_url": "https://freesound.org/people/Pertti.Orn/sounds/250965/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs250965-4.mp3",
+  "title": "CarCrash_heartbeat-SloMo.wav",
+  "author": "Pertti.Orn",
+  "source_url": "https://freesound.org/people/Pertti.Orn/sounds/250965/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs250965-5.mp3",
+  "title": "CarCrash_heartbeat-SloMo.wav",
+  "author": "Pertti.Orn",
+  "source_url": "https://freesound.org/people/Pertti.Orn/sounds/250965/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs250965-6.mp3",
+  "title": "CarCrash_heartbeat-SloMo.wav",
+  "author": "Pertti.Orn",
+  "source_url": "https://freesound.org/people/Pertti.Orn/sounds/250965/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heartbeat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs273150-1.mp3",
+  "title": "Heart Beating",
+  "author": "michorvath",
+  "source_url": "https://freesound.org/people/michorvath/sounds/273150/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs273150-2.mp3",
+  "title": "Heart Beating",
+  "author": "michorvath",
+  "source_url": "https://freesound.org/people/michorvath/sounds/273150/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs273150-3.mp3",
+  "title": "Heart Beating",
+  "author": "michorvath",
+  "source_url": "https://freesound.org/people/michorvath/sounds/273150/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs273150-4.mp3",
+  "title": "Heart Beating",
+  "author": "michorvath",
+  "source_url": "https://freesound.org/people/michorvath/sounds/273150/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs273150-5.mp3",
+  "title": "Heart Beating",
+  "author": "michorvath",
+  "source_url": "https://freesound.org/people/michorvath/sounds/273150/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "heart/fs273150-6.mp3",
+  "title": "Heart Beating",
+  "author": "michorvath",
+  "source_url": "https://freesound.org/people/michorvath/sounds/273150/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "heart beat",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.7초), 피크 -1dBFS"
+ },
+ {
+  "file": "howl/fs115357.mp3",
+  "title": "dog howling.wav",
+  "author": "simcotter",
+  "source_url": "https://freesound.org/people/simcotter/sounds/115357/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dog howling",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "howl/fs115423.mp3",
+  "title": "basset_hound-howl.mp3",
+  "author": "mpfeiffer",
+  "source_url": "https://freesound.org/people/mpfeiffer/sounds/115423/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dog howling",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "howl/fs267179.mp3",
+  "title": "Scary Ghost Wolf Howling.wav",
+  "author": "BrainClaim",
+  "source_url": "https://freesound.org/people/BrainClaim/sounds/267179/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wolf howl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "howl/fs378334.mp3",
+  "title": "Howling wolves",
+  "author": "Kingcornz",
+  "source_url": "https://freesound.org/people/Kingcornz/sounds/378334/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "coyote howl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "howl/fs380156.mp3",
+  "title": "Howl_Echo.wav",
+  "author": "taure",
+  "source_url": "https://freesound.org/people/taure/sounds/380156/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wolf howl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "howl/fs398430.mp3",
+  "title": "Wolf howl",
+  "author": "NaturesTemper",
+  "source_url": "https://freesound.org/people/NaturesTemper/sounds/398430/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wolf howl",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 4.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "howl/old-dog-howl.mp3",
+  "title": "dog howling.wav",
+  "source_url": "https://freesound.org/people/simcotter/sounds/115357/",
+  "author": "simcotter",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "dog howling.wav",
+  "edits": "12.63~14.60초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -2.2dBFS), Freesound HQ 미리듣기 mp3에서 작업, 허스키 하울링 한 번(48 kHz 24 bit 녹음)",
+  "from": "sleddog_roam_2.mp3 (괴물런)"
  },
  {
   "file": "howl/old-wolf-1.mp3",
@@ -132,6 +1337,272 @@
   "from": "dokkaebi_sprint_2.mp3"
  },
  {
+  "file": "pounce/fs132874.mp3",
+  "title": "Monster Short Roar.wav",
+  "author": "ecfike",
+  "source_url": "https://freesound.org/people/ecfike/sounds/132874/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creature roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs204912.mp3",
+  "title": "Didgeridoo Monster Roar",
+  "author": "Noxdl",
+  "source_url": "https://freesound.org/people/Noxdl/sounds/204912/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bear roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs263115.mp3",
+  "title": "Tiger Roar",
+  "author": "lauramellis",
+  "source_url": "https://freesound.org/people/lauramellis/sounds/263115/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "lion roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs320345.mp3",
+  "title": "Dino Hiss Dragon Roar",
+  "author": "999999990",
+  "source_url": "https://freesound.org/people/999999990/sounds/320345/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs344903.mp3",
+  "title": "Monster - deep growl.wav",
+  "author": "Aegersum",
+  "source_url": "https://freesound.org/people/Aegersum/sounds/344903/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "tiger roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs366672.mp3",
+  "title": "Monster Growl_with Reverb.wav",
+  "author": "cylon8472",
+  "source_url": "https://freesound.org/people/cylon8472/sounds/366672/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "tiger roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs476083.mp3",
+  "title": "cloverfield roar.wav",
+  "author": "icyjim",
+  "source_url": "https://freesound.org/people/icyjim/sounds/476083/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs559600.mp3",
+  "title": "LION ROAR",
+  "author": "Podcapocalipsis",
+  "source_url": "https://freesound.org/people/Podcapocalipsis/sounds/559600/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "lion roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs77634.mp3",
+  "title": "growl3.wav",
+  "author": "lendrick",
+  "source_url": "https://freesound.org/people/lendrick/sounds/77634/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bear roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/fs85568.mp3",
+  "title": "DRAGON_ROAR.wav",
+  "author": "JoelAudio",
+  "source_url": "https://freesound.org/people/JoelAudio/sounds/85568/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "pounce/mon-fs132874.mp3",
+  "title": "괴물화 Monster Short Roar.wav",
+  "author": "ecfike",
+  "source_url": "https://freesound.org/people/ecfike/sounds/132874/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creature roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "pounce/mon-fs204912.mp3",
+  "title": "괴물화 Didgeridoo Monster Roar",
+  "author": "Noxdl",
+  "source_url": "https://freesound.org/people/Noxdl/sounds/204912/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "bear roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "pounce/mon-fs263115.mp3",
+  "title": "괴물화 Tiger Roar",
+  "author": "lauramellis",
+  "source_url": "https://freesound.org/people/lauramellis/sounds/263115/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "lion roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "pounce/mon-fs320345.mp3",
+  "title": "괴물화 Dino Hiss Dragon Roar",
+  "author": "999999990",
+  "source_url": "https://freesound.org/people/999999990/sounds/320345/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "monster roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "pounce/mon-fs344903.mp3",
+  "title": "괴물화 Monster - deep growl.wav",
+  "author": "Aegersum",
+  "source_url": "https://freesound.org/people/Aegersum/sounds/344903/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "tiger roar",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.4초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "pounce/old-angry-pig.mp3",
+  "title": "Angry Pig Oinking",
+  "source_url": "https://freesound.org/people/Jofae/sounds/352698/",
+  "author": "Jofae",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Angry Pig Oinking",
+  "edits": "1.57~2.17초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 리미터로 순간 피크 4dB 압축, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 ogg에서 작업, 성난 돼지 한 마리의 짧고 거친 꽥 비명 한 번",
+  "from": "pig_sprint_1.mp3 (괴물런)"
+ },
+ {
+  "file": "pounce/old-big-dog-bark.mp3",
+  "title": "Angry big dog barking - Close [d15].wav",
+  "source_url": "https://freesound.org/people/v23/sounds/440866/",
+  "author": "v23",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Angry big dog barking - Close [d15].wav",
+  "edits": "15.46~16.04초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -1.4dBFS), Freesound HQ 미리듣기 ogg에서 작업, 중앙아시아 셰퍼드(큰 개)의 성난 짖음 두 번(녹음 끝 대목)",
+  "from": "greyhound_sprint_2.mp3 (괴물런)"
+ },
+ {
+  "file": "pounce/old-cat-hiss.mp3",
+  "title": "catHisses1.wav",
+  "source_url": "https://freesound.org/people/Zabuhailo/sounds/146963/",
+  "author": "Zabuhailo",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "catHisses1.wav",
+  "edits": "0.24~1.20초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업, 고양이 하악 (feline_sprint_1과 같은 파일. 원래 cat_sprint_1은 제목과 달리 하악이 아닌 낮은 소리라 돼지처럼 들려 교체, 2026-09-25)",
+  "from": "cat_sprint_1.mp3 (괴물런)"
+ },
+ {
+  "file": "pounce/old-cat-yowl.mp3",
+  "title": "Cat Yowl 5.wav",
+  "source_url": "https://freesound.org/people/HenKonen/sounds/682082/",
+  "author": "HenKonen",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Cat Yowl 5.wav",
+  "edits": "0.04~0.90초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, Freesound HQ 미리듣기 mp3에서 작업",
+  "from": "cat_sprint_2.mp3 (괴물런)"
+ },
+ {
+  "file": "pounce/old-elephant.mp3",
+  "title": "Elephant voice - trumpeting",
+  "source_url": "https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg",
+  "author": "தகவலுழவன் (Wikimedia Commons)",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "Elephant_voice_-_trumpeting.ogg",
+  "edits": "0.14~1.02초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화",
+  "from": "elephant_sprint_1.mp3 (괴물런)"
+ },
+ {
+  "file": "pounce/old-horse-neigh.mp3",
+  "title": "Horse neighing #4",
+  "source_url": "https://bigsoundbank.com/horse-neighing-4-s1541.html",
+  "author": "Joseph SARDIN (BigSoundBank)",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "original_file": "1541.flac",
+  "edits": "0.14~1.10초 자름, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 피크 -1dBFS 정규화, BigSoundBank 원본 FLAC에서 작업, 말 울음(히이잉) 한 번, 야외, 원본 최대 피크 몇 곳이 0dBFS에 닿아 있음(0.4 ms 이하)",
+  "from": "horse_sprint_1.mp3 (괴물런)"
+ },
+ {
+  "file": "ring/fs131348.mp3",
+  "title": "Bell at Daitokuji temple,kyoto.wav",
+  "author": "nahmandub",
+  "source_url": "https://freesound.org/people/nahmandub/sounds/131348/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "temple bell",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "ring/fs173932.mp3",
+  "title": "Ding Ding Small Bell",
+  "author": "JohnsonBrandEditing",
+  "source_url": "https://freesound.org/people/JohnsonBrandEditing/sounds/173932/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "small bell",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "ring/fs396551.mp3",
+  "title": "Bell ringing & dropping.wav",
+  "author": "Techienanna",
+  "source_url": "https://freesound.org/people/Techienanna/sounds/396551/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "hand bell ring",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "ring/fs503134.mp3",
+  "title": "Small Bell Ringing.wav",
+  "author": "se2001",
+  "source_url": "https://freesound.org/people/se2001/sounds/503134/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "hand bell ring",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "ring/fs99625.mp3",
+  "title": "bell003mono.wav",
+  "author": "tec_studio",
+  "source_url": "https://freesound.org/people/tec_studio/sounds/99625/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "small bell",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
   "file": "ring/jeoseung.mp3",
   "title": "저승사자 방울(요령) 한 번: 손종(ghantee) 녹음을 3반음 내림",
   "source_url": "https://freesound.org/people/pbimal/sounds/547703/",
@@ -141,6 +1612,186 @@
   "original_file": "ghantee-10.flac (547703)",
   "edits": "층1 손종(ghantee)(freesound 547703) 0.00~1.55초, 8000Hz 저역 통과, 3반음 내림, 테이프식 피치 내림(음높이와 포먼트가 함께 내려가고 길이가 늘어남), 35Hz 고역 통과 2번(직류·초저역 제거), 2초에서 자름, 끝 0.45초 페이드아웃, 모노 44.1kHz 96kbps, 앞 5ms 페이드인, 끝 30ms 페이드아웃, 음량 정규화(RMS -14dBFS 상한, 피크 -3.8dBFS), Freesound HQ 미리듣기 mp3에서 작업, 원본: https://freesound.org/people/pbimal/sounds/547703/",
   "from": "jeoseung_roam_2.mp3"
+ },
+ {
+  "file": "safe/fs158206.mp3",
+  "title": "Music Box.wav",
+  "author": "Rickbrewin",
+  "source_url": "https://freesound.org/people/Rickbrewin/sounds/158206/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy music box",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 5.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "safe/fs258174.mp3",
+  "title": "Spooky music box radio broadcast",
+  "author": "Macintrash",
+  "source_url": "https://freesound.org/people/Macintrash/sounds/258174/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "eerie music box",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 5.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "safe/fs278903.mp3",
+  "title": "Guardians Of Limbo: Magnus Choir VST, VST3, Audio Unit Preset",
+  "author": "Syntheway by syntheway",
+  "source_url": "https://freesound.org/people/Syntheway%20by%20syntheway/sounds/278903/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy music box",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 5.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "safe/fs473638.mp3",
+  "title": "CreepyMusicBox.wav",
+  "author": "dansayshi",
+  "source_url": "https://freesound.org/people/dansayshi/sounds/473638/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "eerie music box",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 5.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "safe/fs712798.mp3",
+  "title": "Scary Music Box for Spooky Scenes",
+  "author": "Antenalosmusic",
+  "source_url": "https://freesound.org/people/Antenalosmusic/sounds/712798/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "eerie music box",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 5.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs169628.mp3",
+  "title": "Male voice screaming loudly",
+  "author": "Dinsfire",
+  "source_url": "https://freesound.org/people/Dinsfire/sounds/169628/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "man scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs203594.mp3",
+  "title": "man scream.ogg",
+  "author": "insanity54",
+  "source_url": "https://freesound.org/people/insanity54/sounds/203594/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "man scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs219719.mp3",
+  "title": "man-screaming.wav",
+  "author": "mariateresa_garcia",
+  "source_url": "https://freesound.org/people/mariateresa_garcia/sounds/219719/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "man scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs219856.mp3",
+  "title": "Scream",
+  "author": "claracarpintero",
+  "source_url": "https://freesound.org/people/claracarpintero/sounds/219856/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "woman scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs333832.mp3",
+  "title": "Demonic Woman Scream.wav",
+  "author": "nick121087",
+  "source_url": "https://freesound.org/people/nick121087/sounds/333832/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "woman scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs353086.mp3",
+  "title": "Weirdo Scream.wav",
+  "author": "GreatNate98",
+  "source_url": "https://freesound.org/people/GreatNate98/sounds/353086/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "terrified scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs35716.mp3",
+  "title": "scream.wav",
+  "author": "analogchill",
+  "source_url": "https://freesound.org/people/analogchill/sounds/35716/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs449702.mp3",
+  "title": "Female Scream",
+  "author": "DigestContent",
+  "source_url": "https://freesound.org/people/DigestContent/sounds/449702/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "terrified scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs485802.mp3",
+  "title": "scream14.mp3",
+  "author": "Grez1",
+  "source_url": "https://freesound.org/people/Grez1/sounds/485802/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "woman scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/fs556976.mp3",
+  "title": "Male Screams [1]",
+  "author": "marc3122",
+  "source_url": "https://freesound.org/people/marc3122/sounds/556976/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "scream/mon-fs169628.mp3",
+  "title": "괴물화 Male voice screaming loudly",
+  "author": "Dinsfire",
+  "source_url": "https://freesound.org/people/Dinsfire/sounds/169628/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "man scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "scream/mon-fs203594.mp3",
+  "title": "괴물화 man scream.ogg",
+  "author": "insanity54",
+  "source_url": "https://freesound.org/people/insanity54/sounds/203594/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "man scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "scream/mon-fs219719.mp3",
+  "title": "괴물화 man-screaming.wav",
+  "author": "mariateresa_garcia",
+  "source_url": "https://freesound.org/people/mariateresa_garcia/sounds/219719/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "man scream",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 2.6초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
  },
  {
   "file": "step/dokkaebi-1.mp3",
@@ -725,5 +2376,305 @@
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "query": "footsteps running gravel",
   "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.4초), 피크 -1dBFS"
+ },
+ {
+  "file": "tension/fs178081.mp3",
+  "title": "guitar string rubbed with coin",
+  "author": "sgarrison2127",
+  "source_url": "https://freesound.org/people/sgarrison2127/sounds/178081/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "eerie strings",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 12초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "tension/fs325142.mp3",
+  "title": "Thriller Score Horror Scene",
+  "author": "memz",
+  "source_url": "https://freesound.org/people/memz/sounds/325142/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror strings",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 12초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "tension/fs347865.mp3",
+  "title": "Risset Horror.wav",
+  "author": "MrFossy",
+  "source_url": "https://freesound.org/people/MrFossy/sounds/347865/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "dissonant violin",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 12초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "tension/fs503344.mp3",
+  "title": "Horror/Suspense Violin.mp3",
+  "author": "jozef_sound",
+  "source_url": "https://freesound.org/people/jozef_sound/sounds/503344/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "horror strings",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 12초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "tension/fs805634.mp3",
+  "title": "Bowing metal stairs with cello bow 7",
+  "author": "giddster",
+  "source_url": "https://freesound.org/people/giddster/sounds/805634/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy cello",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 12초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "tick/fs408741-1.mp3",
+  "title": "Alarm clock ticking.wav",
+  "author": "straget",
+  "source_url": "https://freesound.org/people/straget/sounds/408741/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs408741-2.mp3",
+  "title": "Alarm clock ticking.wav",
+  "author": "straget",
+  "source_url": "https://freesound.org/people/straget/sounds/408741/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs408741-3.mp3",
+  "title": "Alarm clock ticking.wav",
+  "author": "straget",
+  "source_url": "https://freesound.org/people/straget/sounds/408741/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs408741-4.mp3",
+  "title": "Alarm clock ticking.wav",
+  "author": "straget",
+  "source_url": "https://freesound.org/people/straget/sounds/408741/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs408741-5.mp3",
+  "title": "Alarm clock ticking.wav",
+  "author": "straget",
+  "source_url": "https://freesound.org/people/straget/sounds/408741/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs408741-6.mp3",
+  "title": "Alarm clock ticking.wav",
+  "author": "straget",
+  "source_url": "https://freesound.org/people/straget/sounds/408741/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs450509-1.mp3",
+  "title": "ClockTickSound_01.wav",
+  "author": "abyeditsound",
+  "source_url": "https://freesound.org/people/abyeditsound/sounds/450509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs450509-2.mp3",
+  "title": "ClockTickSound_01.wav",
+  "author": "abyeditsound",
+  "source_url": "https://freesound.org/people/abyeditsound/sounds/450509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs450509-3.mp3",
+  "title": "ClockTickSound_01.wav",
+  "author": "abyeditsound",
+  "source_url": "https://freesound.org/people/abyeditsound/sounds/450509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs450509-4.mp3",
+  "title": "ClockTickSound_01.wav",
+  "author": "abyeditsound",
+  "source_url": "https://freesound.org/people/abyeditsound/sounds/450509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs450509-5.mp3",
+  "title": "ClockTickSound_01.wav",
+  "author": "abyeditsound",
+  "source_url": "https://freesound.org/people/abyeditsound/sounds/450509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "tick/fs450509-6.mp3",
+  "title": "ClockTickSound_01.wav",
+  "author": "abyeditsound",
+  "source_url": "https://freesound.org/people/abyeditsound/sounds/450509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "clock tick",
+  "edits": "Freesound HQ 미리듣기, 모노, 소리 한 번씩 6개로 자름(0.25초), 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs143902.mp3",
+  "title": "Four_Voices_Whispering.wav",
+  "author": "geoneo0",
+  "source_url": "https://freesound.org/people/geoneo0/sounds/143902/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "whispering",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs193812.mp3",
+  "title": "Four_Voices_Whispering_6.wav",
+  "author": "geoneo0",
+  "source_url": "https://freesound.org/people/geoneo0/sounds/193812/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy whisper",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs193818.mp3",
+  "title": "Four_Voices_Whispering_6_wEcho.wav",
+  "author": "geoneo0",
+  "source_url": "https://freesound.org/people/geoneo0/sounds/193818/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy whisper",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs22329.mp3",
+  "title": "whisper trail 2.ogg",
+  "author": "sleepCircle",
+  "source_url": "https://freesound.org/people/sleepCircle/sounds/22329/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "whispering",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs234044.mp3",
+  "title": "Creepy Whispering",
+  "author": "RaspberryTickle",
+  "source_url": "https://freesound.org/people/RaspberryTickle/sounds/234044/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "ghost whisper",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs316797.mp3",
+  "title": "Ghostly Whispers",
+  "author": "dimbark1",
+  "source_url": "https://freesound.org/people/dimbark1/sounds/316797/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy whisper",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/fs341841.mp3",
+  "title": "whisper.wav",
+  "author": "IanStarGem",
+  "source_url": "https://freesound.org/people/IanStarGem/sounds/341841/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "ghost whisper",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS"
+ },
+ {
+  "file": "whisper/mon-fs143902.mp3",
+  "title": "괴물화 Four_Voices_Whispering.wav",
+  "author": "geoneo0",
+  "source_url": "https://freesound.org/people/geoneo0/sounds/143902/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "whispering",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "whisper/mon-fs193812.mp3",
+  "title": "괴물화 Four_Voices_Whispering_6.wav",
+  "author": "geoneo0",
+  "source_url": "https://freesound.org/people/geoneo0/sounds/193812/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "creepy whisper",
+  "edits": "Freesound HQ 미리듣기, 모노, 앞 무음 자름, 최대 3.0초, 페이드, 피크 -1dBFS → 0.72배속(약 5.7반음 내림)"
+ },
+ {
+  "file": "wind/fs159509.mp3",
+  "title": "Halloween - Graveyard At Night Howling Wind.mp3",
+  "author": "mistersherlock",
+  "source_url": "https://freesound.org/people/mistersherlock/sounds/159509/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "night wind",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "wind/fs22331.mp3",
+  "title": "wind.ogg",
+  "author": "sleepCircle",
+  "source_url": "https://freesound.org/people/sleepCircle/sounds/22331/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "night wind",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "wind/fs525292.mp3",
+  "title": "wind.wav",
+  "author": "nithala",
+  "source_url": "https://freesound.org/people/nithala/sounds/525292/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wind howling",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
+ },
+ {
+  "file": "wind/fs69512.mp3",
+  "title": "Winter wind whistling through window.mp3",
+  "author": "audible-edge",
+  "source_url": "https://freesound.org/people/audible-edge/sounds/69512/",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "query": "wind howling",
+  "edits": "Freesound HQ 미리듣기, 모노, 가운데 16초를 끝·처음 1.5초 교차로 이어 끊김 없는 루프, 피크 -3dBFS"
  }
 ]

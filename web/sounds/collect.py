@@ -30,7 +30,7 @@ PLAN = {
     'bell':    ('one', 6.0, [('church bell toll', 3, 30), ('bell toll', 2, 30), ('large bell', 1, 30)]),
     'tick':    ('hits', 0.25, [('clock tick', 3, 30)]),
     'close':   ('one', 3.5, [('horror stinger', 3, 15), ('jump scare', 2, 15), ('cinematic boom', 2, 15), ('reverse swell', 1, 15)]),
-    'safe':    ('one', 5.0, [('music box', 2, 30), ('dark ambient pad', 2, 60)]),
+    'safe':    ('one', 5.0, [('eerie music box', 3, 40), ('creepy music box', 2, 40), ('dark ambient pad', 2, 60), ('ominous choir', 1, 60)]),
     'door':    ('one', 4.0, [('door slam', 3, 20), ('heavy door close', 2, 20), ('metal door slam', 1, 20)]),
     'drone':   ('loop', 16, [('dark drone', 2, 300), ('horror ambience', 2, 300), ('low drone', 1, 300)]),
     'wind':    ('loop', 16, [('wind howling', 2, 300), ('night wind', 2, 300), ('strong wind', 1, 300)]),
@@ -51,7 +51,7 @@ OLDPICK = [
 MUST = {'step': r'foot|step|run|walk|gravel|jog', 'heart': r'heart', 'breath': r'breath|pant|gasp|exhal|inhal', 'growl': r'growl|snarl|grunt|monster|creature|zombie|beast',
         'pounce': r'roar|monster|creature|beast|growl', 'scream': r'scream|shriek|yell', 'howl': r'howl', 'whisper': r'whisper', 'creak': r'creak|squeak|hinge',
         'ring': r'bell|ring', 'drag': r'drag|shuffl|chain', 'bell': r'bell|toll', 'tick': r'tick|clock', 'close': r'stinger|scare|boom|hit|impact|swell|whoosh|horror',
-        'safe': r'music.?box|pad|ambient|drone', 'door': r'door|slam', 'drone': r'drone|ambien|dark|horror', 'wind': r'wind', 'tension': r'string|violin|cello|viola|horror'}
+        'safe': r'music.?box|pad|ambient|drone|choir', 'door': r'door|slam', 'drone': r'drone|ambien|dark|horror', 'wind': r'wind', 'tension': r'string|violin|cello|viola|horror'}
 SKIP_WORDS = re.compile(r'\b(child|kid|baby|girl|boy|music|song|loop pack|voice over|vocal|say|says|word)\b', re.I)
 
 
@@ -159,7 +159,7 @@ def main(only):
             got = 0
             for r in res:
                 if got >= n: break
-                if r['sid'] in used or 'Creative Commons 0' not in r['lic'] or r['dur'] > maxd or r['dur'] < 0.3 or SKIP_WORDS.search(r['title']) or not re.search(MUST[sid], r['title'], re.I): continue
+                if r['sid'] in used or 'Creative Commons 0' not in r['lic'] or r['dur'] > maxd or r['dur'] < 0.3 or (SKIP_WORDS.search(r['title']) and not (sid == 'safe' and not re.search(r'child|kid|baby', r['title'], re.I))) or not re.search(MUST[sid], r['title'], re.I): continue
                 try: x = decode(get(r['mp3'], True))
                 except Exception as e: print('받기 실패', r['sid'], e); continue
                 used.add(r['sid'])
