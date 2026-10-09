@@ -5,21 +5,21 @@
 const SND = (() => {
   // kind: loop = 계속 깔리는 소리, beat = 박자마다 반복, one = 한 번. dur = 미리듣기 길이(초)
   const LIST = [
-    { id: 'scene', kind: 'demo', dur: 26, name: '전체 장면', when: '검수용. 아무개씨가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 울부짖음, 심장, 으르렁, 불협 현, 접근 경고, 숨소리, 덮침을 실제 순서대로 섞었다' },
+    { id: 'scene', kind: 'demo', dur: 26, name: '전체 장면', when: '검수용. 추격자가 100m 뒤에서 붙을 때까지', desc: '드론, 바람, 발소리, 울부짖음, 심장, 으르렁, 불협 현, 접근 경고, 숨소리, 덮침을 실제 순서대로 섞었다' },
     { id: 'drone', kind: 'loop', dur: 9, name: '저음 드론', when: '공포모드 내내 깔린다. 가까워질수록 커진다', desc: '41Hz 톱니파 둘을 살짝 어긋나게 겹친 맥놀이 + 서브 + 저역 럼블. 필터가 느리게 숨 쉰다' },
     { id: 'wind', kind: 'loop', dur: 7, name: '바람', when: '공포모드 내내. 정적을 메운다', desc: '브라운 노이즈 + 저역 통과. 돌풍처럼 천천히 일렁인다' },
-    { id: 'tension', kind: 'loop', dur: 8, name: '불협 현', when: '아무개씨가 약 45m 안으로 들어오면 서서히 커진다', desc: '반음씩 붙은 고음 현 네 줄의 떨림 + 저음 단2도. 공포 영화 바이올린' },
-    { id: 'step', kind: 'beat', dur: 11, name: '아무개씨 발소리', when: '달리는 내내 끊기지 않는다. 박자는 설정 페이스의 케이던스, 크기와 밝기는 거리', desc: '무거운 발 쿵. 좌우 발이 번갈아 뒤에서 들린다. 미리듣기는 100m에서 0m까지' },
+    { id: 'tension', kind: 'loop', dur: 8, name: '불협 현', when: '추격자가 약 45m 안으로 들어오면 서서히 커진다', desc: '반음씩 붙은 고음 현 네 줄의 떨림 + 저음 단2도. 공포 영화 바이올린' },
+    { id: 'step', kind: 'beat', dur: 11, name: '추격자 발소리', when: '달리는 내내 끊기지 않는다. 박자는 설정 페이스의 케이던스, 크기와 밝기는 거리', desc: '무거운 발 쿵. 좌우 발이 번갈아 뒤에서 들린다. 미리듣기는 100m에서 0m까지' },
     { id: 'heart', kind: 'beat', dur: 8, name: '내 심장', when: '달리는 내내. 가까워질수록 빨라진다(70~160bpm)', desc: '쿵쿵 두 박. 미리듣기는 느림에서 빠름까지' },
-    { id: 'breath', kind: 'beat', dur: 6, name: '아무개씨 숨소리', when: '12m 안. 한 번이 끝나면 다음 숨', desc: '낮고 거친 헐떡임. 뒤에서, 바로 귀 뒤에서' },
+    { id: 'breath', kind: 'beat', dur: 6, name: '추격자 숨소리', when: '12m 안. 한 번이 끝나면 다음 숨', desc: '낮고 거친 헐떡임. 뒤에서, 바로 귀 뒤에서' },
     { id: 'growl', kind: 'one', dur: 2.2, name: '으르렁', when: '45m 안. 8~20초마다 한 번, 뒤에서. 가까울수록 크다', desc: '큰 짐승의 콧김과 낮은 그르렁' },
     { id: 'tick', kind: 'one', dur: 1.2, name: '카운트다운', when: '출발 3, 2, 1초 전. 인터벌은 회복 끝 3초 전', desc: '낮은 시계 초침' },
-    { id: 'bell', kind: 'one', dur: 6, name: '출발 종', when: '출발 순간. 아무개씨가 움직이기 시작한다', desc: '낮은 G 교회 종. 비배음 배음이 길게 운다' },
+    { id: 'bell', kind: 'one', dur: 6, name: '출발 종', when: '출발 순간. 추격자가 움직이기 시작한다', desc: '낮은 G 교회 종. 비배음 배음이 길게 운다' },
     { id: 'close', kind: 'one', dur: 4, name: '접근 경고', when: '20m 안으로 들어오는 순간(35m 밖으로 나가야 다시 울림)', desc: '거꾸로 빨려드는 스웰 뒤 쾅. 진동 함께' },
     { id: 'pounce', kind: 'one', dur: 1.6, name: '덮침 포효', when: '거리 0m. 잡힘과 같이, 반드시', desc: '괴물 포효. 바로 뒤에서 크게' },
-    { id: 'caught', kind: 'one', dur: 2.6, name: '잡힘 비명', when: '거리 0m. 잡힌 횟수 +1, 아무개씨는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동' },
+    { id: 'caught', kind: 'one', dur: 2.6, name: '잡힘 비명', when: '거리 0m. 잡힌 횟수 +1, 추격자는 다시 뒤로', desc: '찢어지는 비명 + 쾅. 화면 번쩍, 긴 진동' },
     { id: 'scream', kind: 'one', dur: 2.4, name: '먼 비명', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 멀리 한쪽에서', desc: '누군가 멀리서 지르는 비명. 쾅 없이 비명만' },
-    { id: 'roar', kind: 'one', dur: 1.8, name: '먼 포효', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 아무개씨 자리(뒤)에서, 거리만큼 작게', desc: '덮침 포효 녹음과 같은 소리. 녹음이 없으면 조용' },
+    { id: 'roar', kind: 'one', dur: 1.8, name: '먼 포효', when: '주행 중 가끔(50~110초마다 비명이나 포효 중 하나). 추격자 자리(뒤)에서, 거리만큼 작게', desc: '덮침 포효 녹음과 같은 소리. 녹음이 없으면 조용' },
     { id: 'creak', kind: 'one', dur: 3.5, name: '먼 삐걱임', when: '25m 밖일 때. 35~80초마다 한 번, 왼쪽이나 오른쪽 멀리서', desc: '녹슨 철문이 멀리서 끼익. 좌우 한쪽에서 울린다' },
     { id: 'howl', kind: 'one', dur: 2.4, name: '먼 울부짖음', when: '25m 밖일 때. 삐걱임 대신 가끔, 멀리 한쪽에서', desc: '늑대 하울링이 멀리서 길게' },
     { id: 'ring', kind: 'one', dur: 2.4, name: '방울', when: '25m 밖일 때. 삐걱임 대신 가끔, 한쪽에서', desc: '저승사자 요령이 한 번 울린다' },
@@ -218,7 +218,7 @@ const SND = (() => {
       const k = h + 0.55, m = O('square', 2200), mb = F('bandpass', 2200, 8), mg = G(0); env(mg.gain, k, 0.001, 0.3, 0.04); m.connect(mb); mb.connect(mg); mg.connect(dest); play(m, k, 0.05);   // 걸쇠
       const m2 = O('square', 1700), mg2 = G(0); env(mg2.gain, k + 0.07, 0.001, 0.25, 0.05); m2.connect(mb); mb.connect(mg2); mg2.connect(dest); play(m2, k + 0.07, 0.06);
     };
-    /** 한 번 나는 소리. 녹음이 있으면 녹음, 없으면 합성. o.side/o.far를 주면 좌우 한쪽에서, o.chase면 아무개씨 자리(뒤, 거리 반영)에서 */
+    /** 한 번 나는 소리. 녹음이 있으면 녹음, 없으면 합성. o.side/o.far를 주면 좌우 한쪽에서, o.chase면 추격자 자리(뒤, 거리 반영)에서 */
     E.one = (id, o) => {
       o = o || {}; const t = o.at !== undefined ? o.at : ctx.currentTime + 0.02;
       const dest = o.dest || (o.chase ? E.chaseIn : o.side !== undefined ? sideOut(o.side, o.far || 0) : id === 'tick' ? E.ui : E.master);

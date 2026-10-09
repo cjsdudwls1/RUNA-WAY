@@ -33,37 +33,37 @@ function sim(cfg, speed, opt = {}) {
   const minGap = Math.min(...fast.snaps.filter(s => s.phase === 'run').map(s => s.gap));
   check(minGap > 35, `빠를 때 최소 거리 ${minGap.toFixed(1)}m`);
 }
-// 2) 빌드업 5km 6:30 → 5:00. 설정 시간 28분 45초, 아무개씨는 점점 빨라진다
+// 2) 빌드업 5km 6:30 → 5:00. 설정 시간 28분 45초, 추격자는 점점 빨라진다
 {
   const cfg = { type: 'build', distM: 5000, p0: 390, p1: 300 };
   check(G.planTimeS(G.plan(cfg).sets[0]) === 1725, '빌드업 설정 시간 1725초');
   const r = sim(cfg, () => 3600 / 330);
   const run = r.snaps.filter(s => s.phase === 'run');
-  check(run[10].oppPace > run[run.length - 10].oppPace + 60, `아무개씨 페이스 ${run[10].oppPace.toFixed(0)} → ${run[run.length - 10].oppPace.toFixed(0)}`);
+  check(run[10].oppPace > run[run.length - 10].oppPace + 60, `추격자 페이스 ${run[10].oppPace.toFixed(0)} → ${run[run.length - 10].oppPace.toFixed(0)}`);
   check(r.fin && !r.fin.quit, '빌드업 완주');
 }
-// 3) 인터벌 200m × 3, 4:00, 회복 30초. 회복 중엔 아무개씨 없음, 세트마다 다시 출발 간격
+// 3) 인터벌 200m × 3, 4:00, 회복 30초. 회복 중엔 추격자 없음, 세트마다 다시 출발 간격
 {
   const r = sim({ type: 'interval', setM: 200, sets: 3, ipace: 240, restS: 30 }, (t, g) => (g.phase === 'rest' ? 5 : 16));
   check(r.ev.filter(e => e.type === 'setEnd').length === 3 && r.ev.filter(e => e.type === 'go').length === 3, '인터벌 3세트, 출발 3번');
   check(r.types.filter(x => x === 'rest').length === 2, '회복 2번');
   check(r.types.includes('setSoon') && r.types.includes('restSoon'), '다음 세트 예고, 회복 끝 알림');
   const rest = r.snaps.filter(s => s.phase === 'rest');
-  check(rest.length > 0 && rest.every(s => s.gap === 0), '회복 중 아무개씨 없음');
+  check(rest.length > 0 && rest.every(s => s.gap === 0), '회복 중 추격자 없음');
   const restLen = r.snaps.filter(s => s.phase === 'rest' || s.phase === 'count').length;
   check(restLen >= 60 && restLen <= 66, `회복+카운트 총 ${restLen}초`);
   const slow = sim({ type: 'interval', setM: 400, sets: 2, ipace: 270, restS: 20 }, (t, g) => (g.phase === 'rest' ? 4 : 10));
   check(slow.g.caught > 0 && slow.fin && slow.fin.results.every(x => x.caught >= 0), `느린 인터벌 잡힘 ${slow.g.caught}`);
 }
-// 4) 자동 일시정지: 멈추면 5초 뒤 아무개씨도 멈춘다
+// 4) 자동 일시정지: 멈추면 5초 뒤 추격자도 멈춘다
 {
   const r = sim({ type: 'normal', distM: 1000, pace: 420 }, (t) => (t > 60 && t < 90 ? 0 : 10));
   check(r.types.includes('pause') && r.types.includes('resume'), '자동 일시정지/재개');
   const ps = r.snaps.filter(s => s.phase === 'run' && s.frozen);
   check(ps.length >= 20 && ps.length <= 27, `동결 ${ps.length}초`);
-  check(ps[0].opp === ps[ps.length - 1].opp, '동결 중 아무개씨 정지');
+  check(ps[0].opp === ps[ps.length - 1].opp, '동결 중 추격자 정지');
 }
-// 5) GPS 끊김: 아무개씨 정지
+// 5) GPS 끊김: 추격자 정지
 {
   const r = sim({ type: 'normal', distM: 1000, pace: 360 }, () => 10, { lost: (t) => t > 50 && t < 70 });
   check(r.types.includes('gpsLost') && r.types.includes('gpsBack'), 'GPS 끊김/복귀');
