@@ -48,13 +48,22 @@ async function open(cfg, opts = {}) {
   return { ctx, page, errors };
 }
 
+/** 밀어서 출발. 출발 버튼(손잡이)을 오른쪽 끝까지 끈다 */
+async function slide(page) {
+  await page.waitForTimeout(400);   // 손잡이가 제자리로 돌아오는 시간
+  const k = await page.locator('#start').boundingBox(), t = await page.locator('#slide').boundingBox();
+  await page.mouse.move(k.x + k.width / 2, k.y + k.height / 2); await page.mouse.down();
+  await page.mouse.move(t.x + t.width - 8, k.y + k.height / 2, { steps: 8 }); await page.mouse.up();
+}
+const gpsRun = (caught, c) => ({ at: new Date().toISOString(), ...c, src: 'gps', result: { title: caught ? '잡혔다' : '탈출 성공', hero: '', dist: c.distM, moving: 1000, caught } });
+
 /** 실내 데모 한 판. 10ms 틱(100배속) */
 async function demo(cfg, label) {
   const { ctx, page, errors } = await open(cfg, { query: '?src=demo&demoMs=10' });
   check(await page.isVisible('#start'), `${label}: 첫 화면에 출발 버튼`);
   await page.click(`#kind button[data-v="${cfg.type}"]`);
   await page.waitForTimeout(1500);   // 녹음 받기(첫 화면 0.8초 뒤 시작)
-  await page.click('#start');
+  await slide(page);
   await page.waitForSelector('#result.on', { timeout: 120000 }).catch(() => { });
   check(await page.isVisible('#result'), `${label}: 끝까지 완주`);
   const r = await page.evaluate(() => ({ label: document.querySelector('#rLabel').textContent, hero: document.querySelector('#rHero').textContent, log: document.querySelector('#rLog').textContent, sets: document.querySelectorAll('#rSets tr').length, qa: window.__qa }));
@@ -164,7 +173,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   const { ctx, page, errors } = await open({ ...{ safe: true, distM: 300, pace: 345 }, type: 'normal' }, { query: '?src=demo&demoMs=10' });
   await page.evaluate(() => { const s = {}; for (const it of SND.LIST) s[it.id] = []; s.step = ['synth']; localStorage.setItem('rw.snd', JSON.stringify(s)); });
   await page.reload({ waitUntil: 'load' }); await page.waitForTimeout(500);
-  await page.click('#start'); await page.waitForSelector('#result.on', { timeout: 120000 }).catch(() => { });
+  await slide(page); await page.waitForSelector('#result.on', { timeout: 120000 }).catch(() => { });
   const qa = await page.evaluate(() => window.__qa);
   check(qa.rec === 0 && qa.osc >= 2, `고른 대로: 발소리 합성음만(녹음 ${qa.rec}, 합성 ${qa.osc})`);
   check(errors.length === 0, '고른 대로 주행 오류 없음 ' + errors.join(' | '));
@@ -175,8 +184,10 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
 {
   const { ctx, page, errors } = await open({ type: 'normal', distM: 1000, pace: 360 }, { ctx: { permissions: ['geolocation'], geolocation: { latitude: 37.894, longitude: 127.2, accuracy: 6 } } });
   await page.click('#start');
+  check(await page.isVisible('#home') && !(await page.isVisible('#safety')) && (await page.textContent('#slideHint')).includes('밀어야'), '출발 버튼 탭만으로는 출발 안 함(밀어야 출발)');
+  await slide(page);
   check(await page.isVisible('#safety'), 'GPS 첫 출발: 안전 고지');
-  await page.click('#safetyOk'); await page.click('#start');
+  await page.click('#safetyOk'); await slide(page);
   let lat = 37.894;
   for (let i = 0; i < 16; i++) { lat += 0.000025; await ctx.setGeolocation({ latitude: lat, longitude: 127.2, accuracy: 6 }); await page.waitForTimeout(1000); }   // 초속 약 2.8m
   const s = await page.evaluate(() => ({ big: document.querySelector('#gapBig').textContent, sub: document.querySelector('#gapSub').textContent }));
@@ -194,6 +205,49 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   const p2 = await ctx.newPage(); await p2.goto(BASE, { waitUntil: 'load' });
   check(await p2.isVisible('#last') && (await p2.textContent('#planSum')).includes('지난번 설정') && await p2.inputValue('#v_distM') === '1 km', '앱을 다시 켜면 지난 기록과 지난번 설정 그대로');
   check(errors.length === 0, 'GPS 모드 오류 없음 ' + errors.join(' | '));
+  await ctx.close();
+}
+
+// 4-1) 점진적 과부하: 같은 설정 기록의 잡힌 횟수, 0회면 다음 단계 제안
+{
+  const c = { type: 'normal', distM: 5000, pace: 360 };
+  const { ctx, page, errors } = await open(c);
+  await page.evaluate((rs) => localStorage.setItem('rw.runs', JSON.stringify(rs)), [gpsRun(3, c), gpsRun(1, c), { ...gpsRun(0, c), src: 'demo' }, gpsRun(2, { ...c, pace: 330 }), gpsRun(0, c)]);
+  await page.reload({ waitUntil: 'load' });
+  check(await page.locator('#prog .bars > div').count() === 3, '같은 설정 기록만 막대로(데모·다른 설정 제외): ' + await page.locator('#prog .bars > div').count());
+  check(await page.isVisible('#prog .up'), '0회 → 올리자는 제안');
+  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'home_up.png'), fullPage: true });
+  await page.click('#prog [data-up="0"]');
+  const cfg = JSON.parse(await page.evaluate(() => localStorage.getItem('rw.cfg')));
+  check(cfg.pace === 350 && cfg.distM === 5000, '페이스 올리기 6:00 → 5:50');
+  check(!(await page.isVisible('#prog')) && await page.inputValue('#v_pace') === '5:50', '새 설정은 기록 없음, 값 반영');
+  await page.evaluate((rs) => localStorage.setItem('rw.runs', JSON.stringify(rs)), [gpsRun(0, { ...c, pace: 350 })]);
+  await page.click('#kind button[data-v="normal"]');
+  await page.click('#prog [data-up="1"]');
+  const cfg2 = JSON.parse(await page.evaluate(() => localStorage.getItem('rw.cfg')));
+  check(cfg2.distM === 5500 && cfg2.pace === 350, '거리 늘리기 5 → 5.5 km');
+  await page.evaluate((rs) => localStorage.setItem('rw.runs', JSON.stringify(rs)), [gpsRun(2, { type: 'interval', ipace: 270, setM: 400, sets: 6, restS: 90 })]);
+  await page.click('#kind button[data-v="interval"]');
+  check(await page.isVisible('#prog') && !(await page.isVisible('#prog .up')), '인터벌: 잡힌 기록 있으면 제안 없음');
+  check(errors.length === 0, '점진적 과부하 오류 없음 ' + errors.join(' | '));
+  await ctx.close();
+}
+// 4-2) 실주행 완주 결과: 지난번보다 줄었는지, 0회면 올리자는 제안
+{
+  const c = { type: 'normal', distM: 100, pace: 900 };
+  const { ctx, page, errors } = await open({ ...c, safe: true }, { ctx: { permissions: ['geolocation'], geolocation: { latitude: 37.894, longitude: 127.2, accuracy: 6 } } });
+  await page.evaluate((rs) => localStorage.setItem('rw.runs', JSON.stringify(rs)), [gpsRun(2, c), gpsRun(1, c)]);
+  await slide(page);
+  let lat = 37.894;
+  for (let i = 0; i < 70 && !(await page.isVisible('#result')); i++) { lat += 0.000025; await ctx.setGeolocation({ latitude: lat, longitude: 127.2, accuracy: 6 }); await page.waitForTimeout(1000); }
+  check(await page.isVisible('#result') && (await page.textContent('#rLabel')) === '탈출 성공', 'GPS 100m 완주: ' + await page.textContent('#rLabel'));
+  const pt = await page.textContent('#rProg');
+  check(pt.includes('지난번 1회') && pt.includes('0회') && await page.isVisible('#rProg .up'), '결과: 줄어든 추세 + 올리자는 제안: ' + pt.slice(0, 60));
+  check((await page.textContent('#rVs')).includes('15:00') && /m/.test(await page.textContent('#rClose')), '결과: 나 vs 추격자, 최근접 거리');
+  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'result_up.png'), fullPage: true });
+  await page.click('#rProg [data-up="1"]');
+  check(await page.isVisible('#home') && await page.inputValue('#v_distM') === '0.2 km', '결과에서 거리 늘리기 → 첫 화면 0.2 km');
+  check(errors.length === 0, '완주 결과 오류 없음 ' + errors.join(' | '));
   await ctx.close();
 }
 

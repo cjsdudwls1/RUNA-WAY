@@ -15,7 +15,7 @@
 python3 web/build.py && NODE_PATH=$(npm root -g) node web/qa.mjs
 ```
 
-- docs/app/을 로컬에 띄워 헤드리스 크롬으로 돈다. 일반런·빌드업·인터벌 실내 데모 완주, 말 없음, 녹음 재생, 검수 화면, GPS 모드(위치 에뮬레이션), 아이폰 에뮬레이션
+- docs/app/을 로컬에 띄워 헤드리스 크롬으로 돈다. 일반런·빌드업·인터벌 실내 데모 완주, 말 없음, 녹음 재생, 검수 화면, GPS 모드(위치 에뮬레이션), 밀어서 출발, 점진적 과부하(기록 막대, 단계 올리기, 실주행 완주 결과), 아이폰 에뮬레이션
 - 규칙: `node web/test_game.mjs`, 골든 테스트: `node web/test_golden.mjs`
 - 검수용 WAV: `NODE_PATH=$(npm root -g) node web/render_sounds.mjs` → web/dist/sounds/
 
