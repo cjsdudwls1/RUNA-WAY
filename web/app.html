@@ -2,213 +2,287 @@
 <meta name="theme-color" content="#0a0f0d">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
 <style>
-  :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--orange:#ff9a3c;--yellow:#ffd93d;
+  :root{--bg:#0a0f0d;--panel:#101816;--line:#1f2b27;--text:#dfe9e4;--dim:#7d8f88;--green:#3ff2a5;--green-dim:#1d7a57;--red:#ff4a3d;--red-dim:#7a1d17;--orange:#ff9a3c;--yellow:#ffd93d;--acc:var(--red);
     --display:"Black Han Sans",sans-serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
   *{box-sizing:border-box}html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
-  input{user-select:text;-webkit-user-select:text}
   body.flash{background:#5a0f0a}
+  button{font-family:inherit;color:inherit;cursor:pointer}
   .screen{display:none;min-height:100vh;padding:16px 16px 40px;max-width:560px;margin:0 auto}.screen.on{display:block}
-  h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--green)}
+  h1{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:22px 0 4px;color:var(--red)}
+  h2{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;margin:8px 0 12px;color:var(--acc)}
+  h3{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--dim);margin:24px 0 8px;font-weight:500}
   .sub{color:var(--dim);font-size:13px;margin:0 0 18px}
-  .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:18px 0 8px}
-  .seg{display:flex;gap:6px}.seg button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 6px;font-family:var(--mono);font-size:13px}
-  .seg button.on{border-color:var(--green);color:var(--green)}
+  .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--dim);margin:18px 0 8px}
+  .seg{display:flex;gap:6px}.seg button{flex:1;background:var(--panel);border:1px solid var(--line);padding:12px 6px;font-family:var(--mono);font-size:14px}
+  .seg button.on{border-color:var(--acc);color:var(--acc)}
   .card{background:var(--panel);border:1px solid var(--line);padding:10px 12px;font-family:var(--mono);font-size:12px;color:var(--dim);white-space:pre-wrap}
   .card.ok{border-color:var(--green-dim);color:var(--text)}.card.bad{border-color:var(--red);color:var(--text)}
-  .list{border-top:1px solid var(--line)}
-  .row{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line);cursor:pointer}
-  .row.on{background:var(--panel);outline:1px solid var(--green-dim)}
-  .row .ico{font-size:26px;text-align:center;line-height:1}.row .ico small{display:block;font-family:var(--mono);font-size:10px;color:var(--dim)}.row .ico small.b{color:var(--red)}
-  .row .name{font-weight:600}.row .meta{font-family:var(--mono);font-size:11px;color:var(--dim)}
-  .row .hits{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:right}
-  .hook{font-size:17px;line-height:1.55;color:var(--text);margin:0 0 22px}
-  .pick{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);padding:12px}
-  .pick-ico{font-size:38px;line-height:1;text-align:center}
-  .pick-t b{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.1;display:block}
-  .pick-t .st{font-family:var(--mono);font-size:12px;color:var(--dim)}
-  .ghost.sm{width:auto;margin:0;padding:8px 12px;font-size:12px}
-  details#setBox{margin-top:26px;border-top:1px solid var(--line)}
-  details#setBox summary{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim);padding:14px 2px;cursor:pointer}
-  .big{display:block;width:100%;background:var(--green);color:#04120c;border:0;padding:16px;font-family:var(--display);font-size:24px;margin-top:22px}
-  .ghost{background:transparent;border:1px solid var(--line);color:var(--text);padding:12px;font-family:var(--mono);font-size:13px;width:100%;margin-top:8px}
+  .back{background:none;border:0;color:var(--dim);font-family:var(--mono);font-size:13px;padding:8px 0}
+  .stp{display:grid;grid-template-columns:1fr 52px 112px 52px;gap:6px;align-items:center;margin:8px 0}
+  .stp .k{font-size:14px}.stp .k small{display:block;font-family:var(--mono);font-size:10px;color:var(--dim)}
+  .stp button{height:46px;background:var(--panel);border:1px solid var(--line);font-family:var(--mono);font-size:22px;touch-action:manipulation}
+  .stp .v{width:100%;height:46px;text-align:center;font-family:var(--mono);font-size:20px;color:var(--text);background:transparent;border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:0;user-select:text;-webkit-user-select:text}
+  .stp .v:focus{outline:0;border-bottom:1px solid var(--acc);background:var(--panel)}
+  .desc{font-size:13px;line-height:1.6;color:var(--dim);margin:10px 0 4px}.desc b{color:var(--text);font-weight:600}.desc p{margin:0 0 4px}
+  .last{font-family:var(--mono);font-size:12px;color:var(--dim);border-left:3px solid var(--line);padding:4px 10px;margin:0 0 14px}.last b{color:var(--text);font-weight:500}
+  .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);border:1px solid var(--line);padding:0 6px;margin-right:6px}
+  .big{display:block;width:100%;background:var(--acc);color:#140403;border:0;padding:16px;font-family:var(--display);font-size:26px;margin-top:22px}
+  .ghost{display:block;background:transparent;border:1px solid var(--line);padding:12px;font-family:var(--mono);font-size:13px;width:100%;margin-top:8px}
+  details.set{margin-top:26px;border-top:1px solid var(--line)}
+  details.set summary{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim);padding:14px 2px;cursor:pointer}
   /* run */
-  #run{padding:10px 12px 20px}
-  .top{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
-  .gauge{height:14px;background:var(--panel);border:1px solid var(--line);position:relative}
-  .gauge i{display:block;height:100%;background:var(--red);width:0;transition:width .2s}
-  .hits{font-family:var(--mono);font-size:16px;letter-spacing:.2em;color:var(--red)}
+  #run{padding:12px 14px 20px}
+  .rhead{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.08em}
+  .gapbox{text-align:center;padding:26px 0 18px}
+  #gapBig{font-family:var(--display);font-size:96px;line-height:1;color:var(--text)}
+  #gapBig.behind{color:var(--red)}#gapBig.warn{color:var(--orange)}#gapBig.dim{color:var(--dim)}
+  #gapSub{font-family:var(--mono);font-size:14px;color:var(--dim);margin-top:8px;min-height:21px}
+  .bar{position:relative;height:16px;background:var(--panel);border:1px solid var(--line);margin:8px 0 14px}
+  .bar i{position:absolute;top:-5px;width:4px;height:24px;margin-left:-2px;transition:left .3s}
+  #barMe{background:var(--text)}#barOpp{background:var(--acc)}
   .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
-  .num{background:var(--panel);border:1px solid var(--line);padding:6px 8px}
-  .num b{display:block;font-family:var(--mono);font-size:20px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
-  canvas{width:100%;aspect-ratio:1/1;display:block;background:#070b0a;border:1px solid var(--line)}
-  .mapwrap{position:relative}#radar{touch-action:none;cursor:grab}
-  #recenter{position:absolute;right:10px;bottom:10px;display:none;background:rgba(10,15,13,.88);border:1px solid var(--green);color:var(--green);padding:10px 14px;font-family:var(--mono);font-size:13px}
-  .enemy{margin-top:8px;padding:10px 12px;border:1px solid var(--line);background:var(--panel);display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center}
-  .enemy .big-ico{font-size:40px;line-height:1;text-align:center}
-  .enemy b{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.1}
-  .enemy .st{font-family:var(--mono);font-size:12px;color:var(--dim)}
-  .enemy.sprint{border-color:var(--red)}.enemy.sprint b{color:var(--red)}.enemy.tired b{color:var(--orange)}.enemy.recover b{color:var(--dim)}.enemy.lost b{color:var(--dim)}
-  .banner{font-family:var(--mono);font-size:12px;color:var(--yellow);text-align:center;padding:6px;min-height:28px}
+  .num{background:var(--panel);border:1px solid var(--line);padding:8px}
+  .num b{display:block;font-family:var(--mono);font-size:24px;font-weight:500}.num span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
+  .banner{font-family:var(--mono);font-size:12px;color:var(--yellow);text-align:center;padding:8px;min-height:34px}
   .banner.bad{color:var(--red)}
-  .ctl{display:flex;gap:6px;margin-top:6px}.ctl button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:12px;font-family:var(--mono)}
-  .dbg{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px;text-align:right}
+  .ctl{display:flex;gap:6px;margin-top:6px}.ctl button{flex:1;background:var(--panel);border:1px solid var(--line);padding:14px;font-family:var(--mono)}
+  .dbg{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;text-align:right}
+  #vig{position:fixed;inset:0;pointer-events:none;opacity:0;z-index:50;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 35%,rgba(110,0,0,.95) 100%);transition:opacity .6s}
   /* result */
-  .hero{font-family:var(--display);font-weight:400;font-size:64px;line-height:1;color:var(--green);margin:6px 0 0}
+  .hero{font-family:var(--display);font-weight:400;font-size:60px;line-height:1;color:var(--green);margin:6px 0 0}
   .hero.fail{color:var(--red)}
   .hero-l{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.12em}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}
   .stat{background:var(--panel);border:1px solid var(--line);padding:10px}
-  .stat b{display:block;font-family:var(--mono);font-size:24px;font-weight:500}.stat span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
-  .story{border-left:3px solid var(--green);padding:8px 12px;margin:10px 0;font-size:15px}
+  .stat b{display:block;font-family:var(--mono);font-size:22px;font-weight:500}.stat span{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
+  .story{border-left:3px solid var(--acc);padding:8px 12px;margin:10px 0;font-size:15px}
   details{margin-top:10px}summary{font-family:var(--mono);font-size:12px;color:var(--dim);cursor:pointer;padding:8px 0}
-  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}td{padding:6px 0;border-bottom:1px solid var(--line)}td:last-child{text-align:right}
-  .log{font-family:var(--mono);font-size:11px;color:var(--dim);max-height:200px;overflow:auto;border:1px solid var(--line);padding:6px;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}th{color:var(--dim);font-weight:400;font-size:11px}
+  .log{font-family:var(--mono);font-size:11px;color:var(--dim);max-height:220px;overflow:auto;border:1px solid var(--line);padding:6px;white-space:pre-wrap}
+  /* review */
+  .rvg{border-bottom:1px solid var(--line);margin:0}.rvg summary{padding:12px 2px;color:var(--text);font-family:var(--body);font-size:15px}.rvg summary code{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:8px}
+  .rvg p{margin:0 0 8px;font-size:12px;color:var(--dim);line-height:1.5}
+  .cand{display:grid;grid-template-columns:40px 1fr 52px 52px;gap:6px;align-items:center;padding:4px 0;font-size:12px;color:var(--dim)}.cand.on span{color:var(--text)}
+  .cand span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cand button{height:36px;background:var(--panel);border:1px solid var(--line);font-family:var(--mono);font-size:12px;padding:0}
+  .cand.on .use{border-color:var(--acc);color:var(--acc)}.cand button.playing{border-color:var(--acc);color:var(--acc)}
+  .cand.head span{color:var(--text)}
+  .rv{display:grid;grid-template-columns:1fr 64px;gap:10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--line)}
+  .rv b{font-size:15px}.rv code{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:6px}
+  .rv p{margin:2px 0 0;font-size:12px;color:var(--dim);line-height:1.5}
+  .rv button{height:40px;background:var(--panel);border:1px solid var(--line);font-family:var(--mono);font-size:13px}
+  .rv button.playing{border-color:var(--acc);color:var(--acc)}
 </style>
 
 <div id="home" class="screen on">
   <h1>러너웨이</h1>
-  <p class="hook">뒤에서 진짜 동물이 쫓아온다.<br>실측 속도와 지구력 그대로. 잡히기 전에 도망쳐라.</p>
+  <p class="sub">추격자가 정한 페이스로 뒤에서 쫓아온다. 잡히지 마라.</p>
 
-  <div class="card bad" id="embedWarn" style="display:none;white-space:normal;line-height:1.6">
+  <div class="card bad" id="embedWarn" style="display:none;white-space:normal;line-height:1.6;margin-bottom:12px">
     <b style="color:var(--red)">여기서는 실주행이 안 된다.</b><br>
-    이 화면은 앱 안에 끼워진 창이라 위치 권한이 정책으로 막혀 있다. 지도도 안 뜬다.<br>
+    앱 안에 끼워진 창이라 위치 권한이 막혀 있다. 실내 데모만 돈다.<br>
     크롬에서 아래 주소를 직접 열어라.<br>
     <a id="siteLink" href="#" target="_blank" rel="noopener" style="color:var(--green);word-break:break-all"></a>
   </div>
 
-  <div class="pick" id="pick">
-    <div class="pick-ico" id="pickIco">🐔</div>
-    <div class="pick-t"><b id="pickName">닭</b><div class="st" id="pickSub">3 km · 3마리</div></div>
-    <button class="ghost sm" id="openSet">바꾸기</button>
-  </div>
+  <div class="last" id="last" style="display:none"></div>
+  <div class="seg" id="kind"><button data-v="normal" class="on">일반런</button><button data-v="build">빌드업</button><button data-v="interval">인터벌</button></div>
+  <div class="desc" id="kindDesc"></div>
+  <div id="params"></div>
+  <div class="card" id="planSum" style="margin-top:14px;white-space:normal;line-height:1.6"></div>
+  <button class="big" id="start">출발</button>
+  <p class="sub" style="margin-top:12px">이어폰을 끼면 화면은 안 봐도 된다. 차도와 횡단보도에서는 신호를 먼저 본다.</p>
 
-  <button class="big" id="start">도망치기</button>
-  <p class="sub" style="margin-top:14px">이어폰을 끼면 소리만으로 방향과 거리를 안다. 화면은 안 봐도 된다.<br>차도와 횡단보도에서는 게임보다 신호를 먼저 본다.</p>
-
-  <details id="setBox">
-    <summary>설정 · GPS 확인 · 다른 동물</summary>
+  <details class="set" id="setBox">
+    <summary>설정 · GPS 확인 · 소리 검수</summary>
     <div class="lbl">GPS 상태</div>
     <div class="card" id="gpsCard">확인 전. 아래 버튼을 눌러 권한과 신호를 확인한다.</div>
     <button class="ghost" id="gpsTest">GPS 확인</button>
-    <div class="lbl">모드</div>
-    <div class="seg" id="mode"><button data-v="gps" class="on">실주행 GPS</button><button data-v="replay">실내 데모</button></div>
-    <div class="lbl">거리</div>
-    <div class="seg" id="course"><button data-v="1000">1 km</button><button data-v="3000" class="on">3 km</button><button data-v="5000">5 km</button></div>
-    <div class="lbl">워밍업 · 이 시간 동안은 안 잡힘</div>
-    <div class="seg" id="warmup"><button data-v="0">없음</button><button data-v="60">1분</button><button data-v="120" class="on">2분</button><button data-v="180">3분</button></div>
-    <div class="lbl">적 수</div>
-    <div class="seg" id="npack"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div>
-    <div class="lbl">관제 음성</div>
-    <div class="seg" id="voice"><button data-v="off" class="on">끔</button><button data-v="quiet">적게</button><button data-v="normal">보통</button><button data-v="chatty">많이</button></div>
+    <div class="lbl">위치</div>
+    <div class="seg" id="src"><button data-v="gps" class="on">실주행 GPS</button><button data-v="demo">실내 데모</button></div>
+    <p class="sub" style="margin-top:6px">실내 데모: 녹화된 시속 10km 주행을 10배속으로 돌린다. 소리 확인용.</p>
     <div id="iosAudioBox" style="display:none">
       <div class="lbl">아이폰 소리</div>
       <div class="seg" id="iosAudio"><button data-v="playback" class="on">무음에서도 들림</button><button data-v="ambient">음악과 같이</button></div>
       <p class="sub" style="margin-top:6px">무음에서도 들림: 옆 스위치가 무음이어도 소리가 난다. 대신 듣던 음악이 멈춘다.<br>음악과 같이: 음악 위에 겹쳐 들린다. 대신 무음 모드면 아무 소리도 안 난다.</p>
     </div>
-    <button class="ghost" id="audioTest">소리 테스트 · 왼쪽에서 오른쪽으로, 그다음 뒤에서 다가온다</button>
-    <p class="sub" style="margin-top:6px">관제사 목소리: Supertonic 3(Supertone, OpenRAIL-M)로 미리 합성. 한 번 받으면 오프라인에서도 나온다.</p><!--CREDITS-->
-    <div class="lbl">지도 키 (선택) · 비우면 OpenStreetMap</div>
-    <input id="vkey" class="card" style="width:100%" placeholder="vworld.kr 인증키를 넣으면 한국 상세 다크 지도">
-    <div class="lbl">추격자 · A 정규(순차) / B 못 깨는 것들(상시)</div>
-    <div class="list" id="animals"></div>
+    <button class="ghost" id="openReview">소리 검수</button>
   </details>
 </div>
 
 <div id="run" class="screen">
-  <div class="top"><div class="gauge"><i id="gauge"></i></div><div class="hits" id="hitsDots">○○○</div></div>
+  <div class="rhead"><span id="rMode">-</span><span id="rSet"></span></div>
+  <div class="gapbox"><div id="gapBig" class="dim">GPS</div><div id="gapSub">위치 잡는 중</div></div>
+  <div class="bar"><i id="barOpp" style="left:0"></i><i id="barMe" style="left:0"></i></div>
   <div class="nums">
-    <div class="num"><b id="nGap">-</b><span id="nGapL">거리 m</span></div>
-    <div class="num"><b id="nPace">-</b><span>내 km/h</span></div>
-    <div class="num"><b id="nTime">0:00</b><span>시간 · <em id="nDist">0.00</em>km</span></div>
+    <div class="num"><b id="nPace">-</b><span>내 페이스</span></div>
+    <div class="num"><b id="nTarget">-</b><span>목표 페이스</span></div>
+    <div class="num"><b id="nDist">0.00</b><span>km · <em id="nTime">0:00</em></span></div>
   </div>
-  <div class="mapwrap"><canvas id="radar" width="720" height="720"></canvas><button id="recenter">내 위치로</button></div>
-  <div class="enemy" id="enemyBox"><div class="big-ico" id="eIco">🐔</div><div><b id="eName">-</b><div class="st" id="eState">-</div></div></div>
   <div class="banner" id="banner"></div>
-  <div class="ctl"><button id="pause">일시정지</button><button id="mapToggle">지도/레이더</button><button id="pocket">주머니</button><button id="stop">종료</button></div>
+  <div class="ctl"><button id="pause">일시정지</button><button id="pocket">주머니</button><button id="stop">종료</button></div>
   <div class="dbg" id="dbg"></div>
 </div>
+<div id="vig"></div>
 
 <div id="safety" style="display:none;position:fixed;inset:0;background:rgba(4,8,7,.96);z-index:120;align-items:center;justify-content:center;padding:24px">
   <div style="max-width:420px">
-    <h2 style="color:var(--red);font-family:var(--display);font-weight:400;font-size:30px;margin:0 0 14px">달리기 전에</h2>
+    <h2 style="color:var(--red);margin:0 0 14px">달리기 전에</h2>
     <ul style="padding-left:18px;line-height:1.8;margin:0 0 22px">
       <li>차도와 횡단보도에서는 게임보다 신호를 먼저 본다</li>
       <li>이어폰 음량은 차 소리가 들리는 수준으로 유지한다</li>
-      <li>소리가 가까워져도 앞을 보고 달린다. 화면은 안 봐도 된다</li>
+      <li>멈춰 서면 추격자도 멈춘다. 신호등에서 무리하지 않는다</li>
       <li>사고는 앱이 막아주지 않는다</li>
     </ul>
-    <button class="big" id="safetyOk">알겠다</button>
+    <button class="big" id="safetyOk" style="--acc:var(--green)">알겠다</button>
   </div>
 </div>
 
 <div id="pocketCover" style="display:none;position:fixed;inset:0;background:#000;z-index:99;align-items:center;justify-content:center;color:#1d3a30;font:14px monospace">화면 꺼둠 · 탭하면 돌아온다</div>
 
 <div id="result" class="screen">
-  <div class="hero-l" id="rLabel">최종 시간</div>
-  <div class="hero" id="rHero">0:00</div>
+  <div class="hero-l" id="rLabel">결과</div>
+  <div class="hero" id="rHero">-</div>
   <p class="sub" id="rSub"></p>
   <div class="stats" id="rStats"></div>
   <div class="story" id="rStory"></div>
-  <details><summary>상세 수치</summary><table id="rTable"></table></details>
+  <div id="rSets"></div>
   <details><summary>이벤트 로그</summary><div class="log" id="rLog"></div></details>
-  <canvas id="shareCard" width="1080" height="1080" style="margin-top:18px;border:1px solid var(--line)"></canvas>
+  <canvas id="shareCard" width="1080" height="1080" style="width:100%;margin-top:18px;border:1px solid var(--line)"></canvas>
   <button class="big" id="share">결과 이미지 공유</button>
   <button class="ghost" id="again">다시</button>
   <button class="ghost" id="copy">결과 텍스트 복사</button>
 </div>
 
+<div id="review" class="screen">
+  <button class="back" id="reviewBack">&lt; 돌아가기</button>
+  <h2 style="color:var(--text)">소리 검수</h2>
+  <p class="sub">이어폰으로. 소리마다 후보를 ▶로 듣고 '사용'을 켜고 끈다. 주행은 고른 후보만, 여럿이면 매번 무작위로 쓴다. 고른 것은 이 기기에 저장된다.</p>
+  <button class="ghost" id="reviewStop">모두 정지</button>
+  <div id="rvList"></div>
+</div>
+
 <script><!--CORE--></script>
-<script><!--ANIMALS--></script>
+<script><!--GAME--></script>
+<script><!--SOUND--></script>
 <script><!--REPLAYS--></script>
 <script><!--SOUNDS--></script>
-<script><!--VOICE--></script>
 <script>
 (() => {
 const $ = (s) => document.querySelector(s);
-const st = { mode: 'gps', courseM: 3000, warmupS: 120, nPack: 3, animal: null, wake: null, watchId: null, lastFix: null, timer: null, session: null, log: [], tickN: 0, manualPause: false, trail: [], trailDist: [], lat0: NaN, lon0: NaN, builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, useMap: true, tilesOk: null, lastLatLon: null, hold: null, win: [], still: false, headRad: NaN, gpsReady: false, holdN: 0 };
+const show = (id) => { document.querySelectorAll('.screen').forEach(x => x.classList.toggle('on', x.id === id)); window.scrollTo(0, 0); };
 // 아티팩트 뷰어와 일부 인앱 브라우저는 iframe 정책으로 위치를 막는다. 코드로 못 푼다
 const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
-const VP = { op: null, cache: new Map(), opP: null };   // 음성 팩 상태
-// 실제 동물 녹음(web/sounds/). 동물 목록 클릭 핸들러가 로드 중에 쓰므로 위에 둔다
-const SFX = { aid: null, bytes: {}, buf: {}, last: {}, live: 0, loading: null };
-const HAS_SFX = typeof SOUND_INDEX !== 'undefined' && Object.keys(SOUND_INDEX).length > 0;
 // 아이폰·아이패드. 아이패드 사파리는 맥이라고 자칭하므로 터치 여부로 가린다
 const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const EMOJI = { sloth: '🦥', loris: '🐒', gila: '🦎', chicken: '🐔', chihuahua: '🐕', crocodile: '🐊', komodo: '🦎', squirrel: '🐿️', koala: '🐨', cat: '🐈', pig: '🐖', armadillo: '🦔', hippo: '🦛', elephant: '🐘', greyhound: '🐕‍🦺', kangaroo: '🦘', cheetah: '🐆', hare: '🐇', wolf: '🐺', jindo: '🐕', horse: '🐎', camel: '🐪', sleddog: '🐕', ostrich: '🦩', pronghorn: '🦌' };
-const CLASS = { chicken: 'bird', ostrich: 'bird', chihuahua: 'canine', greyhound: 'canine', wolf: 'canine', jindo: 'canine', sleddog: 'canine', cat: 'feline', cheetah: 'feline', crocodile: 'reptile', komodo: 'reptile', gila: 'reptile', pig: 'hoof', hippo: 'hoof', elephant: 'hoof', camel: 'hoof', horse: 'hoof', pronghorn: 'hoof', kangaroo: 'hoof', squirrel: 'small', hare: 'small', armadillo: 'small', koala: 'small', sloth: 'small', loris: 'small' };
+const QS = new URLSearchParams(location.search);
+const st = { src: 'gps', demoMs: Number(QS.get('demoMs')) || 100, wake: null, watchId: null, lastFix: null, timer: null, game: null, log: [], tickN: 0, manualPause: false,
+  builder: null, replay: null, replayI: 0, gpsErr: null, fixCount: 0, hold: null, win: [], still: false, gpsReady: false, coarse: false, pocket: false };
+const DEF = { type: 'normal', distM: 5000, pace: 360, p0: 390, p1: 300, ipace: 270, setM: 400, sets: 6, restS: 90 };
+let cfg = { ...DEF };
+let cfgPrev = false;   // 지난번 설정을 불러왔고 아직 안 바꿨다
+try { const c = localStorage.getItem('rw.cfg'); if (c) { cfg = { ...DEF, ...JSON.parse(c) }; cfgPrev = true; } } catch (e) { }
+const saveCfg = () => { cfgPrev = false; try { localStorage.setItem('rw.cfg', JSON.stringify(cfg)); } catch (e) { } };
+const fmt = (s) => { s = Math.max(0, Math.round(s)); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, r = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(r).padStart(2, '0'); };
+const paceFmt = (p) => (p ? fmt(p) : '-');
+const KIND_KO = { normal: '일반런', build: '빌드업', interval: '인터벌' };
 
-// ---------- 홈 ----------
-function seg(id, key, cast) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.remove('on')); b.classList.add('on'); if (typeof key === 'function') key(b.dataset.v); else st[key] = cast(b.dataset.v); if (typeof refreshPick === 'function') refreshPick(); }); }
-seg('#mode', 'mode', String); seg('#course', 'courseM', Number); seg('#warmup', 'warmupS', Number); seg('#npack', 'nPack', Number);
-const list = $('#animals');
-const sorted = [...ANIMALS].sort((a, b) => (a.track === b.track ? (a.track === 'A' ? a.tier - b.tier : (a.hits ? a.hits[1] : 0) - (b.hits ? b.hits[1] : 0)) : (a.track === 'A' ? -1 : 1)));
-for (const a of sorted) {
-  const d = document.createElement('div'); d.className = 'row'; d.dataset.id = a.id;
-  const sp = a.constant ? `${a.sprintKmh} km/h 등속` : `스프린트 ${a.sprintKmh} km/h × ${a.sprintS}s`;
-  d.innerHTML = `<div class="ico">${EMOJI[a.id] || '🐾'}<small class="${a.track === 'B' ? 'b' : ''}">${a.track === 'A' ? 'A' + a.tier : 'B'}</small></div><div><div class="name">${a.nameKo}</div><div class="meta">${sp}</div></div><div class="hits">${a.track === 'B' ? '못 깸' : '난이도 ' + a.tier}</div>`;
-  d.addEventListener('click', () => { [...list.children].forEach(x => x.classList.remove('on')); d.classList.add('on'); st.animal = a; refreshPick(); if (HAS_SFX && !EMBEDDED) setTimeout(() => sfxLoad(a.id), 0); });
-  list.appendChild(d);
-}
-function refreshPick() {
-  const a = st.animal; if (!a) return;
-  $('#pickIco').textContent = EMOJI[a.id] || '🐾';
-  $('#pickName').textContent = a.nameKo;
-  $('#pickSub').textContent = `${st.courseM / 1000} km · ${st.nPack}마리` + (st.mode === 'replay' ? ' · 실내 데모' : '');
-}
-$('#openSet').addEventListener('click', () => { $('#setBox').open = true; $('#setBox').scrollIntoView({ behavior: 'smooth' }); });
-list.children[3].click();
-refreshPick();
+// ---------- 첫 화면 ----------
+function seg(id, on) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.toggle('on', x === b)); on(b.dataset.v); }); }
+const segSet = (id, v) => [...$(id).children].forEach(x => x.classList.toggle('on', x.dataset.v === v));
+seg('#src', v => { st.src = v; });
 $('#gpsTest').addEventListener('click', () => {
   const c = $('#gpsCard'); c.className = 'card'; c.textContent = '요청 중… 권한 창이 뜨면 허용.';
   if (!navigator.geolocation) { c.className = 'card bad'; c.textContent = '이 브라우저는 위치를 지원하지 않음'; return; }
-  navigator.geolocation.getCurrentPosition(p => { c.className = 'card ok'; c.textContent = `OK  위도 ${p.coords.latitude.toFixed(5)}  경도 ${p.coords.longitude.toFixed(5)}\n정확도 ${Math.round(p.coords.accuracy)}m  (25m 이하면 정상, 40m 초과면 판정 동결)`; },
+  navigator.geolocation.getCurrentPosition(p => { c.className = 'card ok'; c.textContent = `OK  정확도 ${Math.round(p.coords.accuracy)}m\n25m 이하면 정상, 30m 넘으면 판정 동결`; },
     e => { c.className = 'card bad'; c.textContent = `실패 code=${e.code} ${e.message}\n` + (e.code === 1 ? '권한 거부. 브라우저 설정에서 위치 허용. 앱 안에서 열었다면 크롬으로 직접 열기.' : e.code === 2 ? '신호 없음. 실외에서 다시.' : '시간 초과. 하늘이 보이는 곳에서 다시.'); },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
 });
 
+// ---------- 운동 설정 ----------
+// 숫자를 눌러 직접 입력. e = 입력칸에 보일 값, parse = 입력 → 값(못 읽으면 NaN)
+/** "5:30", "5.30", "5 30", "530" → 330초. "5.3"은 5:30. 숫자만 두 자리 이하면 분(secs면 초) */
+function mmss(s, secs) {
+  s = String(s).trim().replace(/[분초]/g, ' ').trim();
+  let m = s.match(/^(\d{1,2})\s*[:.,\s]\s*(\d{1,2})$/);
+  if (m) { const r = m[2].length === 1 ? +m[2] * 10 : +m[2]; return r < 60 ? +m[1] * 60 + r : NaN; }
+  if (!/^\d{1,4}$/.test(s)) return NaN;
+  if (secs) return +s;
+  if (s.length <= 2) return +s * 60;
+  const r = +s.slice(-2); return r < 60 ? +s.slice(0, -2) * 60 + r : NaN;
+}
+const numIn = (s) => parseFloat(String(s).replace(',', '.'));
+const kmTxt = (v) => String(+(v / 1000).toFixed(2));
+const paceP = { min: 150, max: 900, step: 5, f: paceFmt, e: paceFmt, parse: (s) => mmss(s) };
+const P = {
+  distM: { k: '거리', min: 100, max: 100000, step: 500, f: v => kmTxt(v) + ' km', e: kmTxt, parse: s => { const x = numIn(s); return x >= 100 ? Math.round(x) : Math.round(x * 100) * 10; } },   // 100 이상은 m로 본다
+  pace: { k: '페이스', n: '/km', ...paceP },
+  p0: { k: '시작 페이스', n: '/km. 느리게', ...paceP },
+  p1: { k: '종료 페이스', n: '/km. 빠르게', ...paceP },
+  ipace: { k: '인터벌 페이스', n: '/km', ...paceP },
+  setM: { k: '세트당 거리', min: 50, max: 10000, step: 100, f: v => v + ' m', e: String, parse: s => { const x = numIn(s); return x < 20 ? Math.round(x * 1000) : Math.round(x); } },   // 20 미만은 km로 본다
+  sets: { k: '세트 수', min: 1, max: 50, step: 1, f: v => v + '세트', e: String, parse: s => Math.round(numIn(s)) },
+  restS: { k: '회복 시간', n: '추격자 없음', min: 10, max: 900, step: 15, f: v => fmt(v), e: v => fmt(v), parse: s => mmss(s, true) },
+};
+const KIND_INFO = {
+  normal: ['설정한 목표 거리와 페이스를 일정하게 유지하며 완주하는 기본 모드. 추격자가 설정된 고정 페이스로 뒤에서 꾸준히 쫓아옵니다.', '페이스를 일정하게 유지하는 페이싱 연습을 하거나, 흐트러짐 없이 꾸준한 조깅을 하고 싶을 때'],
+  build: ['달리기를 진행할수록 점점 속도를 높여 완주하는 훈련 모드. 초반에는 여유롭게 시작하지만, 거리가 지날수록 추격자의 페이스가 빨라져 속도를 올리도록 유도합니다.', '후반부 스퍼트 능력을 기르고 싶거나, 몸을 서서히 예열한 뒤 점진적으로 강도를 높이는 달리기를 원할 때'],
+  interval: ['전력 질주와 조깅 또는 휴식을 반복하는 고강도 훈련 모드. 추격자가 바짝 추격해 오는 압박 구간과 거리를 벌릴 수 있는 구간이 교대로 나타납니다.', '심폐 기능을 극대화하고 짧은 시간 안에 높은 칼로리를 소모하거나, 스피드를 폭발적으로 향상시키고 싶을 때'],
+};
+/** 지난 기록 한 줄. 앱을 다시 켜면 첫 화면 맨 위에 */
+function drawLast() {
+  let r = null; try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); r = all[all.length - 1]; } catch (e) { }
+  const el = $('#last'); if (!r || !r.result) { el.style.display = 'none'; return; }
+  const d = new Date(r.at), when = `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  el.innerHTML = `지난 기록 · ${when} ${r.src === 'demo' ? ' (데모)' : ''}<br><b>${KIND_KO[r.type] || ''} ${(r.result.dist / 1000).toFixed(2)}km · ${fmt(r.result.moving)} · ${r.result.title}</b>`;
+  el.style.display = 'block';
+}
+const KINDS = { normal: ['distM', 'pace'], build: ['distM', 'p0', 'p1'], interval: ['ipace', 'setM', 'sets', 'restS'] };
+function home() { segSet('#kind', cfg.type); drawLast(); drawParams(); show('home'); }
+seg('#kind', v => { cfg.type = v; saveCfg(); drawParams(); });
+function drawParams() {
+  const [how, who] = KIND_INFO[cfg.type];
+  $('#kindDesc').innerHTML = `<p>${how}</p><p><b>추천</b> ${who}</p>`;
+  const box = $('#params'); box.innerHTML = '';
+  for (const key of KINDS[cfg.type]) {
+    const p = P[key], d = document.createElement('div'); d.className = 'stp';
+    d.innerHTML = `<div class="k">${p.k}${p.n ? `<small>${p.n}</small>` : ''}</div><button data-d="-1">-</button><input class="v" id="v_${key}" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${p.f(cfg[key])}"><button data-d="1">+</button>`;
+    // 숫자를 누르면 직접 입력. 못 읽는 값이면 원래 값으로 돌아간다
+    const inp = d.querySelector('input');
+    inp.addEventListener('focus', () => { inp.value = p.e(cfg[key]); setTimeout(() => inp.select(), 0); });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
+    inp.addEventListener('blur', () => {
+      const v = p.parse(inp.value);
+      if (isFinite(v) && v > 0) { cfg[key] = Math.max(p.min, Math.min(p.max, v)); saveCfg(); }
+      inp.value = p.f(cfg[key]); planSum();
+    });
+    // 누르고 있으면 계속 바뀐다. 6:00에서 4:30까지 열여덟 번 누르게 하지 않는다
+    d.querySelectorAll('button').forEach(b => {
+      let rep = null, n = 0;
+      const bump = () => { cfg[key] = Math.max(p.min, Math.min(p.max, cfg[key] + p.step * Number(b.dataset.d))); inp.value = p.f(cfg[key]); saveCfg(); planSum(); };
+      const stop = () => { clearTimeout(rep); rep = null; };
+      b.addEventListener('pointerdown', e => { e.preventDefault(); n = 0; bump(); const go = () => { n++; bump(); rep = setTimeout(go, n > 8 ? 50 : 110); }; rep = setTimeout(go, 420); });
+      b.addEventListener('pointerup', stop); b.addEventListener('pointerleave', stop); b.addEventListener('pointercancel', stop);
+    });
+    box.appendChild(d);
+  }
+  planSum();
+}
+function planSum() {
+  const p = GAME.plan(cfg), s0 = p.sets[0];
+  let t = (cfgPrev ? '<span class="tag">지난번 설정</span>' : '') + `추격자 ${Math.round(GAME.headM(s0))}m 뒤에서 출발 · `;
+  if (cfg.type === 'interval') t += `세트당 ${fmt(GAME.planTimeS(s0))}<br>총 ${(cfg.setM * cfg.sets / 1000).toFixed(1)} km · 회복 중에는 안 쫓아온다`;
+  else {
+    t += cfg.type === 'build' ? `${paceFmt(s0.p0)}에서 ${paceFmt(s0.p1)}까지 빨라진다` : `${paceFmt(s0.p0)}/km 고정`;
+    t += `<br>그 페이스로 완주 ${fmt(GAME.planTimeS(s0))}`;
+    if (cfg.type === 'build' && s0.p1 >= s0.p0) t += '<br><span style="color:var(--orange)">종료 페이스가 시작보다 빨라야(숫자가 작아야) 빌드업이다</span>';
+  }
+  $('#planSum').innerHTML = t;
+}
+
 // ---------- 오디오 ----------
-const A = { ctx: null, master: null, noise: null, nextBeat: 0, lastSay: 0, ambient: null, samples: {}, lastCry: 0 };
+const A = { ctx: null, E: null, rv: null, rvOut: null };
 // 아이폰은 옆 무음 스위치가 웹 오디오를 통째로 끈다. 게임 소리가 전부 사라지면 앱이 고장 난 걸로 읽힌다.
 // 재생용(playback)으로 선언하면 무음 모드에서도 들린다. 대가로 다른 앱 음악이 멈춘다 → 설정에서 고르게 한다
 const AUD = { mode: 'playback', el: null };
@@ -223,401 +297,89 @@ function audioSession() {
 }
 /** 0.25초 무음 WAV (8kHz 16bit). 파일 없이 만든다. 옛 사파리는 blob 주소 미디어가 불안정해 data 주소로 */
 function silentWav() {
-  const n = 4000, b = new Uint8Array(44 + n), v = new DataView(b.buffer);   // 데이터 영역은 0 = 무음
+  const n = 4000, b = new Uint8Array(44 + n), v = new DataView(b.buffer);
   const w = (o, t) => { for (let i = 0; i < t.length; i++) b[o + i] = t.charCodeAt(i); };
   w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
   v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n, true);
   let str = ''; for (let i = 0; i < b.length; i++) str += String.fromCharCode(b[i]);
   return 'data:audio/wav;base64,' + btoa(str);
 }
-// 전화·알림·다른 앱 소리가 끼어들면 iOS는 오디오를 멈춘다('interrupted'). 화면을 만지거나 앱으로 돌아오면 다시 켠다
+// 전화·알림이 끼어들면 iOS는 오디오를 멈춘다('interrupted'). 화면을 만지거나 앱으로 돌아오면 다시 켠다
 function audioWake() { if (A.ctx && A.ctx.state !== 'running' && A.ctx.state !== 'closed') { const p = A.ctx.resume(); if (p && p.catch) p.catch(() => { }); } }
 document.addEventListener('touchend', audioWake, { passive: true });
 document.addEventListener('click', audioWake);
+// 버튼을 누를 때마다 작은 딸깍. 오디오는 첫 누름에서 켠다(브라우저 자동재생 규칙)
+let CLICK = null;
+function clickSnd() {
+  try {
+    if (!A.ctx) { const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C(); }
+    audioWake();
+    const c = A.ctx;
+    if (!CLICK) { const n = Math.floor(c.sampleRate * 0.012); CLICK = c.createBuffer(1, n, c.sampleRate); const d = CLICK.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (n / 6)); }
+    const s = c.createBufferSource(), hp = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = CLICK; hp.type = 'highpass'; hp.frequency.value = 2500; g.gain.value = 0.18;
+    s.connect(hp); hp.connect(g); g.connect(c.destination); s.start();
+  } catch (e) { }
+}
+document.addEventListener('pointerdown', e => { if (e.target.closest('button, summary')) clickSnd(); }, true);
+// ---------- 소리 후보 ----------
+// web/sounds/<id>/<후보>. 소리 검수에서 고른 후보만 주행에 쓴다. 고른 게 여럿이면 매번 무작위. 'synth' = 합성음
+// 아직 안 골랐으면 녹음 후보 전부(녹음이 없으면 합성음). 하나도 안 고르면 그 소리는 끈다
+const SIDX = typeof SOUND_INDEX !== 'undefined' ? SOUND_INDEX : {};
+const poolOf = (id) => SND.POOL[id] || id;
+const candsOf = (id) => Object.keys(SIDX[poolOf(id)] || {});
+const hasSynth = (id) => !SND.NOSYN.includes(id);
+let SEL = {};
+try { SEL = JSON.parse(localStorage.getItem('rw.snd') || '{}'); } catch (e) { }
+const saveSel = () => { try { localStorage.setItem('rw.snd', JSON.stringify(SEL)); } catch (e) { } };
+function selOf(id) {
+  const all = candsOf(id);
+  if (Array.isArray(SEL[id])) return SEL[id].filter(c => c === 'synth' ? hasSynth(id) : all.includes(c));
+  return all.length ? all : hasSynth(id) ? ['synth'] : [];
+}
+const filesOf = (id, cands) => cands.filter(c => c !== 'synth').flatMap(c => SIDX[poolOf(id)][c] || []);
+const BYTES = new Map();
+function getBytes(f) {
+  if (!BYTES.has(f)) BYTES.set(f, fetch('sounds/' + f + '?v=' + SOUND_VER).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).catch(e => { BYTES.delete(f); log('소리 파일 실패 ' + f + ' ' + e.message); return null; }));
+  return BYTES.get(f);
+}
+/** 고른 후보를 미리 받아 둔다(주행 시작 전에) */
+function sfxFetch() { if (location.protocol === 'file:') return; for (const it of SND.LIST) for (const f of filesOf(it.id, selOf(it.id))) getBytes(f); }
+/** 엔진에 소리를 넣는다. pick = { id: [후보] }를 주면 그것만(검수 미리듣기), 아니면 고른 대로. 다 디코드되면 끝나는 Promise */
+function feedSamples(E, pick) {
+  const jobs = [];
+  for (const it of SND.LIST) {
+    const id = it.id, cands = pick ? pick[id] : selOf(id);
+    if (!cands) continue;
+    E.synth[id] = cands.includes('synth');
+    for (const f of filesOf(id, cands)) jobs.push(getBytes(f).then(b => b && E.addSample(id, b.slice(0))));
+  }
+  return Promise.all(jobs);
+}
 function audioInit() {
   audioSession();
-  if (A.ctx) { audioWake(); return; }
-  const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C();
-  A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
-  const lim = A.ctx.createDynamicsCompressor();            // 절차 합성이 겹치면 클리핑한다
-  lim.threshold.value = -6; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.003; lim.release.value = 0.15;
-  A.master.connect(lim); lim.connect(A.ctx.destination);
-  const len = A.ctx.sampleRate * 2, buf = A.ctx.createBuffer(1, len, A.ctx.sampleRate), d = buf.getChannelData(0);
-  let last = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }   // 브라운 노이즈(랜덤 워크)
-  A.noise = buf;
-  const src = A.ctx.createBufferSource(); src.buffer = buf; src.loop = true;
-  const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 400;           // 바람 = 브라운 노이즈 + 400Hz 로우패스
-  const g = A.ctx.createGain(); g.gain.value = 0.06; src.connect(lp); lp.connect(g); g.connect(A.master); src.start(); A.ambient = g;
-  A.sfx = A.ctx.createGain(); A.sfx.gain.value = 1; A.sfx.connect(A.master);      // 동물 소리 버스. 말할 때 여기를 줄인다
-  A.duck = 1;
-  // 목소리 버스. 동물 소리처럼 줄이지 않는다. 관제사는 무전기처럼 저역을 깎고 명료도 대역을 살린다(바람 속에서 들리게)
-  A.voice = A.ctx.createGain(); A.voice.gain.value = 1.1; A.voice.connect(A.master);
-  const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 200;
-  const pk = A.ctx.createBiquadFilter(); pk.type = 'peaking'; pk.frequency.value = 2600; pk.Q.value = 0.9; pk.gain.value = 4;
-  hp.connect(pk); pk.connect(A.voice); A.radio = hp;
-  A.verb = makeVerb(A.ctx, A.sfx);
-  // 입체 음향(HRTF). 이어폰으로 들으면 좌우뿐 아니라 앞뒤도 머리 밖에서 난다. 크롬은 첫 사용 때 데이터를 읽느라 잠깐 무음이라 미리 깨운다
-  A.hrtf = typeof A.ctx.createPanner === 'function';
-  if (A.hrtf) { try { const w = A.ctx.createPanner(); w.panningModel = 'HRTF'; } catch (e) { A.hrtf = false; } }
-  if (VOICE.level !== 'off') prewarm();
-  sfxDecode();
+  if (!A.ctx) { const C = window.AudioContext || window.webkitAudioContext; A.ctx = new C(); }
+  audioWake(); sfxFetch();
 }
-/** 잔향. 멀리서 난 소리는 직접음보다 주변에 튄 소리가 더 많이 들린다. 사람이 "멀다"를 느끼는 가장 큰 단서다.
- *  야외라 짧고 어둡게: 25ms 뒤 시작, 1.4초 감쇠, 3kHz 위는 깎는다. 좌우 채널을 따로 만들어 넓게 퍼지게 */
-function makeVerb(ctx, dest) {
-  const sr = ctx.sampleRate, n = Math.floor(sr * 1.4), pre = Math.floor(sr * 0.025), ir = ctx.createBuffer(2, n, sr);
-  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = pre; i < n; i++) { const t = (i - pre) / sr; d[i] = (Math.random() * 2 - 1) * Math.exp(-t / 0.32) * Math.min(1, t / 0.01); } }
-  const cv = ctx.createConvolver(); cv.buffer = ir;
-  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3000; cv.connect(lp); lp.connect(dest);
-  return cv;
-}
-/** 거리 기반 출력 체인. near=0(멀다)~1(붙었다), rel=내 진행방향 기준 상대 방위(0 정면, +오른쪽, ±π 뒤).
- *  - 크기: 거리^1.5. 가까울수록 크다
- *  - 음색: 멀수록 고음이 빠져 먹먹하다(공기가 고음을 먼저 먹는다). 뒤는 더 둔탁하게
- *  - 거리감: 멀수록 직접음은 빨리 줄고 잔향은 천천히 준다. 둘의 비율이 "멀리서 난다"로 들린다
- *  - 방향: HRTF 입체 음향. 없으면 스테레오 패닝
- *  - 피치는 거리로 건드리지 않는다(기계음 방지) */
-function out(near, rel, dest, intensity) {
-  const behind = rel === undefined ? 0.85 : (1 - Math.cos(rel)) / 2;      // 0=정면 1=바로 뒤
-  const lvl = intensity === undefined ? 1 : 0.55 + 0.45 * intensity;
-  const lp = A.ctx.createBiquadFilter(); lp.type = 'lowpass';
-  lp.frequency.value = (300 + 5000 * near * near) * (1 - 0.45 * behind);
-  const g = A.ctx.createGain(); g.gain.value = Math.pow(near, 1.5) * (1 + 0.12 * behind) * lvl;   // 뒤가 더 조용하면 추격 게임이 아니다
-  let tail = g;
-  if (rel !== undefined && A.hrtf) {
-    const pn = A.ctx.createPanner(); pn.panningModel = 'HRTF'; pn.distanceModel = 'linear'; pn.rolloffFactor = 0;   // 거리 감쇠는 위에서 직접 한다
-    const x = Math.sin(rel), z = -Math.cos(rel);         // 듣는 사람은 원점에서 -z를 본다. 오른쪽 +x, 뒤 +z
-    if (pn.positionX) { pn.positionX.value = x; pn.positionY.value = 0; pn.positionZ.value = z; } else pn.setPosition(x, 0, z);
-    g.connect(pn); tail = pn;
-    // HRTF의 좌우 차이는 실제 귀 수준(약 6dB)이라 달리면서 듣기엔 약하다. 게임답게 조금 과장한다(실측 약 8dB, 여기에 좌우 시간차가 더해진다)
-    if (A.ctx.createStereoPanner) { const sp = A.ctx.createStereoPanner(); sp.pan.value = Math.sin(rel) * 0.35; pn.connect(sp); tail = sp; }
-  } else if (rel !== undefined && A.ctx.createStereoPanner) {
-    const pn = A.ctx.createStereoPanner();
-    pn.pan.value = Math.max(-0.7, Math.min(0.7, Math.sin(rel) * 0.7));   // 한쪽 귀가 완전히 비면 고장으로 들린다
-    g.connect(pn); tail = pn;
-  }
-  lp.connect(g); tail.connect(dest || A.sfx || A.master);
-  // 잔향은 직접음보다 훨씬 천천히 준다. 붙었을 땐 또렷하게, 멀면 울리게 (web/qa.mjs 8번이 귀별 에너지로 잰다)
-  if (A.verb && !dest) { const w = A.ctx.createGain(); w.gain.value = 0.8 * Math.pow(near, 0.2) * (1 - 0.6 * near) * Math.min(1, near / 0.1) * lvl; lp.connect(w); w.connect(A.verb); }
-  return { node: lp, gain: g };
-}
-/** 내 진행 방향 기준 적의 상대 방위 */
-function relBearing(en) {
-  const [px, py] = playerXY();
-  const abs = Math.atan2(en.x - px, en.y - py);
-  let r = abs - (Number.isNaN(st.headRad) ? 0 : st.headRad);
-  while (r > Math.PI) r -= Math.PI * 2; while (r < -Math.PI) r += Math.PI * 2;
-  return r;
-}
-/** 말로 하는 방향. 여덟 방위가 아니라 러너가 즉시 알아듣는 다섯 가지만 */
-function dirWord(rel) {
-  const d = Math.abs(rel), side = rel > 0 ? '오른쪽' : '왼쪽';
-  if (d < Math.PI / 8) return '정면';
-  if (d > Math.PI * 7 / 8) return '바로 뒤';
-  if (d < Math.PI * 3 / 8) return side + ' 앞';
-  if (d < Math.PI * 5 / 8) return side;
-  return side + ' 뒤';
-}
-/** 녹음 재생. 같은 종류 녹음이 여러 개면 직전 것과 다른 것을 고른다(같은 소리 반복이 제일 먼저 질린다) */
-function playSample(key, near, rel, intensity, force) {
-  const list = SFX.buf[key]; if (!list || !list.length) return false;
-  if (!force && SFX.live >= 2) return true;             // 녹음은 합성음보다 길다. 세 겹 넘게 겹치면 소음이다. 합성음으로 새지 않게 true
-  let i = Math.floor(Math.random() * list.length);
-  if (list.length > 1 && i === SFX.last[key]) i = (i + 1) % list.length;
-  SFX.last[key] = i;
-  const s = A.ctx.createBufferSource(); s.buffer = list[i];
-  s.playbackRate.value = 0.97 + Math.random() * 0.06;   // 한 마리가 매번 똑같은 톤으로 울지 않는다
-  const o = out(near, rel, undefined, intensity); s.connect(o.node); s.start();
-  SFX.live++; s.onended = () => { SFX.live = Math.max(0, SFX.live - 1); };
-  return true;
-}
-function hasSample(kind) { const a = st.animal; return !!(a && ((SFX.buf[a.id + '_' + kind] || []).length || (SFX.buf[(CLASS[a.id] || 'small') + '_' + kind] || []).length)); }
-/** 고른 동물의 녹음만 받는다(동물당 100~200KB). 받기는 바로, 디코드는 오디오가 켜진 뒤(버튼 누름) */
-function sfxLoad(aid) {
-  if (!HAS_SFX || !aid || location.protocol === 'file:') return null;
-  if (SFX.aid === aid) return SFX.loading;
-  SFX.aid = aid; SFX.bytes = {}; SFX.buf = {}; SFX.last = {};
-  const cls = CLASS[aid] || 'small', keys = [];
-  for (const k of ['roam', 'sprint', 'tired']) { const key = SOUND_INDEX[aid + '_' + k] ? aid + '_' + k : SOUND_INDEX[cls + '_' + k] ? cls + '_' + k : null; if (key) keys.push(key); }
-  SFX.loading = Promise.all(keys.flatMap(key => SOUND_INDEX[key].map(f => fetch('sounds/' + f + '?v=' + SOUND_VER)
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
-    .then(b => { if (SFX.aid === aid) (SFX.bytes[key] = SFX.bytes[key] || []).push(b); })
-    .catch(e => log('소리 파일 실패 ' + f + ' ' + e.message))))).then(sfxDecode);
-  return SFX.loading;
-}
-function sfxDecode() {
-  if (!A.ctx) return;
-  for (const key in SFX.bytes) {
-    const arr = SFX.buf[key] = SFX.buf[key] || [];
-    for (const b of SFX.bytes[key].splice(0)) A.ctx.decodeAudioData(b).then(buf => arr.push(buf)).catch(() => log('소리 디코드 실패 ' + key));
-  }
-}
-function env(g, t, a, peak, dur) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); }
-// 동물군별 절차 합성. 실제 샘플이 있으면 그걸 우선.
-/** 야외에서 정보를 지는 단서는 800Hz~3kHz에 있어야 한다. 바람소리는 저역을 통째로 덮는다.
- *  동물 소리의 성격은 그대로 두고, 들리는 온셋만 얹는다 */
-function onset(o, t, near, intensity) {
-  const src = A.ctx.createBufferSource(); src.buffer = A.noise;
-  const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 1.1;
-  const g = A.ctx.createGain(); env(g, t, 0.004, 0.16 * intensity * (0.4 + 0.6 * near), 0.07);
-  src.connect(bp); bp.connect(g); g.connect(o.node); src.start(t); src.stop(t + 0.1);
-}
-/** force: 돌진 시작·피격 같은 사건 소리. 겹침 제한을 무시한다 */
-function cry(kind, cls, near, intensity = 1, rel, force) {
-  if (!A.ctx || near <= 0.02) return; const a = st.animal;
-  if (playSample(`${a.id}_${kind}`, near, rel, intensity, force) || playSample(`${cls}_${kind}`, near, rel, intensity, force)) return;
-  const t = A.ctx.currentTime, o = out(near, rel);
-  if (cls === 'canine' || cls === 'hoof' || cls === 'feline') onset(o, t, near, intensity);
-  if (cls === 'bird') {            // 꼬꼬댁: FM 버스트 3~5회
-    const n = kind === 'sprint' ? 5 : 3;
-    for (let i = 0; i < n; i++) { const osc = A.ctx.createOscillator(), g = A.ctx.createGain(); osc.type = 'square'; const t0 = t + i * 0.13;
-      osc.frequency.setValueAtTime(700 + Math.random() * 300, t0); osc.frequency.exponentialRampToValueAtTime(450, t0 + 0.09); env(g, t0, 0.01, 0.25 * intensity, 0.11); osc.connect(g); g.connect(o.node); osc.start(t0); osc.stop(t0 + 0.12); }
-  } else if (cls === 'canine') {   // 짖음/으르렁: 노이즈 버스트 + 포먼트, 낮은 톱니 트레몰로
-    if (kind === 'tired') { breath(near, 0.6); return; }
-    const n = kind === 'sprint' ? 3 : 1;
-    for (let i = 0; i < n; i++) { const t0 = t + i * 0.22; const s = A.ctx.createBufferSource(); s.buffer = A.noise; const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.setValueAtTime(900, t0); bp.frequency.exponentialRampToValueAtTime(500, t0 + 0.15); bp.Q.value = 2.5;
-      const g = A.ctx.createGain(); env(g, t0, 0.015, 0.7 * intensity, 0.18); s.connect(bp); bp.connect(g); g.connect(o.node); s.start(t0); s.stop(t0 + 0.2); }
-    if (kind !== 'sprint') { const osc = A.ctx.createOscillator(), g = A.ctx.createGain(), tr = A.ctx.createOscillator(), tg = A.ctx.createGain(); osc.type = 'sawtooth'; osc.frequency.value = 70; tr.frequency.value = 22; tg.gain.value = 0.5; tr.connect(tg); tg.connect(g.gain); env(g, t, 0.05, 0.25 * intensity, 0.9); osc.connect(g); g.connect(o.node); osc.start(t); tr.start(t); osc.stop(t + 1); tr.stop(t + 1); }
-  } else if (cls === 'feline') {   // 포효: 톱니 스윕 + 왜곡 + 노이즈
-    if (kind === 'tired') { breath(near, 0.8); return; }
-    const osc = A.ctx.createOscillator(), g = A.ctx.createGain(), ws = A.ctx.createWaveShaper(); const curve = new Float32Array(256); for (let i = 0; i < 256; i++) { const x = i / 128 - 1; curve[i] = Math.tanh(3 * x); } ws.curve = curve;
-    osc.type = 'sawtooth'; const f0 = a.sprintCms > 2000 ? 110 : 160; osc.frequency.setValueAtTime(f0, t); osc.frequency.exponentialRampToValueAtTime(f0 * 0.45, t + 1.1);
-    const tr = A.ctx.createOscillator(), tg = A.ctx.createGain(); tr.frequency.value = 28; tg.gain.value = 0.6; tr.connect(tg); tg.connect(g.gain);
-    env(g, t, 0.08, (kind === 'sprint' ? 0.8 : 0.3) * intensity, 1.2); osc.connect(ws); ws.connect(g); g.connect(o.node); osc.start(t); tr.start(t); osc.stop(t + 1.3); tr.stop(t + 1.3);
-    const s = A.ctx.createBufferSource(); s.buffer = A.noise; const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 250; bp.Q.value = 0.8; const ng = A.ctx.createGain(); env(ng, t, 0.1, 0.5 * intensity, 1.2); s.connect(bp); bp.connect(ng); ng.connect(o.node); s.start(t); s.stop(t + 1.3);
-  } else if (cls === 'reptile') {  // 쉭쉭: 하이패스 노이즈
-    const s = A.ctx.createBufferSource(); s.buffer = A.noise; s.playbackRate.value = 2; const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 2500; const g = A.ctx.createGain(); env(g, t, 0.15, 0.5 * intensity, kind === 'sprint' ? 1.6 : 0.8); s.connect(hp); hp.connect(g); g.connect(o.node); s.start(t); s.stop(t + 1.7);
-  } else if (cls === 'hoof') {     // 발굽 3박 + 콧김
-    const n = kind === 'sprint' ? 6 : 3;
-    for (let i = 0; i < n; i++) { const t0 = t + i * (kind === 'sprint' ? 0.16 : 0.3) + (i % 3 === 2 ? 0.05 : 0); const osc = A.ctx.createOscillator(), g = A.ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(90, t0); osc.frequency.exponentialRampToValueAtTime(40, t0 + 0.1); env(g, t0, 0.005, 0.6 * intensity, 0.13); osc.connect(g); g.connect(o.node); osc.start(t0); osc.stop(t0 + 0.14); }
-    if (kind !== 'roam') { const s = A.ctx.createBufferSource(); s.buffer = A.noise; const bp = A.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 1; const g = A.ctx.createGain(); env(g, t + 0.05, 0.03, 0.35 * intensity, 0.35); s.connect(bp); bp.connect(g); g.connect(o.node); s.start(t); s.stop(t + 0.5); }
-  } else {                          // 소형: 바스락 + 찍찍
-    const s = A.ctx.createBufferSource(); s.buffer = A.noise; s.playbackRate.value = 3; const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1800; const g = A.ctx.createGain(); env(g, t, 0.02, 0.3 * intensity, 0.35); s.connect(hp); hp.connect(g); g.connect(o.node); s.start(t); s.stop(t + 0.4);
-    if (kind === 'sprint') { const osc = A.ctx.createOscillator(), og = A.ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(2800, t); osc.frequency.exponentialRampToValueAtTime(1800, t + 0.12); env(og, t, 0.01, 0.2 * intensity, 0.14); osc.connect(og); og.connect(o.node); osc.start(t); osc.stop(t + 0.15); }
-  }
-}
-function breath(near, level) {
-  if (!A.ctx) return; const t = A.ctx.currentTime, o = out(near);
-  const src = A.ctx.createBufferSource(); src.buffer = A.noise; src.playbackRate.value = 1.8;
-  const hp = A.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
-  const g = A.ctx.createGain(); env(g, t, 0.12, 0.3 * level, 0.45); src.connect(hp); hp.connect(g); g.connect(o.node); src.start(t); src.stop(t + 0.5);
-}
-function thump(vol) {
-  if (!A.ctx) return; const t = A.ctx.currentTime; const o = A.ctx.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(70, t); o.frequency.exponentialRampToValueAtTime(35, t + 0.12);
-  const g = A.ctx.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14); o.connect(g); g.connect(A.master); o.start(t); o.stop(t + 0.15);
-}
-function heartbeat(bpm, vol) { if (!A.ctx) return; const now = A.ctx.currentTime; if (now >= A.nextBeat) { thump(vol); setTimeout(() => thump(vol * 0.6), 130); A.nextBeat = now + 60 / bpm; } }
-const PRI = { CRIT: 0, HIGH: 1, NORM: 2, LOW: 3 };
-// 발화 스케줄러. 우선순위 큐 + 최소 간격 + 키별 쿨다운 + 유통기한.
-// 러너는 화면을 못 본다. 그렇다고 쉴 새 없이 떠들면 다음 세션에 음소거당한다.
-const VOICE = { on: true, level: 'off', q: [], speaking: false, lastAt: 0, keyAt: {}, rot: {}, GAP_MS: 3500,
-  tok: 3, CAP: 3, REFILL_S: 90, refAt: 0, seen: {} };
-/** 말 예산. 중요한 말은 공짜, 부연 설명은 토큰을 쓴다. 30분에 스무 마디 남짓으로 묶인다 */
-function budgetOk(cost) {
-  if (!cost) return true;
-  const now = Date.now();
-  if (!VOICE.refAt) VOICE.refAt = now;
-  const gain = Math.floor((now - VOICE.refAt) / (VOICE.REFILL_S * 1000 / vrate()));
-  if (gain > 0) { VOICE.tok = Math.min(VOICE.CAP, VOICE.tok + gain); VOICE.refAt += gain * VOICE.REFILL_S * 1000 / vrate(); }
-  if (VOICE.tok < cost) return false;
-  VOICE.tok -= cost; return true;
-}
-// 리플레이는 10배속. 벽시계 기준 쿨다운이 세션 시간으로는 10배가 되므로 배속만큼 줄인다
-function vrate() { return st.mode === 'replay' ? 10 : 1; }
-// ---------- 음성 팩 ----------
-// 미리 구운 신경망 TTS(web/voice/bake.py). 관제사 문장은 조각을 이어 붙인다.
-// 동물 목소리(사람이 의성어를 읽는 것)는 어색해서 뺐다. 동물은 울음 합성음만 낸다
-// 팩을 못 받으면(오프라인, 단일 파일 실행) 브라우저 TTS로 같은 문장을 읽는다
-const HAS_PACK = typeof VOICE_PACK !== 'undefined' && VOICE_PACK.op;
-function vtext(k) { return (HAS_PACK && VOICE_PACK.text[k]) || k; }
-/** 바이트만 받는다(오디오 컨텍스트 불필요). 홈 화면에서 미리 받아 두어야 출발 직후 첫 말부터 구운 목소리가 나온다 */
-function vpLoad() {
-  if (!HAS_PACK || location.protocol === 'file:') return;
-  const get = (f) => fetch('voice/' + f + '?v=' + VOICE_PACK.ver).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); });
-  if (!VP.opP) VP.opP = get('op.bin').then(b => { VP.op = b; prewarm(); }).catch(e => { VP.opP = null; log('음성 팩 실패 → 기본 TTS ' + e.message); });
-}
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-/** 조각 하나를 필요할 때 디코드한다. 전부 풀어두면 수십 MB라 저가 폰에서 위험하다 */
-function clip(key) {
-  const ck = key;
-  if (VP.cache.has(ck)) { const p = VP.cache.get(ck); VP.cache.delete(ck); VP.cache.set(ck, p); return p; }
-  const bin = VP.op;
-  if (!A.ctx) return Promise.resolve(null);
-  const idx = VOICE_PACK.op[key];
-  if (!bin || !idx) return Promise.resolve(null);
-  const p = A.ctx.decodeAudioData(bin.slice(idx[0], idx[0] + idx[1])).catch(() => null);
-  VP.cache.set(ck, p);
-  if (VP.cache.size > 90) VP.cache.delete(VP.cache.keys().next().value);
-  return p;
-}
-/** 급할 때 디코드 지연이 없도록 방향과 자주 쓰는 말은 미리 풀어둔다 */
-function prewarm() {
-  if (!A.ctx || !VP.op) return;
-  for (const d of ['front', 'back', 'lf', 'rf', 'l', 'r', 'lb', 'rb']) { clip('dc_' + d); clip('dx_' + d); }
-  for (const k of ['spotted', 'hold', 'again', 'stick', 'hit1', 'hit2', 'hit3', 'half1', 'half2', 'tired1', 'tired2', 'tired3']) clip(k);
-}
-/** 수 → 조각 키. 235 = 이백 + 삼십오 */
-function numSeq(n) {
-  n = Math.max(0, Math.min(999, Math.round(n)));
-  if (n === 0) return ['zero'];
-  const h = Math.floor(n / 100) * 100, r = n % 100;
-  return [...(h ? ['n' + h] : []), ...(r ? ['n' + r] : [])];
-}
-/** 거리는 50m 밖이면 10m 단위로. "이백삼십칠 미터"는 들어도 못 쓴다.
- *  숫자는 구절째 구운 조각을 쓴다. 조각을 이으면 "육십"이 "6시"로 들리는 일이 잦았다(ASR 실측 60~70%) */
-function meterSeq(m) {
-  const v = Math.max(1, m < 50 ? Math.round(m) : Math.round(m / 10) * 10);
-  return HAS_PACK && VOICE_PACK.op['m' + v] ? ['m' + v] : [...numSeq(v), 'meter'];
-}
-function kmhSeq(k) {
-  const v = Math.max(1, Math.round(k));
-  return HAS_PACK && VOICE_PACK.op['kmh' + v] ? ['kmh' + v] : ['sisok', ...numSeq(v), 'intro_kmh'];
-}
-const DIR_KEYS = { '정면': 'front', '바로 뒤': 'back', '왼쪽 앞': 'lf', '오른쪽 앞': 'rf', '왼쪽': 'l', '오른쪽': 'r', '왼쪽 뒤': 'lb', '오른쪽 뒤': 'rb' };
-function dirKey(rel) { return DIR_KEYS[dirWord(rel)]; }
-function speakIntro(seq) { speak('intro', seq, { pri: PRI.CRIT }); }
-function pickVar(key, v) { if (!Array.isArray(v[0])) return v; const n = (VOICE.rot[key] = (VOICE.rot[key] || 0) + 1); return v[n % v.length]; }
-/** key: 같은 종류의 말을 묶는 이름. variants: 조각 키 배열 하나, 또는 그 배열들(돌아가며 쓴다).
- *  o.pri/o.cooldown(초)/o.ttl(초) */
-function speak(key, variants, o) {
-  o = o || {}; const pri = o.pri === undefined ? PRI.NORM : o.pri, now = Date.now();
-  if (!VOICE.on || VOICE.level === 'off') return;   // 기본은 끔. 소리(녹음)만으로 방향과 거리를 읽는다
-  if (!HAS_PACK && !('speechSynthesis' in window)) return;
-  if (VOICE.level === 'quiet' && pri > PRI.HIGH) return;
-  if (pri === PRI.LOW && VOICE.level !== 'chatty') return;
-  const cd = (o.cooldown || 0) * 1000 / vrate();
-  if (cd && now - (VOICE.keyAt[key] || -1e9) < cd) return;
-  if (!budgetOk(o.cost)) return;
-  VOICE.keyAt[key] = now;
-  VOICE.q = VOICE.q.filter(x => now < x.ttl && x.key !== key);          // 낡은 말과 같은 키의 대기분은 버린다
-  const seq = pickVar(key, variants);
-  VOICE.q.push({ key, seq, text: seq.map(vtext).join(' '), pri, ttl: now + (o.ttl === undefined ? 8 : o.ttl) * 1000 / vrate() });
-  VOICE.q.sort((a, b) => a.pri - b.pri);
-  if (pri === PRI.CRIT && VOICE.speaking) { hush(); setTimeout(pump, 140); return; }   // cancel 직후 동기 speak는 크롬이 삼킨다
-  pump();
-}
-/** 지금 하던 말을 끊는다. 더 급한 말이 왔을 때 */
-function hush() {
-  VOICE.cur = (VOICE.cur || 0) + 1;
-  for (const s of VOICE.srcs || []) { try { s.stop(); } catch (e) { } }
-  VOICE.srcs = [];
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
-  VOICE.speaking = false;
-}
-function pump() {
-  if (VOICE.speaking || !VOICE.q.length) return;
-  const now = Date.now(), wait = VOICE.GAP_MS / vrate() - (now - VOICE.lastAt);
-  if (wait > 0 && VOICE.q[0].pri > PRI.CRIT) { clearTimeout(VOICE.t); VOICE.t = setTimeout(pump, wait); return; }
-  const it = VOICE.q.shift(); if (!it || now > it.ttl) { if (VOICE.q.length) pump(); return; }
-  VOICE.speaking = true; VOICE.lastAt = now; duck(0.3);
-  const tok = VOICE.cur = (VOICE.cur || 0) + 1;
-  const done = () => { if (tok !== VOICE.cur || !VOICE.speaking) return; VOICE.speaking = false; VOICE.lastAt = Date.now(); duck(1); pump(); };
-  log('말: ' + it.text);
-  playPack(it, tok).then(dur => {
-    if (tok !== VOICE.cur) return;
-    if (dur !== null) { setTimeout(done, dur * 1000 + 60); return; }
-    ttsFallback(it, done);
-  });
-}
-/** 구운 조각을 이어서 재생. 하나라도 없으면 null → 브라우저 TTS */
-async function playPack(it, tok) {
-  if (!A.ctx) return null;
-  // 받는 중이면 잠깐 기다린다. 첫 말이 기계음으로 새는 것보다 조금 늦는 게 낫다
-  if (!VP.op && VP.opP) await Promise.race([VP.opP, sleep(4000)]);
-  if (!VP.op) return null;
-  const bufs = await Promise.all(it.seq.map(k => clip(k)));
-  if (bufs.some(b => !b)) return null;
-  if (tok !== VOICE.cur) return 0;
-  if (A.ctx.state !== 'running') A.ctx.resume();
-  const t0 = A.ctx.currentTime + 0.03; let t = t0; VOICE.srcs = [];
-  const play = (b, dest, at) => { const s = A.ctx.createBufferSource(); s.buffer = b; s.connect(dest); s.start(at); VOICE.srcs.push(s); };
-  bufs.forEach((b, i) => { play(b, A.radio, t); t += b.duration + (/[.!?]$/.test(vtext(it.seq[i])) ? 0.1 : 0.035); });
-  return t - A.ctx.currentTime;
-}
-function ttsFallback(it, done) {
-  if (!('speechSynthesis' in window)) { done(); return; }
-  const u = new SpeechSynthesisUtterance(it.text); u.lang = 'ko-KR';
-  u.rate = it.pri === PRI.CRIT ? 1.2 : it.pri === PRI.HIGH ? 1.1 : 1.0;
-  const v = speechSynthesis.getVoices().find(x => x.lang && x.lang.startsWith('ko')); if (v) u.voice = v;
-  // 이벤트에만 의존하면 안 된다. 일부 안드로이드 웹뷰는 onstart/onend를 안 쏜다
-  u.onend = u.onerror = done;
-  speechSynthesis.speak(u);
-  setTimeout(done, 1000 + it.text.length * 220);  // onend 유실 대비
-}
-/** 말할 때 동물 소리와 바람을 낮춘다. 말이 묻히면 말한 의미가 없다 */
-function duck(k) {
-  if (!A.ctx || !A.sfx) return; const t = A.ctx.currentTime;
-  A.sfx.gain.cancelScheduledValues(t); A.sfx.gain.linearRampToValueAtTime(k, t + 0.15);
-  if (A.ambient) { A.ambient.gain.cancelScheduledValues(t); A.ambient.gain.linearRampToValueAtTime(Math.max(0.015, 0.06 * (k < 1 ? 0.4 : 1)), t + 0.15); }
+/** 주행마다 새 엔진. 앞 주행의 깔리는 소리가 남지 않게 */
+function newEngine() {
+  if (A.E) { A.E.halt(); A.E.stopLoops(); try { A.E.out.disconnect(); } catch (e) { } }
+  const out = A.ctx.createGain(); out.connect(A.ctx.destination);
+  A.E = SND.engine(A.ctx, out); A.E.out = out; A.E.fed = feedSamples(A.E);
+  return A.E;
 }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function flash() { document.body.classList.add('flash'); setTimeout(() => document.body.classList.remove('flash'), 180); }
 
 // ---------- 위치 ----------
-// 자이로 각속도. 폰이 주머니에 있어도 몸이 돈 만큼 폰도 돈다.
-// 장착 방향을 몰라도 "지금 안 돌고 있다"는 판정은 정확하다. 정지 중 지도가 도는 것을 뿌리에서 막는다
-// 나침반. 카카오맵이 폰을 돌리면 바로 반응하는 이유가 이것이다.
-// GPS 코스는 "움직이는 방향"이라 제자리에서 돌면 아무 값도 안 나온다. 지자기 센서만이 "지금 어디를 보는가"를 안다
-const HEAD = { compass: NaN, compassAt: 0, course: NaN, courseAt: 0, ok: false, outAt: 0 };
-function nrm(a) { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
-/** 아이폰은 방향 센서를 쓰려면 권한을 받아야 한다. 반드시 버튼 누름 안에서 불러야 창이 뜬다 */
-function askCompass() {
-  const D = window.DeviceOrientationEvent;
-  if (!D || typeof D.requestPermission !== 'function') return;
-  try { D.requestPermission().then(r => { if (r !== 'granted') log('나침반 권한 거부 → GPS 진행 방향만'); }).catch(e => log('나침반 권한 실패 ' + e.message)); } catch (e) { }
-}
-function startCompass() {
-  if (typeof window.DeviceOrientationEvent === 'undefined' || HEAD.listening) return;
-  HEAD.listening = true;                                // 주행마다 리스너가 쌓이지 않게
-  const onOrient = (e) => {
-    const b = (e.beta || 0) * Math.PI / 180, cb = Math.cos(b);
-    if (Math.abs(cb) < 0.25) return;                    // 폰이 거의 수직. 윗변의 수평 방향이 정의되지 않는다
-    const sa = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
-    let h;
-    if (typeof e.webkitCompassHeading === 'number' && e.webkitCompassHeading >= 0) {
-      // 아이폰: iOS가 계산한 방위(북에서 시계 방향, 기기 윗변 기준). 아이폰의 alpha는 기준이 제각각이라 나침반이 아니다
-      if (e.webkitCompassAccuracy < 0) return;          // 보정 전. 틀린 방위보다 GPS 진행 방향이 낫다
-      h = nrm((e.webkitCompassHeading + sa) * Math.PI / 180);
-    } else {
-      if (e.alpha === null || e.alpha === undefined) return;
-      if (e.absolute !== true && e.type !== 'deviceorientationabsolute') return;   // 상대 방향은 나침반이 아니다
-      h = nrm((-e.alpha + sa) * Math.PI / 180);         // 알파는 나침반과 반대 방향으로 증가한다
-      if (cb < 0) h = nrm(h + Math.PI);                 // 폰을 뒤집어 들었다
-    }
-    HEAD.compass = h; HEAD.compassAt = Date.now(); HEAD.ok = true;
-    applyHeading();
-  };
-  window.addEventListener('deviceorientationabsolute', onOrient, true);
-  window.addEventListener('deviceorientation', onOrient, true);
-}
-/** 나침반과 GPS 코스를 합친다.
- *  달릴 땐 코스(팔 흔들림에 안 흔들린다), 느리거나 서 있으면 나침반(제자리에서 돌아도 바로 반응) */
-function applyHeading() {
-  const now = Date.now();
-  const spd = st.lastFix && st.lastFix.spd !== null ? st.lastFix.spd
-            : (st.session && st.session.lastSnap ? st.session.lastSnap.playerCms / 100 : 0);
-  const courseOk = !Number.isNaN(HEAD.course) && now - HEAD.courseAt < 4000;
-  const compOk = !Number.isNaN(HEAD.compass) && now - HEAD.compassAt < 1500;
-  let target = NaN, soft = false;
-  if (spd >= GPSF.COURSE_MS && courseOk) { target = HEAD.course; soft = HEAD.courseSoft; }
-  else if (compOk) target = HEAD.compass;
-  else if (courseOk) { target = HEAD.course; soft = HEAD.courseSoft; }
-  if (Number.isNaN(target)) return;
-  if (Number.isNaN(st.headRad)) { st.headRad = target; HEAD.outAt = now; return; }
-  const d = nrm(target - st.headRad);
-  if (Math.abs(d) < GPSF.HEAD_DEAD) { HEAD.outAt = now; return; }   // 미세한 떨림은 무시. 서 있을 때 흔들리지 않게
-  const dt = Math.min(0.5, Math.max(0.01, (now - (HEAD.outAt || now)) / 1000)); HEAD.outAt = now;
-  st.headRad = nrm(st.headRad + d * (1 - Math.exp(-dt / (soft ? GPSF.HEAD_TAU_SOFT : GPSF.HEAD_TAU))));
-}
 function startGps() {
-  startCompass();
   st.gpsErr = null; st.fixCount = 0;
   if (!navigator.geolocation) { st.gpsErr = '위치 미지원 브라우저'; return; }
   st.watchId = navigator.geolocation.watchPosition(p => {
       const c = p.coords; st.fixCount++;
       const num = (v) => (typeof v === 'number' && isFinite(v) && v >= 0) ? v : null;
       const ac = num(c.accuracy);
-      st.lastFix = { at: Date.now(), lat: c.latitude, lon: c.longitude, acc: ac === null ? 8 : ac, spd: num(c.speed), hdg: num(c.heading) };
+      st.lastFix = { at: Date.now(), lat: c.latitude, lon: c.longitude, acc: ac === null ? 8 : ac, spd: num(c.speed) };
       st.gpsErr = null;
     },
     e => { st.gpsErr = (e.code === 1 ? (EMBEDDED ? '이 화면에서는 위치가 차단됨' : '권한 거부') : e.code === 2 ? '신호 없음' : '시간 초과') + ' (' + e.code + ')'; log('GPS 오류 ' + st.gpsErr); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
@@ -628,112 +390,12 @@ async function wakeLock() {
   catch (e) {
     log('wake lock 불가 ' + e.message);
     // 화면이 꺼지면 GPS와 소리가 멈춘다. 모르고 뛰면 기록이 통째로 날아간다. 주행마다 한 번 알린다
-    if (st.session && !st.wakeWarned) { st.wakeWarned = true; st.wakeWarnUntil = Date.now() + 10000; }
+    if (st.game && !st.wakeWarned) { st.wakeWarned = true; st.wakeWarnUntil = Date.now() + 10000; }
   }
 }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { audioWake(); if (st.session && !st.wake) wakeLock(); } });
-
-// ---------- 지도 타일 (아티팩트 뷰어에서는 차단됨 → 자동으로 레이더만) ----------
-// 타일 공급자. CARTO는 2026년부터 키를 요구해 워터마크가 찍힌다 → 키 없는 OSM 표준 타일 + 캔버스 반전으로 다크맵
-const TILE_SRC = {
-  // 브이월드 midnight: 진짜 다크 타일이라 반전 필터가 필요 없고 한국 골목 상세도가 OSM을 압도한다.
-  // 경로가 z/y/x 순서다(y가 먼저). 키는 vworld.kr에서 무료 발급, 서비스 도메인 등록 필수
-  vworld: { name: 'VWorld midnight', invert: false, credit: '© VWorld 국토교통부',
-         url: (x, y, z) => `https://api.vworld.kr/req/wmts/1.0.0/${TILE.key}/midnight/${z}/${y}/${x}.png` },
-  osm: { name: 'OpenStreetMap', invert: true, credit: '© OpenStreetMap contributors',
-         url: (x, y, z) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png` },
-  carto: { name: 'CARTO dark', invert: false, credit: '© OpenStreetMap © CARTO',
-         url: (x, y, z) => `https://${'abcd'[(x + y) % 4]}.basemaps.cartocdn.com/dark_all/${z}/${x}/${y}.png` },
-};
-const TILE = { z: 17, cache: new Map(), fails: 0, loads: 0, src: 'osm', key: '' };
-try { TILE.key = localStorage.getItem('vworldKey') || ''; } catch (e) { }
-if (TILE.key) TILE.src = 'vworld';
-const DARK_FILTER = 'invert(1) hue-rotate(180deg) saturate(0.22) brightness(0.78) contrast(1.08)';   // 채도가 높으면 반전된 도로가 분홍으로 뜬다
-// 사파리는 캔버스 filter를 지원하지 않는다. 그대로 두면 아이폰에서 지도가 하얗게 뜬다
-const CANVAS_FILTER = (() => { try { return 'filter' in document.createElement('canvas').getContext('2d'); } catch (e) { return false; } })();
-/** 타일을 받을 때 한 번, DARK_FILTER와 같은 계산을 픽셀에 직접 한다. 256×256이라 몇 ms면 끝난다 */
-function darkTile(img) {
-  const c = document.createElement('canvas'); c.width = img.naturalWidth || 256; c.height = img.naturalHeight || 256;
-  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
-  let d; try { d = g.getImageData(0, 0, c.width, c.height); } catch (e) { return null; }   // CORS 없이 받은 타일은 못 읽는다
-  const p = d.data, S = 0.22, BR = 0.78, K = 1.08, cl = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
-  for (let i = 0; i < p.length; i += 4) {
-    let r = 1 - p[i] / 255, gr = 1 - p[i + 1] / 255, b = 1 - p[i + 2] / 255;                          // invert(1)
-    let r2 = cl(-0.574 * r + 1.430 * gr + 0.144 * b), g2 = cl(0.426 * r + 0.430 * gr + 0.144 * b), b2 = cl(0.426 * r + 1.430 * gr - 0.856 * b);   // hue-rotate(180deg)
-    r = cl((0.213 + 0.787 * S) * r2 + (0.715 - 0.715 * S) * g2 + (0.072 - 0.072 * S) * b2);            // saturate
-    gr = cl((0.213 - 0.213 * S) * r2 + (0.715 + 0.285 * S) * g2 + (0.072 - 0.072 * S) * b2);
-    b = cl((0.213 - 0.213 * S) * r2 + (0.715 - 0.715 * S) * g2 + (0.072 + 0.928 * S) * b2);
-    p[i] = cl((r * BR - 0.5) * K + 0.5) * 255; p[i + 1] = cl((gr * BR - 0.5) * K + 0.5) * 255; p[i + 2] = cl((b * BR - 0.5) * K + 0.5) * 255;   // brightness, contrast
-  }
-  g.putImageData(d, 0, 0); return c;
-}
-function tileUrl(x, y) { return TILE_SRC[TILE.src].url(x, y, TILE.z); }
-function getTile(x, y) {
-  const k = TILE.src + ':' + x + ',' + y; if (TILE.cache.has(k)) return TILE.cache.get(k);
-  const rec = { img: null, ok: false }, dark = !CANVAS_FILTER && TILE_SRC[TILE.src].invert;
-  const load = (useCors) => {
-    const img = new Image(); rec.img = img; img.decoding = 'async';
-    if (useCors) img.crossOrigin = 'anonymous';
-    img.onload = () => { if (dark) { const c = darkTile(img); if (c) rec.img = c; } rec.ok = true; TILE.loads++; if (st.tilesOk === null) st.tilesOk = true; };
-    img.onerror = () => { if (useCors) { load(false); return; }   // CORS 헤더 없는 공급자 대비
-      TILE.fails++;
-      if (TILE.src === 'vworld' && TILE.loads === 0 && TILE.fails >= 4) {   // 키가 틀렸거나 도메인 미등록
-        TILE.src = 'osm'; TILE.cache.clear(); TILE.fails = 0; log('브이월드 타일 실패 → OSM으로 전환'); return;
-      }
-      if (TILE.loads === 0 && TILE.fails >= 4) st.tilesOk = false; };
-    img.src = tileUrl(x, y);
-  };
-  load(true); TILE.cache.set(k, rec);
-  if (TILE.cache.size > 220) { const it = TILE.cache.keys(); for (let i = 0; i < 60; i++) TILE.cache.delete(it.next().value); }   // 30분 세션 메모리 상한
-  return rec;
-}
-function lonToX(lon, z) { return (lon + 180) / 360 * Math.pow(2, z); }
-function latToY(lat, z) { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z); }
-
-// ---------- 세션 ----------
-function log(s) { const t = st.session ? st.session.elapsed : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
-const SHARE_URL = '<!--SITE-->';
-/** 결과 이미지. 러닝 게임은 결과 스크린샷으로 퍼진다. 그게 유일한 성장 고리다 */
-function drawShareCard() {
-  const c = $('#shareCard'), g = c.getContext('2d'), W = 1080, s = st.lastResult, a = st.animal;
-  if (!s || !a) return;
-  g.fillStyle = '#0a0f0d'; g.fillRect(0, 0, W, W);
-  g.strokeStyle = '#1f2b27'; g.lineWidth = 2;
-  for (let r = 120; r < 900; r += 120) { g.beginPath(); g.arc(W / 2, 470, r, 0, Math.PI * 2); g.stroke(); }
-  g.textAlign = 'center';
-  g.font = '300px sans-serif'; g.fillText(EMOJI[a.id] || '🐾', W / 2, 420);
-  const win = !s.failed;
-  g.fillStyle = win ? '#3ff2a5' : '#ff4a3d';
-  g.font = '700 92px "Black Han Sans", sans-serif';
-  g.fillText(win ? '탈출 성공' : '탈출 실패', W / 2, 560);
-  g.fillStyle = '#dfe9e4'; g.font = '600 62px "IBM Plex Sans KR", sans-serif';
-  g.fillText(`${a.nameKo} ${st.nPack}마리한테서 ${(s.dist / 100000).toFixed(2)}km`, W / 2, 660);
-  g.fillStyle = '#7d8f88'; g.font = '40px "IBM Plex Mono", monospace';
-  g.fillText(`${a.sprintKmh} km/h · 피격 ${s.hits}회 · 스프린트 ${s.sprints}회 버팀`, W / 2, 725);
-  g.fillStyle = '#dfe9e4'; g.font = '500 150px "IBM Plex Mono", monospace';
-  g.fillText(fmt(s.finalTimeS), W / 2, 880);
-  g.fillStyle = '#3ff2a5'; g.font = '700 52px "Black Han Sans", sans-serif';
-  g.fillText('러너웨이', W / 2, 965);
-  g.fillStyle = '#7d8f88'; g.font = '32px "IBM Plex Mono", monospace';
-  g.fillText(SHARE_URL, W / 2, 1015);
-}
-async function shareCard() {
-  const c = $('#shareCard'), s = st.lastResult, a = st.animal;
-  const text = s && a ? `${a.nameKo} ${st.nPack}마리한테서 ${(s.dist / 100000).toFixed(2)}km 도망쳤다. ${fmt(s.finalTimeS)}` : '러너웨이';
-  const blob = await new Promise(r => c.toBlob(r, 'image/png'));
-  const file = blob ? new File([blob], 'runaway.png', { type: 'image/png' }) : null;
-  try {
-    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], text: text + ' https://' + SHARE_URL }); return;
-    }
-    if (navigator.share) { await navigator.share({ text, url: 'https://' + SHARE_URL }); return; }
-  } catch (e) { if (e && e.name === 'AbortError') return; }
-  const url = URL.createObjectURL(blob); const link = document.createElement('a');
-  link.href = url; link.download = 'runaway.png'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 5000);
-}
-function fmt(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
-// GPS 튐 억제 상수. 정지 중 표류를 죽이고 실제 이동만 남긴다
-const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, DEAD_MAX_M: 10, MOVE_MS: 1.0, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5, HEAD_MIN_MS: 0.9, HEAD_GPS_MS: 1.3, HEAD_BASE_M: 8, COURSE_MS: 2.0, HEAD_TAU: 0.12, HEAD_TAU_SOFT: 1.2, HEAD_DEAD: 0.05 };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { audioWake(); if (st.game && !st.wake) wakeLock(); } });
+// GPS 튐 억제. 정지 중 표류를 죽이고 실제 이동만 남긴다
+const GPSF = { DEAD_MIN_M: 5, DEAD_ACC_K: 1.4, DEAD_MAX_M: 10, MOVE_MS: 1.0, STILL_MS: 0.5, WIN_N: 12, STILL_SEP_M: 4.5 };
 /** 서 있는가? 1순위는 도플러 속도, 없으면 최근 창의 전반부·후반부 무게중심 이동량으로 판정 */
 function isStanding(fix) {
   if (fix.spd !== null) return fix.spd < GPSF.STILL_MS;
@@ -742,7 +404,7 @@ function isStanding(fix) {
   const mid = W.length >> 1;
   const cen = (from, to) => { let a = 0, o = 0; for (let i = from; i < to; i++) { a += W[i][0]; o += W[i][1]; } const n = to - from; return [a / n, o / n]; };
   const [a1, o1] = cen(0, mid), [a2, o2] = cen(mid, W.length);
-  return RW.haversineM(a1, o1, a2, o2) < GPSF.STILL_SEP_M;   // 무게중심이 안 움직이면 잡음일 뿐
+  return RW.haversineM(a1, o1, a2, o2) < GPSF.STILL_SEP_M;
 }
 /** 정확도 반경만큼의 데드밴드를 둔 앵커 추종. 밴드 안의 흔들림은 무시, 밖으로 나간 만큼만 끌려간다 */
 function trackAnchor(fix) {
@@ -750,420 +412,224 @@ function trackAnchor(fix) {
   const h = st.hold, W = st.win;
   W.push([fix.lat, fix.lon]); if (W.length > GPSF.WIN_N) W.shift();
   h.acc = fix.acc;
-  // 도플러가 "달린다"고 하면 두말없이 따라간다. 정지 잡음을 막으려고 만든 장치가 달릴 때까지 발목을 잡으면 안 된다
+  // 도플러가 "달린다"고 하면 두말없이 따라간다
   if (fix.spd !== null && fix.spd >= GPSF.MOVE_MS) { st.still = false; h.lat = fix.lat; h.lon = fix.lon; return; }
-  if (isStanding(fix)) { st.still = true; return; }           // 정지. 앵커 완전 고정
+  if (isStanding(fix)) { st.still = true; return; }
   st.still = false;
   const d = RW.haversineM(h.lat, h.lon, fix.lat, fix.lon);
-  // 정확도가 20m여도 밴드가 28m가 되면 안 된다. 그러면 움직여도 아무 일이 안 일어난다
   const band = Math.min(GPSF.DEAD_MAX_M, Math.max(GPSF.DEAD_MIN_M, fix.acc * GPSF.DEAD_ACC_K));
-  if (d <= band) return;                       // 밴드 안 = 잡음
-  const k = (d - band) / d;                    // 밴드 경계까지만 이동
+  if (d <= band) return;
+  const k = (d - band) / d;
   h.lat += (fix.lat - h.lat) * k; h.lon += (fix.lon - h.lon) * k;
 }
-/** 진행 방향. 느리면 갱신하지 않고 직전 방향을 유지한다 (정지 중 지도가 빙빙 도는 원인) */
-/** GPS 코스를 기록한다. 지도 회전 자체는 applyHeading이 나침반과 합쳐서 결정한다 */
-function updateHeading(fix, row) {
-  const spd = fix && fix.spd !== null ? fix.spd : row.speedCms / 100;
-  if (spd < GPSF.HEAD_MIN_MS) return;
-  let target = NaN;
-  let soft = false;
-  if (fix && fix.hdg !== null && spd >= GPSF.HEAD_GPS_MS) target = fix.hdg * Math.PI / 180;
-  else {
-    soft = true;   // 궤적 차분은 잡음이 많다. 같은 속도로 반영하면 지도가 떨린다
-    const P = st.trail;
-    for (let k = P.length - 2; k >= 0 && k > P.length - 60; k--) {
-      const dx = P[P.length - 1][0] - P[k][0], dy = P[P.length - 1][1] - P[k][1];
-      if (Math.hypot(dx, dy) >= GPSF.HEAD_BASE_M) { target = Math.atan2(dx, dy); break; }
-    }
-  }
-  if (Number.isNaN(target)) return;
-  HEAD.course = nrm(target); HEAD.courseAt = Date.now(); HEAD.courseSoft = soft;
-  applyHeading();
-}
-/** 신호가 없으면 마지막 위치를 유지한다. 출발점으로 되돌리지 않는다 */
+/** 신호가 없으면 마지막 위치를 유지한다 */
 function fixToRow(t, fix) {
-  if (fix) { trackAnchor(fix); st.holdN = 0; } else st.holdN++;
+  if (fix) trackAnchor(fix);
   const h = st.hold;
-  if (!h) return null;                                    // 첫 위치 확보 전 = 아직 세션 시작 안 함
-  // 안드로이드 12+ '대략적 위치'만 허용하면 정확도가 수백 m다. 그 상태로는 게임이 성립하지 않는다
+  if (!h) return null;                                    // 첫 위치 확보 전
+  // 안드로이드 12+ '대략적 위치'만 허용하면 정확도가 수백 m다. 그 상태로는 거리를 못 잰다
   st.coarse = h.acc > 100;
   if (st.coarse && !st.gpsReady) return null;
-  if (Number.isNaN(st.lat0)) { st.lat0 = h.lat; st.lon0 = h.lon; }
   const row = st.builder.push(t, h.lat, h.lon, h.acc);
   if (fix && fix.spd !== null) row.speedCms = Math.round(fix.spd * 100);   // 도플러 속도가 위치 차분보다 정확
   if (!fix || st.still) row.speedCms = 0;
-  const sl = h.lat, so = h.lon;   // 표시는 앵커 그대로. 코어 평활화(알파 0.35)는 거리 계산에만 쓴다
-  st.lastLatLon = [sl, so];
-  const n = RW.haversineM(st.lat0, st.lon0, sl, st.lon0) * (sl >= st.lat0 ? 1 : -1), e = RW.haversineM(st.lat0, st.lon0, st.lat0, so) * (so >= st.lon0 ? 1 : -1);
-  if (!st.trailDist.length || row.distCm > st.trailDist[st.trailDist.length - 1]) { st.trailDist.push(row.distCm); st.trail.push([e, n]); }
-  if (!st.trail.length) st.trail.push([e, n]);
-  updateHeading(fix, row);
   return row;
 }
-const PACK = { wolf: 5, jindo: 4, sleddog: 5, chihuahua: 3, greyhound: 2, chicken: 4, pig: 3, squirrel: 3, hare: 2, kangaroo: 3, horse: 2, ostrich: 2, pronghorn: 3, elephant: 2, hippo: 1, cheetah: 1, cat: 2, crocodile: 2, komodo: 1, gila: 1, koala: 2, armadillo: 2, sloth: 1, loris: 1, camel: 2 };
-/** 2D 다중 추격 세션. 상태 머신·판정은 코어(RW.Enemy, RW.Threat) 그대로, 위치만 2D. 동시 스프린트는 1마리. */
-class Session2D {
-  constructor(animal, courseCm, n) {
-    this.a = animal; this.courseCm = courseCm; this.threat = new RW.Threat();
-    this.warmGap = Math.min(RW.S.WARMUP_MIN_GAP_CM, animal.detectCm - RW.S.REENGAGE_INSIDE_CM);
-    this.enemies = []; this.n = n;
-    this.elapsed = 0; this.slow = 0; this.recent = []; this.hits = 0; this.failed = false; this.moving = 0; this.paused = 0; this.dist = 0; this.minGap = null;
-    this.enemyMoved = 0; this.enemyActive = 0; this.lost = 0; this.reengages = 0; this.done = false; this.first = true; this.prevDist = 0; this.spawned = false; this.sprints = 0; this.oriented = false;
-  }
-  spawn(px, py, heading) {
-    const a = this.a; this.enemies = [];
-    for (let i = 0; i < this.n; i++) {
-      const behind = RW.S.WARMUP_S === 0;
-      const dM = behind ? (a.detectCm - RW.S.REENGAGE_INSIDE_CM) / 100 : a.detectCm / 100 + 80 + Math.random() * 80;
-      const ang = heading + Math.PI + (Math.random() - 0.5) * (behind ? 1.2 : 2.4) + (i / this.n) * 0.6;
-      const e = new RW.Enemy(a, Math.round(dM * 100));
-      this.enemies.push({ e, x: px + Math.sin(ang) * dM, y: py + Math.cos(ang) * dM, far: 0, prevState: null, lastCycle: 0, id: i });
-    }
-    this.spawned = true;
-  }
-  place(en, px, py, ang, dM) { en.x = px + Math.sin(ang) * dM; en.y = py + Math.cos(ang) * dM; }
-  tick(row, px, py, heading0) {
-    if (this.first) { this.prevDist = row.distCm; this.first = false; }
-    const hKnown = !Number.isNaN(heading0), heading = hKnown ? heading0 : 0;
-    // GPS가 순간이동하면 무리도 같이 옮긴다. 상대 배치를 보존해 거리 폭주를 막는다
-    if (this.px !== undefined) {
-      const jx = px - this.px, jy = py - this.py;
-      if (Math.hypot(jx, jy) > 50) for (const en of this.enemies) { en.x += jx; en.y += jy; }
-    }
-    this.px = px; this.py = py;
-    if (!this.spawned) this.spawn(px, py, heading);
-    // 출발 직후엔 진행 방향을 모름 → 방향이 잡히면 무리를 '뒤'로 한 번 회전 (스프린트·피격 전까지만)
-    if (!this.oriented && hKnown) { this.oriented = true; if (this.hits === 0 && this.sprints === 0) for (const en of this.enemies) { const dx = en.x - px, dy = en.y - py, d = Math.hypot(dx, dy); this.place(en, px, py, Math.atan2(dx, dy) + heading, d); } }
-    const a = this.a, S = RW.S, T = RW.T;
-    const adv = row.distCm - this.prevDist; this.prevDist = row.distCm; this.elapsed++;
-    this.recent.push(row.speedCms); if (this.recent.length > 5) this.recent.shift();
-    const avg = Math.floor(this.recent.reduce((x, y) => x + y, 0) / this.recent.length);
-    if (avg < S.PAUSE_SPEED_CMS) this.slow++; else this.slow = 0;
-    const paused = this.slow >= S.PAUSE_AFTER_S; if (paused) this.paused++; else this.moving++;
-    const warmup = this.elapsed <= S.WARMUP_S;
-    const cooldown = row.distCm >= Math.floor(this.courseCm * S.COOLDOWN_PCT / 100);
-    const frozen = paused || cooldown;
-    const events = []; let sprinting = this.enemies.some(en => en.e.state === 'sprint');
-    // 가까운 순으로 처리 → 동시 스프린트 1마리 규칙
-    const order = [...this.enemies].sort((p, q) => Math.hypot(p.x - px, p.y - py) - Math.hypot(q.x - px, q.y - py));
-    for (const en of order) {
-      const e = en.e; let d = Math.hypot(en.x - px, en.y - py); e.gap = Math.round(d * 100);
-      let stalk = null;
-      if (warmup && e.gap > this.warmGap) { const rem = Math.max(1, S.WARMUP_S - this.elapsed + 1); stalk = Math.min(a.sprintCms, adv + Math.max(20, Math.floor((e.gap - this.warmGap) / rem))); }
-      const canDetect = !warmup && (!sprinting || e.state === 'sprint');
-      const prev = e.state;
-      const state = e.tick(0, row.accM, { frozen, stalkCms: stalk, canDetect });
-      if (state === 'sprint' && prev !== 'sprint') { sprinting = true; this.sprints++; events.push({ type: 'sprint', en }); }
-      if (state === 'lost') this.lost++;
-      if (!frozen) { this.enemyActive++; this.enemyMoved += e.speed; }
-      // 이동: 플레이어 방향으로
-      const step = Math.min(e.speed / 100, d);
-      if (step > 0 && d > 0.01) { en.x += (px - en.x) / d * step; en.y += (py - en.y) / d * step; }
-      d = Math.hypot(en.x - px, en.y - py);
-      if (warmup && d * 100 < this.warmGap) { const ang = Math.atan2(en.x - px, en.y - py); this.place(en, px, py, ang, this.warmGap / 100); d = this.warmGap / 100; }
-      e.gap = Math.round(d * 100);
-      // 회복 끝났는데 감지 밖 → 따라잡음(뒤·옆 재배치)
-      if (e.cycle > en.lastCycle) { en.lastCycle = e.cycle; if (!warmup && !frozen && e.gap > a.detectCm) { this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'reengage', en }); } }
-      // 배회 중 너무 멀어진 놈은 30초 뒤 뒤·옆에서 재출현 (앞 배치는 직진 러너가 무조건 잡히므로 금지. 지침·회복 중엔 재출현 없음 = 피로 우회 방지)
-      if (!warmup && !frozen && e.state === 'roam' && e.gap > a.detectCm * 2) { en.far++; if (en.far >= 30) { en.far = 0; this.place(en, px, py, heading + Math.PI + (Math.random() - 0.5) * 2.0, (a.detectCm - S.REENGAGE_INSIDE_CM) / 100); e.reposition(a.detectCm - S.REENGAGE_INSIDE_CM); this.reengages++; events.push({ type: 'ambush', en }); } } else en.far = 0;
-      en.prevState = prev;
-    }
-    // 최근접 교체에 히스테리시스. 없으면 아무 사건 없이 소리의 상태와 방향이 튄다
-    const best = order.reduce((m, en) => (en.e.gap < m.e.gap ? en : m), order[0]);
-    const cur = this.enemies.find(en => en.id === this.lastNearest);
-    const nearest = (cur && cur !== best && cur.e.gap - best.e.gap < 300) ? cur : best;
-    this.lastNearest = nearest.id;
-    const hit = this.threat.tick(nearest.e.gap, row.accM, !warmup && !frozen);
-    if (hit) {
-      // 무리 전체가 물러남: 200m 뒤, 지친 상태 (1D 코어와 같은 피격 간격. 연쇄 피격 방지)
-      this.hits++; for (const en of this.enemies) { this.place(en, px, py, heading + Math.PI + (en === nearest ? 0 : (Math.random() - 0.5) * 1.6), T.RESPAWN_GAP_CM / 100); en.e.reposition(T.RESPAWN_GAP_CM, true); }
-      if (this.hits >= T.MAX_HITS) { this.failed = true; this.done = true; } events.push({ type: 'hit', en: nearest });
-    }
-    if (this.minGap === null || nearest.e.gap < this.minGap) this.minGap = nearest.e.gap;
-    this.dist = row.distCm; if (row.distCm >= this.courseCm) this.done = true;
-    const snap = { t: row.t, playerCms: row.speedCms, distCm: row.distCm, state: nearest.e.state, enemyCms: nearest.e.speed, gapCm: nearest.e.gap, gauge: this.threat.gauge, hits: this.hits, failed: this.failed, paused, warmup, cooldown, accM: row.accM, cycle: nearest.e.cycle, done: this.done, events, enemies: this.enemies.map(en => ({ x: en.x, y: en.y, state: en.e.state, gap: en.e.gap, cycle: en.e.cycle })), nearestId: nearest.id };
-    this.lastSnap = snap; return snap;
-  }
-  skip(n) { this.elapsed += n; this.paused += n; }   // 앱이 멈춰 있던 시간
-  get penaltyS() { return this.hits * RW.T.HIT_PENALTY_S; }
-  get excessPauseS() { return Math.max(0, this.paused - RW.S.PAUSE_CAP_S); }
-  get finalTimeS() { return this.moving + this.excessPauseS + this.penaltyS; }
-}
-function playerXY() { const P = st.trail; return P.length ? P[P.length - 1] : [0, 0]; }
-function playerHeading() { return st.headRad; }
-let prevState = null, prevGap = null, saidWarmupEnd = false, saidHalf = false, saidCooldown = false, said60 = false, said15 = false;
-/** 게임 시계는 벽시계에서 온다. setInterval 발화 횟수로 세면 화면이 꺼져 쓰로틀될 때 시뮬레이션이 슬로모션이 된다 */
+
+// ---------- 주행 ----------
+function log(s) { const t = st.game ? st.game.t : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
+// 공포 연출 상태. amb = 멀 때 주변에서 나는 소리(녹음이 없는 것은 빌드에서 빠져 있으면 조용하다)
+const H = { armed: true, nextAmb: 0, nextGrowl: 0, nextCry: 0, amb: ['creak', 'howl', 'ring', 'drag'] };
+/** 게임 시계는 벽시계에서 온다. setInterval 횟수로 세면 화면이 꺼져 쓰로틀될 때 슬로모션이 된다 */
 function tick() {
-  if (st.mode === 'replay') { step(); return; }
+  if (st.src === 'demo') { step(); return; }
   const due = Math.floor((Date.now() - st.t0) / 1000);
   let n = due - st.tickN;
   if (n <= 0) return;
-  if (n > 3) {                       // 앱이 멈춰 있던 구간. 적만 달리게 두면 불공평하니 통째로 일시정지 처리
-    const skip = n - 1;
-    if (st.session) st.session.skip(skip);
-    st.tickN += skip; n = 1;
-    log(`공백 ${skip}초 · 일시정지 처리`);
-  }
-  for (let i = 0; i < n && st.session && !st.session.done; i++) step();
+  if (n > 3) { log(`공백 ${n - 1}초 건너뜀`); st.tickN += n - 1; n = 1; }   // 앱이 멈춰 있던 구간. 상대만 달리게 두지 않는다
+  for (let i = 0; i < n && st.game && !st.game.done; i++) step();
 }
 function step() {
-  const s = st.session, a = st.animal, t = st.tickN++, cls = CLASS[a.id] || 'small';
+  const g = st.game, t = st.tickN++;
   if (t % 5 === 0) audioWake();                         // 전화가 끝나도 iOS는 오디오를 알아서 다시 켜지 않을 때가 있다
   let fix = null;
-  if (st.mode === 'replay') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now(), spd: null, hdg: null }; }   // 도플러 없음. undefined로 두면 속도가 NaN이 된다
-  else { fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null; }
+  if (st.src === 'demo') { const r = st.replay[st.replayI++]; if (!r) { finish(); return; } fix = { lat: r[0], lon: r[1], acc: r[2], at: Date.now(), spd: null }; }
+  else fix = st.lastFix && Date.now() - st.lastFix.at < 3500 ? st.lastFix : null;
   const row = fixToRow(t, fix);
-  if (!row) {                                   // GPS 첫 위치 대기. 타이머도 적도 아직 없다
-    st.tickN = 0;
-    if (!st.saidWait) { st.saidWait = true; speak('wait', [st.coarse ? 'wait_coarse' : 'wait'], { pri: PRI.CRIT }); }
-    render(null, fix); return;
-  }
-  if (!st.gpsReady) { st.gpsReady = true; if (st.mode === 'gps') log('첫 위치 확보 acc ' + Math.round(st.hold.acc) + 'm'); }
-  if (st.manualPause) row.speedCms = 0;
-  const [px, py] = playerXY();
-  const snap = s.tick(row, px, py, playerHeading());
-  const near = Math.max(0, 1 - snap.gapCm / Math.max(a.detectCm + 5000, 8000));
-  const nearEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
-  const nrel = nearEn ? relBearing(nearEn) : undefined;
-  const left = RW.S.WARMUP_S - s.elapsed + 1;
-  if (s.elapsed === 1) {
-    const head = ['intro_head', 'name_' + a.id, 'cnt' + Math.min(5, st.nPack)];
-    if (st.warmupS === 0) speakIntro([...head, 'intro_now']);
-    else speakIntro([...head, 'intro_hide', ...(a.constant ? [] : ['intro_max', ...kmhSeq(a.sprintKmh)]), 'intro_tail']);
-  }
-  if (snap.warmup && left <= 60 && !said60) { said60 = true; speak('warn60', ['warn60'], { pri: PRI.HIGH }); }
-  if (snap.warmup && left <= 15 && !said15) { said15 = true; speak('warn15', ['warn15'], { pri: PRI.HIGH }); }
-  if (!snap.warmup && !saidWarmupEnd) { saidWarmupEnd = true; if (st.warmupS > 0) { speak('spotted', ['spotted'], { pri: PRI.HIGH, ttl: 4 }); cry('roam', cls, Math.max(near, 0.6), 1, nrel, true); } }
-  for (const ev of snap.events) {
-    const eNear = Math.max(0, 1 - ev.en.e.gap / Math.max(a.detectCm + 5000, 8000));
-    const erel = relBearing(ev.en), dk = dirKey(erel), em = Math.round(ev.en.e.gap / 100);
-    const ek = (ev.type === 'ambush') ? 'reengage' : ev.type;
-    const n = (VOICE.seen[ek] = (VOICE.seen[ek] || 0) + 1);
-    if (ev.type === 'sprint') {
-      cry('sprint', cls, Math.max(eNear, 0.7), 1.0, erel, true); buzz([80, 60, 200]); flash();
-      const kmh = Math.round(RW.cycleParams(a, ev.en.e.cycle)[0] * 0.036);
-      // 말은 가르치는 역할만 한다. 소리를 읽을 줄 알게 되면 물러난다
-      if (n === 1) speak('sprint', ['dc_' + dk, ...kmhSeq(kmh), 'hold'], { pri: PRI.CRIT });
-      else if (n === 2) speak('sprint', ['again', 'dx_' + dk, ...kmhSeq(kmh)], { pri: PRI.HIGH });
-      else if (n <= 4) speak('sprint', [['dc_' + dk], ['dx_' + dk, 'stick']], { pri: PRI.HIGH, cooldown: 15 });
-      else speak('sprint', [['dx_' + dk, ...meterSeq(em)], ['dx_' + dk]], { pri: PRI.NORM, cooldown: 50, cost: 1 });
-    }
-    else if (ev.type === 'hit') {
-      cry('sprint', cls, 1, 1.0, erel, true); buzz(500); flash();
-      speak('hit', ['hit' + Math.min(3, snap.hits)], { pri: PRI.CRIT });
-    }
-    else if (ev.type === 'reengage' || ev.type === 'ambush') {
-      // 복귀는 소리로만 알린다. 어차피 곧 스프린트가 오고, 둘 다 말하면 같은 말을 두 번 하는 셈
-      cry('roam', cls, 0.65, 1, erel, true);
-      if (n <= 2) speak('rejoin', ['dr_' + dk, ...meterSeq(em)], { pri: PRI.HIGH });
-    }
-  }
-  if (snap.state === 'tired' && prevState === 'sprint') {
-    cry('tired', cls, Math.max(near, 0.5), 1, nrel, true);
-    const tn = (VOICE.seen.tired = (VOICE.seen.tired || 0) + 1);
-    // 지침은 유일하게 행동을 바꾸는 정보다. 계속 알리되 갈수록 짧게
-    if (tn === 1) speak('tired', ['tired1'], { pri: PRI.HIGH });
-    else if (tn <= 3) speak('tired', [['tired2'], ['tired3']], { pri: PRI.HIGH, cooldown: 30 });
-    else speak('tired', [['tired4'], ['tired5']], { pri: PRI.NORM, cooldown: 120, cost: 1 });
-  }
-  else if (snap.state === 'recover' && prevState === 'tired') speak('recover', [['recover1'], ['recover2']], { pri: PRI.LOW, cooldown: 60, cost: 1 });
-  else if (snap.state === 'lost' && prevState !== 'lost') { speak('lost', ['lost'], { pri: PRI.NORM, cooldown: 120 }); }
-  if (snap.gauge < 200) saidHalf = false;                 // 벗어나면 다시 무장. 교전마다 한 번은 경고해야 한다
-  if (snap.gauge >= 500 && !saidHalf) { saidHalf = true; speak('half', [['half1'], ['half2']], { pri: PRI.CRIT }); }
-  if (snap.cooldown && !saidCooldown) { saidCooldown = true; speak('cool', ['cool'], { pri: PRI.HIGH }); }
-  // 울음 주기가 거리계다. 30m에 붙으면 거의 연속음, 300m면 12초에 한 번
-  const gapM = snap.gapCm / 100, frozen = snap.paused || snap.cooldown || st.manualPause;
-  const phase = snap.warmup ? 'warm' : frozen ? 'recover' : snap.state;
-  // 판정이 멈춘 동안 소리가 계속 조여오면 학습한 규칙이 거짓이 된다. 멀리 물러난 것처럼 들려야 한다
-  const per = frozen ? 14 : cryPeriodS(gapM, phase);
-  if (snap.warmup) { heartbeat(70 + 30 * near, 0.1); beacon(per, () => cry('roam', cls, Math.max(0.15, near * 0.6), 0.5, nrel)); }
-  else if (snap.state === 'sprint') { heartbeat(120 + 60 * near, 0.25 + 0.35 * near); beacon(per, () => cry('sprint', cls, near, 0.6 + 0.4 * near, nrel)); }
-  else if (snap.state === 'tired') { heartbeat(80, 0.15); if (!hasSample('tired')) breath(near, 0.4 + 0.6 * near); beacon(per, () => cry('tired', cls, near * 0.8, 0.5, nrel)); }
-  else if (snap.state === 'recover') { heartbeat(60, 0.06); beacon(per, () => cry('roam', cls, near * 0.5, 0.3, nrel)); }
-  else { heartbeat(60 + 30 * near, 0.08 + 0.12 * near); beacon(per, () => cry('roam', cls, near, 0.4, nrel)); }
-  // 진동은 사건에만. 상시 진동은 화면 꺼지면 죽고, 배터리와 습관화 양쪽에서 손해다
-  if (!snap.warmup && !frozen && gapM < 30 && snap.state === 'sprint' && t % 4 === 0) buzz([30, 40, 30]);
-  // 90초 넘게 아무 소리도 없으면 앱이 죽은 걸로 읽힌다. 멀리서 한 번 울어 존재만 남긴다
-  if (!snap.warmup && A.lastCry && t - A.lastCry > 90 && (t - A.lastCry) % 40 === 0) cry('roam', cls, 0.08, 0.3);
-  if (A.ambient && !VOICE.speaking) A.ambient.gain.value = Math.max(0.015, 0.04 + 0.04 * (1 - near));   // 0이면 타이머가 언다
-  prevState = snap.state;
-  render(snap, fix);
-  if (snap.done) finish();
+  if (!row) { renderWait(fix); return; }
+  if (!st.gpsReady) { st.gpsReady = true; log('첫 위치 정확도 ' + Math.round(st.hold.acc) + 'm'); handle(g.ready(), g.snap()); }
+  const r = g.tick({ distCm: row.distCm, speedCms: row.speedCms, accM: row.accM, ok: !!fix }, st.manualPause);
+  handle(r.ev, r.snap);
+  render(r.snap, fix);
+  if (g.done) finish();
 }
-/** 거리(m) → 울음 주기(초). 주차 센서와 가이거 카운터가 쓰는 기하 곡선.
- *  30m = 위협 반경에서 소리가 거의 안 끊긴다. "안 끊기면 게이지가 차는 중"을 귀로 배우게 된다 */
-function cryPeriodS(gapM, state) {
-  if (state === 'recover') return 12;
-  if (state === 'warm') return 20;
-  const k = state === 'sprint' ? 0.7 : state === 'tired' ? 1.7 : 1.0;
-  return Math.max(0.34, Math.min(12, 0.45 * Math.pow(Math.max(gapM, 10) / 30, 1.35) * k));
-}
-/** 1초에 한 번 도는 루프에서 1초보다 짧은 주기를 내려면 그 초 안에 나눠 쏜다 */
-function beacon(per, fn) {
-  A.lastCry = st.tickN;
-  if (per <= 1) { const n = st.mode === 'replay' ? 1 : Math.min(4, Math.max(1, Math.round(1 / per))); for (let i = 0; i < n; i++) setTimeout(fn, i * (1000 / n)); A.cryAcc = 0; return; }
-  A.cryAcc = (A.cryAcc || 0) + 1; if (A.cryAcc >= per) { A.cryAcc = 0; fn(); }
-}
-const KO = { roam: '배회', sprint: '스프린트', tired: '지침', recover: '회복', lost: '냄새 잃음' };
-function render(snap, fix) {
-  const a = st.animal, s = st.session;
-  if (!snap) {                                  // 위치 대기 화면
-    const b = $('#banner'); b.className = 'banner bad';
-    b.textContent = st.gpsErr ? 'GPS ' + st.gpsErr
-      : st.coarse ? `정확도 ${Math.round(st.hold.acc)}m · 안드로이드 설정 > 앱 > Chrome > 권한 > 위치에서 '정확한 위치'를 켜라`
-      : '위치 잡는 중... 하늘이 보이는 곳에서 기다려라';
-    $('#dbg').textContent = (fix ? 'acc ' + fix.acc.toFixed(0) + 'm' : '신호 없음') + ' · 위치 대기';
-    return;
+/** 사건 → 소리. 잡힐 때는 포효 + 비명 + '잡았다~'가 반드시, 주행 중에는 가끔 먼 비명이나 포효 */
+function handle(ev, snap) {
+  const E = A.E;
+  for (const e of ev) {
+    if (e.type !== 'count') log(e.type + (e.set ? ' ' + e.set : '') + (e.type === 'caught' ? ' ' + e.n : ''));
+    if (!E) continue;
+    if (e.type === 'ready') { for (const id of ['wind', 'drone', 'tension']) { const l = E.loop(id); l.level.setTargetAtTime(id === 'wind' ? 0.3 : 0, A.ctx.currentTime, 1.5); } E.setNear(0); E.heartOn = true; E.run(); }
+    if (e.type === 'count') E.one('tick');
+    if (e.type === 'go') { E.one('bell'); E.stepsOn = true; H.armed = true; H.nextAmb = st.game.t + 30 + Math.random() * 30; H.nextGrowl = st.game.t + 10; H.nextCry = st.game.t + 40 + Math.random() * 40; }
+    if (e.type === 'caught') { const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('caught', { at: t + 0.2 }); E.one('gotcha', { at: t + 1.2 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash(); }
+    if (e.type === 'rest') { E.stepsOn = false; E.setNear(0); E.one('safe'); }
+    if (e.type === 'finish') { E.stepsOn = false; E.heartOn = false; E.stopLoops(); if (!e.quit) E.one('door'); }
   }
-  $('#gauge').style.width = (snap.gauge / 10) + '%';
-  $('#hitsDots').textContent = '●'.repeat(snap.hits) + '○'.repeat(Math.max(0, 3 - snap.hits));
-  $('#nGap').textContent = Math.round(snap.gapCm / 100);
-  { const e0 = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0]; $('#nGapL').textContent = (e0 ? dirWord(relBearing(e0)) : '거리') + ' m'; }
-  $('#nPace').textContent = (snap.playerCms * 0.036).toFixed(1);
-  $('#nTime').textContent = fmt(s.elapsed); $('#nDist').textContent = (snap.distCm / 100000).toFixed(2);
-  const box = $('#enemyBox'); box.className = 'enemy ' + snap.state; $('#eIco').textContent = EMOJI[a.id] || '🐾';
-  const ekmh = snap.enemyCms * 0.036;
-  $('#eName').textContent = `${a.nameKo} · ${ekmh < 10 ? ekmh.toFixed(1) : ekmh.toFixed(0)} km/h`;
-  const nEn = s.enemies.find(e => e.id === snap.nearestId) || s.enemies[0];
-  const dw = nEn ? dirWord(relBearing(nEn)) : '';
-  const nSpr = snap.enemies.filter(e => e.state === 'sprint').length;
-  $('#eState').textContent = `${dw} ${Math.round(snap.gapCm / 100)}m · ${KO[snap.state] || snap.state}` + (nSpr ? ' · 달려온다' : '') + ` · 무리 ${snap.enemies.length}`;
-  const b = $('#banner'); b.className = 'banner';
-  if (st.mode === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr + ' · 홈에서 GPS 확인'; }
-  else if (st.mode === 'gps' && !fix) { b.className = 'banner bad'; b.textContent = st.fixCount ? 'GPS 신호 끊김 · 판정 동결' : 'GPS 신호 대기 중… 하늘이 보이는 곳으로'; }
+  if (!E || !snap || snap.phase !== 'run') return;
+  // 거리 → 소리. 100m 밖은 거의 안 들리고 붙으면 귀 뒤에서 난다
+  const gap = snap.gap, near = Math.max(0, Math.min(1, 1 - gap / 100)), t = st.game.t;
+  E.setNear(near); E.spm = E.cadence(snap.oppPace); E.stepsOn = !snap.frozen;
+  if (snap.frozen) return;
+  if (H.armed && gap < 20) { H.armed = false; E.one('close'); buzz([60, 40, 60]); }
+  if (gap > 35) H.armed = true;
+  // 45m 안이면 으르렁. 가까울수록 자주
+  if (gap < 45 && t >= H.nextGrowl) { H.nextGrowl = t + 8 + 12 * Math.max(0, gap) / 45 + Math.random() * 4; E.one('growl', { chase: true }); }
+  // 가끔 비명이나 포효. 비명은 멀리 한쪽에서, 포효는 추격자 자리(뒤)에서 거리만큼 작게
+  if (t >= H.nextCry) {
+    H.nextCry = t + 50 + Math.random() * 60;
+    const cry = Math.random() < 0.5 ? 'scream' : 'roar'; log('소리 ' + cry);
+    if (cry === 'scream') E.one('scream', { side: Math.random() < 0.5 ? -0.9 : 0.9, far: 0.6 + Math.random() * 0.3 });
+    else E.one('roar', { chase: true });
+    H.nextAmb = Math.max(H.nextAmb, t + 12);   // 다른 주변 소리와 바로 겹치지 않게
+  }
+  // 가끔 주변에서 무서운 소리. 멀면 먼 소리, 가까우면 귀 옆 속삭임
+  if (t >= H.nextAmb) {
+    H.nextAmb = t + 35 + Math.random() * 45;
+    const side = Math.random() < 0.5 ? -0.85 : 0.85;
+    if (gap < 25) E.one('whisper', { side, far: 0.1 });
+    else { const id = H.amb[Math.floor(Math.random() * H.amb.length)]; E.one(id, { side, far: id === 'howl' ? 0.85 : 0.5 + Math.random() * 0.3 }); }
+  }
+}
+function renderWait(fix) {
+  $('#gapBig').textContent = 'GPS'; $('#gapBig').className = 'dim';
+  $('#gapSub').textContent = '위치 잡는 중';
+  const b = $('#banner'); b.className = 'banner bad';
+  b.textContent = st.gpsErr ? 'GPS ' + st.gpsErr
+    : st.coarse ? `정확도 ${Math.round(st.hold.acc)}m · 설정 > 앱 > Chrome > 권한 > 위치에서 '정확한 위치'를 켜라`
+    : '하늘이 보이는 곳에서 기다려라';
+  $('#dbg').textContent = (fix ? 'acc ' + fix.acc.toFixed(0) + 'm' : '신호 없음') + ' · 위치 대기';
+}
+function render(s, fix) {
+  const big = $('#gapBig'), sub = $('#gapSub'), b = $('#banner');
+  $('#rSet').textContent = s.sets > 1 ? `세트 ${s.set}/${s.sets}` : '';
+  $('#nDist').textContent = (s.dist / 1000).toFixed(2);
+  $('#nTime').textContent = fmt(s.moving);
+  $('#nPace').textContent = s.phase === 'run' ? paceFmt(s.myPace) : '-';
+  $('#nTarget').textContent = s.phase === 'rest' ? '회복' : paceFmt(s.target);
+  let vig = 0;
+  if (s.phase === 'ready') { big.textContent = '준비'; big.className = 'dim'; sub.textContent = '뒤에서 뭔가 움직인다'; }
+  else if (s.phase === 'count') { big.textContent = String(s.cd); big.className = ''; sub.textContent = s.set > 1 ? `${s.set}세트` : '출발 준비'; }
+  else if (s.phase === 'rest') { big.textContent = fmt(s.rest); big.className = 'dim'; sub.textContent = `회복 · 다음 ${s.set}/${s.sets}세트`; }
+  else if (s.phase === 'run') {
+    const g = Math.round(s.gap);
+    big.textContent = Math.max(0, g) + 'm'; big.className = g < 20 ? 'behind' : g < 45 ? 'warn' : '';
+    sub.textContent = s.caught ? `추격자가 뒤에 · 잡힘 ${s.caught}회` : '추격자가 뒤에';
+    vig = Math.pow(Math.max(0, Math.min(1, 1 - s.gap / 60)), 2);
+  }
+  $('#vig').style.opacity = vig.toFixed(2);
+  const pct = (x) => Math.max(0, Math.min(100, x / s.distM * 100)) + '%';
+  $('#barMe').style.left = s.phase === 'run' ? pct(s.me) : '0%';
+  $('#barOpp').style.left = s.phase === 'run' ? pct(s.opp) : '0%';
+  $('#barOpp').style.display = s.phase === 'rest' ? 'none' : '';
+  b.className = 'banner';
+  if (st.src === 'gps' && st.gpsErr) { b.className = 'banner bad'; b.textContent = 'GPS ' + st.gpsErr; }
   else if (Date.now() < (st.wakeWarnUntil || 0)) { b.className = 'banner bad'; b.textContent = IOS ? '화면이 꺼지면 멈춘다 · 설정 > 디스플레이 및 밝기 > 자동 잠금 > 안 함' : '화면이 꺼지면 멈춘다 · 화면 자동 꺼짐 시간을 늘려라'; }
-  else b.textContent = snap.warmup ? '녀석이 뒤에 있다. 아직 널 못 봤다' : snap.cooldown ? '쿨다운 · 적 정지' : (snap.paused || st.manualPause) ? '일시정지 · 적도 멈춤' : snap.state === 'lost' ? 'GPS 불안정 · 판정 동결' : '';
-  $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m · fix ${((Date.now() - fix.at) / 1000).toFixed(0)}s` : '신호 없음') + ` · ${st.mode} · 지도 ${st.tilesOk === false ? '차단' : st.tilesOk ? 'OK' : '?'} · 나침반 ${HEAD.ok ? Math.round(((HEAD.compass * 180 / Math.PI) + 360) % 360) + '°' : '없음'}`;
-  if (!st.pocket) drawRadar(snap);
-}
-const MAPV = { e: 0, n: 0, zoom: 1, at: 0, k: 1, bearing: 0, IDLE_MS: 12000 };
-/** 화면에서 (dx, dy)px 끌었다 → 세계 좌표(동, 북 m)로. 지도가 진행 방향으로 돌아가 있으니 회전을 되돌린다 */
-function mapPan(dx, dy) {
-  const b = MAPV.bearing, wx = dx * Math.cos(b) - dy * Math.sin(b), wy = dx * Math.sin(b) + dy * Math.cos(b);
-  MAPV.e -= wx / MAPV.k; MAPV.n += wy / MAPV.k;
-  const lim = 1500; MAPV.e = Math.max(-lim, Math.min(lim, MAPV.e)); MAPV.n = Math.max(-lim, Math.min(lim, MAPV.n));   // 타일 폭주 방지
-  MAPV.at = Date.now(); mapUi();
-}
-function mapZoom(z) { MAPV.zoom = Math.max(0.5, Math.min(3, z)); MAPV.at = Date.now(); mapUi(); }
-function mapReset() { MAPV.e = 0; MAPV.n = 0; MAPV.zoom = 1; mapUi(); }
-function mapUi() { const off = Math.hypot(MAPV.e, MAPV.n) > 3 || Math.abs(MAPV.zoom - 1) > 0.02; $('#recenter').style.display = off ? 'block' : 'none'; }
-/** GPS는 1초에 한 번 온다. 그 사이를 진행 방향으로 메워야 즉각 반응하는 것처럼 보인다.
- *  내비 앱이 부드러운 이유가 이것이다. 값을 지어내는 게 아니라 다음 수신까지 관성으로 잇는 것 */
-function predictOffset() {
-  if (Number.isNaN(st.headRad) || !st.lastFix || st.still) return [0, 0];
-  const v = st.lastFix.spd !== null ? st.lastFix.spd
-          : (st.session && st.session.lastSnap ? st.session.lastSnap.playerCms / 100 : 0);
-  if (v < 0.8) return [0, 0];
-  const dt = Math.min(2.0, Math.max(0, (Date.now() - st.lastFix.at) / 1000));
-  return [Math.sin(st.headRad) * v * dt, Math.cos(st.headRad) * v * dt];
-}
-function drawRadar(snap) {
-  const c = $('#radar'), g = c.getContext('2d'), W = c.width, cx = W / 2, cy = W / 2; const a = st.animal;
-  if (MAPV.e || MAPV.n || MAPV.zoom !== 1) { if (Date.now() - MAPV.at > MAPV.IDLE_MS) mapReset(); }   // 달리는 중이다. 손을 떼고 잠시 지나면 내 위치로 돌아온다
-  const baseM = Math.max(120, Math.min(260, a.detectCm / 100 + 40)), viewM = Math.round(baseM / MAPV.zoom), k = (W / 2 - 10) / viewM;
-  MAPV.k = k;
-  g.fillStyle = '#070b0a'; g.fillRect(0, 0, W, W);
-  const [pdE, pdN] = predictOffset();
-  const P = st.trail, raw = P.length ? P[P.length - 1] : [0, 0], me = [raw[0] + pdE, raw[1] + pdN];
-  const ctr = [me[0] + MAPV.e, me[1] + MAPV.n];                   // 화면 중심. 끌면 내 위치에서 벗어난다
-  const bearing = Number.isNaN(st.headRad) ? 0 : st.headRad;   // 소리와 지도가 같은 방향을 써야 한다. 어긋나면 러너가 소리를 안 믿는다
-  MAPV.bearing = bearing;
-  g.save(); g.translate(cx, cy); g.rotate(-bearing);
-  // 지도 타일
-  if (st.useMap && st.tilesOk !== false && st.lastLatLon) {
-    const [rlat, rlon] = st.lastLatLon;
-    const lat = rlat + (pdN + MAPV.n) / 111320, lon = rlon + (pdE + MAPV.e) / (111320 * Math.cos(rlat * Math.PI / 180) || 1);
-    const z = TILE.z; const fx = lonToX(lon, z), fy = latToY(lat, z);
-    const mPerTile = 40075016.686 * Math.cos(lat * Math.PI / 180) / Math.pow(2, z), tilePx = mPerTile * k;
-    const span = Math.ceil(viewM / mPerTile) + 1;   // 화면 밖 프리페치는 타일 정책 위반이자 낭비
-    g.save(); g.globalAlpha = 0.9;
-    const SRC = TILE_SRC[TILE.src];
-    if (SRC.invert && CANVAS_FILTER) g.filter = DARK_FILTER;
-    for (let dx = -span; dx <= span; dx++) for (let dy = -span; dy <= span; dy++) {
-      const tx = Math.floor(fx) + dx, ty = Math.floor(fy) + dy; const rec = getTile(tx, ty); if (!rec.ok) continue;
-      const px = (tx - fx) * tilePx, py = (ty - fy) * tilePx; g.drawImage(rec.img, px, py, tilePx + 0.5, tilePx + 0.5);
-    }
-    g.restore();
-  }
-  const toS = ([e, n]) => [(e - ctr[0]) * k, -(n - ctr[1]) * k];
-  const [mx, my] = toS(me);                                      // 반경 원과 레이더 스윕은 화면 중심이 아니라 나를 따라간다
-  g.strokeStyle = '#173129'; g.lineWidth = 1;
-  for (const r of [30, 50, 100, 150, 200, 250]) { if (r > baseM) break; g.beginPath(); g.arc(mx, my, r * k, 0, Math.PI * 2); g.stroke(); }
-  g.strokeStyle = '#3a1512'; g.setLineDash([6, 6]); g.beginPath(); g.arc(mx, my, 30 * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  g.strokeStyle = '#1d3a30'; g.setLineDash([4, 8]); g.beginPath(); g.arc(mx, my, Math.min(baseM, a.detectCm / 100) * k, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-  const ang = (Date.now() / 1500) % (Math.PI * 2); const grd = g.createConicGradient ? g.createConicGradient(ang, mx, my) : null;
-  if (grd) { grd.addColorStop(0, 'rgba(63,242,165,0.16)'); grd.addColorStop(0.15, 'rgba(63,242,165,0)'); grd.addColorStop(1, 'rgba(63,242,165,0)'); g.fillStyle = grd; g.beginPath(); g.arc(mx, my, baseM * k, 0, Math.PI * 2); g.fill(); }
-  g.strokeStyle = 'rgba(63,242,165,0.55)'; g.lineWidth = 3; g.beginPath();
-  for (let i = Math.max(0, P.length - 400); i < P.length; i++) { const [x, y] = toS(P[i]); if (i === Math.max(0, P.length - 400)) g.moveTo(x, y); else g.lineTo(x, y); } g.stroke();
-  for (const en of snap.enemies) {
-    if (en.state === 'lost') continue;
-    const [x, y] = toS([en.x, en.y]); if (Math.hypot(x, y) > (W / 2) * 1.3) continue;
-    const col = en.state === 'sprint' ? '255,74,61' : en.state === 'tired' ? '255,154,60' : en.state === 'recover' ? '120,140,135' : '150,150,150';
-    const pulse = en.state === 'sprint' ? 1 + 0.25 * Math.sin(Date.now() / 90) : 1; const rad = (en.state === 'sprint' ? 34 : 22) * pulse;
-    const rg = g.createRadialGradient(x, y, 0, x, y, rad * 2); rg.addColorStop(0, `rgba(${col},0.7)`); rg.addColorStop(1, `rgba(${col},0)`); g.fillStyle = rg; g.beginPath(); g.arc(x, y, rad * 2, 0, Math.PI * 2); g.fill();
-    if (en.state === 'sprint') { g.strokeStyle = `rgba(${col},0.6)`; g.lineWidth = 2; g.beginPath(); g.arc(x, y, 30 * k, 0, Math.PI * 2); g.stroke(); }
-    g.save(); g.translate(x, y); g.rotate(bearing); g.font = `${Math.round(rad * 1.6)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = en.state === 'recover' ? 0.6 : 1; g.fillText(EMOJI[a.id] || '🐾', 0, 0); g.globalAlpha = 1;
-    g.fillStyle = '#dfe9e4'; g.font = '20px "IBM Plex Mono", monospace'; g.fillText(`${Math.round(en.gap / 100)}m`, 0, -rad - 12); g.restore();
-  }
-  g.restore();
-  // 북쪽 표시. 지도가 도는 게 맞는지 눈으로 확인된다. 이게 없으면 회전이 버그처럼 보인다
-  {
-    const r = W / 2 - 26, nx = cx + Math.sin(-bearing) * r, ny = cy - Math.cos(-bearing) * r;
-    g.save(); g.translate(nx, ny);
-    g.fillStyle = 'rgba(255,74,61,0.9)'; g.beginPath(); g.moveTo(0, -13); g.lineTo(-8, 8); g.lineTo(8, 8); g.closePath(); g.fill();
-    g.fillStyle = '#dfe9e4'; g.font = 'bold 18px "IBM Plex Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.fillText('N', 0, 26); g.restore();
-  }
-  { // 내 위치. 지도를 끌었으면 화면 중심이 아니라 실제 위치에 그린다
-    const c0 = Math.cos(-bearing), s0 = Math.sin(-bearing), ax = cx + mx * c0 - my * s0, ay = cy + mx * s0 + my * c0;
-    g.fillStyle = '#3ff2a5'; g.beginPath(); g.moveTo(ax, ay - 14); g.lineTo(ax - 9, ay + 9); g.lineTo(ax + 9, ay + 9); g.closePath(); g.fill();
-  }
-  g.fillStyle = '#7d8f88'; g.font = '16px "IBM Plex Mono", monospace'; g.textAlign = 'left'; g.fillText(`반경 ${viewM}m · 감지 ${a.detectCm / 100}m`, 12, W - 14);
-  if (st.useMap && st.tilesOk) { g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(TILE_SRC[TILE.src].credit, W - 8, W - 8); }
+  else if (s.phase === 'run' && s.lost) { b.className = 'banner bad'; b.textContent = 'GPS 약함 · 판정 동결 · 추격자도 멈춤'; }
+  else if (s.manual) b.textContent = '일시정지 · 추격자도 멈춤';
+  else if (s.phase === 'run' && s.auto) b.textContent = '멈춤 · 추격자도 멈춤';
+  else b.textContent = '';
+  $('#dbg').textContent = (fix ? `acc ${fix.acc.toFixed(0)}m` : '신호 없음') + ` · ${st.src}` + (A.E ? ` · 발 ${Math.round(A.E.spm)}spm` : '');
 }
 function start() {
-  if (!st.animal) return;
-  if (st.mode === 'gps') askCompass();                  // 아이폰: 버튼 누름 안에서 불러야 권한 창이 뜬다
-  audioInit(); sfxLoad(st.animal.id); sfxDecode();
-  if (VOICE.level !== 'off') { vpLoad(); if ('speechSynthesis' in window) speechSynthesis.getVoices(); }
-  RW.S.WARMUP_S = st.warmupS;
-  st.session = new Session2D(st.animal, st.courseM * 100, st.nPack); st.builder = new RW.TrackBuilder(); st.trail = []; st.trailDist = []; st.lat0 = NaN; st.lon0 = NaN; st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.lastLatLon = null;
-  st.hold = null; st.win = []; st.still = false; st.pocket = false; st.coarse = false; st.headRad = NaN; st.gpsReady = false; st.holdN = 0; st.saidWait = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
-  mapReset(); hush(); VOICE.seen = {}; VOICE.q = []; VOICE.keyAt = {}; VOICE.tok = VOICE.CAP; VOICE.refAt = 0; VOICE.speaking = false;
-  prevState = null; prevGap = null; saidWarmupEnd = false; saidHalf = false; saidCooldown = false; said60 = false; said15 = false;
-  if (st.mode === 'replay') { st.replay = REPLAYS.steady10; st.replayI = 0; } else { startGps(); }
+  audioInit(); const E = newEngine();
+  const p = GAME.plan(cfg);
+  st.game = new GAME.Game(p); st.builder = new RW.TrackBuilder();
+  st.tickN = 0; st.log = []; st.lastFix = null; st.manualPause = false; st.hold = null; st.win = []; st.still = false; st.gpsReady = false; st.coarse = false; st.pocket = false; st.wakeWarned = false; st.wakeWarnUntil = 0;
+  $('#pause').textContent = '일시정지';
+  if (st.src === 'demo') { st.replay = REPLAYS.steady10; st.replayI = 0; } else startGps();
   wakeLock();
-  $('#home').classList.remove('on'); $('#run').classList.add('on');
-  log(`시작 ${st.animal.nameKo} ${st.courseM}m ${st.mode}`);
-  st.t0 = Date.now();
-  st.timer = setInterval(tick, st.mode === 'replay' ? 100 : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
-  requestAnimationFrame(function loop() { if (st.session && !st.session.done) { const s = st.session; if (!st.pocket && s.lastSnap) drawRadar(s.lastSnap); requestAnimationFrame(loop); } });
+  $('#rMode').textContent = KIND_KO[cfg.type];
+  renderWait(null); show('run');
+  log(`시작 ${cfg.type} ${JSON.stringify(p.sets[0])} ×${p.sets.length} ${st.src}`);
+  // 고른 녹음이 다 들어간 뒤 시작(최대 4초). 깔리는 소리는 시작할 때 정해지므로
+  const g = st.game;
+  Promise.race([E.fed, new Promise(r => setTimeout(r, 4000))]).then(() => {
+    if (st.game !== g) return;
+    st.t0 = Date.now();
+    st.timer = setInterval(tick, st.src === 'demo' ? st.demoMs : 250);   // 벽시계로 보정하므로 자주 돌아도 한 번만 진행한다
+  });
 }
 function finish() {
   clearInterval(st.timer); stopGps(); if (st.wake) { st.wake.release(); st.wake = null; }
-  const s = st.session, a = st.animal; if (!s) return;
-  { const m = Math.floor(s.finalTimeS / 60), sec = s.finalTimeS % 60;
-    speak('end', s.failed ? ['end_fail'] : s.done ? ['end_arrive', 'end_hits' + Math.min(2, s.hits), 'end_final', ...(m ? [...numSeq(m), 'unit_min'] : []), ...(sec || !m ? [...numSeq(sec), 'unit_sec'] : [])] : ['end_stop'], { pri: s.failed ? PRI.HIGH : PRI.CRIT, ttl: 30 }); }   // 실패는 '세 번째다'를 끊지 않고 뒤에 붙인다
-  const title = s.failed ? '탈출 실패' : s.done ? '탈출 성공' : '중단';
-  $('#rLabel').textContent = title + ' · 최종 시간(이동 + 페널티)'; $('#rHero').textContent = fmt(s.finalTimeS); $('#rHero').className = 'hero' + (s.failed ? ' fail' : '');
-  $('#rSub').textContent = `${EMOJI[a.id] || ''} ${a.nameKo} ${st.nPack}마리 · ${st.courseM / 1000}km · ${st.mode === 'gps' ? '실주행' : '리플레이'}`;
-  const avg = s.moving ? s.dist / s.moving * 0.036 : 0, eavg = s.enemyActive ? s.enemyMoved / s.enemyActive * 0.036 : 0;
-  $('#rStats').innerHTML = [[`${s.hits}`, '피격'], [(s.dist / 100000).toFixed(2), 'KM'], [avg.toFixed(1), '평균 KM/H']].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
-  const sp = s.sprints; const survived = Math.max(0, sp - s.hits);
-  $('#rStory').textContent = sp === 0 ? `${a.nameKo}들은 끝내 널 따라잡지 못했다.` : `${a.nameKo} 무리의 스프린트 ${sp}회 중 ${survived}회를 버텼다. ${s.hits ? `잡힌 ${s.hits}번은 페널티 ${s.penaltyS}초.` : '한 번도 안 잡혔다.'} 녀석의 평균은 ${eavg.toFixed(1)} km/h, 너는 ${avg.toFixed(1)} km/h.`;
-  const rows = [['이동 시간', fmt(s.moving)], ['일시정지', fmt(s.paused)], ['페널티', s.penaltyS + 's'], ['적 스프린트', sp], ['최소 거리', (s.minGap === null ? '-' : Math.round(s.minGap / 100) + ' m')], ['적 평균(활성)', eavg.toFixed(1) + ' km/h'], ['GPS 동결', s.lost + ' s'], ['재접근', s.reengages]];
-  $('#rTable').innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  const g = st.game; if (!g) return;
+  if (!g.done) handle(g.stop(), g.snap());
+  st.game = null; $('#vig').style.opacity = 0;
+  if (A.E) { const E = A.E; setTimeout(() => { if (A.E === E) E.halt(); }, 6000); }
+  showResult(g.summary());
+}
+function showResult(s) {
+  const inter = s.kind === 'interval', R = s.results;
+  let title, hero, fail = false, story;
+  const myT = R.reduce((a, r) => a + r.myT, 0), dist = R.reduce((a, r) => a + r.distM, 0), closest = Math.max(0, Math.round(s.minGap || 0));
+  if (s.quit && !R.length) { title = '중단'; hero = fmt(s.moving); story = '끝까지 못 갔다.'; fail = true; }
+  else {
+    fail = s.caught > 0;
+    title = s.quit ? '중단' : fail ? '잡혔다' : '탈출 성공';
+    hero = fail ? `잡힘 ${s.caught}회` : fmt(myT);
+    story = (fail ? `추격자한테 ${s.caught}번 잡혔다.` : '한 번도 안 잡혔다.') + ` 가장 가까이 온 건 ${closest}m.`;
+  }
+  $('#rLabel').textContent = title;
+  $('#rHero').textContent = hero; $('#rHero').className = 'hero' + (fail ? ' fail' : '');
+  $('#rSub').textContent = `${KIND_KO[s.kind]} · ${st.src === 'gps' ? '실주행' : '실내 데모'}`;
+  const avg = dist && myT ? myT / (dist / 1000) : (s.dist && s.moving ? s.moving / (s.dist / 1000) : 0);
+  $('#rStats').innerHTML = [[(s.dist / 1000).toFixed(2), 'KM'], [fmt(s.moving), '이동 시간'], [paceFmt(avg), '평균 /KM']].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
+  $('#rStory').textContent = story;
+  $('#rSets').innerHTML = inter && R.length ? '<table><tr><th>세트</th><th>나</th><th>잡힘</th></tr>' +
+    R.map(r => `<tr><td>${r.set}</td><td>${fmt(r.myT)}</td><td>${r.caught}</td></tr>`).join('') + '</table>' : '';
   $('#rLog').textContent = st.log.join('\n');
-  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), animal: a.id, course: st.courseM, mode: st.mode, hits: s.hits, failed: s.failed, final: s.finalTimeS, dist: s.dist }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-50))); } catch (e) { }
-  st.lastResult = { dist: s.dist, hits: s.hits, sprints: s.sprints, failed: s.failed, done: s.done, finalTimeS: s.finalTimeS };
-  $('#run').classList.remove('on'); $('#result').classList.add('on'); st.session = null;
-  drawShareCard();
+  try { const all = JSON.parse(localStorage.getItem('rw.runs') || '[]'); all.push({ at: new Date().toISOString(), ...cfg, src: st.src, result: { title, hero, dist: s.dist, moving: s.moving, caught: s.caught } }); localStorage.setItem('rw.runs', JSON.stringify(all.slice(-50))); } catch (e) { }
+  st.lastResult = { title, hero, fail, dist: s.dist, moving: s.moving, avg, s };
+  show('result'); drawShareCard();
+}
+const SHARE_URL = '<!--SITE-->';
+/** 결과 이미지. 러닝 게임은 결과 스크린샷으로 퍼진다 */
+function drawShareCard() {
+  const c = $('#shareCard'), g = c.getContext('2d'), W = 1080, r = st.lastResult; if (!r) return;
+  const acc = r.fail ? '#ff4a3d' : '#3ff2a5';
+  g.fillStyle = '#0d0707'; g.fillRect(0, 0, W, W);
+  g.strokeStyle = '#2b1b1b'; g.lineWidth = 2;
+  for (let x = 90; x < W; x += 90) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, W); g.stroke(); }
+  g.textAlign = 'center';
+  g.fillStyle = '#7d8f88'; g.font = '44px "IBM Plex Mono", monospace';
+  g.fillText(`공포 · ${KIND_KO[r.s.kind]}`, W / 2, 200);
+  g.fillStyle = acc; g.font = '140px "Black Han Sans", sans-serif'; g.fillText(r.title, W / 2, 400);
+  g.fillStyle = '#dfe9e4'; g.font = '500 120px "IBM Plex Mono", monospace'; g.fillText(r.hero, W / 2, 580);
+  g.fillStyle = '#dfe9e4'; g.font = '600 56px "IBM Plex Sans KR", sans-serif';
+  g.fillText(`${(r.dist / 1000).toFixed(2)} km · ${fmt(r.moving)} · ${paceFmt(r.avg)}/km`, W / 2, 720);
+  g.fillStyle = '#ff4a3d'; g.font = '64px "Black Han Sans", sans-serif'; g.fillText('러너웨이', W / 2, 920);
+  g.fillStyle = '#7d8f88'; g.font = '32px "IBM Plex Mono", monospace'; g.fillText(SHARE_URL, W / 2, 980);
+}
+async function shareCard() {
+  const c = $('#shareCard'), r = st.lastResult;
+  const text = r ? `러너웨이 ${r.title}. ${(r.dist / 1000).toFixed(2)}km ${fmt(r.moving)}` : '러너웨이';
+  const blob = await new Promise(res => c.toBlob(res, 'image/png'));
+  const file = blob ? new File([blob], 'runaway.png', { type: 'image/png' }) : null;
+  try {
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: text + ' https://' + SHARE_URL }); return; }
+    if (navigator.share) { await navigator.share({ text, url: 'https://' + SHARE_URL }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  const url = URL.createObjectURL(blob), link = document.createElement('a');
+  link.href = url; link.download = 'runaway.png'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 $('#start').addEventListener('click', start);
 $('#stop').addEventListener('click', finish);
 $('#pause').addEventListener('click', e => { st.manualPause = !st.manualPause; e.target.textContent = st.manualPause ? '재개' : '일시정지'; });
 $('#share').addEventListener('click', shareCard);
+$('#again').addEventListener('click', home);
+$('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent; navigator.clipboard && navigator.clipboard.writeText(t); });
+$('#pocket').addEventListener('click', () => { st.pocket = true; $('#pocketCover').style.display = 'flex'; });
+$('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
 // 테스터가 화면만 찍어 보내도 원인이 남도록. 오류를 조용히 삼키지 않는다
 window.addEventListener('error', e => {
   const m = (e.message || '오류') + ' @' + (e.lineno || '?');
@@ -1174,76 +640,78 @@ window.addEventListener('unhandledrejection', e => log('오류(비동기) ' + ((
 // 첫 실행 안전 고지
 let safeSeen = false;
 try { safeSeen = localStorage.getItem('safetyOk') === '1'; } catch (e) { }
-$('#safetyOk').addEventListener('click', () => {
-  try { localStorage.setItem('safetyOk', '1'); } catch (e) { }
-  $('#safety').style.display = 'none'; safeSeen = true;
-});
-const _start = $('#start');
-_start.addEventListener('click', (e) => {
-  if (!safeSeen && st.mode === 'gps') { e.stopImmediatePropagation(); $('#safety').style.display = 'flex'; }
-}, true);
+$('#safetyOk').addEventListener('click', () => { try { localStorage.setItem('safetyOk', '1'); } catch (e) { } $('#safety').style.display = 'none'; safeSeen = true; });
+$('#start').addEventListener('click', (e) => { if (!safeSeen && st.src === 'gps') { e.stopImmediatePropagation(); $('#safety').style.display = 'flex'; } }, true);
 // 끼워진 창에서 열렸으면 실주행이 안 된다. 앱이 고장난 줄 알게 두지 않는다
 if (EMBEDDED) {
   const url = 'https://' + SHARE_URL + '/';
   $('#siteLink').href = url; $('#siteLink').textContent = url;
   $('#embedWarn').style.display = 'block';
-  const demo = $('#mode').querySelector('[data-v="replay"]');
-  if (demo) demo.click();                      // 여기서는 실내 데모만 돌아간다
-  $('#setBox').open = false;
+  st.src = 'demo'; segSet('#src', 'demo');
 }
-// 오프라인 캐시. 음성 팩을 한 번 받으면 신호가 약한 코스에서도 말이 끊기지 않는다
+if (QS.get('src') === 'demo') { st.src = 'demo'; segSet('#src', 'demo'); }
 if ('serviceWorker' in navigator && location.protocol === 'https:' && !EMBEDDED) navigator.serviceWorker.register('sw.js').catch(() => { });
-// 첫 화면을 그린 뒤 미리 받는다. 녹음은 고른 동물 것만(작다). 관제 음성 팩(약 2.8MB)은 켰을 때만
-if (!EMBEDDED) setTimeout(() => { if (st.animal) sfxLoad(st.animal.id); if (VOICE.level !== 'off') vpLoad(); }, 800);
-$('#mapToggle').addEventListener('click', () => { st.useMap = !st.useMap; });
-// 지도 끌기(한 손가락)와 확대·축소(두 손가락, 휠). 끈 만큼 화면 중심이 옮겨 간다
-{
-  const cv = $('#radar'), pts = new Map(); let pinch0 = 0, zoom0 = 1;
-  const dist = () => { const [p, q] = [...pts.values()]; return Math.hypot(p[0] - q[0], p[1] - q[1]); };
-  cv.addEventListener('pointerdown', e => { try { cv.setPointerCapture(e.pointerId); } catch (er) { } pts.set(e.pointerId, [e.clientX, e.clientY]); if (pts.size === 2) { pinch0 = dist(); zoom0 = MAPV.zoom; } MAPV.at = Date.now(); });
-  cv.addEventListener('pointermove', e => {
-    const prev = pts.get(e.pointerId); if (!prev) return;
-    const cur = [e.clientX, e.clientY]; pts.set(e.pointerId, cur);
-    if (pts.size === 1) mapPan((cur[0] - prev[0]) * cv.width / cv.clientWidth, (cur[1] - prev[1]) * cv.height / cv.clientHeight);
-    else if (pts.size === 2 && pinch0 > 0) mapZoom(zoom0 * dist() / pinch0);
-  });
-  const up = e => { pts.delete(e.pointerId); if (pts.size < 2) pinch0 = 0; };
-  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('lostpointercapture', up);
-  cv.addEventListener('wheel', e => { e.preventDefault(); mapZoom(MAPV.zoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15)); }, { passive: false });
-  $('#recenter').addEventListener('click', mapReset);
-}
-// 주머니 모드. 화면을 덮고 캔버스 그리기를 멈춘다. 소리만 남는다
-$('#pocket').addEventListener('click', () => {
-  st.pocket = true; $('#pocketCover').style.display = 'flex';
-  speak('pocket', ['pocket'], { pri: PRI.HIGH });
-});
-$('#pocketCover').addEventListener('click', () => { st.pocket = false; $('#pocketCover').style.display = 'none'; });
-// 관제 음성 설정은 기억한다. 켜 둔 사람이 매번 다시 켜지 않게
-try { const v0 = localStorage.getItem('voiceLevel'); if (v0) { VOICE.level = v0; [...$('#voice').children].forEach(x => x.classList.toggle('on', x.dataset.v === v0)); } } catch (e) { }
-seg('#voice', v => { VOICE.level = v; try { localStorage.setItem('voiceLevel', v); } catch (e) { } if (v !== 'off') vpLoad(); });
+if (!EMBEDDED) setTimeout(sfxFetch, 800);
 if (IOS) {
-  $('#iosAudioBox').style.display = 'block';
-  [...$('#iosAudio').children].forEach(x => x.classList.toggle('on', x.dataset.v === AUD.mode));
+  $('#iosAudioBox').style.display = 'block'; segSet('#iosAudio', AUD.mode);
   seg('#iosAudio', v => { AUD.mode = v; try { localStorage.setItem('iosAudio', v); } catch (e) { } audioSession(); });
 }
-$('#vkey').value = TILE.key;
-$('#vkey').addEventListener('change', e => {
-  TILE.key = e.target.value.trim();
-  try { localStorage.setItem('vworldKey', TILE.key); } catch (er) { }
-  TILE.src = TILE.key ? 'vworld' : 'osm'; TILE.cache.clear(); TILE.loads = 0; TILE.fails = 0; st.tilesOk = null;
-});
-$('#audioTest').addEventListener('click', async () => {
-  audioInit(); if (!st.animal) return;
-  const cls = CLASS[st.animal.id] || 'small', load = sfxLoad(st.animal.id); sfxDecode();
-  if (load) await Promise.race([load, sleep(3000)]);   // 녹음이 있으면 녹음으로 들려준다
-  await sleep(150);
-  // 1) 왼쪽 뒤에서 정면을 지나 오른쪽 뒤로. 좌우와 앞뒤가 구분되는지
-  [-2.4, -1.2, 0, 1.2, 2.4].forEach((rel, i) => setTimeout(() => cry('roam', cls, 0.85, 1, rel, true), i * 750));
-  // 2) 바로 뒤에서 멀리 → 가까이. 멀면 작고 먹먹하고 울리며, 가까우면 크고 또렷한지
-  [0.12, 0.35, 0.65, 0.95].forEach((near, i) => setTimeout(() => cry('sprint', cls, near, 1, Math.PI, true), 4200 + i * 1100));
-  if (VOICE.level !== 'off') { vpLoad(); setTimeout(() => speak('test', ['name_' + st.animal.id, 'test_tail'], { pri: PRI.CRIT }), 9000); }
-});
-$('#again').addEventListener('click', () => { $('#result').classList.remove('on'); $('#home').classList.add('on'); });
-$('#copy').addEventListener('click', () => { const t = $('#rLabel').textContent + ' ' + $('#rHero').textContent + '\n' + $('#rSub').textContent + '\n' + $('#rStory').textContent + '\n' + [...$('#rTable').rows].map(r => r.cells[0].textContent + ': ' + r.cells[1].textContent).join('\n'); navigator.clipboard && navigator.clipboard.writeText(t); });
+
+// ---------- 검수 ----------
+// 같은 엔진, 같은 코드. 여기서 들리는 게 주행 중에 나는 소리다. 후보마다 들어 보고 '사용'을 켜고 끈다
+let rvTok = 0;
+/** 미리듣기마다 새 엔진. 앞 소리는 끊는다 */
+async function rvPlay(btn, id, pick) {
+  audioInit(); rvStop();
+  const tok = ++rvTok, out = A.ctx.createGain(); out.connect(A.ctx.destination);
+  const E = SND.engine(A.ctx, out); A.rv = E; A.rvOut = out;
+  btn.classList.add('playing'); btn.textContent = '…';
+  await feedSamples(E, pick);
+  if (tok !== rvTok) return;
+  const sec = E.demo(id);
+  btn.textContent = '■'; clearTimeout(btn._t); btn._t = setTimeout(() => { btn.classList.remove('playing'); btn.textContent = '▶'; }, sec * 1000);
+}
+function rvStop() {
+  rvTok++;
+  if (A.rv) { A.rv.halt(); A.rv.stopLoops(); try { A.rvOut.disconnect(); } catch (e) { } A.rv = null; }
+  document.querySelectorAll('#review button.playing').forEach(b => { clearTimeout(b._t); b.classList.remove('playing'); b.textContent = '▶'; });
+}
+function rvRow(id, c, label, sel, redraw) {
+  const r = document.createElement('div'); r.className = 'cand' + (sel.includes(c) ? ' on' : '');
+  r.innerHTML = `<button class="pl">▶</button><span>${label}</span><button class="only">이것만</button><button class="use">${sel.includes(c) ? '사용' : '안 씀'}</button>`;
+  r.querySelector('.pl').addEventListener('click', e => rvPlay(e.target, id, { [id]: [c] }));
+  r.querySelector('.only').addEventListener('click', () => { SEL[id] = [c]; saveSel(); redraw(); });
+  r.querySelector('.use').addEventListener('click', () => { const s = selOf(id); SEL[id] = s.includes(c) ? s.filter(x => x !== c) : [...s, c]; saveSel(); redraw(); });
+  return r;
+}
+function drawReview() {
+  const el = $('#rvList'); el.innerHTML = '';
+  for (const it of SND.LIST) {
+    const id = it.id, d = document.createElement('details'); d.className = 'rvg'; d.dataset.id = id;
+    const draw = () => {
+      const open = d.open, sel = selOf(id), all = candsOf(id), n = all.length + (hasSynth(id) ? 1 : 0);
+      d.innerHTML = `<summary><b>${it.name}</b><code>${id} · ${it.kind === 'demo' ? '고른 소리로' : sel.length ? `${sel.length}/${n} 사용` : '끔'}</code></summary>`
+        + `<p>${it.when}. ${it.desc}</p><div class="cands"></div>`;
+      d.open = open;
+      const box = d.querySelector('.cands');
+      const top = document.createElement('div'); top.className = 'cand head';
+      top.innerHTML = `<button class="pl">▶</button><span>고른 소리로 듣기${SND.POOL[id] ? ` · 후보는 '${SND.BY[SND.POOL[id]].name}'과 같은 녹음` : ''}</span>` + (it.kind === 'demo' ? '' : '<button class="all">전부</button><button class="none">끄기</button>');
+      top.querySelector('.pl').addEventListener('click', e => rvPlay(e.target, id));
+      if (it.kind !== 'demo') {
+        top.querySelector('.all').addEventListener('click', () => { SEL[id] = [...(hasSynth(id) ? ['synth'] : []), ...all]; saveSel(); draw(); });
+        top.querySelector('.none').addEventListener('click', () => { SEL[id] = []; saveSel(); draw(); });
+      }
+      box.appendChild(top);
+      if (it.kind === 'demo') return;
+      if (hasSynth(id)) box.appendChild(rvRow(id, 'synth', '합성음(기계음)', sel, draw));
+      for (const c of all) box.appendChild(rvRow(id, c, (typeof SOUND_INFO !== 'undefined' && SOUND_INFO[poolOf(id) + '/' + c]) || c, sel, draw));
+    };
+    draw(); el.appendChild(d);
+  }
+}
+$('#openReview').addEventListener('click', () => { audioInit(); drawReview(); show('review'); });
+$('#reviewBack').addEventListener('click', () => { rvStop(); sfxFetch(); show('home'); });
+$('#reviewStop').addEventListener('click', rvStop);
+home();
 })();
 </script>

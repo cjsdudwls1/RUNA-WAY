@@ -17,16 +17,15 @@
 </style></head><body><main>
 
 <h1>러너웨이 개인정보처리방침</h1>
-<p class="d">최종 수정일: 2026년 9월 18일</p>
+<p class="d">최종 수정일: 2026년 10월 5일</p>
 
 <p>러너웨이는 위치 기반 러닝 게임입니다. 이 방침은 앱이 어떤 정보를 다루는지 있는 그대로 설명합니다.</p>
 
 <h2>1. 수집하는 정보</h2>
 <table>
 <tr><th>정보</th><th>목적</th><th>어디에 저장되는가</th></tr>
-<tr><td>정밀 위치 (GPS 좌표, 정확도, 속도, 진행 방향)</td><td>지도 표시, 가상 추격자와의 거리 계산, 이동 거리 측정</td><td>기기 메모리에만. 세션이 끝나면 사라집니다</td></tr>
-<tr><td>기기 방향 센서 (각속도)</td><td>정지 중 지도가 회전하는 것을 막기 위함</td><td>기기 메모리에만</td></tr>
-<tr><td>게임 설정 (선택한 동물, 거리, 음성 크기, 지도 키)</td><td>다음에 열 때 설정 유지</td><td>브라우저 로컬 저장소. 기기 안에만</td></tr>
+<tr><td>정밀 위치 (GPS 좌표, 정확도, 속도)</td><td>이동 거리와 페이스 측정, 뒤쫓는 추격자와의 거리 계산</td><td>기기 메모리에만. 세션이 끝나면 사라집니다</td></tr>
+<tr><td>게임 설정 (모드, 운동 종류, 거리, 페이스)</td><td>다음에 열 때 설정 유지</td><td>브라우저 로컬 저장소. 기기 안에만</td></tr>
 </table>
 
 <h2>2. 서버로 전송하지 않습니다</h2>
@@ -39,9 +38,7 @@
 
 <h2>3. 외부로 나가는 통신</h2>
 <ul>
-<li><b>지도 타일</b>: 지도를 그리려면 지도 제공자에게 타일 이미지를 요청해야 합니다. 이 요청에는 보고 있는 지도 구역이 포함됩니다.
-기본값은 <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>이고, 사용자가 인증키를 직접 넣으면 브이월드(국토교통부)를 씁니다.
-각 제공자의 정책은 해당 제공자에게 적용됩니다</li>
+<li><b>글꼴</b>: 화면 글꼴을 Google Fonts에서 받습니다. 위치 정보는 담기지 않습니다</li>
 <li><b>방문자 수</b>: 익명 페이지 조회 수만 셀 수 있습니다. 개인을 식별하지 않고 위치와 무관합니다. 현재는 꺼져 있습니다</li>
 <li>광고가 없습니다. 광고 식별자를 쓰지 않습니다</li>
 <li>제3자에게 정보를 판매하거나 제공하지 않습니다</li>
@@ -51,8 +48,7 @@
 <table>
 <tr><th>권한</th><th>왜 필요한가</th><th>거부하면</th></tr>
 <tr><td>위치 (정밀)</td><td>게임의 핵심입니다. 내 위치가 있어야 추격이 성립합니다</td><td>실주행을 못 합니다. 실내 데모는 됩니다</td></tr>
-<tr><td>기기 방향 센서</td><td>지도 회전 안정화</td><td>지도가 정지 중에 흔들릴 수 있습니다</td></tr>
-<tr><td>진동</td><td>적이 가까울 때 알림</td><td>진동만 안 옵니다</td></tr>
+<tr><td>진동</td><td>추격자가 가까울 때, 잡혔을 때 알림</td><td>진동만 안 옵니다</td></tr>
 </table>
 
 <h2>5. 아동</h2>
@@ -77,8 +73,7 @@
 <p class="en">RunAway is a location-based running game.</p>
 <h2>What is collected</h2>
 <ul class="en">
-<li>Precise location (GPS coordinates, accuracy, speed, heading) — used to draw the map, compute distance to virtual pursuers, and measure distance travelled. Held in device memory only and discarded when the session ends.</li>
-<li>Device orientation (angular rate) — used to stop the map rotating while you stand still. Device memory only.</li>
+<li>Precise location (GPS coordinates, accuracy, speed) — used to measure distance and pace and to compute the gap to the virtual opponent. Held in device memory only and discarded when the session ends.</li>
 <li>Game settings — stored in browser local storage on your device.</li>
 </ul>
 <h2>What is not done</h2>
@@ -89,7 +84,7 @@
 <li>No sale or sharing of data with third parties.</li>
 </ul>
 <h2>Outbound requests</h2>
-<p class="en">Map tiles are requested from the map provider (OpenStreetMap by default, or VWorld if you supply your own key). Such requests include the map area being viewed and are governed by that provider's own policy. Optional anonymous page-view counting may be enabled; it does not identify individuals and carries no location data. It is currently disabled.</p>
+<p class="en">Fonts are loaded from Google Fonts; no location data is included. Race-mode lines are read by the speech synthesis built into your device or browser. Optional anonymous page-view counting may be enabled; it does not identify individuals and carries no location data. It is currently disabled.</p>
 <h2>Deletion</h2>
 <p class="en">All stored data is local. Clearing site data or uninstalling removes it. We hold no copy, so no deletion request is necessary.</p>
 <h2>Safety</h2>

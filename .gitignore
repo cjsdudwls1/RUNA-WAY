@@ -9,3 +9,6 @@ android/app/release/
 # python
 __pycache__/
 *.pyc
+# 검수용 WAV (web/render_sounds.mjs). 약 20MB, 언제든 다시 굽는다
+web/dist/sounds/
+web/dist/voices/
