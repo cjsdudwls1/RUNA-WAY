@@ -3,7 +3,7 @@
   "lang": "ko",
   "name": "러너웨이",
   "short_name": "러너웨이",
-  "description": "뒤에서 진짜 동물이 쫓아온다. 실측 속도와 지구력 그대로.",
+  "description": "정한 페이스로 뒤에서 쫓아오는 아무개씨. 잡히지 마라.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
