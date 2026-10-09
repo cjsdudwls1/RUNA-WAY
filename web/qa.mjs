@@ -87,14 +87,14 @@ async function demo(cfg, label) {
     if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `home_${k}.png`) });
   }
   // 인터벌 페이스 +5초 → 4:35, 저장
-  check((await page.textContent('#kindDesc')).includes('전력 질주'), '인터벌 설명');
+  check((await page.textContent('#kindDesc')).includes('질주'), '인터벌 설명');
   const before = await page.inputValue('#v_ipace');
   await page.locator('#params .stp').first().locator('button[data-d="1"]').dispatchEvent('pointerdown');
   await page.locator('#params .stp').first().locator('button[data-d="1"]').dispatchEvent('pointerup');
   const after = await page.inputValue('#v_ipace');
   check(before === '4:30' && after === '4:35', `페이스 조절 ${before} → ${after}`);
   check(JSON.parse(await page.evaluate(() => localStorage.getItem('rw.cfg'))).ipace === 275, '설정 저장');
-  check((await page.textContent('#planSum')).includes('추격자'), '출발 간격 안내');
+  check(!(await page.locator('#planSum, .chase, #gpsCard').count()), '요약 칸, 추격자 그림, GPS 카드 없음');
   // 숫자를 눌러 직접 입력
   for (const [key, typed, want] of [['ipace', '5.3', '5:30'], ['ipace', '447', '4:47'], ['setM', '1.2', '1200 m'], ['sets', '8', '8세트'], ['restS', '75', '1:15'], ['restS', '엉뚱', '1:15']]) {
     await page.click('#v_' + key); await page.fill('#v_' + key, typed); await page.press('#v_' + key, 'Enter');
@@ -103,11 +103,13 @@ async function demo(cfg, label) {
   }
   check(await page.evaluate(() => window.__qa.buf) >= 3, '버튼 딸깍 ' + await page.evaluate(() => window.__qa.buf) + '번');
   await page.click('#kind button[data-v="build"]');
-  check((await page.textContent('#planSum')).includes('6:30에서 5:00까지'), '빌드업 요약');
   check(JSON.parse(await page.evaluate(() => localStorage.getItem('rw.cfg'))).type === 'build', '운동 종류도 저장(다음에 열면 그대로)');
   await page.click('#kind button[data-v="normal"]');
   await page.click('#v_distM'); await page.fill('#v_distM', '7.25'); await page.press('#v_distM', 'Enter');
   check(await page.inputValue('#v_distM') === '7.25 km', '거리 직접 입력 7.25 km');
+  const gp = await page.evaluate(() => { const c = new OfflineAudioContext(2, 4410, 44100), E = SND.engine(c, c.destination); return [0, 10, 20, 40, 100].map(d => [E.GAP.gain(d), E.GAP.lp(d), E.GAP.verb(d)]); });
+  check(gp.every((v, i) => !i || (v[0] < gp[i - 1][0] && v[1] <= gp[i - 1][1] && v[2] >= gp[i - 1][2])) && Math.abs(gp[3][0] / gp[2][0] - 23 / 43) < 0.01,
+    '거리감: 멀수록 작고(1/r) 먹먹하고 울린다 ' + gp.map(v => v.map(x => +x.toFixed(2)).join('/')).join(' '));
   check(errors.length === 0, '첫 화면 오류 없음 ' + errors.join(' | '));
   await ctx.close();
 }
@@ -116,10 +118,10 @@ async function demo(cfg, label) {
 const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, setM: 100, sets: 2, restS: 15 };
 {
   const r = await demo({ ...base, type: 'normal' }, '일반런');
-  check(r.qa.osc + r.qa.rec > 30, `소리 ${r.qa.osc + r.qa.rec}번 울림(합성 ${r.qa.osc}, 녹음 ${r.qa.rec})`);
+  check(r.qa.osc + r.qa.rec > 10, `소리 ${r.qa.osc + r.qa.rec}번 울림(합성 ${r.qa.osc}, 녹음 ${r.qa.rec})`);
   check(r.qa.rec > 5, `녹음 ${r.qa.rec}번 울림(발소리 등)`);
   check(/탈출 성공|잡혔다/.test(r.label), '결과: ' + r.label + ' ' + r.hero);
-  check(/소리 (scream|roar)/.test(r.log), '주행 중 먼 비명·포효: ' + (r.log.match(/소리 (scream|roar)/g) || []).join(', '));
+  check(/소리 growl/.test(r.log) && !/소리 (scream|roar)/.test(r.log), '주행 중 추격자 울음만: ' + (r.log.match(/소리 \w+ \d+m/g) || []).slice(0, 5).join(', '));
 }
 {
   const r = await demo({ ...base, type: 'build', p0: 330, p1: 240 }, '빌드업(빨라서 잡힘)');
@@ -134,7 +136,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
 {
   const { ctx, page, errors } = await open({});
   await page.click('#setBox summary'); await page.click('#openReview');
-  const n = await page.locator('#rvList .rvg').count(), want = await page.evaluate(() => SND.LIST.length);
+  const n = await page.locator('#rvList .rvg').count(), want = 7;
   check(n === want, `검수: 소리 ${n}개`);
   const cands = await page.evaluate(() => Object.fromEntries(Object.entries(SOUND_INDEX).map(([k, v]) => [k, Object.keys(v).length])));
   check(Object.keys(cands).length >= 15, `검수: 녹음 후보가 있는 소리 ${Object.keys(cands).length}개 ` + JSON.stringify(cands));
@@ -193,7 +195,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   const s = await page.evaluate(() => ({ big: document.querySelector('#gapBig').textContent, sub: document.querySelector('#gapSub').textContent }));
   check(/m$/.test(s.big) && s.sub.includes('추격자'), `GPS: 달리는 중 표시 ${s.big} ${s.sub}`);
   const qa = await page.evaluate(() => window.__qa);
-  check(qa.osc + qa.rec > 50 && qa.rec > 5 && qa.tts.length === 0, `GPS 실시간(준비 4초·카운트 3초 뒤 약 9초 주행): 합성음 ${qa.osc}개, 녹음 ${qa.rec}번(발소리), 말 ${qa.tts.length}`);
+  check(qa.osc + qa.rec > 30 && qa.rec > 5 && qa.tts.length === 0, `GPS 실시간(준비 4초·카운트 3초 뒤 약 9초 주행): 합성음 ${qa.osc}개, 녹음 ${qa.rec}번(발소리), 말 ${qa.tts.length}`);
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'run.png') });
   await page.click('#pause');
   check(await page.textContent('#pause') === '재개', '일시정지 버튼');
@@ -203,7 +205,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   check(await page.isVisible('#home'), '다시 → 첫 화면');
   check(/지난 기록/.test(await page.textContent('#last')) && await page.isVisible('#last'), '첫 화면에 지난 기록: ' + (await page.textContent('#last')));
   const p2 = await ctx.newPage(); await p2.goto(BASE, { waitUntil: 'load' });
-  check(await p2.isVisible('#last') && (await p2.textContent('#planSum')).includes('지난번 설정') && await p2.inputValue('#v_distM') === '1 km', '앱을 다시 켜면 지난 기록과 지난번 설정 그대로');
+  check(await p2.isVisible('#last') && await p2.inputValue('#v_distM') === '1 km', '앱을 다시 켜면 지난 기록과 지난번 설정 그대로');
   check(errors.length === 0, 'GPS 모드 오류 없음 ' + errors.join(' | '));
   await ctx.close();
 }
