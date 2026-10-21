@@ -37,7 +37,7 @@ open(out, 'w', encoding='utf-8').write(html)
 HEAD = """<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>러너웨이 · 뒤에서 쫓아오는 추격자</title>
-<meta name="description" content="추격자가 내가 정한 페이스로 뒤에서 쫓아온다. 발소리, 숨소리, 으르렁. 잡히지 마라. 설치 없이 브라우저에서 바로.">
+<meta name="description" content="휘파람 부는 남자가 내가 정한 페이스로 뒤에서 쫓아온다. 발소리, 숨, 웃음. 잡히지 마라. 설치 없이 브라우저에서 바로.">
 <meta name="theme-color" content="#0c0c0c">
 <meta property="og:type" content="website">
 <meta property="og:title" content="러너웨이 · 뒤에서 쫓아오는 추격자">

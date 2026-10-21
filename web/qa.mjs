@@ -1,7 +1,7 @@
 // 출시 전 헤드리스 QA. docs/app/을 로컬로 띄워 실제 크롬에서 끝까지 돌린다
 // 실행: python3 web/build.py && NODE_PATH=$(npm root -g) node web/qa.mjs   (playwright 필요)
 // 확인: 스크립트 오류 0, 첫 화면에서 바로 설정 → 출발, 일반런·빌드업·인터벌 실내 데모 완주,
-//       말은 없다, 녹음(발소리·숨소리·으르렁·포효)이 실제로 울린다, 검수 화면 전 항목 재생,
+//       말은 없다, 녹음(발소리·숨소리·웃음)이 실제로 울린다, 사람 추격자(휘파람·웃음·돌진), 검수 화면 전 항목 재생,
 //       GPS 모드(위치 에뮬레이션)에서 출발까지, 아이폰 에뮬레이션(무음 스위치 대응 설정)
 import { createRequire } from 'node:module';
 import http from 'node:http';
@@ -107,9 +107,12 @@ async function demo(cfg, label) {
   await page.click('#kind button[data-v="normal"]');
   await page.click('#v_distM'); await page.fill('#v_distM', '7.25'); await page.press('#v_distM', 'Enter');
   check(await page.inputValue('#v_distM') === '7.25 km', '거리 직접 입력 7.25 km');
-  const gp = await page.evaluate(() => { const c = new OfflineAudioContext(2, 4410, 44100), E = SND.engine(c, c.destination); return [0, 10, 20, 40, 100].map(d => [E.GAP.gain(d), E.GAP.lp(d), E.GAP.verb(d)]); });
-  check(gp.every((v, i) => !i || (v[0] < gp[i - 1][0] && v[1] <= gp[i - 1][1] && v[2] >= gp[i - 1][2])) && Math.abs(gp[3][0] / gp[2][0] - 23 / 43) < 0.01,
-    '거리감: 멀수록 작고(1/r) 먹먹하고 울린다 ' + gp.map(v => v.map(x => +x.toFixed(2)).join('/')).join(' '));
+  const gp = await page.evaluate(() => { const c = new OfflineAudioContext(2, 4410, 44100), E = SND.engine(c, c.destination); return { ir: E.verb.buffer.duration, v: [0, 10, 20, 40, 100].map(d => [E.GAP.gain(d), E.GAP.lp(d), E.GAP.verb(d), E.GAP.low(d), E.GAP.width(d)]) }; });
+  const v = gp.v;
+  check(v.every((x, i) => !i || (x[0] < v[i - 1][0] && x[1] <= v[i - 1][1] && x[2] >= v[i - 1][2])) && 20 * Math.log10(v[1][0] / v[3][0]) > 12,
+    '거리감: 멀수록 작고 먹먹하다. 10m와 40m가 12dB 넘게 차이 ' + v.map(x => x.slice(0, 3).map(y => +y.toFixed(2)).join('/')).join(' '));
+  check(v[0][3] > 6 && v[1][3] === 0 && v[0][4] > v[3][4], '근접: 붙으면 저음이 붙고 좌우 발이 벌어진다');
+  check(gp.ir < 0.5, `공간: 짧은 반사음만(${gp.ir.toFixed(2)}초). 긴 잔향 없음`);
   check(errors.length === 0, '첫 화면 오류 없음 ' + errors.join(' | '));
   await ctx.close();
 }
@@ -121,7 +124,8 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   check(r.qa.osc + r.qa.rec > 10, `소리 ${r.qa.osc + r.qa.rec}번 울림(합성 ${r.qa.osc}, 녹음 ${r.qa.rec})`);
   check(r.qa.rec > 5, `녹음 ${r.qa.rec}번 울림(발소리 등)`);
   check(/탈출 성공|잡혔다/.test(r.label), '결과: ' + r.label + ' ' + r.hero);
-  check(/소리 growl/.test(r.log) && !/소리 (scream|roar)/.test(r.log), '주행 중 추격자 울음만: ' + (r.log.match(/소리 \w+ \d+m/g) || []).slice(0, 5).join(', '));
+  check(/소리 whistle/.test(r.log) && !/소리 (growl|scream|roar)/.test(r.log), '주행 중 추격자 기척은 휘파람·웃음만: ' + (r.log.match(/소리 \w+ \d+m/g) || []).slice(0, 5).join(', '));
+  check(/surge/.test(r.log) && /소리 laugh 돌진/.test(r.log), '돌진하면 웃음');
 }
 {
   const r = await demo({ ...base, type: 'build', p0: 330, p1: 240 }, '빌드업(빨라서 잡힘)');
@@ -136,27 +140,27 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
 {
   const { ctx, page, errors } = await open({});
   await page.click('#setBox summary'); await page.click('#openReview');
-  const n = await page.locator('#rvList .rvg').count(), want = 7;
+  const n = await page.locator('#rvList .rvg').count(), want = 9;
   check(n === want, `검수: 소리 ${n}개`);
   const cands = await page.evaluate(() => Object.fromEntries(Object.entries(SOUND_INDEX).map(([k, v]) => [k, Object.keys(v).length])));
   check(Object.keys(cands).length >= 15, `검수: 녹음 후보가 있는 소리 ${Object.keys(cands).length}개 ` + JSON.stringify(cands));
-  // 으르렁: 후보 하나 미리듣기 → 녹음이 울린다
-  const g = page.locator('.rvg[data-id=growl]');
+  // 웃음: 후보 하나 미리듣기 → 녹음이 울린다
+  const g = page.locator('.rvg[data-id=laugh]');
   await g.locator('summary').click();
   const rows = await g.locator('.cand:not(.head)').count();
-  check(rows === cands.growl, `으르렁 후보 ${rows}개`);
+  check(rows === cands.laugh, `웃음 후보 ${rows}개`);
   const r0 = await page.evaluate(() => window.__qa.rec);
   await g.locator('.cand:not(.head) .pl').nth(2).click(); await page.waitForTimeout(1500);
   check(await page.evaluate(() => window.__qa.rec) > r0, '후보 미리듣기: 녹음 재생');
   // 이것만 → 하나만 사용, 끄기 → 끔, 전부 → 다시 전부
   await g.locator('.cand:not(.head) .only').nth(1).click();
   let sel = JSON.parse(await page.evaluate(() => localStorage.getItem('rw.snd')));
-  check(sel.growl.length === 1 && (await g.locator('summary code').textContent()).includes(`1/${rows}`), '이것만: ' + JSON.stringify(sel.growl));
+  check(sel.laugh.length === 1 && (await g.locator('summary code').textContent()).includes(`1/${rows}`), '이것만: ' + JSON.stringify(sel.laugh));
   await g.locator('.cand.head .none').click();
   check((await g.locator('summary code').textContent()).includes('끔'), '끄기');
   await g.locator('.cand.head .all').click();
   sel = JSON.parse(await page.evaluate(() => localStorage.getItem('rw.snd')));
-  check(sel.growl.length === rows, '전부');
+  check(sel.laugh.length === rows, '전부');
   // 합성음 후보가 있는 소리: 발소리. 합성음만 고르면 녹음 없이 합성음
   const st = page.locator('.rvg[data-id=step]');
   await st.locator('summary').click();

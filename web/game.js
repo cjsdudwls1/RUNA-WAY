@@ -12,6 +12,11 @@ const GAME = (() => {
     PACE_WIN_S: 15,    // 내 페이스 = 최근 15초 평균
     SET_SOON_S: 6,     // 인터벌: 회복이 6초 남으면 다음 세트 예고
     REST_SOON_S: 15,   // 인터벌: 회복이 15초 남으면 알림(회복이 25초 이상일 때만)
+    // 돌진: 추격자는 사람이라 늘 같은 속도로 오지 않는다. 60초마다 30초 처지고 15초 돌진, 15초 처진다
+    // 처질 때 0.8배, 돌진 1.6배. 60초 평균은 정확히 설정 페이스(45 × 0.8 + 15 × 1.6 = 60)
+    // 설정 페이스대로 뛰면 거리가 약 33~58m 사이로 출렁인다. 소리로 다가오고 멀어지는 게 들린다
+    SURGE_CYCLE_S: 60, SURGE_AT_S: 30, SURGE_S: 15, SURGE_K: 1.6, SLOW_K: 0.8,
+    SURGE_MAX_MS: 6.5, // 돌진 상한(초속 6.5m = 2:34/km). 사람이 낼 수 있는 속도
   };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -29,20 +34,22 @@ const GAME = (() => {
   /** 설정 페이스로 완주하는 시간(초). 페이스가 거리에 대해 직선이라 평균 페이스 × 거리 */
   const planTimeS = (seg) => seg.distM / 1000 * (seg.p0 + seg.p1) / 2;
   const headM = (seg) => Math.max(C.HEAD_MIN_M, C.HEAD_S * 1000 / seg.p0);
+  /** 세트 안에서 움직인 시간(초) → 돌진 중인가 */
+  const surging = (s) => { const c = (s - 1) % C.SURGE_CYCLE_S; return c >= C.SURGE_AT_S && c < C.SURGE_AT_S + C.SURGE_S; };
 
   class Game {
     constructor(p) {
       this.p = p; this.phase = 'wait'; this.si = 0; this.t = 0; this.cd = 0; this.rest = 0;
       this.dist = null; this.me0 = 0; this.me = 0; this.opp = 0; this.setS = 0; this.v = 0;
       this.caught = 0; this.setCaught = 0; this.results = []; this.spd = []; this.adv = []; this.slow = 0; this.auto = false; this.lost = false;
-      this.moving = 0; this.paused = 0; this.done = false; this.quit = false; this.minGap = null;
+      this.moving = 0; this.paused = 0; this.done = false; this.quit = false; this.minGap = null; this.surge = false;
     }
     get seg() { return this.p.sets[Math.min(this.si, this.p.sets.length - 1)]; }
     /** 첫 위치를 잡았다 */
     ready() { if (this.phase !== 'wait') return []; this.phase = 'ready'; this.cd = C.READY_S; return [{ type: 'ready', set: 1, sets: this.p.sets.length }]; }
     startSet(ev) {
       const s = this.seg;
-      this.phase = 'run'; this.me0 = this.dist || 0; this.me = 0; this.setS = 0; this.setCaught = 0; this.adv = [];
+      this.phase = 'run'; this.me0 = this.dist || 0; this.me = 0; this.setS = 0; this.setCaught = 0; this.adv = []; this.surge = false;
       this.opp = -headM(s);
       ev.push({ type: 'go', set: this.si + 1, sets: this.p.sets.length, headM: headM(s) });
     }
@@ -75,8 +82,10 @@ const GAME = (() => {
         else {
           this.moving++; this.setS++;
           this.adv.push(adv); if (this.adv.length > C.PACE_WIN_S) this.adv.shift();
-          this.v = 1000 / paceAt(s, Math.max(0, this.opp));
+          const base = 1000 / paceAt(s, Math.max(0, this.opp)), sg = surging(this.setS);
+          this.v = sg ? Math.min(Math.max(base, C.SURGE_MAX_MS), base * C.SURGE_K) : base * C.SLOW_K;
           this.opp += this.v;
+          if (sg !== this.surge) { this.surge = sg; if (sg) ev.push({ type: 'surge' }); }
         }
         if (!frozen && this.me - this.opp <= 0) {
           this.caught++; this.setCaught++; this.opp = this.me - headM(s);
@@ -107,10 +116,10 @@ const GAME = (() => {
       const s = this.seg, a = this.adv, v = a.length >= 5 ? a.reduce((x, y) => x + y, 0) / a.length : 0;
       return { phase: this.phase, set: this.si + 1, sets: this.p.sets.length, cd: this.cd, rest: this.rest, me: this.me, opp: this.opp, gap: this.me - this.opp,
         distM: s.distM, target: paceAt(s, Math.max(0, this.me)), oppPace: paceAt(s, Math.max(0, this.opp)), myPace: v > 0.5 ? 1000 / v : null,
-        frozen: !!frozen, manual: !!manual, auto: this.auto, lost: this.lost, caught: this.caught, moving: this.moving, setS: this.setS, dist: this.dist || 0 };
+        frozen: !!frozen, manual: !!manual, surge: this.phase === 'run' && this.surge && !frozen, auto: this.auto, lost: this.lost, caught: this.caught, moving: this.moving, setS: this.setS, dist: this.dist || 0 };
     }
   }
 
-  return { C, plan, paceAt, planTimeS, headM, Game };
+  return { C, plan, paceAt, planTimeS, headM, surging, Game };
 })();
 if (typeof module !== 'undefined') module.exports = GAME;

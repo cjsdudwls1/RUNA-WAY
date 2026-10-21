@@ -11,6 +11,7 @@
 - `web/sounds/<소리id>/<후보>.mp3`. 발소리·심장처럼 여러 조각이 한 벌이면 `<후보>-<번호>.mp3`
 - 후보 이름
   - `fs<번호>`: freesound.org 소리 번호
+  - `oga-*`: OpenGameArt.org CC0 녹음(사람 추격자 웃음·숨, 2026-10-21). `-low`는 0.86배속으로 조금 낮춘 것
   - `mon-fs<번호>`: 같은 녹음을 0.72배속으로(약 5.7반음 내림). 괴물화
   - `old-*`: 괴물런 시절 녹음(claude/inspiring-goodall-v6mfyx)
   - `dokkaebi`, `jeoseung`: 괴물런 시절 만든 소리
@@ -20,6 +21,8 @@
 
 - `python3 web/sounds/collect.py [id ...]` → freesound 검색(CC0만) + 괴물런 녹음. 검색어는 맨 위 `PLAN`
 - `python3 web/sounds/collect.py monster [id ...]` → 괴물화 변형
+- `python3 web/sounds/human.py` → 사람 추격자 후보. OpenGameArt CC0 웃음·숨을 받고, 동물·괴물·여자·아이 후보를 지운다(`DROP`)
+  - freesound는 이 개발 환경에서 막혀 있다(403). collect.py는 다른 환경에서 돌린다
 - `python3 web/sounds/gotcha.py` → "잡았다~" 목소리. Supertonic 3(로컬 TTS)으로 문장 4개 × 화자 2명씩 굽고 6가지로 비튼다(low 괴물, demon 악마, drag 늘임, child 섬뜩한 아이, whisper 속삭임, reverse 거꾸로 잔향). 괴물런 도깨비 대사 '으하하하! 잡았다!'도 3가지
   - 후보 이름 `s<화자>-l<문장>-<가공>`. 문장 1 잡았다~, 2 잡았다아~, 3 히히히… 잡았다., 4 찾았다… 잡았다.
 - 다듬기: 모노 44.1kHz, 앞 무음 자름, 길이 제한, 페이드, 피크 -1dBFS

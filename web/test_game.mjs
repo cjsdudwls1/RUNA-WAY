@@ -75,4 +75,18 @@ function sim(cfg, speed, opt = {}) {
   const e = g.stop();
   check(e[0].type === 'finish' && e[0].quit, '중도 종료 → quit');
 }
+// 7) 돌진: 설정 페이스 그대로 뛰면 거리가 출렁인다. 평균은 설정 페이스, 잡히지는 않는다
+{
+  const r = sim({ type: 'normal', distM: 3000, pace: 360 }, () => 10);
+  const run = r.snaps.filter(s => s.phase === 'run'), gaps = run.map(s => s.gap);
+  const lo = Math.min(...gaps), hi = Math.max(...gaps);
+  check(r.g.caught === 0, '설정 페이스면 안 잡힌다');
+  check(lo > 28 && lo < 38 && hi > 52 && hi < 62, `거리 출렁임 ${lo.toFixed(1)} ~ ${hi.toFixed(1)}m`);
+  check(r.types.filter(x => x === 'surge').length >= 4 && run.some(s => s.surge), `돌진 ${r.types.filter(x => x === 'surge').length}번`);
+  const one = run.slice(0, 60), avgV = (one[59].opp - (one[0].opp - 1000 / 360 * 0.8)) / 60;
+  check(Math.abs(avgV - 1000 / 360) < 0.01, `60초 평균 속도 ${avgV.toFixed(3)} = 설정 ${(1000 / 360).toFixed(3)}m/s`);
+  const slow = sim({ type: 'normal', distM: 2000, pace: 360 }, () => 9.2);
+  const firstCatch = slow.snaps.findIndex(s => s.caught > 0);
+  check(slow.g.caught > 0 && slow.snaps[firstCatch].surge, '조금 느리면 돌진 때 잡힌다');
+}
 process.exit(fails ? 1 : 0);
