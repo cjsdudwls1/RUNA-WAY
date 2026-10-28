@@ -113,6 +113,18 @@ async function demo(cfg, label) {
     '거리감: 멀수록 작고 먹먹하다. 10m와 40m가 12dB 넘게 차이 ' + v.map(x => x.slice(0, 3).map(y => +y.toFixed(2)).join('/')).join(' '));
   check(v[0][3] > 6 && v[1][3] === 0 && v[0][4] > v[3][4], '근접: 붙으면 저음이 붙고 좌우 발이 벌어진다');
   check(gp.ir < 0.5, `공간: 짧은 반사음만(${gp.ir.toFixed(2)}초). 긴 잔향 없음`);
+  // 한 사람: 주행 엔진은 소리마다 후보 하나만 쓴다. 미리듣기 엔진은 섞는다
+  const ov = await page.evaluate(async () => {
+    const files = Object.entries(SOUND_INDEX.step).slice(0, 3), bytes = await Promise.all(files.map(([c, fs]) => Promise.all(fs.map(f => fetch('sounds/' + f).then(r => r.arrayBuffer())))));
+    const run = async (one) => {
+      const c = new OfflineAudioContext(2, 44100 * 12, 44100), E = SND.engine(c, c.destination); E.oneVoice = one; E.trace = []; E.synth.step = false;
+      for (let i = 0; i < files.length; i++) for (const b of bytes[i]) await E.addSample('step', b.slice(0), files[i][0]);
+      E.setGap(30); E.spm = 170; E.stepsOn = true; E.nextStep = 0.05; E.pump(10);
+      return [...new Set(E.trace)].length;
+    };
+    return [await run(true), await run(false)];
+  });
+  check(ov[0] === 1 && ov[1] > 1, `한 사람: 주행은 발소리 후보 ${ov[0]}개만, 미리듣기는 ${ov[1]}개 섞음`);
   check(errors.length === 0, '첫 화면 오류 없음 ' + errors.join(' | '));
   await ctx.close();
 }
@@ -121,11 +133,12 @@ async function demo(cfg, label) {
 const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, setM: 100, sets: 2, restS: 15 };
 {
   const r = await demo({ ...base, type: 'normal' }, '일반런');
-  check(r.qa.osc + r.qa.rec > 10, `소리 ${r.qa.osc + r.qa.rec}번 울림(합성 ${r.qa.osc}, 녹음 ${r.qa.rec})`);
+  check(r.qa.osc + r.qa.rec > 6, `소리 ${r.qa.osc + r.qa.rec}번 울림(100배속이라 실제 약 2초. 합성 ${r.qa.osc}, 녹음 ${r.qa.rec})`);
   check(r.qa.rec > 5, `녹음 ${r.qa.rec}번 울림(발소리 등)`);
   check(/탈출 성공|잡혔다/.test(r.label), '결과: ' + r.label + ' ' + r.hero);
-  check(/소리 whistle/.test(r.log) && !/소리 (growl|scream|roar)/.test(r.log), '주행 중 추격자 기척은 휘파람·웃음만: ' + (r.log.match(/소리 \w+ \d+m/g) || []).slice(0, 5).join(', '));
-  check(/surge/.test(r.log) && /소리 laugh 돌진/.test(r.log), '돌진하면 웃음');
+  const calls = r.log.match(/소리 \w+ \S+/g) || [];
+  check(/소리 whistle 출발/.test(r.log) && !/소리 (growl|scream|roar)/.test(r.log), '휘파람은 추격 시작에 한 번: ' + calls.join(', '));
+  check(/surge/.test(r.log) && /소리 laugh 돌진/.test(r.log) && calls.filter(x => x.includes('laugh')).length <= 2, '웃음은 돌진 때만, 드물게: ' + calls.filter(x => x.includes('laugh')).length + '번');
 }
 {
   const r = await demo({ ...base, type: 'build', p0: 330, p1: 240 }, '빌드업(빨라서 잡힘)');
@@ -140,7 +153,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
 {
   const { ctx, page, errors } = await open({});
   await page.click('#setBox summary'); await page.click('#openReview');
-  const n = await page.locator('#rvList .rvg').count(), want = 9;
+  const n = await page.locator('#rvList .rvg').count(), want = 8;
   check(n === want, `검수: 소리 ${n}개`);
   const cands = await page.evaluate(() => Object.fromEntries(Object.entries(SOUND_INDEX).map(([k, v]) => [k, Object.keys(v).length])));
   check(Object.keys(cands).length >= 15, `검수: 녹음 후보가 있는 소리 ${Object.keys(cands).length}개 ` + JSON.stringify(cands));
@@ -199,7 +212,7 @@ const base = { safe: true, distM: 500, pace: 345, p0: 420, p1: 300, ipace: 330, 
   const s = await page.evaluate(() => ({ big: document.querySelector('#gapBig').textContent, sub: document.querySelector('#gapSub').textContent }));
   check(/m$/.test(s.big) && s.sub.includes('추격자'), `GPS: 달리는 중 표시 ${s.big} ${s.sub}`);
   const qa = await page.evaluate(() => window.__qa);
-  check(qa.osc + qa.rec > 30 && qa.rec > 5 && qa.tts.length === 0, `GPS 실시간(준비 4초·카운트 3초 뒤 약 9초 주행): 합성음 ${qa.osc}개, 녹음 ${qa.rec}번(발소리), 말 ${qa.tts.length}`);
+  check(qa.rec > 15 && qa.tts.length === 0, `GPS 실시간(준비 4초·카운트 3초 뒤 약 9초 주행, 추격자 40m 뒤라 심장 없음): 합성음 ${qa.osc}개(휘파람), 녹음 ${qa.rec}번(발소리), 말 ${qa.tts.length}`);
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'run.png') });
   await page.click('#pause');
   check(await page.textContent('#pause') === '재개', '일시정지 버튼');

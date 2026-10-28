@@ -432,7 +432,7 @@ function getBytes(f) {
 }
 /** 고른 후보를 미리 받아 둔다(주행 시작 전에) */
 // 주행에서 쓰는 소리만. 받기, 엔진에 넣기, 검수 목록 모두 이것만
-const SOUNDS_USED = SND.LIST.filter(x => ['scene', 'step', 'breath', 'heart', 'whistle', 'laugh', 'pounce', 'caught', 'gotcha'].includes(x.id));
+const SOUNDS_USED = SND.LIST.filter(x => ['scene', 'step', 'breath', 'heart', 'whistle', 'laugh', 'pounce', 'gotcha'].includes(x.id));
 function sfxFetch() { if (location.protocol === 'file:') return; for (const it of SOUNDS_USED) for (const f of filesOf(it.id, selOf(it.id))) getBytes(f); }
 /** 엔진에 소리를 넣는다. pick = { id: [후보] }를 주면 그것만(검수 미리듣기), 아니면 고른 대로. 다 디코드되면 끝나는 Promise */
 function feedSamples(E, pick) {
@@ -441,7 +441,7 @@ function feedSamples(E, pick) {
     const id = it.id, cands = pick ? pick[id] : selOf(id);
     if (!cands) continue;
     E.synth[id] = cands.includes('synth');
-    for (const f of filesOf(id, cands)) jobs.push(getBytes(f).then(b => b && E.addSample(id, b.slice(0))));
+    for (const c of cands) for (const f of filesOf(id, [c])) jobs.push(getBytes(f).then(b => b && E.addSample(id, b.slice(0), c)));
   }
   return Promise.all(jobs);
 }
@@ -454,7 +454,7 @@ function audioInit() {
 function newEngine() {
   if (A.E) { A.E.halt(); A.E.stopLoops(); try { A.E.out.disconnect(); } catch (e) { } }
   const out = A.ctx.createGain(); out.connect(A.ctx.destination);
-  A.E = SND.engine(A.ctx, out); A.E.out = out; A.E.fed = feedSamples(A.E);
+  A.E = SND.engine(A.ctx, out); A.E.out = out; A.E.oneVoice = true; A.E.fed = feedSamples(A.E);   // 주행 한 번 = 추격자 한 사람. 소리마다 후보 하나로 끝까지
   return A.E;
 }
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
@@ -528,7 +528,7 @@ function fixToRow(t, fix) {
 // ---------- 주행 ----------
 function log(s) { const t = st.game ? st.game.t : 0; st.log.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')} ${s}`); }
 // 다음 기척(휘파람·웃음) 시각(게임 초)
-const H = { nextCall: 0 };
+const H = { lastLaugh: -999 };
 /** 게임 시계는 벽시계에서 온다. setInterval 횟수로 세면 화면이 꺼져 쓰로틀될 때 슬로모션이 된다 */
 function tick() {
   if (st.src === 'demo') { step(); return; }
@@ -552,30 +552,34 @@ function step() {
   render(r.snap, fix);
   if (g.done) finish();
 }
-/** 사건 → 소리. 추격자는 사람 하나: 발소리, 숨(15m 안), 휘파람(멀 때), 웃음(가까울 때, 돌진할 때). 내 심장. 잡힐 때 붙잡힘 + 비명 + '잡았다~'
- *  추격자 소리는 전부 추격자 자리에서 실제 거리만큼(크기, 먹먹함, 반사음, 근접 저음). 심장은 가까울수록 크고 빠르다 */
+/** 사건 → 소리. 추격자는 사람 하나. 깔리는 건 그의 발소리와 숨(40m 안, 발 박자에 맞춰)뿐이고 나머지는 드물게
+ *  휘파람: 추격이 시작될 때 한 번(출발 3초 전, 잡힌 뒤 다시 뒤로 갈 때). 웃음: 돌진으로 25m 안까지 따라붙었을 때, 90초에 한 번까지
+ *  내 심장: 30m 안에서만. 잡힐 때: 붙잡힘 + '잡았다~'
+ *  추격자 소리는 전부 추격자 자리에서 실제 거리만큼(크기, 먹먹함, 반사음, 근접 저음). 따로 노는 소리를 만들지 않는다 */
 function handle(ev, snap) {
   const E = A.E;
   for (const e of ev) {
     if (e.type !== 'count') log(e.type + (e.set ? ' ' + e.set : '') + (e.type === 'caught' ? ' ' + e.n : ''));
     if (!E) continue;
-    if (e.type === 'ready') { E.setGap(100); E.heartOn = true; E.run(); }
+    if (e.type === 'ready') { E.setGap(100); E.heartOn = true; E.run(); H.lastLaugh = -999; }
     if (e.type === 'count') buzz(60);   // 소리 대신 진동으로 3, 2, 1
-    if (e.type === 'go') { buzz(300); E.stepsOn = true; H.nextCall = st.game.t + 5 + Math.random() * 5; }
-    if (e.type === 'surge') { log('소리 laugh 돌진'); E.one('laugh', { chase: true, vol: E.CALL_VOL }); H.nextCall = Math.max(H.nextCall, st.game.t + 12); }
-    if (e.type === 'caught') { const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('caught', { at: t + 0.2 }); E.one('gotcha', { at: t + 1.2 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash(); }
-    if (e.type === 'rest') { E.stepsOn = false; E.setGap(100); }
+    if (e.type === 'count' && e.n === GAME.C.COUNT_S) { log('소리 whistle 출발'); E.one('whistle', { chase: true, vol: E.CALL_VOL }); }
+    if (e.type === 'go') { buzz(300); E.stepsOn = true; }
+    if (e.type === 'caught') {
+      const t = A.ctx.currentTime + 0.02; E.one('pounce', { at: t }); E.one('gotcha', { at: t + 0.6 }); E.holdUntil = t + 3; buzz([400, 100, 600]); flash();
+      E.one('whistle', { at: t + 3.4, chase: true, vol: E.CALL_VOL });   // 다시 뒤로 물러나 휘파람. 같은 사람이 다시 온다
+    }
+    if (e.type === 'rest') { E.stepsOn = false; E.surge = false; E.setGap(100); }
     if (e.type === 'finish') { E.stepsOn = false; E.heartOn = false; E.stopLoops(); }
   }
   if (!E || !snap || snap.phase !== 'run') return;
-  const gap = Math.max(0, snap.gap), t = st.game.t;
-  E.setGap(gap); E.spm = E.cadence(snap.oppPace / (snap.surge ? GAME.C.SURGE_K : 1)); E.stepsOn = !snap.frozen;
-  if (snap.frozen) return;
-  // 기척: 멀면 휘파람, 25m 안이면 웃음. 가까울수록 자주(12초~30초)
-  if (t >= H.nextCall) {
-    const id = gap > 25 ? 'whistle' : 'laugh';
-    H.nextCall = t + 12 + 18 * Math.min(1, gap / 60) + Math.random() * 5; log('소리 ' + id + ' ' + Math.round(gap) + 'm'); E.one(id, { chase: true, vol: E.CALL_VOL });
-  }
+  const gap = Math.max(0, snap.gap);
+  E.setGap(gap); E.surge = snap.surge;
+  // 박자는 천천히 따라간다. 돌진 때 갑자기 바뀌면 다른 사람이 끼어든 것처럼 들린다
+  E.spm += (E.cadence(snap.oppPace / (snap.surge ? GAME.C.SURGE_K : 1)) - E.spm) * 0.35;
+  E.stepsOn = !snap.frozen;
+  // 웃음: 돌진으로 25m 안까지 따라붙은 순간. 90초에 한 번까지
+  if (snap.surge && gap < 25 && st.game.t - H.lastLaugh >= 90) { H.lastLaugh = st.game.t; log('소리 laugh 돌진 ' + Math.round(gap) + 'm'); E.one('laugh', { chase: true, vol: E.CALL_VOL }); }
 }
 function renderWait(fix) {
   $('#gapBig').textContent = 'GPS'; $('#gapBig').className = 'dim'; document.body.classList.remove('hot');
